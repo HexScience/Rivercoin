@@ -12,7 +12,7 @@
 
 package com.riverssen.core;
 
-import com.riverssen.core.headers.Transaction;
+import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.utils.ByteUtil;
@@ -20,7 +20,7 @@ import com.riverssen.utils.ByteUtil;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class RewardTransaction implements Transaction
+public class RewardTransaction implements TransactionI
 {
     public static final short TYPE = 1;
     private PublicAddress receiver;

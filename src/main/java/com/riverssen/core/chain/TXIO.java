@@ -11,7 +11,7 @@ import java.math.BigInteger;
 import java.util.*;
 
 /**
- * Transaction In/Out
+ * TransactionI In/Out
  */
 public class TXIO
 {

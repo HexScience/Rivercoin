@@ -204,7 +204,7 @@ public class Block
 //     * @param tokenList a list of tokens sent by the peers
      * @return true if the solution is correct, and the block will stop attempting to mine.
      */
-    public synchronized boolean verifyWork(long nonce, long blockID, String parentHash, Token reward)//List<Transaction> tokenList)
+    public synchronized boolean verifyWork(long nonce, long blockID, String parentHash, Token reward)//List<TransactionI> tokenList)
     {
         /**
          * check block is equal to this block, if it's older, that means block is already mined.

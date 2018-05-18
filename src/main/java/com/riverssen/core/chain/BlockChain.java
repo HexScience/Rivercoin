@@ -44,8 +44,8 @@ public class BlockChain implements Runnable
             getBroadcastedSolutionsFromPeers();
         });
 
-        this.tokenPool          = new PriorityQueue<>();//Collections.synchronizedCollection(new PriorityQueue<Transaction>());
-        this.tokenPoolSet       = new LinkedList<>();//Collections.synchronizedSet(new LinkedHashSet<Transaction>());
+        this.tokenPool          = new PriorityQueue<>();//Collections.synchronizedCollection(new PriorityQueue<TransactionI>());
+        this.tokenPoolSet       = new LinkedList<>();//Collections.synchronizedSet(new LinkedHashSet<TransactionI>());
     }
 
     private Block downloadBlockChain(File blockChainDirectory)
@@ -104,7 +104,7 @@ public class BlockChain implements Runnable
         return this.block;
     }
 
-//    public synchronized void addToken(Transaction token)
+//    public synchronized void addToken(TransactionI token)
 //    {
 ////        pool.add(token);
 ////        pool.sort((a, b) ->
@@ -228,9 +228,9 @@ public class BlockChain implements Runnable
         }
     }
 
-//    private Transaction poll()
+//    private TransactionI poll()
 //    {
-//        Transaction token = pool.get(0);
+//        TransactionI token = pool.get(0);
 //        pool.remove(0);
 //
 //        return token;

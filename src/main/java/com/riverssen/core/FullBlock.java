@@ -15,7 +15,7 @@ package com.riverssen.core;
 import com.riverssen.core.chain.BlockData;
 import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.consensus.ConsensusAlgorithm;
-import com.riverssen.core.headers.Transaction;
+import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.utils.*;
 
@@ -107,7 +107,7 @@ public class FullBlock implements Encodeable
         return 0;
     }
 
-    public void add(Transaction token)
+    public void add(TransactionI token)
     {
         body.add(token);
     }
@@ -121,7 +121,12 @@ public class FullBlock implements Encodeable
         while (difficultyHash.length() < 64) difficultyHash = "0" + difficultyHash;
 
         Logger.alert("--------------------------------");
-        Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: new job {Algorithm '" + algorithm.getClass().getSimpleName() + "' difficulty '" + (difficultyHash) + "'}");
+        Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: new job {"+ algorithm.getClass().getSimpleName() + ":" + (difficultyHash) + "}");
+
+        /** add the reward BEFORE mining the block **/
+        body.add(new RewardTransaction(miner));
+
+        //System.out.println(new RewardTransaction(miner).toJSON());
 
         this.body.setTime(System.currentTimeMillis());
         ByteBuffer data = getBodyAsByteBuffer();
@@ -131,7 +136,6 @@ public class FullBlock implements Encodeable
 
         while (new BigInteger(hash, 16).compareTo(difficulty) > 0) { data.putLong(data.capacity() - 8, ++nonce); this.hash = algorithm.encode16(data.array()); }
 
-        body.add(new RewardTransaction(miner));
         body.getMerkleTree().buildTree();
         header.setHash(algorithm.encode(data.array()));
         header.setParentHash(parent.getHash());

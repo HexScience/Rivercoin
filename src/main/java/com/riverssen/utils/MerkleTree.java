@@ -14,7 +14,7 @@ package com.riverssen.utils;
 
 import com.riverssen.core.algorithms.Sha3;
 import com.riverssen.core.chain.Serialisable;
-import com.riverssen.core.headers.Transaction;
+import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.consensus.ConsensusAlgorithm;
 
 import java.io.DataInputStream;
@@ -29,13 +29,13 @@ public class MerkleTree implements Serialisable, Encodeable
     /** the root element of the merkle tree **/
     private TreeElement root;
     /** a flat representation of the merkle tree in a list of tokens **/
-    private List<Transaction> list;
+    private List<TransactionI> list;
     /** a flat representation of the merkle tree in a list of hash strings **/
     private List<String> hashList;
     /** the size of the tree **/
     private int size;
 
-    public MerkleTree(List<Transaction> tokenList)
+    public MerkleTree(List<TransactionI> tokenList)
     {
         load(tokenList);
     }
@@ -45,7 +45,7 @@ public class MerkleTree implements Serialisable, Encodeable
     {
         stream.writeShort(this.size);
 
-        for (Transaction token : list)
+        for (TransactionI token : list)
             token.write(stream);
     }
 
@@ -55,13 +55,13 @@ public class MerkleTree implements Serialisable, Encodeable
         int i = stream.readInt();
 
         for (int j = 0; j < i; j++)
-            list.add(Transaction.read(stream));
+            list.add(TransactionI.read(stream));
 
         load(list);
     }
 
     /** return a flat representation of the tree elements in a list of tokens **/
-    public List<Transaction> flatten()
+    public List<TransactionI> flatten()
     {
         return list;
     }
@@ -83,14 +83,14 @@ public class MerkleTree implements Serialisable, Encodeable
         return json;
     }
 
-    private void load(List<Transaction> list)
+    private void load(List<TransactionI> list)
     {
         this.list = Collections.synchronizedList(new ArrayList<>());
         this.list.addAll(list);
 
         PriorityQueue<TreeElement> elements = new PriorityQueue<>();
 
-        for (Transaction token : list) elements.add(new TreeElement(token));
+        for (TransactionI token : list) elements.add(new TreeElement(token));
 
         int i = 0;
 
@@ -130,7 +130,7 @@ public class MerkleTree implements Serialisable, Encodeable
     {
         PriorityQueue<TreeElement> elements = new PriorityQueue<>();
 
-        for (Transaction token : list) elements.add(new TreeElement(token));
+        for (TransactionI token : list) elements.add(new TreeElement(token));
 
         int i = 0;
 
@@ -163,20 +163,20 @@ public class MerkleTree implements Serialisable, Encodeable
         return new byte[0];
     }
 
-    public void add(Transaction token)
+    public void add(TransactionI token)
     {
         list.add(token);
     }
 
     private class TreeElement implements Comparable<TreeElement>, Serialisable, Encodeable
     {
-        private Transaction token;
+        private TransactionI token;
         private String hash;
         private TreeElement left;
         private TreeElement right;
         private int priority;
 
-        TreeElement(Transaction token)
+        TreeElement(TransactionI token)
         {
             this.token = token;
             this.hash  = token.encode16(new Sha3());

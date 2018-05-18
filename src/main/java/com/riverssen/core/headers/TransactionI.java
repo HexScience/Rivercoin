@@ -22,11 +22,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public interface Transaction extends Comparable<Transaction>, Encodeable, JSONFormattable
+public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSONFormattable
 {
     boolean           valid();
     void              write(DataOutputStream stream) throws IOException;
-    static Transaction read(DataInputStream stream)
+    static TransactionI read(DataInputStream stream)
     {
         return null;
     }
@@ -38,7 +38,7 @@ public interface Transaction extends Comparable<Transaction>, Encodeable, JSONFo
     RiverCoin         getAmount();
     int               hashCode();
 
-    default int compareTo(Transaction token)
+    default int compareTo(TransactionI token)
     {
         return getTimeStamp() > token.getTimeStamp() ? 1 : -1;
     }
