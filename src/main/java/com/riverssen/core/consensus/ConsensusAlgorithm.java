@@ -3,12 +3,11 @@ package com.riverssen.core.consensus;
 import com.riverssen.core.Config;
 import com.riverssen.core.Logger;
 import com.riverssen.core.algorithms.*;
-import com.riverssen.utils.HashAlgorithm;
+import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.utils.MerkleTree;
 import com.riverssen.utils.Tuple;
 import com.riverssen.utils.HashUtil;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

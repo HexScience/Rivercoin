@@ -10,16 +10,15 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core;
+package com.riverssen.core.headers;
 
-import com.riverssen.core.consensus.Solution;
-
-public class SolutionHeader
+public interface HashAlgorithm
 {
-    private String proposedBlockHash;
+    byte[] encode(byte data[]);
+    String encode16(byte data[]);
+    String encode32(byte data[]);
+    String encode58(byte data[]);
+    String encode64(byte data[]);
 
-    public Solution toSolution()
-    {
-        return null;
-    }
+    default int numBits() { return 256; }
 }

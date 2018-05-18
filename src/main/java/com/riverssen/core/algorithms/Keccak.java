@@ -1,7 +1,7 @@
 package com.riverssen.core.algorithms;
 
 import com.riverssen.utils.Base58;
-import com.riverssen.utils.HashAlgorithm;
+import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.utils.HashUtil;
 
 public class Keccak implements HashAlgorithm

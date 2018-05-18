@@ -13,11 +13,10 @@
 package com.riverssen.core.chain;
 
 import com.riverssen.core.Config;
-import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.utils.Serializer;
-import com.riverssen.utils.Encodeable;
+import com.riverssen.core.headers.Encodeable;
 import com.riverssen.utils.MerkleTree;
 
 import java.io.*;

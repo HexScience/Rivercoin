@@ -2,7 +2,7 @@ package com.riverssen.core.messages;
 
 import com.riverssen.core.RVCCore;
 import com.riverssen.core.consensus.Solution;
-import com.riverssen.core.networking.Message;
+import com.riverssen.core.headers.Message;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

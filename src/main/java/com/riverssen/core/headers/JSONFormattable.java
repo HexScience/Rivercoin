@@ -10,16 +10,19 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core;
+package com.riverssen.core.headers;
 
-import com.riverssen.core.consensus.Solution;
-
-public class SolutionHeader
+public interface JSONFormattable
 {
-    private String proposedBlockHash;
-
-    public Solution toSolution()
+    default String comma()
     {
-        return null;
+        return ",";
     }
+
+    default String jsonLine(String name, String data)
+    {
+        return "\""+name+"\":\""+data+"\"";
+    }
+
+    String toJSON();
 }

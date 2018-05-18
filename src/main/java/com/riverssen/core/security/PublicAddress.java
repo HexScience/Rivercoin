@@ -1,7 +1,7 @@
 package com.riverssen.core.security;
 
 import com.riverssen.utils.Base58;
-import com.riverssen.utils.Encodeable;
+import com.riverssen.core.headers.Encodeable;
 
 public class PublicAddress implements Encodeable
 {

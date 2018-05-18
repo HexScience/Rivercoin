@@ -10,16 +10,40 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core;
+package com.riverssen.core.headers;
 
-import com.riverssen.core.consensus.Solution;
-
-public class SolutionHeader
+/** this interface represents an object that can be converted to a byte array for hashing **/
+public interface Encodeable
 {
-    private String proposedBlockHash;
-
-    public Solution toSolution()
+    /** returns a raw byte array containing the hash of the object **/
+    default byte[] encode(HashAlgorithm algorithm)
     {
-        return null;
+        return algorithm.encode(getBytes());
     }
+    /** return a hex representation of the object's hash **/
+    default String encode16(HashAlgorithm algorithm)
+    {
+        return algorithm.encode16(getBytes());
+    }
+    /** return a hex representation of the object's hash **/
+
+    default String encode32(HashAlgorithm algorithm)
+    {
+        return algorithm.encode32(getBytes());
+    }
+    /** return a hex representation of the object's hash **/
+
+    default String encode58(HashAlgorithm algorithm)
+    {
+        return algorithm.encode58(getBytes());
+    }
+    /** return a hex representation of the object's hash **/
+
+    default String encode64(HashAlgorithm algorithm)
+    {
+        return algorithm.encode64(getBytes());
+    }
+    /** return a byte array to feed into the hash function **/
+
+    byte[] getBytes();
 }

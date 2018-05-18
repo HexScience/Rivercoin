@@ -10,16 +10,24 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core;
+package com.riverssen.core.headers;
 
-import com.riverssen.core.consensus.Solution;
-
-public class SolutionHeader
+public interface Hashable
 {
-    private String proposedBlockHash;
+    String keccak();
+    String gost3411();
+    String sha1();
+    default String sha2() { return sha256(); }
+    String sha3();
+    String sha256();
+    String sha512();
+    String blake2b();
+    String ripemd128();
+    String ripemd160();
+    String ripemd256();
 
-    public Solution toSolution()
-    {
-        return null;
-    }
+
+    String fs_sha();
+    String fs_ripeMD();
+    String X11();
 }

@@ -13,7 +13,9 @@
 package com.riverssen.utils;
 
 import com.riverssen.core.algorithms.Sha3;
-import com.riverssen.core.chain.Serialisable;
+import com.riverssen.core.headers.Encodeable;
+import com.riverssen.core.headers.HashAlgorithm;
+import com.riverssen.core.headers.Serialisable;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.consensus.ConsensusAlgorithm;
 

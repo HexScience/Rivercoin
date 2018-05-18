@@ -4,7 +4,7 @@ import com.riverssen.core.FullBlock;
 import com.riverssen.core.RVCCore;
 import com.riverssen.core.chain.BlockData;
 import com.riverssen.core.chain.BlockHeader;
-import com.riverssen.core.networking.Message;
+import com.riverssen.core.headers.Message;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

@@ -15,6 +15,8 @@ package com.riverssen.core;
 import com.riverssen.core.chain.BlockData;
 import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.consensus.ConsensusAlgorithm;
+import com.riverssen.core.headers.Encodeable;
+import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.utils.*;

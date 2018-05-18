@@ -18,7 +18,7 @@ import com.riverssen.core.security.PrivKey;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.utils.Base58;
 import com.riverssen.utils.ByteUtil;
-import com.riverssen.utils.Encodeable;
+import com.riverssen.core.headers.Encodeable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

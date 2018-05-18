@@ -17,7 +17,7 @@ import com.riverssen.core.Logger;
 import com.riverssen.core.RVCCore;
 import com.riverssen.core.chain.BlockData;
 import com.riverssen.core.consensus.Solution;
-import com.riverssen.core.messages.ChainSize;
+import com.riverssen.core.headers.Message;
 import com.riverssen.core.messages.NewTransaction;
 import com.riverssen.core.messages.RequestChain;
 import com.riverssen.utils.Base58;

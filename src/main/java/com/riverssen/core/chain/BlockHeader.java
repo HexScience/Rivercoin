@@ -4,12 +4,11 @@ import com.riverssen.core.Config;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.utils.ByteUtil;
-import com.riverssen.utils.Encodeable;
+import com.riverssen.core.headers.Encodeable;
 import com.riverssen.utils.MerkleTree;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.zip.InflaterInputStream;
 
 public class BlockHeader implements Encodeable

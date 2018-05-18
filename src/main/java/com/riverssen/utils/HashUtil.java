@@ -1,3 +1,15 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2018 Riverssen
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.riverssen.utils;
 
 import com.riverssen.core.Config;
@@ -12,20 +24,6 @@ import java.util.Base64;
 
 public class HashUtil
 {
-    public static String HASH_ADDRESS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toLowerCase() + "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-//    public static String toPublicAddress(byte key[])
-//    {
-//        String address = "";
-//
-//        for(byte b : key)
-//        {
-//            address += HASH_ADDRESS.charAt(b);
-//        }
-//
-//        return address;
-//    }
-
     public static String compressPublicKey(PubKey key)
     {
         ECPublicKey key1 = (ECPublicKey) key.getPublic();
@@ -54,16 +52,6 @@ public class HashUtil
     {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(data);
     }
-
-//    public static String base64StringDecode(String string)
-//    {
-//        return new String(Base64.getUrlDecoder().decode(string));
-//    }
-//
-//    public static String base64Decoded(byte data[])
-//    {
-//        return new String(base64StringDecode(data));
-//    }
 
     public static String base36Encode(byte data[])
     {
