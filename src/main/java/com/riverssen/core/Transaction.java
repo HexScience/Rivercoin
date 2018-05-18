@@ -1,0 +1,118 @@
+package com.riverssen.core;
+
+import com.riverssen.core.security.CompressedAddress;
+import com.riverssen.core.security.PrivKey;
+import com.riverssen.core.security.PublicAddress;
+import com.riverssen.utils.Base58;
+import com.riverssen.utils.ByteUtil;
+import com.riverssen.utils.Encodeable;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+
+public class Transaction implements Encodeable, Token
+{
+    public static final short TYPE = 0;
+
+    /** 64 byte compressed ecdsa public key **/
+    private CompressedAddress sender;
+    /** 20 byte receiver public address **/
+    private PublicAddress     receiver;
+    /** 13 byte amount of transaction **/
+    private RiverCoin         amount;
+    /** 256 byte comment in UTF format **/
+    private byte              data[];
+    /** 140 byte signature **/
+    private byte              signature[];
+    /** 4 byte nonce **/
+    private byte              nonce[];
+    /** 8 byte timestamp **/
+    private byte              timestamp[];
+
+    public Transaction(CompressedAddress sender, PublicAddress receiver, RiverCoin amount, String comment, int nonce, long timestamp, PrivKey key)
+    {
+        this(sender, receiver, amount, comment, nonce, timestamp, key.signEncoded(generateSignatureData(sender, receiver, amount, comment, nonce, timestamp)));
+    }
+
+    public Transaction(DataInputStream stream)
+    {
+        this(   new CompressedAddress(Base58.encode(ByteUtil.read(stream, 50))),
+                new PublicAddress(Base58.encode(ByteUtil.read(stream, 20))),
+                new RiverCoin(ByteUtil.read(stream, RiverCoin.MAX_BYTES)),
+                new String(ByteUtil.read(stream, 256)),
+                ByteUtil.decodei(ByteUtil.read(stream, 4)),
+                ByteUtil.decode(ByteUtil.read(stream, 8)),
+                ByteUtil.read(stream, 140));
+    }
+
+    public Transaction(CompressedAddress sender, PublicAddress receiver, RiverCoin amount, String comment, int nonce, long timestamp, byte signature[])
+    {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.amount = amount;
+        this.data = comment.getBytes();
+        this.nonce = ByteUtil.encodei(nonce);
+        this.signature = signature;
+    }
+
+    @Override
+    public byte[] getBytes()
+    {
+        return ByteUtil.concatenate(sender.getBytes(), receiver.getBytes(), amount.getBytes(), data, signature);
+    }
+
+    @Override
+    public boolean valid()
+    {
+        if(sender.toPublicKey() == null) return false;
+
+        if(!sender.toPublicKey().isValid()) return false;
+
+        if(amount.toBigInteger().compareTo(BigInteger.ZERO) <= 0) return false;
+
+        return sender.toPublicKey().verifySignature(generateSignatureData(sender, receiver, amount, data, nonce, timestamp), Base58.encode(signature));
+    }
+
+    @Override
+    public void write(DataOutputStream stream) throws IOException
+    {
+        stream.writeShort(TYPE);
+        stream.write(getBytes());
+    }
+
+    @Override
+    public long getTimeStamp()
+    {
+        return ByteUtil.decode(timestamp);
+    }
+
+    @Override
+    public CompressedAddress getSender()
+    {
+        return sender;
+    }
+
+    @Override
+    public PublicAddress getReceiver()
+    {
+        return receiver;
+    }
+
+    @Override
+    public int getNonce()
+    {
+        return ByteUtil.decodei(nonce);
+    }
+
+    public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, RiverCoin amount, String comment, int nonce, long timestamp)
+    {
+        return ByteUtil.concatenate(sender.getBytes(), receiver.getBytes(), amount.getBytes(), comment.getBytes(), ByteUtil.encodei(nonce), ByteUtil.encode(timestamp));
+    }
+
+    public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, RiverCoin amount, byte comment[], byte nonce[], byte timestamp[])
+    {
+        return ByteUtil.concatenate(sender.getBytes(), receiver.getBytes(), amount.getBytes(), comment, nonce, timestamp);
+    }
+}
