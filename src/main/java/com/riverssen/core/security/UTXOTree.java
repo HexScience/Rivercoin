@@ -12,35 +12,36 @@
 
 package com.riverssen.core.security;
 
-import com.riverssen.utils.Base58;
-import com.riverssen.core.headers.Encodeable;
+import com.riverssen.core.FullBlock;
+import com.riverssen.core.RVCCore;
+import com.riverssen.core.RiverCoin;
+import com.riverssen.core.UnspentTransaction;
+import com.riverssen.core.chain.BlockHeader;
 
-public class CompressedAddress implements Encodeable
-{
-    private String address;
+import java.util.*;
 
-    public CompressedAddress(String address)
+public class UTXOTree {
+    private static HashMap<PublicAddress, List<UnspentTransaction>> utxoMap = new HashMap<>();
+    private static Set<UnspentTransaction>                          utxoSet = new HashSet<>();
+
+    public static void add(UnspentTransaction utxo)
     {
-        this.address = address;
+        if(utxoSet.contains(utxo)) return;
+
+        utxoSet.add(utxo);
+
+        List<UnspentTransaction> list = utxoMap.get(utxo.receiver());
+
+        if(list == null)
+        {
+            list = new ArrayList<>();
+            list.add(utxo);
+
+            utxoMap.put(utxo.receiver(), list);
+        } else list.add(utxo);
     }
 
-    @Override
-    public String toString()
-    {
-        return address;
-    }
-
-    public PubKey toPublicKey()
-    {
-        PubKey key = new PubKey(address);
-
-        if(key.isValid()) return key;
+    public static RiverCoin traverse(PublicAddress publicAddress) {
         return null;
-    }
-
-    @Override
-    public byte[] getBytes()
-    {
-        return Base58.decode(address);
     }
 }

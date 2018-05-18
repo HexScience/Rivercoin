@@ -1,3 +1,15 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2018 Riverssen
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.riverssen.core.security;
 
 import com.riverssen.core.Logger;
@@ -22,7 +34,6 @@ public class PubKey
     private PublicKey           key;
     private CompressedAddress   ads;
     private PublicAddress       wad;
-//    private String              publicWalletAddress;
 
     public PubKey(byte address[])
     {
@@ -100,12 +111,7 @@ public class PubKey
 
             ByteBuffer pubKeyBuffer = ByteBuffer.allocate(point.getAffineX().toByteArray().length + point.getAffineY().toByteArray().length + 1);
 
-//            System.out.println(point.getAffineX().toByteArray().length + " " + point.getAffineY().toByteArray().length);
-
-//            pubKeyBuffer.put(RVCCore.versionByte);
             pubKeyBuffer.put((byte)point.getAffineX().toByteArray().length);
-//            pubKeyBuffer.put((byte)point.getAffineY().toByteArray().length);
-
             pubKeyBuffer.put(point.getAffineX().toByteArray());
             pubKeyBuffer.put(point.getAffineY().toByteArray());
             pubKeyBuffer.flip();
@@ -115,9 +121,6 @@ public class PubKey
             byte ripeMD[]   = HashUtil.applyRipeMD160(sha2562);
 
             wad = new PublicAddress(Base58.encode(ripeMD));
-//            System.out.println(new BigInteger(pubKeyBuffer.array()).toByteArray().length);
-//            System.out.println(new BigInteger(new BigInteger(pubKeyBuffer.array()).toString(36), 36).toByteArray().length);
-//            System.out.println("-----------------");
             return Base58.encode(pubKeyBuffer.array());
 
         } catch (Exception e)
@@ -133,11 +136,6 @@ public class PubKey
     {
         try{
             int xs = Byte.toUnsignedInt(key[0]);
-//            int ys = Byte.toUnsignedInt(key[1]);
-
-//            System.out.println(xs + " " + ys);
-//            System.out.println(xs + " " + ((key.length - 2) - ys - 1));
-
             byte x[] = Arrays.copyOfRange(key, 1, xs + 1);
             byte y[] = Arrays.copyOfRange(key, xs + 1, (key.length - 1 - xs) + xs + 1);
 
@@ -147,8 +145,6 @@ public class PubKey
             return Wallet.Factory.generatePublic(pubSpec);
         } catch (Exception e)
         {
-//            Logger.err("couldn't convert publicaddresskey to publickey");
-//            e.printStackTrace();
         }
 
         return null;
@@ -160,7 +156,7 @@ public class PubKey
         return addressToPublicKey(Base58.decode(key));
     }
 
-    public CompressedAddress getPublicAddress()
+    public CompressedAddress getCompressed()
     {
         return ads;
     }
@@ -187,25 +183,8 @@ public class PubKey
         return Base58.decode(keyAddress);
     }
 
-    public PublicAddress getPublicWalletAddress()
+    public PublicAddress getAddress()
     {
         return wad;
-    }
-
-    public byte[] encrypt(String msg)
-    {
-        byte nMSG[] = new byte[1];
-
-        try {
-            Cipher cipher = Cipher.getInstance("ECIES", "BC");
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-
-            return cipher.doFinal(msg.getBytes());
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        return nMSG;
     }
 }

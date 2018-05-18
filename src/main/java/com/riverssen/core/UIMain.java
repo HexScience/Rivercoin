@@ -95,7 +95,7 @@ public class UIMain extends JFrame implements Runnable
 //            }
 //        };
 
-        final String api = "https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=" + RVCCore.get().getWallet().getPublicKey().getPublicAddress();
+        final String api = "https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=" + RVCCore.get().getWallet().getPublicKey().getCompressed();
 
 //        try
 //        {
@@ -496,7 +496,7 @@ public class UIMain extends JFrame implements Runnable
 
             if(!publicKey.isValid()) return;
 
-            final String api = "https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=" + publicKey.getPublicAddress();
+            final String api = "https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=" + publicKey.getCompressed();
 
             BufferedImage image = null;
 

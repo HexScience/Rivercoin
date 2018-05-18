@@ -84,7 +84,7 @@ public class RVCCore
         blockPool          = new BlockPool(network);
         solutionPool       = new SolutionPool(network);
         TransactionPool transactionPool = new TransactionPool(network);
-        blockChain         = new com.riverssen.core.BlockChain(transactionPool, blockPool, solutionPool, network, wallet.getPublicKey().getPublicWalletAddress());
+        blockChain         = new com.riverssen.core.BlockChain(transactionPool, blockPool, solutionPool, network, wallet.getPublicKey().getAddress());
 
         service.execute(blockChain);
         service.execute(()->{
@@ -106,7 +106,7 @@ public class RVCCore
 
         BigInteger difficultyi = (Config.getConfig().TARGET_DIFFICULTY.toBigInteger()).divide(new BigInteger("10000"));
 
-        block.mine(new Sha3(), difficultyi, wallet.getPublicKey().getPublicWalletAddress(), solutionPool);
+        block.mine(new Sha3(), difficultyi, wallet.getPublicKey().getAddress(), solutionPool);
 
         System.exit(0);
 
@@ -140,8 +140,8 @@ public class RVCCore
     private synchronized void alert()
     {
         long now = System.currentTimeMillis();
-        BigInteger balance = Wallet.readBalance(wallet.getPublicKey().getPublicWalletAddress().toString());
-        Logger.prt(Logger.COLOUR_BLUE, "wallet[" + wallet.getPublicKey().getPublicWalletAddress() + "] balance: " + new RiverCoin(balance).toRiverCoinString() + " lookup:" + (System.currentTimeMillis() - now) + "ms");
+        BigInteger balance = Wallet.readBalance(wallet.getPublicKey().getAddress().toString());
+        Logger.prt(Logger.COLOUR_BLUE, "wallet[" + wallet.getPublicKey().getAddress() + "] balance: " + new RiverCoin(balance).toRiverCoinString() + " lookup:" + (System.currentTimeMillis() - now) + "ms");
     }
 
     public synchronized static RVCCore get()

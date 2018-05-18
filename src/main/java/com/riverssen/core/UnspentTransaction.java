@@ -10,37 +10,38 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.security;
+package com.riverssen.core;
 
-import com.riverssen.utils.Base58;
 import com.riverssen.core.headers.Encodeable;
+import com.riverssen.core.security.PublicAddress;
+import com.riverssen.utils.ByteUtil;
+import com.sun.istack.internal.NotNull;
 
-public class CompressedAddress implements Encodeable
+public class UnspentTransaction implements Encodeable
 {
-    private String address;
+    private byte            hash[];
+    private PublicAddress   receiver;
+    private RiverCoin       value;
 
-    public CompressedAddress(String address)
+    public UnspentTransaction(@NotNull byte hash[], @NotNull String txhash, @NotNull RiverCoin value, @NotNull PublicAddress receiver)
     {
-        this.address = address;
+        this.hash       = hash;
+        this.value      = value;
+        this.receiver   = receiver;
+        this.hash       = hash;
+    }
+
+    public PublicAddress receiver() {
+        return receiver;
+    }
+
+    public RiverCoin amount()
+    {
+        return value;
     }
 
     @Override
-    public String toString()
-    {
-        return address;
-    }
-
-    public PubKey toPublicKey()
-    {
-        PubKey key = new PubKey(address);
-
-        if(key.isValid()) return key;
-        return null;
-    }
-
-    @Override
-    public byte[] getBytes()
-    {
-        return Base58.decode(address);
+    public byte[] getBytes() {
+        return ByteUtil.concatenate(hash, receiver.getBytes(), value.getBytes());
     }
 }

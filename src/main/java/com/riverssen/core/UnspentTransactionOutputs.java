@@ -45,7 +45,7 @@ public class UnspentTransactionOutputs
 
     public UnspentTransactionOutputs(CompressedAddress address, long currentBlock)
     {
-        this.address = address.toPublicKey().getPublicWalletAddress();
+        this.address = address.toPublicKey().getAddress();
     }
 
     public void addInput(TransactionI token)

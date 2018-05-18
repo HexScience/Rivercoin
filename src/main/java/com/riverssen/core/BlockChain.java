@@ -114,8 +114,6 @@ public class BlockChain implements BlockChainI
         /** if our chain is short then update it with the longest chain **/
         if(block.getBlockID() < forkInfo.getJ())
             FetchBlockChainFromPeers();
-
-//        if(block.getBlockID() == forkInfo.getJ() && forkInfo.getI().equals(block.getHeader().getParentHashAsString()))
     }
 
     @Override
@@ -141,7 +139,10 @@ public class BlockChain implements BlockChainI
             Validate();
 
             if(block.getBody().mine())
-                block.mine(ConsensusAlgorithm.getLatestInstance(block.getHeader().getParentHash()), Config.getConfig().TARGET_DIFFICULTY.toBigInteger(), miner, solutionPool);
+                block.mine(ConsensusAlgorithm.getLatestInstance(block.getHeader().getParentHash()),
+                Config.getConfig().TARGET_DIFFICULTY.toBigInteger(),
+                miner,
+                solutionPool);
         }
     }
 }

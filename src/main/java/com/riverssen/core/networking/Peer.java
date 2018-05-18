@@ -57,60 +57,9 @@ public class Peer
         this.input  = new DataInputStream(socket.getInputStream());
         this.run    = true;
         this.name   = socket.getInetAddress().getHostName();
-        service.execute(()->
-        {
-            while(RVCCore.get().run() && run)
-            {
-                try
-                {
-                    int version     = input.readInt();//headerBuffer.getShort();
-                    int typeOfMSG   = input.readShort();//headerBuffer.getShort();
-                    int sizeOfMSG   = input.readShort();//headerBuffer.getInt();
-
-                    byte message[] = new byte[sizeOfMSG];
-
-                    switch (typeOfMSG)
-                    {
-                        case msg_block_:
-                            break;
-                        case msg_new_token:
-                            MessageWrapper.newTokenMessage(message, version);
-                            break;
-                        case msg_chain_size_r:
-                            stream.write(MessageWrapper.wrapChainSize());
-                        case msg_block_header:break;
-                    }
-                } catch (IOException e)
-                {
-                    e.printStackTrace();
-                    connectionClosed = true;
-                }
-            }
-        });
-    }
-
-    public synchronized void sendSolution(Solution solution)
-    {
-        try
-        {
-            stream.writeUTF(MessageWrapper.solutionMessage(solution));
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-            connectionClosed = true;
-        }
-    }
-
-    public Solution receiveSolution()
-    {
-        return null;
     }
 
     public void send()
-    {
-    }
-
-    private void newTransaction()
     {
     }
 

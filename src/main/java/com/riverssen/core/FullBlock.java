@@ -63,22 +63,22 @@ public class FullBlock implements Encodeable
         this.timeCreated = System.currentTimeMillis();
     }
 
-    public String getHashAsString()
+    public synchronized String getHashAsString()
     {
         return header.getHashAsString();
     }
 
-    public long getBlockID()
+    public synchronized long getBlockID()
     {
         return header.getBlockID();
     }
 
-    public int validate()
+    public synchronized int validate()
     {
         return validate(parent);
     }
 
-    public int validate(BlockHeader parent)
+    public synchronized int validate(BlockHeader parent)
     {
         byte pHash[] = null;
 
@@ -109,7 +109,7 @@ public class FullBlock implements Encodeable
         return 0;
     }
 
-    public void add(TransactionI token)
+    public synchronized void add(TransactionI token)
     {
         body.add(token);
     }
@@ -117,7 +117,7 @@ public class FullBlock implements Encodeable
     /**
      * mine the block
      **/
-    public void mine(HashAlgorithm algorithm, BigInteger difficulty, PublicAddress miner, SolutionPool pool)
+    public synchronized void mine(HashAlgorithm algorithm, BigInteger difficulty, PublicAddress miner, SolutionPool pool)
     {
         String difficultyHash = HashUtil.hashToStringBase16(difficulty.toByteArray());
         while (difficultyHash.length() < 64) difficultyHash = "0" + difficultyHash;
@@ -175,7 +175,7 @@ public class FullBlock implements Encodeable
         }
     }
 
-    public BlockHeader getHeader()
+    public synchronized BlockHeader getHeader()
     {
         return header;
     }
@@ -186,12 +186,12 @@ public class FullBlock implements Encodeable
         return ByteUtil.concatenate(parent.getHash(), body.getBytes());
     }
 
-    public BlockData getBody()
+    public synchronized BlockData getBody()
     {
         return body;
     }
 
-    private ByteBuffer getBodyAsByteBuffer()
+    private synchronized ByteBuffer getBodyAsByteBuffer()
     {
         byte bodydata[] = getBytes();
         ByteBuffer data = ByteBuffer.allocate(bodydata.length + 8);
@@ -201,7 +201,7 @@ public class FullBlock implements Encodeable
         return data;
     }
 
-    public void serialize()
+    public synchronized void serialize()
     {
         File file = new File(Config.getConfig().BLOCKCHAIN_DIRECTORY + File.separator + "block["+getBlockID()+"]");
 
@@ -221,5 +221,9 @@ public class FullBlock implements Encodeable
         {
             e.printStackTrace();
         }
+    }
+
+    public synchronized FullBlock getParent() {
+        return BlockHeader.FullBlock(getBlockID()-1);
     }
 }

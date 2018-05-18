@@ -94,6 +94,9 @@ public class MerkleTree implements Serialisable, Encodeable
 
         for (TransactionI token : list) elements.add(new TreeElement(token));
 
+        /** if list size is an odd number, we add the last element twice to create an even number list **/
+        if(list.size() % 2 == 1) elements.add(new TreeElement(list.get(list.size() - 1)));
+
         int i = 0;
 
         while (elements.size() > 1)
@@ -109,30 +112,33 @@ public class MerkleTree implements Serialisable, Encodeable
         hashList = new ArrayList<>();
     }
 
-    public void loadFromHeader(List<String> list)
-    {
-        this.list = Collections.synchronizedList(new ArrayList<>());
-        this.hashList = Collections.synchronizedList(new ArrayList<>());
-        this.hashList.addAll(list);
-
-        PriorityQueue<TreeElement> elements = new PriorityQueue<>();
-
-        for (String token : list) elements.add(new TreeElement(token));
-
-        int i = 0;
-
-        while (elements.size() > 1)
-            elements.add(new TreeElement(elements.poll(), elements.poll(), i++));
-
-        this.root = elements.poll();
-        this.size = list.size();
-    }
+//    public void loadFromHeader(List<String> list)
+//    {
+//        this.list = Collections.synchronizedList(new ArrayList<>());
+//        this.hashList = Collections.synchronizedList(new ArrayList<>());
+//        this.hashList.addAll(list);
+//
+//        PriorityQueue<TreeElement> elements = new PriorityQueue<>();
+//
+//        for (String token : list) elements.add(new TreeElement(token));
+//
+//        int i = 0;
+//
+//        while (elements.size() > 1)
+//            elements.add(new TreeElement(elements.poll(), elements.poll(), i++));
+//
+//        this.root = elements.poll();
+//        this.size = list.size();
+//    }
 
     public void buildTree()
     {
         PriorityQueue<TreeElement> elements = new PriorityQueue<>();
 
         for (TransactionI token : list) elements.add(new TreeElement(token));
+
+        /** if list size is an odd number, we add the last element twice to create an even number list **/
+        if(list.size() % 2 == 1) elements.add(new TreeElement(list.get(list.size() - 1)));
 
         int i = 0;
 

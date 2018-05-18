@@ -139,7 +139,7 @@ public class Transaction implements Encodeable, TransactionI
     public String toJSON() {
         return "{"+
                 jsonLine("type", "transaction")+comma()
-                +jsonLine("sender", getSender().toPublicKey().getPublicWalletAddress().toString())+comma()
+                +jsonLine("sender", getSender().toPublicKey().getAddress().toString())+comma()
                 + jsonLine("receiver", receiver.toString())+
                 comma() + jsonLine("amount", amount.toRiverCoinString())+
                 comma() + jsonLine("time", timestamp + "")+comma()
