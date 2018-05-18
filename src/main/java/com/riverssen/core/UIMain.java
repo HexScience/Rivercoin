@@ -417,7 +417,7 @@ public class UIMain extends JFrame implements Runnable
         // TODO add your handling code here:
         System.out.println("send funds");
 
-//        Token token = new Token();
+//        Transaction token = new Transaction();
 //
 //        String sender = Util.publicKeyToAddress(myWallet.publicKey);
 //        String receiver = Util.publicKeyToAddress(Main.DEFAULT.getPublic());//(transactionReceiverKey.getText());
@@ -428,7 +428,7 @@ public class UIMain extends JFrame implements Runnable
 
 //        for (int i = 0; i < Main.MAX_TOKENS_PER_MINE * 5; i++)
 //        {
-//            token = new Token();
+//            token = new Transaction();
 //            token.transaction(Util.publicKeyToAddress(myWallet.publicKey),
 //                    Util.publicKeyToAddress(DEFAULT.getPublic()),
 //                    new RiverCoin("10.0"/* + (int)(Math.random()*10.0)*/).toString().getBytes(),

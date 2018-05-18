@@ -12,7 +12,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 
-public class Transaction implements Encodeable, Token
+public class Transaction implements Encodeable, com.riverssen.core.headers.Transaction
 {
     public static final short TYPE = 0;
 
@@ -106,6 +106,12 @@ public class Transaction implements Encodeable, Token
         return ByteUtil.decodei(nonce);
     }
 
+    @Override
+    public RiverCoin getAmount()
+    {
+        return amount;
+    }
+
     public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, RiverCoin amount, String comment, int nonce, long timestamp)
     {
         return ByteUtil.concatenate(sender.getBytes(), receiver.getBytes(), amount.getBytes(), comment.getBytes(), ByteUtil.encodei(nonce), ByteUtil.encode(timestamp));
@@ -114,5 +120,12 @@ public class Transaction implements Encodeable, Token
     public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, RiverCoin amount, byte comment[], byte nonce[], byte timestamp[])
     {
         return ByteUtil.concatenate(sender.getBytes(), receiver.getBytes(), amount.getBytes(), comment, nonce, timestamp);
+    }
+
+    @Override
+    public String toJSON() {
+        return "{"+
+                jsonLine("type", "transaction")+comma()+jsonLine("sender", getSender().toPublicKey().getPublicWalletAddress().toString()) + comma() + jsonLine("receiver", receiver.toString()) + comma() + jsonLine("amount", amount.toRiverCoinString()) + comma() + jsonLine("time", timestamp + "") + comma() + jsonLine("signature", Base58.encode(signature))
+                +"}";
     }
 }

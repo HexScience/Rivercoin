@@ -1,15 +1,14 @@
 package com.riverssen.core.messages;
 
 import com.riverssen.core.RVCCore;
-import com.riverssen.core.Token;
+import com.riverssen.core.headers.Transaction;
 import com.riverssen.core.networking.Message;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 
-public class NewTransaction implements Message<Token>
+public class NewTransaction implements Message<Transaction>
 {
     @Override
     public long header()
@@ -18,7 +17,7 @@ public class NewTransaction implements Message<Token>
     }
 
     @Override
-    public void send(DataOutputStream out, Token information)
+    public void send(DataOutputStream out, Transaction information)
     {
         try
         {
@@ -31,9 +30,9 @@ public class NewTransaction implements Message<Token>
     }
 
     @Override
-    public Token receive(DataInputStream in)
+    public Transaction receive(DataInputStream in)
     {
-        return Token.read(in);
+        return Transaction.read(in);
     }
 
     @Override

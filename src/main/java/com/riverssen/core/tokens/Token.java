@@ -32,7 +32,7 @@ public class Token implements Comparable<Token>, Hashable, Encodeable
     {
     }
 
-//    public Token(DataInputStream tokenStream)
+//    public Transaction(DataInputStream tokenStream)
 //    {
 //    }
 

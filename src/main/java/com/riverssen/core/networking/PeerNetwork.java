@@ -1,8 +1,7 @@
 package com.riverssen.core.networking;
 
 import com.riverssen.core.*;
-import com.riverssen.core.consensus.Solution;
-import com.riverssen.core.tokens.Token;
+import com.riverssen.core.headers.Transaction;
 import com.riverssen.utils.TimeUtil;
 import com.riverssen.utils.Tuple;
 
@@ -86,7 +85,7 @@ public class PeerNetwork
         return new Tuple<String, Long>("", 0L);
     }
 
-    public void BroadCastNewTransaction(com.riverssen.core.Token token)
+    public void BroadCastNewTransaction(Transaction token)
     {
     }
 

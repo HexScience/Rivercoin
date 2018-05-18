@@ -1,7 +1,20 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2018 Riverssen
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.riverssen.utils;
 
+import com.riverssen.core.algorithms.Sha3;
 import com.riverssen.core.chain.Serialisable;
-import com.riverssen.core.tokens.Token;
+import com.riverssen.core.headers.Transaction;
 import com.riverssen.core.consensus.ConsensusAlgorithm;
 
 import java.io.DataInputStream;
@@ -16,13 +29,13 @@ public class MerkleTree implements Serialisable, Encodeable
     /** the root element of the merkle tree **/
     private TreeElement root;
     /** a flat representation of the merkle tree in a list of tokens **/
-    private List<Token> list;
+    private List<Transaction> list;
     /** a flat representation of the merkle tree in a list of hash strings **/
     private List<String> hashList;
     /** the size of the tree **/
     private int size;
 
-    public MerkleTree(List<Token> tokenList)
+    public MerkleTree(List<Transaction> tokenList)
     {
         load(tokenList);
     }
@@ -32,7 +45,7 @@ public class MerkleTree implements Serialisable, Encodeable
     {
         stream.writeShort(this.size);
 
-        for (Token token : list)
+        for (Transaction token : list)
             token.write(stream);
     }
 
@@ -42,13 +55,13 @@ public class MerkleTree implements Serialisable, Encodeable
         int i = stream.readInt();
 
         for (int j = 0; j < i; j++)
-            list.add(Token.read(stream, version));
+            list.add(Transaction.read(stream));
 
         load(list);
     }
 
     /** return a flat representation of the tree elements in a list of tokens **/
-    public List<Token> flatten()
+    public List<Transaction> flatten()
     {
         return list;
     }
@@ -70,14 +83,14 @@ public class MerkleTree implements Serialisable, Encodeable
         return json;
     }
 
-    private void load(List<Token> list)
+    private void load(List<Transaction> list)
     {
         this.list = Collections.synchronizedList(new ArrayList<>());
         this.list.addAll(list);
 
         PriorityQueue<TreeElement> elements = new PriorityQueue<>();
 
-        for (Token token : list) elements.add(new TreeElement(token));
+        for (Transaction token : list) elements.add(new TreeElement(token));
 
         int i = 0;
 
@@ -117,7 +130,7 @@ public class MerkleTree implements Serialisable, Encodeable
     {
         PriorityQueue<TreeElement> elements = new PriorityQueue<>();
 
-        for (Token token : list) elements.add(new TreeElement(token));
+        for (Transaction token : list) elements.add(new TreeElement(token));
 
         int i = 0;
 
@@ -150,23 +163,23 @@ public class MerkleTree implements Serialisable, Encodeable
         return new byte[0];
     }
 
-    public void add(Token token)
+    public void add(Transaction token)
     {
         list.add(token);
     }
 
     private class TreeElement implements Comparable<TreeElement>, Serialisable, Encodeable
     {
-        private Token token;
+        private Transaction token;
         private String hash;
         private TreeElement left;
         private TreeElement right;
         private int priority;
 
-        TreeElement(Token token)
+        TreeElement(Transaction token)
         {
             this.token = token;
-            this.hash  = token.getHashAsString();
+            this.hash  = token.encode16(new Sha3());
         }
 
         public TreeElement(TreeElement left, TreeElement right, int i)

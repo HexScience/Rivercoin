@@ -1,11 +1,11 @@
 package com.riverssen.core.chain;
 
 import com.riverssen.core.Config;
-import com.riverssen.core.tokens.Token;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.utils.Serializer;
 import com.riverssen.utils.Encodeable;
 import com.riverssen.utils.MerkleTree;
+import com.riverssen.core.headers.Transaction;
 
 import java.io.*;
 import java.util.List;
@@ -79,9 +79,9 @@ public class BlockData implements Encodeable
 
     public boolean transactionsValid()
     {
-        List<Token> flat = merkleTree.flatten();
-        for(Token token : flat)
-            if(!token.isValid()) return false;
+        List<Transaction> flat = merkleTree.flatten();
+        for(Transaction token : flat)
+            if(!token.valid()) return false;
         return true;
     }
 
@@ -119,9 +119,9 @@ public class BlockData implements Encodeable
         return time;
     }
 
-    public void add(Token token)
+    public void add(Transaction token)
     {
-        if(!token.isValid()) return;
+        if(!token.valid()) return;
 
         merkleTree.add(token);
         dataSize += token.toJSON().getBytes().length;
@@ -129,7 +129,7 @@ public class BlockData implements Encodeable
 
     public void FetchUTXOs(PublicAddress address, List<com.riverssen.core.headers.UTXO> tokens)
     {
-        for(Token token : merkleTree.flatten())
+        for(Transaction token : merkleTree.flatten())
         {
 
         }

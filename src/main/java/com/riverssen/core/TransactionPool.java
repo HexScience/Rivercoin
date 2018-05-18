@@ -1,5 +1,6 @@
 package com.riverssen.core;
 
+import com.riverssen.core.headers.Transaction;
 import com.riverssen.core.networking.PeerNetwork;
 
 import java.util.Collections;
@@ -9,8 +10,8 @@ import java.util.Set;
 
 public class TransactionPool
 {
-    private PriorityQueue<Token> pool;
-    private Set<Token>           hset;
+    private PriorityQueue<Transaction> pool;
+    private Set<Transaction>           hset;
     private PeerNetwork          pnet;
 
     public TransactionPool(PeerNetwork network)
@@ -20,7 +21,7 @@ public class TransactionPool
         pnet = network;
     }
 
-    public void add(Token token)
+    public void add(Transaction token)
     {
         /** check token doesn't already exist in pool */
         if(hset.contains(token)) return;
