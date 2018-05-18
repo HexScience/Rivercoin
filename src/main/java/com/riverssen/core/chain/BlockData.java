@@ -13,6 +13,7 @@
 package com.riverssen.core.chain;
 
 import com.riverssen.core.Config;
+import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.utils.Serializer;
@@ -77,11 +78,6 @@ public class BlockData implements Encodeable
     public boolean mine()
     {
         return dataSize >= MAX_BLOCK_SIZE;
-    }
-
-    public Block toBlock()
-    {
-        return null;
     }
 
     public MerkleTree getMerkleTree()

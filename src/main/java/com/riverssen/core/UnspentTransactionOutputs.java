@@ -1,11 +1,11 @@
 package com.riverssen.core;
 
 import com.riverssen.core.chain.BlockData;
+import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.UTXO;
 import com.riverssen.core.headers.UTXOTraverser;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
-import com.riverssen.core.tokens.Token;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -36,9 +36,9 @@ public class UnspentTransactionOutputs
         this.address = address.toPublicKey().getPublicWalletAddress();
     }
 
-    public void addInput(Token token)
+    public void addInput(TransactionI token)
     {
-        tokens.add(token.getUTXO());
+        tokens.add(null);
     }
 
     public RiverCoin balance()

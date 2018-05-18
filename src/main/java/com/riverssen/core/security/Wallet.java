@@ -3,7 +3,6 @@ package com.riverssen.core.security;
 import com.riverssen.core.Config;
 import com.riverssen.core.Logger;
 import com.riverssen.core.RiverCoin;
-import com.riverssen.core.chain.TXIO;
 import com.riverssen.utils.Tuple;
 import com.riverssen.core.chain.WalletOutputInput;
 import com.riverssen.utils.FileUtils;

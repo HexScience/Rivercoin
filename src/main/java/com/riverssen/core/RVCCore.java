@@ -14,12 +14,10 @@ package com.riverssen.core;
 
 import com.riverssen.core.algorithms.Sha3;
 import com.riverssen.core.chain.*;
-import com.riverssen.core.chain.BlockChain;
 import com.riverssen.core.headers.BlockChainI;
 import com.riverssen.core.networking.PeerNetwork;
 import com.riverssen.core.security.PubKey;
 import com.riverssen.core.security.Wallet;
-import com.riverssen.core.tokens.UnsignedTransaction;
 import com.riverssen.utils.FileUtils;
 
 import java.io.File;
