@@ -13,9 +13,13 @@ import java.util.PriorityQueue;
 
 public class MerkleTree implements Serialisable, Encodeable
 {
+    /** the root element of the merkle tree **/
     private TreeElement root;
+    /** a flat representation of the merkle tree in a list of tokens **/
     private List<Token> list;
+    /** a flat representation of the merkle tree in a list of hash strings **/
     private List<String> hashList;
+    /** the size of the tree **/
     private int size;
 
     public MerkleTree(List<Token> tokenList)
@@ -43,11 +47,13 @@ public class MerkleTree implements Serialisable, Encodeable
         load(list);
     }
 
+    /** return a flat representation of the tree elements in a list of tokens **/
     public List<Token> flatten()
     {
         return list;
     }
 
+    /** return a flat representation of the tree elements in a list of hashes **/
     public List<String> flattenHashes()
     {
         return this.hashList;
@@ -85,6 +91,7 @@ public class MerkleTree implements Serialisable, Encodeable
     public MerkleTree()
     {
         list = new ArrayList<>();
+        hashList = new ArrayList<>();
     }
 
     public void loadFromHeader(List<String> list)
@@ -205,10 +212,10 @@ public class MerkleTree implements Serialisable, Encodeable
             }
         }
 
+        /** this shouldn't be used, instead a flat represenation of the tree should suffice **/
         @Override
         public void serialize(DataOutputStream stream) throws Exception
         {
-
         }
 
         @Override

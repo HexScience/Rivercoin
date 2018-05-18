@@ -39,7 +39,10 @@ public class BlockPool
                 continue;
             }
 
-            if()
+            if(chainSizes.get(peer).compareTo(pl) >= 0){
+                p=peer;
+                pl=chainSizes.get(peer);
+            }
         }
 
         return p;

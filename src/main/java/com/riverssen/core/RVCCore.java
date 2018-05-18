@@ -92,17 +92,17 @@ public class RVCCore
             }
         });
 
-        while(run)
-        {
-        }
-
         FullBlock block                 = new FullBlock(0, new BlockHeader());
 
-        BigInteger difficultyi = (Config.getConfig().TARGET_DIFFICULTY.toBigInteger()).divide(new BigInteger("1000000"));
+        BigInteger difficultyi = (Config.getConfig().TARGET_DIFFICULTY.toBigInteger()).divide(new BigInteger("1000"));
 
         block.mine(new Sha3(), difficultyi, wallet.getPublicKey().getPublicWalletAddress(), solutionPool);
 
         System.exit(0);
+
+        while(run)
+        {
+        }
 
         try
         {

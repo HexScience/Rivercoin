@@ -3,6 +3,7 @@ package com.riverssen.core.networking;
 import com.riverssen.core.Config;
 import com.riverssen.core.Logger;
 import com.riverssen.core.RVCCore;
+import com.riverssen.core.chain.BlockData;
 import com.riverssen.core.consensus.Solution;
 import com.riverssen.core.messages.ChainSize;
 import com.riverssen.core.messages.NewTransaction;
@@ -178,4 +179,7 @@ public class Peer
 
 
     }
+
+    /** this method is redundant, it should be removed or kept for pool mining **/
+    public void sendStartMineCommand(long l, long divisionOfLabour, BlockData blockData) {}
 }
