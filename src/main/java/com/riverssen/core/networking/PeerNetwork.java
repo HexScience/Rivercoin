@@ -173,9 +173,9 @@ public class PeerNetwork implements Listener
         for(Peer peer : peers) peer.receive();
     }
 
-    public List<String> getList()
+    public Set<String> getList()
     {
-        List<String> ips = new ArrayList<>();
+        Set<String> ips = new HashSet<>();
 
         try {
             File file = new File(Config.getConfig().BLOCKCHAIN_DIRECTORY + File.separator + "network.info");
@@ -198,12 +198,12 @@ public class PeerNetwork implements Listener
 
         String ipAddresses = "";
 
-        for(Peer peer : peers) ipAddresses += peer.toString() + "\n";
-        try {
+        for(String peer : this.ipAddresses) ipAddresses += peer + "\n";
 
+        try {
             File file = new File(Config.getConfig().BLOCKCHAIN_DIRECTORY + File.separator + "network.info");
 
-            FileWriter writer = new FileWriter(file, true);
+            FileWriter writer = new FileWriter(file);
 
             writer.write(ipAddresses);
 

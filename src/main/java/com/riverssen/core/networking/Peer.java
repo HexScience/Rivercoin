@@ -139,8 +139,6 @@ public class Peer
     {
         new RequestChain().send(stream, 0L);
         Long size = new RequestChain().receive(input);
-
-
     }
 
     /** this method is redundant, it should be removed or kept for pool mining **/
