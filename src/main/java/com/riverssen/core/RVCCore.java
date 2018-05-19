@@ -140,8 +140,8 @@ public class RVCCore
     private synchronized void alert()
     {
         long now = System.currentTimeMillis();
-        BigInteger balance = Wallet.readBalance(wallet.getPublicKey().getAddress().toString());
-        Logger.prt(Logger.COLOUR_BLUE, "wallet[" + wallet.getPublicKey().getAddress() + "] balance: " + new RiverCoin(balance).toRiverCoinString() + " lookup:" + (System.currentTimeMillis() - now) + "ms");
+//        BigInteger balance = Wallet.readBalance(wallet.getPublicKey().getAddress().toString());
+//        Logger.prt(Logger.COLOUR_BLUE, "wallet[" + wallet.getPublicKey().getAddress() + "] balance: " + new RiverCoin(balance).toRiverCoinString() + " lookup:" + (System.currentTimeMillis() - now) + "ms");
     }
 
     public synchronized static RVCCore get()

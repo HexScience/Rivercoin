@@ -26,6 +26,7 @@ import java.util.Arrays;
 public class Config
 {
     private static Config config;
+    private boolean PRUNE;
     public int PORT                           = 5110;
     public int MAX_MINING_THREADS             = 2;
     public String REWARD_PER_BLOCK_MINED      = "50.0";
@@ -42,6 +43,8 @@ public class Config
     public String BLOCKCHAIN_DIRECTORY_TEMP   = ".//structure//chain//";
     public String BLOCKCHAIN_TRX_DB_TEMP      = ".//structure//db_tx//";
     public String BLOCKCHAIN_WLT_DB_TEMP      = ".//structure//db_wd//";
+
+    public String BLOCK_CHAIN_DB              = "";
     public String WALLET_DIRECTORY            = ".//other//";
     public String WALLET_DIRECTORY_TEMP       = ".//other//";
     public String UNIQUE_PEER_LINK            = "http://";
@@ -215,6 +218,8 @@ public class Config
 
             String parse[] = config.split("\n");
 
+            String structure = "";
+
             for(String string : parse)
             {
                 if(string.startsWith("PORT:")) this.PORT = Integer.parseInt(string.substring(5));
@@ -222,7 +227,7 @@ public class Config
                 else if(string.startsWith("REWARD_PER_BLOCK:")) this.REWARD_PER_BLOCK_MINED = (string.substring("REWARD_PER_BLOCK:".length()));
                 else if(string.startsWith("TOKENS_PER_BLOCK:")) this.TOKENS_PER_BLOCK_TOMNE = Integer.parseInt(string.substring("TOKENS_PER_BLOCK:".length()));
                 else if(string.startsWith("ALERT_TIME:")) this.ALERT_TIME = Long.parseLong(string.substring("ALERT_TIME:".length()));
-
+                else if(string.startsWith("STRUCTURE_DIRECTORY")) structure = string.substring("STRUCTURE_DIRECTORY:".length()).replace(".", root);
                 else if(string.startsWith("BLOCKCHAIN_DIRECTORY:")) this.BLOCKCHAIN_DIRECTORY = string.substring("BLOCKCHAIN_DIRECTORY:".length()).replace(".", root);
                 else if(string.startsWith("BLOCKCHAIN_TRX_DB:")) this.BLOCKCHAIN_TRX_DB = string.substring("BLOCKCHAIN_TRX_DB:".length()).replace(".", root);
                 else if(string.startsWith("BLOCKCHAIN_WLT_DB:")) this.BLOCKCHAIN_WLT_DB = string.substring("BLOCKCHAIN_WLT_DB:".length()).replace(".", root);
@@ -230,12 +235,14 @@ public class Config
                 else if(string.startsWith("PEER_FINDER:")) this.UNIQUE_PEER_LINK = string.substring("PEER_FINDER:".length());
                 else if(string.startsWith("PUBLIC_KEY:")) this.PUBLIC_ADDRESS = string.substring("PUBLIC_KEY:".length());
                 else if(string.startsWith("DBKEY:")) this.PUBLIC_ADDRESS = string.substring("PUBLIC_KEY:".length());
+                else if(string.startsWith("BOOL_PRUNING")) this.PRUNE = Boolean.parseBoolean(string.substring("BOOL_PRUNING".length()));
             }
 
             this.BLOCKCHAIN_DIRECTORY += File.separator;
             this.BLOCKCHAIN_TRX_DB += File.separator;
             this.BLOCKCHAIN_WLT_DB += File.separator;
             this.WALLET_DIRECTORY += File.separator;
+            this.BLOCK_CHAIN_DB = structure + File.separator + "database";
 
             Logger.alert("blockchain: "   + BLOCKCHAIN_DIRECTORY);
             Logger.alert("wallet: "       + BLOCKCHAIN_WLT_DB);

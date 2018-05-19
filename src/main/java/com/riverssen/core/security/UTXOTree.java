@@ -12,11 +12,8 @@
 
 package com.riverssen.core.security;
 
-import com.riverssen.core.FullBlock;
-import com.riverssen.core.RVCCore;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.UnspentTransaction;
-import com.riverssen.core.chain.BlockHeader;
 
 import java.util.*;
 
