@@ -81,6 +81,26 @@ public class ByteUtil
         return concatenated;
     }
 
+    public static String[] concatenate(String[]...arrays)
+    {
+        int size = 0;
+        for(String[] array : arrays)
+            size += array.length;
+
+        String concatenated[] = new String[size];
+
+        int index = 0;
+
+        for(String[] array : arrays)
+        {
+            System.arraycopy(array, 0, concatenated, index, array.length);
+
+            index += array.length;
+        }
+
+        return concatenated;
+    }
+
     public static byte[] encodei(int serializable)
     {
         byte array[] = new byte[]{
