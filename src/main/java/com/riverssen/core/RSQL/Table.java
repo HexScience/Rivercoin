@@ -53,7 +53,7 @@ public class Table {
         return s;
     }
 
-    private Row[] find(String arg, String value)
+    public Row[] find(String arg, String value)
     {
         List<Row> ret = table.get(value).get(arg);
         if(ret == null) return new Row[] {null};
@@ -167,4 +167,24 @@ public class Table {
         Row row = new Row(this, values);
         return new Row[] {row};
     }
+
+    /** tests **/
+//    public static void main(String...args)
+//    {
+//        Table table = new Table("a", "b", "c", "d");
+//
+//        table.query("insert (hello good say yo)");
+//        table.query("insert (merkle good say yo)");
+//        table.query("insert (tree good say yo)");
+//        table.query("insert (hello good btc yo)");
+//        table.query("insert (boi good say yo)");
+//
+//        Logger.alert(table.toString());
+//
+//        Row[] r = table.query("select where 'c' = 'btc'");
+//
+//        if(r.length > 0)
+//            for(Row v : r)
+//                System.out.println(v.getValue());
+//    }
 }

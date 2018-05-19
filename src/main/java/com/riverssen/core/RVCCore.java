@@ -89,22 +89,7 @@ public class RVCCore
         blockChain         = new com.riverssen.core.BlockChain(transactionPool, blockPool, solutionPool, network, wallet.getPublicKey().getAddress());
 
 
-        Table table = new Table("a", "b", "c", "d");
 
-        table.query("insert (hello good say yo)");
-        table.query("insert (merkle good say yo)");
-        table.query("insert (tree good say yo)");
-        table.query("insert (hello good btc yo)");
-        table.query("insert (boi good say yo)");
-
-        Logger.alert(table.toString());
-
-        Row[] r = table.query("select where 'a' = 'hello'");
-
-        if(r.length > 0)
-        System.out.println(r[0].getValue());
-
-        System.exit(0);
 
 
         service.execute(blockChain);
