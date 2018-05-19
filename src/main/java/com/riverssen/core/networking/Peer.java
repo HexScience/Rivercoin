@@ -27,7 +27,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 public class Peer
@@ -50,7 +52,7 @@ public class Peer
     private static final int    msg_new_token    = 2;
     private static final int    msg_chain_size_r = 3;
 
-    public Peer(Socket socket, ExecutorService service) throws IOException
+    public Peer(Socket socket) throws IOException
     {
         this.socket = socket;
         this.stream = new DataOutputStream(socket.getOutputStream());
@@ -143,4 +145,11 @@ public class Peer
 
     /** this method is redundant, it should be removed or kept for pool mining **/
     public void sendStartMineCommand(long l, long divisionOfLabour, BlockData blockData) {}
+
+    /** Request a list of peers from this peer, this solidifies the decentralization of the project **/
+    /** meaning in the future, there will be no need for a central server listing ip addresses. **/
+    public Set<String> requestPeerList()
+    {
+        return new HashSet<>();
+    }
 }

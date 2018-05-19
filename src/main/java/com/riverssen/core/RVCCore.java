@@ -88,10 +88,7 @@ public class RVCCore
         TransactionPool transactionPool = new TransactionPool(network);
         blockChain         = new com.riverssen.core.BlockChain(transactionPool, blockPool, solutionPool, network, wallet.getPublicKey().getAddress());
 
-
-
-
-
+        network.connect(service);
         service.execute(blockChain);
         service.execute(()->{
             while (run)
