@@ -12,13 +12,31 @@
 
 package com.riverssen.core.compression;
 
+import com.riverssen.core.algorithms.Sha3;
+import com.riverssen.utils.Base58;
+
+import java.security.Security;
+
 public class CompressionUtil
 {
-    private static final byte   base58CommonBytes[]           = new byte    [58];
+    /** base58 compression yeilds a 0.75 efficiency IE: compress(base58(bytes(32))) = 33 bytes so an efficiency of 1.03125**/
+    /** while base16 yeilds 0.5 IE: compress(base16(bytes(32)) = 32 bytes so an efficiency of 1**/
+    /** base58 on a 32 byte array yeilds 44 bytes, instead of compressing down to 33 we could instead use the raw bytes **/
+    /** and base16 on a 32 byte array yeilds 64 bytes **/
+    private static final byte   base58CommonBytes[]           = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".getBytes();
     private static final float  base58CommonBytesFrequency[]  = new float   [58];
+    private static final String base58Bits[]                  = {
+            "000000"
+    };
 
     public byte[] base58Compress(@Base58Hash byte hash[])
     {
         return hash;
+    }
+
+    public static void main(String...args)
+    {
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        System.out.println(Base58.encode(new Sha3().encode(new byte[3342])).length());
     }
 }
