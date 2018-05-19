@@ -15,10 +15,12 @@ package com.riverssen.core.headers;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.transactions.UTXO;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Collection;
 
 public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSONFormattable
 {
@@ -36,8 +38,12 @@ public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSON
     RiverCoin         getAmount();
     int               hashCode();
 
-    default int compareTo(TransactionI token)
+    default int       compareTo(TransactionI token)
     {
         return getTimeStamp() > token.getTimeStamp() ? 1 : -1;
     }
+
+    Collection<? extends UTXO> getTXIDs();
+
+    boolean           matches(Class<?> t);
 }

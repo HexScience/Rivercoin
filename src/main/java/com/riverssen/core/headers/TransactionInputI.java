@@ -10,26 +10,11 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core;
+package com.riverssen.core.headers;
 
-import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.headers.UTXOTraverser;
-import java.math.BigInteger;
-import java.util.List;
+import com.riverssen.core.transactions.UTXO;
 
-public class BalanceTraverser implements UTXOTraverser<RiverCoin>
+public interface TransactionInputI<T extends Encodeable & JSONFormattable>
 {
-    private BigInteger balance;
-
-    @Override
-    public void traverse(List<TransactionI> tokenList)
-    {
-        for(TransactionI token : tokenList);
-    }
-
-    @Override
-    public RiverCoin get()
-    {
-        return new RiverCoin(balance);
-    }
+    UTXO<T> getUTXO();
 }

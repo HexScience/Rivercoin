@@ -13,7 +13,7 @@
 package com.riverssen.core;
 
 import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.networking.PeerNetwork;
+import com.riverssen.core.networking.NetworkManager;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,9 +24,9 @@ public class TransactionPool
 {
     private PriorityQueue<TransactionI> pool;
     private Set<TransactionI>           hset;
-    private PeerNetwork          pnet;
+    private NetworkManager pnet;
 
-    public TransactionPool(PeerNetwork network)
+    public TransactionPool(NetworkManager network)
     {
         pool = new PriorityQueue<>();
         hset = Collections.synchronizedSet(new HashSet<>());

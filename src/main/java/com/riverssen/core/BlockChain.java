@@ -15,7 +15,7 @@ package com.riverssen.core;
 import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.consensus.ConsensusAlgorithm;
 import com.riverssen.core.headers.BlockChainI;
-import com.riverssen.core.networking.PeerNetwork;
+import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.LatestBlockInfo;
 import com.riverssen.utils.Tuple;
@@ -29,11 +29,11 @@ public class BlockChain implements BlockChainI
     private TransactionPool transactionPool;
     private BlockPool       blockPool;
     private SolutionPool    solutionPool;
-    private PeerNetwork     network;
+    private NetworkManager network;
     private long            lastvalidated;
     private PublicAddress   miner;
 
-    public BlockChain(TransactionPool tPool, BlockPool bPool, SolutionPool solutionPool, PeerNetwork network, PublicAddress miner)
+    public BlockChain(TransactionPool tPool, BlockPool bPool, SolutionPool solutionPool, NetworkManager network, PublicAddress miner)
     {
         this.transactionPool = tPool;
         this.blockPool       = bPool;

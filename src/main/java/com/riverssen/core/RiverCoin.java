@@ -12,12 +12,14 @@
 
 package com.riverssen.core;
 
+import com.riverssen.core.headers.Encodeable;
+import com.riverssen.core.headers.JSONFormattable;
+
 import java.io.DataInputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class RiverCoin
-{
+public class RiverCoin implements Encodeable, JSONFormattable {
     //9.223.372.0,36.854.775.807
 
     public  static final long    NANO_COIN_TO_RVC    = 100_000_000_000L;
@@ -80,6 +82,7 @@ public class RiverCoin
         return nanocoin;
     }
 
+    @Override
     public byte[] getBytes()
     {
         byte bytes[] = new byte[MAX_BYTES];
@@ -111,5 +114,10 @@ public class RiverCoin
         stream.read(array);
 
         return new RiverCoin(array);
+    }
+
+    @Override
+    public String toJSON() {
+        return "{"+toRiverCoinString()+"}";
     }
 }

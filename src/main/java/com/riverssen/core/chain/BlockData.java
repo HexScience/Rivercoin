@@ -15,6 +15,7 @@ package com.riverssen.core.chain;
 import com.riverssen.core.Config;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.transactions.UTXO;
 import com.riverssen.utils.Serializer;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.utils.MerkleTree;
@@ -134,11 +135,11 @@ public class BlockData implements Encodeable
         dataSize += token.toJSON().getBytes().length;
     }
 
-    public void FetchUTXOs(PublicAddress address, List<com.riverssen.core.headers.UTXO> tokens)
+    public void FetchUTXOs(PublicAddress address, List<UTXO> tokens)
     {
         for(TransactionI token : merkleTree.flatten())
         {
-
+            tokens.addAll(token.getTXIDs());
         }
     }
 }

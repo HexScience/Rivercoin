@@ -16,6 +16,7 @@ import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PrivKey;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.transactions.UTXO;
 import com.riverssen.utils.Base58;
 import com.riverssen.utils.ByteUtil;
 import com.riverssen.core.headers.Encodeable;
@@ -24,6 +25,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Collection;
 
 public class Transaction implements Encodeable, TransactionI
 {
@@ -123,6 +125,16 @@ public class Transaction implements Encodeable, TransactionI
     public RiverCoin getAmount()
     {
         return amount;
+    }
+
+    @Override
+    public Collection<? extends UTXO> getTXIDs() {
+        return null;
+    }
+
+    @Override
+    public boolean matches(Class<?> t) {
+        return false;
     }
 
     public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, RiverCoin amount, String comment, int nonce, long timestamp)

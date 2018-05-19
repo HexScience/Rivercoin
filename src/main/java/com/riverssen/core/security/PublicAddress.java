@@ -12,9 +12,7 @@
 
 package com.riverssen.core.security;
 
-import com.riverssen.core.BalanceTraverser;
 import com.riverssen.core.RiverCoin;
-import com.riverssen.core.headers.UTXOTraverser;
 import com.riverssen.utils.Base58;
 import com.riverssen.core.headers.Encodeable;
 

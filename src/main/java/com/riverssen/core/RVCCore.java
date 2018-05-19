@@ -12,14 +12,13 @@
 
 package com.riverssen.core;
 
-import com.riverssen.core.RSQL.Row;
-import com.riverssen.core.RSQL.Table;
 import com.riverssen.core.algorithms.Sha3;
 import com.riverssen.core.chain.*;
 import com.riverssen.core.headers.BlockChainI;
-import com.riverssen.core.networking.PeerNetwork;
+import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.security.PubKey;
 import com.riverssen.core.security.Wallet;
+import com.riverssen.core.transactions.UTXO;
 import com.riverssen.utils.FileUtils;
 
 import java.io.File;
@@ -32,7 +31,7 @@ import java.util.concurrent.Executors;
 public class RVCCore
 {
     public static short versionBytes = 1;
-    private final PeerNetwork network;
+    private final NetworkManager network;
     private Wallet wallet;
     public static final String version = "0.0.2a";
     private static boolean GPUMining;
@@ -82,7 +81,7 @@ public class RVCCore
         /** Generate a wallet from the Public Address of the miner found in the config **/
         wallet = new Wallet(PubKey.fromPublicWalletAddress(Config.getConfig().PUBLIC_ADDRESS));
 
-        network            = new PeerNetwork();
+        network            = new NetworkManager();
         blockPool          = new BlockPool(network);
         solutionPool       = new SolutionPool(network);
         TransactionPool transactionPool = new TransactionPool(network);
@@ -90,6 +89,10 @@ public class RVCCore
 
         network.connect(service);
         service.execute(blockChain);
+
+        UTXO<RiverCoin> utxo = new UTXO(wallet.getPublicKey().getAddress(), new RiverCoin("100.0"), new Sha3().encode("d23d".getBytes()));
+
+        System.out.println(utxo.toJSON());
         service.execute(()->{
             while (run)
             {

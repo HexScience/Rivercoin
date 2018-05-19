@@ -10,17 +10,8 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.headers;
+package com.riverssen.core.transactions;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-
-public interface UTXO<T>
+public class CoinUTXO
 {
-    void store(DataOutputStream stream);
-    void load (DataInputStream stream);
-
-    T    get();
-
-    String toString();
 }

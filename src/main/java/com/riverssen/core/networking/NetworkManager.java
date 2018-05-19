@@ -16,7 +16,7 @@ import java.net.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 
-public class PeerNetwork implements Listener
+public class NetworkManager implements Listener
 {
     private List<Peer>      peers;
 
@@ -26,12 +26,12 @@ public class PeerNetwork implements Listener
     private TransactionPool transactionPool;
     private Set<String>     ipAddresses;
 
-    public PeerNetwork()
+    public NetworkManager()
     {
         this(8);
     }
 
-    public PeerNetwork(int size)
+    public NetworkManager(int size)
     {
         peers = Collections.synchronizedList(new ArrayList<>());
     }

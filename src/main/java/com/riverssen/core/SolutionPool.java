@@ -13,18 +13,17 @@
 package com.riverssen.core;
 
 import com.riverssen.core.consensus.Solution;
-import com.riverssen.core.networking.PeerNetwork;
+import com.riverssen.core.networking.NetworkManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 public class SolutionPool
 {
-    private PeerNetwork     network;
+    private NetworkManager network;
     private List<FullBlock> pool;
 
-    public SolutionPool(PeerNetwork network)
+    public SolutionPool(NetworkManager network)
     {
         this.network = network;
         this.network.addPool(this);

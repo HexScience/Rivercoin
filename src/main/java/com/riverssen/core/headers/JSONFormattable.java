@@ -25,4 +25,41 @@ public interface JSONFormattable
     }
 
     String toJSON();
+
+    class JSON{
+        static final String quote     = "\"";
+        static final String colon     = ":";
+        StringBuilder json;
+        boolean       added;
+
+        public JSON(String name)
+        {
+            this.json = new StringBuilder().append(quote).append(name).append(quote).append(colon);
+        }
+
+        public JSON()
+        {
+            this.json = new StringBuilder().append("{");
+        }
+
+        public JSON add(String name, String value)
+        {
+            this.json.append(added ? ", " : "").append(quote).append(name).append(quote).append(colon).append(quote).append(value).append(quote);
+            this.added = true;
+
+            return this;
+        }
+        public JSON add(String name, JSON json)
+        {
+            this.json.append(added ? ", " : "").append(quote).append(name).append(quote).append(colon).append(quote).append(json.json.toString()).append(quote);
+            this.added = true;
+
+            return this;
+        }
+
+        @Override
+        public String toString() {
+            return json.toString() + "}";
+        }
+    }
 }

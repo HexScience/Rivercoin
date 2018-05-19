@@ -1,9 +1,21 @@
 package com.riverssen.core.headers;
 
+import com.riverssen.core.transactions.UTXO;
+
 import java.util.List;
 
-public interface UTXOTraverser<T>
+public class UTXOTraverser<T extends Encodeable & JSONFormattable>
 {
-    void traverse(List<TransactionI> tokenList);
-    T    get();
+    private T t;
+
+    void traverse(List<TransactionI> tokenList, List<UTXO<T>> out)
+    {
+//        for(TransactionI transactionI : tokenList)
+//            if(transactionI.matches());
+    }
+
+    T    get()
+    {
+        return t;
+    }
 }

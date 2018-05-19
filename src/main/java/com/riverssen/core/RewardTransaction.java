@@ -15,10 +15,12 @@ package com.riverssen.core;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.transactions.UTXO;
 import com.riverssen.utils.ByteUtil;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Collection;
 
 public class RewardTransaction implements TransactionI
 {
@@ -69,6 +71,16 @@ public class RewardTransaction implements TransactionI
     @Override
     public RiverCoin getAmount() {
         return amount;
+    }
+
+    @Override
+    public Collection<? extends UTXO> getTXIDs() {
+        return null;
+    }
+
+    @Override
+    public boolean matches(Class<?> t) {
+        return false;
     }
 
     @Override

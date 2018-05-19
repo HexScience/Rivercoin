@@ -14,7 +14,7 @@ package com.riverssen.core;
 
 import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.networking.Peer;
-import com.riverssen.core.networking.PeerNetwork;
+import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.system.LatestBlockInfo;
 
 import java.util.*;
@@ -23,11 +23,11 @@ public class BlockPool
 {
     private final HashMap<Peer, Long> chainSizes = new HashMap<>();
     private boolean             loading;
-    private PeerNetwork         network;
+    private NetworkManager network;
     private List<FullBlock>     blocks;
     private LatestBlockInfo     lbi;
 
-    BlockPool(PeerNetwork network) throws Exception
+    BlockPool(NetworkManager network) throws Exception
     {
         this.network    = network;
         blocks          = Collections.synchronizedList(new ArrayList<>());
