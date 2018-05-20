@@ -15,9 +15,7 @@ package com.riverssen.core;
 import com.riverssen.core.chain.BlockData;
 import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.consensus.ConsensusAlgorithm;
-import com.riverssen.core.headers.Encodeable;
-import com.riverssen.core.headers.HashAlgorithm;
-import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.headers.*;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.utils.*;
 
@@ -28,7 +26,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.zip.DeflaterOutputStream;
 
-public class FullBlock implements Encodeable
+public class FullBlock implements Encodeable, JSONFormattable, Exportable
 {
     public static int err_not_valid = 1;
     public static int err_mrkl = 2;
@@ -225,5 +223,30 @@ public class FullBlock implements Encodeable
 
     public synchronized FullBlock getParent() {
         return BlockHeader.FullBlock(getBlockID()-1);
+    }
+
+    @Override
+    public byte[] header() {
+        return header.getBytes();
+    }
+
+    @Override
+    public byte[] content() {
+        return body.getBytes();
+    }
+
+    @Override
+    public void export(SmartDataTransferer smdt) {
+
+    }
+
+    @Override
+    public void export(DataOutputStream dost) {
+
+    }
+
+    @Override
+    public String toJSON() {
+        return null;
     }
 }

@@ -25,6 +25,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.Security;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -81,16 +83,26 @@ public class RVCCore
         /** Generate a wallet from the Public Address of the miner found in the config **/
         wallet = new Wallet(PubKey.fromPublicWalletAddress(Config.getConfig().PUBLIC_ADDRESS));
 
-        network            = new NetworkManager();
-        blockPool          = new BlockPool(network);
-        solutionPool       = new SolutionPool(network);
+        network                         = new NetworkManager();
+        blockPool                       = new BlockPool(network);
+        solutionPool                    = new SolutionPool(network);
         TransactionPool transactionPool = new TransactionPool(network);
-        blockChain         = new com.riverssen.core.BlockChain(transactionPool, blockPool, solutionPool, network, wallet.getPublicKey().getAddress());
+        blockChain                      = new com.riverssen.core.BlockChain(transactionPool, blockPool, solutionPool, network, wallet.getPublicKey().getAddress());
 
         network.connect(service);
         service.execute(blockChain);
 
         UTXO<RiverCoin> utxo = new UTXO(wallet.getPublicKey().getAddress(), new RiverCoin("100.0"), new Sha3().encode("d23d".getBytes()));
+        UTXO<FullBlock> butxo = new UTXO(wallet.getPublicKey().getAddress(), BlockHeader.FullBlock(-1), new Sha3().encode("d23d".getBytes()));
+        List<UTXO>      utxos = new ArrayList<>();
+
+        utxos.add(utxo);
+        utxos.add(butxo);
+
+        for(UTXO<RiverCoin> u : utxos)
+            System.out.println(u.toString());
+
+        System.exit(0);
 
         System.out.println(utxo.toJSON());
         service.execute(()->{

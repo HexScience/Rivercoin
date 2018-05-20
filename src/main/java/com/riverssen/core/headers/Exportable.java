@@ -12,9 +12,15 @@
 
 package com.riverssen.core.headers;
 
-import com.riverssen.core.transactions.UTXO;
+import com.riverssen.utils.SmartDataTransferer;
 
-public interface TransactionInputI<T extends Encodeable & JSONFormattable & Exportable>
+import java.io.DataOutputStream;
+
+public interface Exportable
 {
-    UTXO<T> getUTXO();
+    public byte[] header();
+    public byte[] content();
+
+    public void export(SmartDataTransferer smdt);
+    public void export(DataOutputStream    dost);
 }

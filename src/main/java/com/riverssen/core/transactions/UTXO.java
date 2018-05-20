@@ -12,16 +12,19 @@
 
 package com.riverssen.core.transactions;
 
+import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.Encodeable;
+import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.JSONFormattable;
+import com.riverssen.utils.SmartDataTransferer;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.utils.Base58;
 import com.riverssen.utils.ByteUtil;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-public class UTXO<T extends Encodeable & JSONFormattable> implements Encodeable, JSONFormattable
+/** UTXOs of generic types are important for scalability of rivercoin **/
+public class UTXO<T extends Encodeable & JSONFormattable & Exportable> implements Encodeable, JSONFormattable, Exportable
 {
     private final PublicAddress owner;
     private final T             value;
@@ -63,5 +66,32 @@ public class UTXO<T extends Encodeable & JSONFormattable> implements Encodeable,
     @Override
     public String toJSON() {
         return new JSON().add("owner", getOwner().toString()).add("value", getValue().toString()).add("txid", Base58.encode(getParentTXID())).toString();
+    }
+
+    @Override
+    public byte[] header()
+    {
+        return ByteUtil.concatenate(RiverCoin.HEADER_BYTES);
+    }
+
+    @Override
+    public byte[] content()
+    {
+        return ByteUtil.concatenate(getOwner().getBytes(), getValue().getBytes(), getParentTXID());
+    }
+
+    @Override
+    public void export(SmartDataTransferer smdt) {
+    }
+
+    @Override
+    public void export(DataOutputStream dost) {
+        try {
+            dost.write(header());
+            dost.write(content());
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

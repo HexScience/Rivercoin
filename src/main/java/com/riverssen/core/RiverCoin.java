@@ -13,16 +13,22 @@
 package com.riverssen.core;
 
 import com.riverssen.core.headers.Encodeable;
+import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.JSONFormattable;
+import com.riverssen.utils.ByteUtil;
+import com.riverssen.utils.SmartDataTransferer;
 
+import java.awt.*;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class RiverCoin implements Encodeable, JSONFormattable {
+public class RiverCoin implements Encodeable, JSONFormattable, Exportable {
     //9.223.372.0,36.854.775.807
 
     public  static final long    NANO_COIN_TO_RVC    = 100_000_000_000L;
+    public static final byte[]   HEADER_BYTES        = new byte[] {0,0,0,1};
     private static final String  NANO_COIN_ZEROS     = "00000000000";
     public  static final long    MAX_RIVERCOINS      = 4_000_000_000_000_000_000L;
 //    public  static final long    MAX_RIVERCOINS      = 18446744073709551615L;
@@ -119,5 +125,25 @@ public class RiverCoin implements Encodeable, JSONFormattable {
     @Override
     public String toJSON() {
         return "{"+toRiverCoinString()+"}";
+    }
+
+    @Override
+    public byte[] header() {
+        return HEADER_BYTES;
+    }
+
+    @Override
+    public byte[] content() {
+        return nanocoin.toByteArray();
+    }
+
+    @Override
+    public void export(SmartDataTransferer smdt) {
+
+    }
+
+    @Override
+    public void export(DataOutputStream dost) {
+
     }
 }
