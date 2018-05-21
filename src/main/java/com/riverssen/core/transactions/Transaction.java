@@ -38,16 +38,17 @@ public class Transaction
 
     public boolean valid()
     {
-        if(sender.toPublicKey() == null) return false;
+        if (sender.toPublicKey() == null) return false;
 
-        if(!sender.toPublicKey().isValid()) return false;
+        if (!sender.toPublicKey().isValid()) return false;
 
 //        if(amount.toBigInteger().compareTo(BigInteger.ZERO) <= 0) return false;
 
         return sender.toPublicKey().verifySignature(generateSignatureData(sender, receiver, goods, data, timestamp), Base58.encode(signature));
+    }
 
 
-    public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, List<TransactionInputI> goods, String comment, int nonce, long timestamp)
+    public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, TransactionOutput goods, String comment, int nonce, long timestamp)
     {
         return ByteUtil.concatenate(sender.getBytes(), receiver.getBytes(), amount.getBytes(), comment.getBytes(), ByteUtil.encodei(nonce), ByteUtil.encode(timestamp));
     }
