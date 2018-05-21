@@ -23,7 +23,7 @@ import com.riverssen.utils.ByteUtil;
 
 import java.io.DataOutputStream;
 
-/** UTXOs of generic types are important for scalability of rivercoin **/
+/** UTXOs of generic types are important for the scalability of rivercoin **/
 public class UTXO<T extends Encodeable & JSONFormattable & Exportable> implements Encodeable, JSONFormattable, Exportable
 {
     private final PublicAddress owner;

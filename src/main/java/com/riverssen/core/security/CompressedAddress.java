@@ -12,16 +12,36 @@
 
 package com.riverssen.core.security;
 
+import com.riverssen.core.headers.Exportable;
 import com.riverssen.utils.Base58;
 import com.riverssen.core.headers.Encodeable;
+import com.riverssen.utils.SmartDataTransferer;
 
-public class CompressedAddress implements Encodeable
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+
+public class CompressedAddress implements Encodeable, Exportable
 {
     private String address;
 
     public CompressedAddress(String address)
     {
         this.address = address;
+    }
+
+    public CompressedAddress(DataInputStream stream)
+    {
+        try {
+            int size = stream.read();
+            byte array[] = new byte[size];
+
+            stream.read(array);
+            address = Base58.encode(array);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -42,5 +62,31 @@ public class CompressedAddress implements Encodeable
     public byte[] getBytes()
     {
         return Base58.decode(address);
+    }
+
+    @Override
+    public byte[] header() {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] content() {
+        return new byte[0];
+    }
+
+    @Override
+    public void export(SmartDataTransferer smdt) {
+
+    }
+
+    @Override
+    public void export(DataOutputStream dost) {
+        try {
+            byte bytes[] = Base58.decode(address);
+            dost.write(bytes.length);
+            dost.write(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

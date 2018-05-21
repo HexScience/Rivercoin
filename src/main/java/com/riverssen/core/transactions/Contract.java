@@ -12,35 +12,51 @@
 
 package com.riverssen.core.transactions;
 
-public class Contract
+import com.riverssen.core.Config;
+import com.riverssen.core.RiverCoin;
+import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.security.CompressedAddress;
+import com.riverssen.core.security.PublicAddress;
+import com.riverssen.utils.SmartDataTransferer;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.math.BigInteger;
+import java.util.List;
+
+public class Contract implements TransactionI
 {
     static final short opcode = -1,
     /** push object/var to stack **/
-            push = 0,
+            push    = 0,
     /** pop from stack **/
-            pop  = 1,
+            pop     = 1,
     /** var: long **/
-            i64  = 1,
+            i64     = 2,
     /** var: double **/
-            f64  = 1,
+            f64     = 2,
     /** var: int256 **/
-            i256 = 1,
+            i256    = 3,
     /** var: double64+ **/
-            bgf = 1,
+            bgf     = 4,
 
-            print  = 1,
-            send  = 1,
-            get  = 1,
-            add  = 1,
-            sub  = 1,
-            mul  = 1,
-            div  = 1,
-            mod  = 1,
+            print   = 5,
+            send    = 6,
+            get     = 7,
+            add     = 8,
+            sub     = 9,
+            mul     = 10,
+            div     = 11,
+            mod     = 12,
 
-            thrw = 255;
-            ;
+            thrw    = 255;
 
     private byte bytecode[];
+    private int  computationalCost;
+
+    public Contract(DataInputStream stream)
+    {
+    }
 
     public Contract(byte bytecode[])
     {
@@ -55,5 +71,80 @@ public class Contract
     private static byte[] byteCode()
     {
         return new byte[0];
+    }
+
+    @Override
+    public boolean valid() {
+        return false;
+    }
+
+    @Override
+    public long getTimeStamp() {
+        return 0;
+    }
+
+    @Override
+    public CompressedAddress getSender() {
+        return null;
+    }
+
+    @Override
+    public PublicAddress getReceiver() {
+        return null;
+    }
+
+    @Override
+    public TXIList getTXIDs() {
+        return null;
+    }
+
+    @Override
+    public List<TransactionOutput> getOutputs() {
+        return null;
+    }
+
+    @Override
+    public List<TransactionOutput> getOutputs(PublicAddress miner) {
+        return null;
+    }
+
+    @Override
+    public RiverCoin cost() {
+        return new RiverCoin(Config.getCost(computationalCost));
+    }
+
+    @Override
+    public BigInteger getInputAmount() {
+        return null;
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] header() {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] content() {
+        return new byte[0];
+    }
+
+    @Override
+    public void export(SmartDataTransferer smdt) {
+
+    }
+
+    @Override
+    public void export(DataOutputStream dost) {
+
+    }
+
+    @Override
+    public String toJSON() {
+        return null;
     }
 }

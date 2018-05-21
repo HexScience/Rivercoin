@@ -15,10 +15,11 @@ package com.riverssen.core.headers;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
-import com.riverssen.core.transactions.TXIList;
-import com.riverssen.core.transactions.TransactionOutput;
+import com.riverssen.core.transactions.*;
 
 import java.io.DataInputStream;
+import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 
 public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSONFormattable, Exportable
@@ -34,10 +35,26 @@ public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSON
     }
     TXIList                         getTXIDs();
     List<TransactionOutput>         getOutputs();
+    List<TransactionOutput>         getOutputs(PublicAddress miner);
     RiverCoin                       cost();
 
+    BigInteger                      getInputAmount();
+    public static final int TRANSACTION = 0, REWARD = 1, CONTRACT = 2;
     static TransactionI             read(DataInputStream stream)
     {
+        try {
+            int type = stream.read();
+
+            if(type == TRANSACTION) return new Transaction(stream);
+            else if(type == REWARD) return new RewardTransaction(stream);
+            else if(type == CONTRACT) return new Contract(stream);
+
+            else throw new Exception("corrupted transaction data");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

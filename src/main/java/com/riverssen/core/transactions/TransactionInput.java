@@ -33,7 +33,7 @@ public class TransactionInput/**<T extends Encodeable & JSONFormattable & Export
 //        return value;
 //    }
 
-    public <T> TransactionOutput getUTXO()
+    public TransactionOutput getUTXO()
     {
         return UTXOManager.get(transactionOutputID);
     }

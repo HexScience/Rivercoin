@@ -50,4 +50,14 @@ public class PublicAddress implements Encodeable
     {
         return UTXOTree.traverse(this);
     }
+
+    public boolean equals(PublicAddress address)
+    {
+        return address.address.equals(this.address);
+    }
+
+    public boolean equals(CompressedAddress address)
+    {
+        return address.toPublicKey().getAddress().address.equals(this.address);
+    }
 }

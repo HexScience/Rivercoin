@@ -21,14 +21,25 @@ import com.riverssen.core.security.PublicAddress;
 import com.riverssen.utils.ByteUtil;
 import com.riverssen.utils.SmartDataTransferer;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RewardTransaction implements TransactionI
 {
     private PublicAddress       receiver;
     private long                time;
     private TXIList             txids;
+
+    public RewardTransaction(DataInputStream stream) throws IOException, Exception
+    {
+        receiver = new PublicAddress(ByteUtil.read(stream, 20));
+        time     = stream.readLong();
+        txids    = new TXIList(stream);
+    }
 
     public RewardTransaction(PublicAddress receiver, FullBlock block, TXIList feeInputs)
     {
@@ -37,7 +48,7 @@ public class RewardTransaction implements TransactionI
         this.txids    = new TXIList();
 
         this.txids.addAll(feeInputs);
-        this.txids.add(new TransactionInput(new RiverCoin(Config.getReward())));
+        this.txids.add(new TransactionInput(new TransactionOutput(receiver, new RiverCoin(Config.getReward()), block.getHeader().getMerkleRoot())));
     }
 
     @Override
@@ -66,9 +77,34 @@ public class RewardTransaction implements TransactionI
         return txids;
     }
 
+    @Deprecated
+    public List<TransactionOutput> getOutputs()
+    {
+        return getOutputs(null);
+    }
+
+    public List<TransactionOutput> getOutputs(PublicAddress miner)
+    {
+        List<TransactionOutput> utxos = new ArrayList<>();
+
+        utxos.add(new TransactionOutput(receiver, new RiverCoin(getInputAmount()), encode(ByteUtil.defaultEncoder())));
+
+        return utxos;
+    }
+
     @Override
-    public boolean matches(short type) {
-        return false;
+    public RiverCoin cost() {
+        return new RiverCoin("0");
+    }
+
+    @Override
+    public BigInteger getInputAmount() {
+        BigInteger amount = BigInteger.ZERO;
+
+        for(TransactionInput txi : txids)
+            amount = amount.add(((txi.getUTXO()).getValue().toBigInteger()));
+
+        return amount;
     }
 
     @Override
@@ -100,6 +136,15 @@ public class RewardTransaction implements TransactionI
     }
 
     @Override
-    public void export(DataOutputStream dost) {
+    public void export(DataOutputStream dost)
+    {
+        try{
+            getSender().export(dost);
+            dost.writeLong(time);
+            txids.export(dost);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

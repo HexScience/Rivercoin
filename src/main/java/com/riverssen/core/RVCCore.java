@@ -19,10 +19,12 @@ import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.security.PubKey;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.transactions.UTXO;
+import com.riverssen.core.transactions.UTXOManager;
 import com.riverssen.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.math.BigInteger;
 import java.security.Security;
 import java.util.ArrayList;
@@ -88,6 +90,9 @@ public class RVCCore
         solutionPool                    = new SolutionPool(network);
         TransactionPool transactionPool = new TransactionPool(network);
         blockChain                      = new com.riverssen.core.BlockChain(transactionPool, blockPool, solutionPool, network, wallet.getPublicKey().getAddress());
+
+        /** run utxo manager on the main thread **/
+        UTXOManager.loadUTXOs();
 
         network.connect(service);
         service.execute(blockChain);

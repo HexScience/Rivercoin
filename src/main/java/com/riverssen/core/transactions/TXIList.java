@@ -12,27 +12,34 @@
 
 package com.riverssen.core.transactions;
 
-import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
-import com.riverssen.core.headers.TransactionInputI;
 import com.riverssen.utils.ByteUtil;
 import com.riverssen.utils.SmartDataTransferer;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
 public class TXIList extends ArrayList<TransactionInput> implements Encodeable, Exportable
 {
+    public TXIList()
+    {
+    }
+
+    public TXIList(DataInputStream stream) {
+
+    }
     /** read all transaction inputs and return a rivercoin value **/
     /** this only works with Transactions & Rewards and not contracts **/
     BigInteger getInputAmount()
     {
         BigInteger amount = BigInteger.ZERO;
 
-        for(TransactionInputI<RiverCoin> txi : this)
-            amount = amount.add(txi.get().toBigInteger());
+        for(TransactionInput txi : this)
+            amount = amount.add(txi.getUTXO().getValue().toBigInteger());
 
         return amount;
     }
@@ -70,8 +77,12 @@ public class TXIList extends ArrayList<TransactionInput> implements Encodeable, 
     }
 
     @Override
-    public void export(DataOutputStream dost) {
-        throw new RuntimeException("TransactionInputList: unexportable.");
+    public void export(DataOutputStream dost) throws IOException {
+        dost.writeInt(size());
+        for(TransactionInput txi : this)
+            txi.export(dost);
+
+//        throw new RuntimeException("TransactionInputList: unexportable.");
     }
 
     public interface TraverserI<T>

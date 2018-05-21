@@ -16,6 +16,7 @@ import com.riverssen.utils.ByteUtil;
 import com.riverssen.utils.SmartDataTransferer;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 public interface Exportable
 {
@@ -27,5 +28,5 @@ public interface Exportable
     }
 
     public void export(SmartDataTransferer smdt);
-    public void export(DataOutputStream    dost);
+    public void export(DataOutputStream    dost) throws IOException;
 }

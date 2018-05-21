@@ -23,6 +23,6 @@ contract Email is Direct
         
         stayAlive(false)
 
-    onSendFail()
+    onSendFail():
         stayAlive(true)
 }

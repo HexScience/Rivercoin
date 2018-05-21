@@ -12,6 +12,7 @@
 
 package com.riverssen.core.transactions;
 
+import com.riverssen.core.RiverCoin;
 import com.riverssen.core.algorithms.Sha3;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
@@ -22,20 +23,20 @@ import com.riverssen.utils.*;
 import java.io.DataOutputStream;
 
 /** Instances of this class will be created during runtime using the Transaction::getOutputs(Transaction*); **/
-public class TransactionOutput<T extends Encodeable & JSONFormattable & Exportable> implements Encodeable, JSONFormattable, Exportable
+public class TransactionOutput/**<T extends Encodeable & JSONFormattable & Exportable>**/ implements Encodeable, JSONFormattable, Exportable
 {
     private final PublicAddress owner;
-    private final T             value;
+    private final RiverCoin     value;
     private final byte          ptxid[];
     private final byte          txoid[];
 
-    public TransactionOutput(PublicAddress receiver, T value, byte parentTXID[])
+    public TransactionOutput(PublicAddress receiver, RiverCoin value, byte parentTXID[])
     {
         this.owner = receiver;
         this.value = value;
         this.ptxid = parentTXID;
         /** generate a custom hash id for this particular transactionoutput **/
-        this.txoid = new Sha3().encode(ByteUtil.concatenate(receiver.getBytes(), value.getBytes(), parentTXID));
+        this.txoid = ByteUtil.defaultEncoder().encode(ByteUtil.concatenate(receiver.getBytes(), value.getBytes(), parentTXID));
     }
 
     /** The parent transaction ID **/
@@ -48,7 +49,7 @@ public class TransactionOutput<T extends Encodeable & JSONFormattable & Exportab
         return txoid;
     }
     /** The value of the UTXO, using UTXO<Rivercoin> will return rvc balances **/
-    public T getValue()
+    public RiverCoin getValue()
     {
         return value;
     }
@@ -64,12 +65,14 @@ public class TransactionOutput<T extends Encodeable & JSONFormattable & Exportab
     }
 
     @Override
-    public byte[] getBytes() {
+    public byte[] getBytes()
+    {
         return ByteUtil.concatenate(getOwner().getBytes(), getValue().getBytes(), getParentTXID());
     }
 
     @Override
-    public String toJSON() {
+    public String toJSON()
+    {
         return new JSONFormattable.JSON(encode58(new Sha3())).add("owner", getOwner().toString()).add("value", getValue().toString()).add("txid", Base58.encode(getParentTXID())).toString();
     }
 
@@ -92,12 +95,13 @@ public class TransactionOutput<T extends Encodeable & JSONFormattable & Exportab
 
     @Override
     public void export(DataOutputStream dost) {
-        try {
-            dost.write(header());
-            dost.write(content());
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        throw new RuntimeException("TransactionOutput: should not be written to stream.");
+//        try {
+//            dost.write(header());
+//            dost.write(content());
+//        } catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
     }
 }
