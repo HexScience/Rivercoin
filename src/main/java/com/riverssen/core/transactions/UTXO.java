@@ -12,7 +12,7 @@
 
 package com.riverssen.core.transactions;
 
-import com.riverssen.core.RiverCoin;
+import com.riverssen.core.algorithms.Sha3;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.JSONFormattable;
@@ -65,13 +65,13 @@ public class UTXO<T extends Encodeable & JSONFormattable & Exportable> implement
 
     @Override
     public String toJSON() {
-        return new JSON().add("owner", getOwner().toString()).add("value", getValue().toString()).add("txid", Base58.encode(getParentTXID())).toString();
+        return new JSON(encode58(new Sha3())).add("owner", getOwner().toString()).add("value", getValue().toString()).add("txid", Base58.encode(getParentTXID())).toString();
     }
 
     @Override
     public byte[] header()
     {
-        return ByteUtil.concatenate(RiverCoin.HEADER_BYTES);
+        return ByteUtil.concatenate(getValue().header());
     }
 
     @Override

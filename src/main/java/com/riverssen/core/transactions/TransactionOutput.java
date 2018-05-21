@@ -10,29 +10,23 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.headers;
+package com.riverssen.core.transactions;
 
-import com.riverssen.core.security.CompressedAddress;
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.headers.TransactionInputI;
+import com.riverssen.utils.Truple;
+import com.riverssen.utils.Tuple;
 
-import java.io.DataInputStream;
 import java.util.List;
 
-public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSONFormattable, Exportable
+public class TransactionOutput
 {
-    boolean                         valid();
-    static TransactionI             read(DataInputStream stream)
+    private List<TransactionInputI> txids;
+
+    /**
+     * @return A truple of A: receiver's UTXO, B: sender's return UTXO, C: miner's fee.
+     */
+    public Truple<UTXO, UTXO, UTXO> generateRespectiveUTXOs()
     {
         return null;
     }
-    long                            getTimeStamp();
-    CompressedAddress               getSender();
-    PublicAddress                   getReceiver();
-    int                             hashCode();
-    default int                     compareTo(TransactionI token)
-    {
-        return getTimeStamp() > token.getTimeStamp() ? 1 : -1;
-    }
-    List<TransactionInputI>         getTXIDs();
-    boolean                         matches(short type);
 }

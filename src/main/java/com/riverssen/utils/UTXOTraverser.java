@@ -21,10 +21,18 @@ public class UTXOTraverser<T extends Encodeable & JSONFormattable & Exportable>
 {
     private T t;
 
+    void traverse(List<UTXO> list)
+    {
+        for(UTXO utxo : list)
+        {
+        }
+    }
+
     void traverse(List<TransactionI> tokenList, List<UTXO<T>> out)
     {
-//        for(TransactionI transactionI : tokenList)
-//            if(transactionI.matches());
+        for (TransactionI transactionI : tokenList)
+            for (UTXO utxo : transactionI.getTXIDs())
+                out.add(utxo);
     }
 
     T    get()

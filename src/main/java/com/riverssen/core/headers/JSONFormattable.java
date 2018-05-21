@@ -34,7 +34,7 @@ public interface JSONFormattable
 
         public JSON(String name)
         {
-            this.json = new StringBuilder().append(quote).append(name).append(quote).append(colon);
+            this.json = new StringBuilder().append(quote).append(name).append(quote).append(colon).append("{");
         }
 
         public JSON()

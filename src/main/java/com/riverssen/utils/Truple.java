@@ -10,29 +10,52 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.headers;
+package com.riverssen.utils;
 
-import com.riverssen.core.security.CompressedAddress;
-import com.riverssen.core.security.PublicAddress;
-
-import java.io.DataInputStream;
-import java.util.List;
-
-public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSONFormattable, Exportable
+public class Truple<I, J, C>
 {
-    boolean                         valid();
-    static TransactionI             read(DataInputStream stream)
+    private I i;
+    private J j;
+    private C c;
+
+    public Truple(I i, J j, C c)
     {
-        return null;
+        this.i = i;
+        this.j = j;
+        this.c = c;
     }
-    long                            getTimeStamp();
-    CompressedAddress               getSender();
-    PublicAddress                   getReceiver();
-    int                             hashCode();
-    default int                     compareTo(TransactionI token)
+
+    public synchronized I getI()
     {
-        return getTimeStamp() > token.getTimeStamp() ? 1 : -1;
+        return i;
     }
-    List<TransactionInputI>         getTXIDs();
-    boolean                         matches(short type);
+
+    public synchronized void setI(I i)
+    {
+        this.i = i;
+    }
+
+    public synchronized J getJ()
+    {
+        return j;
+    }
+
+    public synchronized void setJ(J j)
+    {
+        this.j = j;
+    }
+
+    @Override
+    public String toString()
+    {
+        return i + " " + j + " " + c;
+    }
+
+    public C getC() {
+        return c;
+    }
+
+    public void setC(C c) {
+        this.c = c;
+    }
 }

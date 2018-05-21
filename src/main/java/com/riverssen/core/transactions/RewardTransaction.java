@@ -10,30 +10,39 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core;
+package com.riverssen.core.transactions;
 
+import com.riverssen.core.Config;
+import com.riverssen.core.FullBlock;
+import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.headers.TransactionInputI;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.transactions.UTXO;
 import com.riverssen.utils.ByteUtil;
+import com.riverssen.utils.SmartDataTransferer;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class RewardTransaction implements TransactionI
 {
     public static final short TYPE = 1;
-    private PublicAddress receiver;
-    private RiverCoin     amount;
-    private long          time;
+    private PublicAddress       receiver;
+    private long                time;
+    private List<TransactionInputI> txids;
 
-    public RewardTransaction(PublicAddress receiver)
+    public RewardTransaction(PublicAddress receiver, FullBlock block)
     {
         this.receiver = receiver;
-        this.amount   = new RiverCoin(Config.getReward());
         this.time     = System.currentTimeMillis();
+        this.txids    = new ArrayList<>();
+
+        this.txids.add(new UTXO<>(receiver, new RiverCoin(Config.getReward()), ByteUtil.concatenate(block.content(), receiver.getBytes())));
     }
 
     @Override
@@ -45,7 +54,7 @@ public class RewardTransaction implements TransactionI
     public void write(DataOutputStream stream) throws IOException {
         stream.writeShort(TYPE);
         stream.write(receiver.getBytes());
-        stream.write(amount.getBytes());
+        stream.write(reward.content());
     }
 
     @Override
@@ -69,13 +78,18 @@ public class RewardTransaction implements TransactionI
     }
 
     @Override
-    public RiverCoin getAmount() {
-        return amount;
+    public List<UTXO> getTXIDs() {
+        return null;
     }
 
     @Override
-    public Collection<? extends UTXO> getTXIDs() {
-        return null;
+    public boolean matches(byte[] header) {
+        return false;
+    }
+
+    @Override
+    public void getTXIDs(List<UTXO<?>> list) {
+
     }
 
     @Override
@@ -95,5 +109,25 @@ public class RewardTransaction implements TransactionI
     @Override
     public byte[] getBytes() {
         return ByteUtil.concatenate(receiver.getBytes(), amount.getBytes(), ByteUtil.encode(time));
+    }
+
+    @Override
+    public byte[] header() {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] content() {
+        return new byte[0];
+    }
+
+    @Override
+    public void export(SmartDataTransferer smdt) {
+
+    }
+
+    @Override
+    public void export(DataOutputStream dost) {
+
     }
 }

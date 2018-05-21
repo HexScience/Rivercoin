@@ -92,19 +92,8 @@ public class RVCCore
         network.connect(service);
         service.execute(blockChain);
 
-        UTXO<RiverCoin> utxo = new UTXO(wallet.getPublicKey().getAddress(), new RiverCoin("100.0"), new Sha3().encode("d23d".getBytes()));
-        UTXO<FullBlock> butxo = new UTXO(wallet.getPublicKey().getAddress(), BlockHeader.FullBlock(-1), new Sha3().encode("d23d".getBytes()));
-        List<UTXO>      utxos = new ArrayList<>();
-
-        utxos.add(utxo);
-        utxos.add(butxo);
-
-        for(UTXO<RiverCoin> u : utxos)
-            System.out.println(u.toString());
-
         System.exit(0);
 
-        System.out.println(utxo.toJSON());
         service.execute(()->{
             while (run)
             {

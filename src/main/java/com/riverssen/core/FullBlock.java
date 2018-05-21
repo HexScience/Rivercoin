@@ -17,6 +17,7 @@ import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.consensus.ConsensusAlgorithm;
 import com.riverssen.core.headers.*;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.transactions.RewardTransaction;
 import com.riverssen.utils.*;
 
 import java.io.*;
