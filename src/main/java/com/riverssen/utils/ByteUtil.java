@@ -12,6 +12,8 @@
 
 package com.riverssen.utils;
 
+import com.riverssen.core.algorithms.Sha3;
+import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.headers.Serialisable;
 
 import java.io.DataInputStream;
@@ -21,6 +23,13 @@ import java.nio.ByteBuffer;
 
 public class ByteUtil
 {
+    private static HashAlgorithm dEncoder = new Sha3();
+
+    public static HashAlgorithm defaultEncoder()
+    {
+        return dEncoder;
+    }
+
     public static byte[] encode(long serializable)
     {
         byte array[] = new byte[]{

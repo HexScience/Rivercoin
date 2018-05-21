@@ -48,7 +48,7 @@ public class MerkleTree implements Serialisable, Encodeable
         stream.writeShort(this.size);
 
         for (TransactionI token : list)
-            token.write(stream);
+            token.export(stream);
     }
 
     @Override

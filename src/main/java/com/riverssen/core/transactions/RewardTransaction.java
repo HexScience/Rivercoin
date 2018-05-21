@@ -16,45 +16,34 @@ import com.riverssen.core.Config;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.headers.TransactionInputI;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
-import com.riverssen.core.transactions.UTXO;
 import com.riverssen.utils.ByteUtil;
 import com.riverssen.utils.SmartDataTransferer;
 
 import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.math.BigInteger;
 
 public class RewardTransaction implements TransactionI
 {
-    public static final short TYPE = 1;
     private PublicAddress       receiver;
     private long                time;
-    private List<TransactionInputI> txids;
+    private TXIList             txids;
 
-    public RewardTransaction(PublicAddress receiver, FullBlock block)
+    public RewardTransaction(PublicAddress receiver, FullBlock block, TXIList feeInputs)
     {
         this.receiver = receiver;
         this.time     = System.currentTimeMillis();
-        this.txids    = new ArrayList<>();
+        this.txids    = new TXIList();
 
-        this.txids.add(new UTXO<>(receiver, new RiverCoin(Config.getReward()), ByteUtil.concatenate(block.content(), receiver.getBytes())));
+        this.txids.addAll(feeInputs);
+        this.txids.add(new TransactionInput(new RiverCoin(Config.getReward())));
     }
 
     @Override
-    public boolean valid() {
-        return getAmount().toRiverCoinString().equals(Config.getReward());
-    }
-
-    @Override
-    public void write(DataOutputStream stream) throws IOException {
-        stream.writeShort(TYPE);
-        stream.write(receiver.getBytes());
-        stream.write(reward.content());
+    public boolean valid()
+    {
+        return txids.getInputAmount().equals(new BigInteger(Config.getReward()));
     }
 
     @Override
@@ -73,27 +62,12 @@ public class RewardTransaction implements TransactionI
     }
 
     @Override
-    public int getNonce() {
-        return 0;
+    public TXIList getTXIDs() {
+        return txids;
     }
 
     @Override
-    public List<UTXO> getTXIDs() {
-        return null;
-    }
-
-    @Override
-    public boolean matches(byte[] header) {
-        return false;
-    }
-
-    @Override
-    public void getTXIDs(List<UTXO<?>> list) {
-
-    }
-
-    @Override
-    public boolean matches(Class<?> t) {
+    public boolean matches(short type) {
         return false;
     }
 
@@ -108,7 +82,7 @@ public class RewardTransaction implements TransactionI
 
     @Override
     public byte[] getBytes() {
-        return ByteUtil.concatenate(receiver.getBytes(), amount.getBytes(), ByteUtil.encode(time));
+        return ByteUtil.concatenate(receiver.getBytes(), getTXIDs().getBytes(), ByteUtil.encode(time));
     }
 
     @Override
@@ -123,11 +97,9 @@ public class RewardTransaction implements TransactionI
 
     @Override
     public void export(SmartDataTransferer smdt) {
-
     }
 
     @Override
     public void export(DataOutputStream dost) {
-
     }
 }

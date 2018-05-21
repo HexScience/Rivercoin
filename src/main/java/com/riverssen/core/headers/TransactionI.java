@@ -12,8 +12,11 @@
 
 package com.riverssen.core.headers;
 
+import com.riverssen.core.RiverCoin;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.transactions.TXIList;
+import com.riverssen.core.transactions.TransactionOutput;
 
 import java.io.DataInputStream;
 import java.util.List;
@@ -21,10 +24,6 @@ import java.util.List;
 public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSONFormattable, Exportable
 {
     boolean                         valid();
-    static TransactionI             read(DataInputStream stream)
-    {
-        return null;
-    }
     long                            getTimeStamp();
     CompressedAddress               getSender();
     PublicAddress                   getReceiver();
@@ -33,6 +32,12 @@ public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSON
     {
         return getTimeStamp() > token.getTimeStamp() ? 1 : -1;
     }
-    List<TransactionInputI>         getTXIDs();
-    boolean                         matches(short type);
+    TXIList                         getTXIDs();
+    List<TransactionOutput>         getOutputs();
+    RiverCoin                       cost();
+
+    static TransactionI             read(DataInputStream stream)
+    {
+        return null;
+    }
 }

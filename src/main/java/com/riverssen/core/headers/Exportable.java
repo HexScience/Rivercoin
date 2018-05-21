@@ -12,6 +12,7 @@
 
 package com.riverssen.core.headers;
 
+import com.riverssen.utils.ByteUtil;
 import com.riverssen.utils.SmartDataTransferer;
 
 import java.io.DataOutputStream;
@@ -20,6 +21,10 @@ public interface Exportable
 {
     public byte[] header();
     public byte[] content();
+    public default byte[] data()
+    {
+        return ByteUtil.concatenate(header(), content());
+    }
 
     public void export(SmartDataTransferer smdt);
     public void export(DataOutputStream    dost);

@@ -27,6 +27,11 @@ public class Config
 {
     private static Config config;
     private boolean PRUNE;
+
+    /** max blocl size in bytes **/
+    public final int MAX_BLOCK_SIZE           = 5_000_000;
+    /** The mining fee is a constant, any mined solutions taking more than the specified amount should be discarded **/
+    public final String MINING_FEE            = "0.00025";
     public int PORT                           = 5110;
     public int MAX_MINING_THREADS             = 2;
     public String REWARD_PER_BLOCK_MINED      = "50.0";
@@ -263,6 +268,12 @@ public class Config
             e.printStackTrace();
             System.exit(0);
         }
+    }
+
+    /** calculate the cost of a contract **/
+    public static String getCost(long contractSize)
+    {
+        return new BigDecimal(getReward()).divide(new BigDecimal(getConfig().MAX_BLOCK_SIZE), 20, RoundingMode.HALF_UP).multiply(new BigDecimal(contractSize)).toPlainString();
     }
 
     public static String getReward()

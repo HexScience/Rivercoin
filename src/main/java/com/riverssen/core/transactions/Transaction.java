@@ -13,14 +13,13 @@
 package com.riverssen.core.transactions;
 
 import com.riverssen.core.RiverCoin;
-import com.riverssen.core.headers.TransactionInputI;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PrivKey;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.utils.Base58;
 import com.riverssen.utils.ByteUtil;
 
-import java.util.List;
+import java.math.BigInteger;
 
 public class Transaction
 {
@@ -28,9 +27,9 @@ public class Transaction
     private CompressedAddress                   sender;
     /** 20 byte receiver public address **/
     private PublicAddress                       receiver;
-    /** list containing the type and amount of goods to be transferred **/
-    private List<TransactionInputI>             goods;
-    /** amount of goods to be transferred **/
+    /** list containing the type and amount of txids to be transferred **/
+    private TXIList                             txids;
+    /** amount of txids to be transferred **/
     private RiverCoin                           amount;
     /** 256 byte comment in UTF format **/
     private byte                                data[];
@@ -41,15 +40,28 @@ public class Transaction
 
     public Transaction(CompressedAddress        sender,
                       PublicAddress             receiver,
-                      List<TransactionInputI>   goods,
+                      TXIList                   goods,
                       RiverCoin                 amount,
                       String                    comment,
                       long                      timestamp)
     {
+        this.sender     = sender;
+        this.receiver   = receiver;
+        this.txids      = goods;
+        this.amount     = amount;
+
+        /** trim excess comment bytes **/
+        if(comment.length() > 256) comment = comment.substring(0, 256);
+        this.data       = comment.getBytes();
+        this.timestamp  = ByteUtil.encode(timestamp);
     }
 
+    /** sign transaction **/
     public void sign(PrivKey key)
     {
+        byte[] bytes = generateSignatureData();
+
+        this.signature = key.signEncoded(bytes);
     }
 
     public boolean valid()
@@ -58,19 +70,33 @@ public class Transaction
 
         if (!sender.toPublicKey().isValid()) return false;
 
-//        if(amount.toBigInteger().compareTo(BigInteger.ZERO) <= 0) return false;
+        if (amount.toBigInteger().compareTo(BigInteger.ZERO) <= 0) return false;
 
-        return sender.toPublicKey().verifySignature(generateSignatureData(sender, receiver, goods, data, timestamp), Base58.encode(signature));
+        /** check utxo amount is more than transaction amount **/
+        if (amount.toBigInteger().compareTo(getInputAmount()) > 0) return false;
+
+        return sender.toPublicKey().verifySignature(generateSignatureData(), Base58.encode(signature));
+    }
+
+    /** read all transaction inputs and return a rivercoin value **/
+    BigInteger getInputAmount()
+    {
+        BigInteger amount = BigInteger.ZERO;
+
+        for(TransactionInput txi : txids)
+            amount = amount.add(((TransactionOutput<RiverCoin>)txi.getUTXO()).getValue().toBigInteger());
+
+        return amount;
+    }
+
+    public byte[] generateSignatureData()
+    {
+        return generateSignatureData(sender, receiver, amount, txids, data, timestamp);
     }
 
 
-    public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, List<TransactionInputI> goods, String comment, int nonce, long timestamp)
+    public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, RiverCoin amount, TXIList txilist, byte comment[], byte timestamp[])
     {
-        return ByteUtil.concatenate(sender.getBytes(), receiver.getBytes(), goods.getBytes(), comment.getBytes(), ByteUtil.encodei(nonce), ByteUtil.encode(timestamp));
-    }
-
-    public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, List<TransactionInputI> amount, byte comment[], byte nonce[], byte timestamp[])
-    {
-        return ByteUtil.concatenate(sender.getBytes(), receiver.getBytes(), amount.getBytes(), comment, nonce, timestamp);
+        return ByteUtil.concatenate(sender.getBytes(), receiver.getBytes(), amount.getBytes(), txilist.getBytes(), comment, timestamp);
     }
 }

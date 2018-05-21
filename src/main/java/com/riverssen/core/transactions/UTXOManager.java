@@ -10,8 +10,45 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.utils;
+package com.riverssen.core.transactions;
 
-public class UnspentTransactionTree
+import com.riverssen.core.FullBlock;
+import com.riverssen.core.compression.Base58Hash;
+import com.riverssen.core.headers.TransactionI;
+import com.riverssen.utils.Base58;
+import com.riverssen.utils.MerkleTree;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class UTXOManager
 {
+    private static Map<byte[], TransactionOutput> map = new HashMap<>();
+
+    public static TransactionOutput get(@Base58Hash byte hash[])
+    {
+        return map.get(hash);
+    }
+
+    public static TransactionOutput get(@Base58Hash String hash)
+    {
+        return get(Base58.decode(hash));
+    }
+
+    public void loadUTXOs()
+    {
+    }
+
+    public void add(FullBlock block)
+    {
+        MerkleTree mt = block.getBody().getMerkleTree();
+
+        for(TransactionI transaction : mt.flatten())
+            for(TransactionOutput transactionOutput : transaction.getOutputs())
+                map.put(transactionOutput.getHash(), transactionOutput);
+    }
+
+    static class ChainedMap
+    {
+    }
 }

@@ -21,23 +21,31 @@ import com.riverssen.utils.*;
 
 import java.io.DataOutputStream;
 
+/** Instances of this class will be created during runtime using the Transaction::getOutputs(Transaction*); **/
 public class TransactionOutput<T extends Encodeable & JSONFormattable & Exportable> implements Encodeable, JSONFormattable, Exportable
 {
     private final PublicAddress owner;
     private final T             value;
     private final byte          ptxid[];
+    private final byte          txoid[];
 
     public TransactionOutput(PublicAddress receiver, T value, byte parentTXID[])
     {
         this.owner = receiver;
         this.value = value;
         this.ptxid = parentTXID;
+        /** generate a custom hash id for this particular transactionoutput **/
+        this.txoid = new Sha3().encode(ByteUtil.concatenate(receiver.getBytes(), value.getBytes(), parentTXID));
     }
 
     /** The parent transaction ID **/
     public byte[] getParentTXID()
     {
         return ptxid;
+    }
+    public byte[] getHash()
+    {
+        return txoid;
     }
     /** The value of the UTXO, using UTXO<Rivercoin> will return rvc balances **/
     public T getValue()
@@ -57,7 +65,7 @@ public class TransactionOutput<T extends Encodeable & JSONFormattable & Exportab
 
     @Override
     public byte[] getBytes() {
-        return ByteUtil.concatenate(getParentTXID(), getValue().getBytes(), getOwner().getBytes());
+        return ByteUtil.concatenate(getOwner().getBytes(), getValue().getBytes(), getParentTXID());
     }
 
     @Override
@@ -78,7 +86,8 @@ public class TransactionOutput<T extends Encodeable & JSONFormattable & Exportab
     }
 
     @Override
-    public void export(SmartDataTransferer smdt) {
+    public void export(SmartDataTransferer smdt)
+    {
     }
 
     @Override
