@@ -14,7 +14,7 @@ package com.riverssen.core.headers;
 
 import com.riverssen.core.transactions.UTXO;
 
-public interface TransactionInputI<T extends Encodeable & JSONFormattable & Exportable>
+public interface TransactionInputI<T extends Encodeable & JSONFormattable & Exportable> extends Encodeable
 {
     UTXO<T> getUTXO();
 }

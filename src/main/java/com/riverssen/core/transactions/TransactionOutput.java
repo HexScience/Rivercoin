@@ -12,21 +12,83 @@
 
 package com.riverssen.core.transactions;
 
-import com.riverssen.core.headers.TransactionInputI;
-import com.riverssen.utils.Truple;
-import com.riverssen.utils.Tuple;
+import com.riverssen.core.algorithms.Sha3;
+import com.riverssen.core.headers.Encodeable;
+import com.riverssen.core.headers.Exportable;
+import com.riverssen.core.headers.JSONFormattable;
+import com.riverssen.core.security.PublicAddress;
+import com.riverssen.utils.*;
 
-import java.util.List;
+import java.io.DataOutputStream;
 
-public class TransactionOutput
+public class TransactionOutput<T extends Encodeable & JSONFormattable & Exportable> implements Encodeable, JSONFormattable, Exportable
 {
-    private List<TransactionInputI> txids;
+    private final PublicAddress owner;
+    private final T             value;
+    private final byte          ptxid[];
 
-    /**
-     * @return A truple of A: receiver's UTXO, B: sender's return UTXO, C: miner's fee.
-     */
-    public Truple<UTXO, UTXO, UTXO> generateRespectiveUTXOs()
+    public TransactionOutput(PublicAddress receiver, T value, byte parentTXID[])
     {
-        return null;
+        this.owner = receiver;
+        this.value = value;
+        this.ptxid = parentTXID;
+    }
+
+    /** The parent transaction ID **/
+    public byte[] getParentTXID()
+    {
+        return ptxid;
+    }
+    /** The value of the UTXO, using UTXO<Rivercoin> will return rvc balances **/
+    public T getValue()
+    {
+        return value;
+    }
+    /** The recepient of the unspent transaction output **/
+    public PublicAddress getOwner()
+    {
+        return owner;
+    }
+    /** Any class must have a toString method returning a simple readable format of this header **/
+    public String toString()
+    {
+        return toJSON();
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return ByteUtil.concatenate(getParentTXID(), getValue().getBytes(), getOwner().getBytes());
+    }
+
+    @Override
+    public String toJSON() {
+        return new JSONFormattable.JSON(encode58(new Sha3())).add("owner", getOwner().toString()).add("value", getValue().toString()).add("txid", Base58.encode(getParentTXID())).toString();
+    }
+
+    @Override
+    public byte[] header()
+    {
+        return ByteUtil.concatenate(getValue().header());
+    }
+
+    @Override
+    public byte[] content()
+    {
+        return ByteUtil.concatenate(getOwner().getBytes(), getValue().getBytes(), getParentTXID());
+    }
+
+    @Override
+    public void export(SmartDataTransferer smdt) {
+    }
+
+    @Override
+    public void export(DataOutputStream dost) {
+        try {
+            dost.write(header());
+            dost.write(content());
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

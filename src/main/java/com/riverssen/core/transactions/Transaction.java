@@ -15,6 +15,7 @@ package com.riverssen.core.transactions;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.TransactionInputI;
 import com.riverssen.core.security.CompressedAddress;
+import com.riverssen.core.security.PrivKey;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.utils.Base58;
 import com.riverssen.utils.ByteUtil;
@@ -24,17 +25,32 @@ import java.util.List;
 public class Transaction
 {
     /** 64 byte compressed ecdsa public key **/
-    private CompressedAddress       sender;
+    private CompressedAddress                   sender;
     /** 20 byte receiver public address **/
-    private PublicAddress           receiver;
+    private PublicAddress                       receiver;
     /** list containing the type and amount of goods to be transferred **/
-    private TransactionOutput       goods;
+    private List<TransactionInputI>             goods;
+    /** amount of goods to be transferred **/
+    private RiverCoin                           amount;
     /** 256 byte comment in UTF format **/
-    private byte                    data[];
+    private byte                                data[];
     /** 140 byte signature **/
-    private byte                    signature[];
+    private byte                                signature[];
     /** 8 byte 'honest' typestamp **/
-    private byte                    timestamp[];
+    private byte                                timestamp[];
+
+    public Transaction(CompressedAddress        sender,
+                      PublicAddress             receiver,
+                      List<TransactionInputI>   goods,
+                      RiverCoin                 amount,
+                      String                    comment,
+                      long                      timestamp)
+    {
+    }
+
+    public void sign(PrivKey key)
+    {
+    }
 
     public boolean valid()
     {
@@ -48,12 +64,12 @@ public class Transaction
     }
 
 
-    public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, TransactionOutput goods, String comment, int nonce, long timestamp)
+    public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, List<TransactionInputI> goods, String comment, int nonce, long timestamp)
     {
-        return ByteUtil.concatenate(sender.getBytes(), receiver.getBytes(), amount.getBytes(), comment.getBytes(), ByteUtil.encodei(nonce), ByteUtil.encode(timestamp));
+        return ByteUtil.concatenate(sender.getBytes(), receiver.getBytes(), goods.getBytes(), comment.getBytes(), ByteUtil.encodei(nonce), ByteUtil.encode(timestamp));
     }
 
-    public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, RiverCoin amount, byte comment[], byte nonce[], byte timestamp[])
+    public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, List<TransactionInputI> amount, byte comment[], byte nonce[], byte timestamp[])
     {
         return ByteUtil.concatenate(sender.getBytes(), receiver.getBytes(), amount.getBytes(), comment, nonce, timestamp);
     }
