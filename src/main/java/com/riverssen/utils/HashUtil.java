@@ -12,7 +12,6 @@
 
 package com.riverssen.utils;
 
-import com.riverssen.core.Config;
 import com.riverssen.core.Logger;
 import com.riverssen.core.security.PubKey;
 
@@ -65,7 +64,7 @@ public class HashUtil
 
     public static String createDifficultyString()
     {
-        return new String(new byte[Config.getConfig().BLOCK_MINING_DIFFICULTY]).replaceAll("\0", "0");
+        return new String(new byte[1000]).replaceAll("\0", "0");
     }
 
     public static byte[] applySha256(byte[] input)

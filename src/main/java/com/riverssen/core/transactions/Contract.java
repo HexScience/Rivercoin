@@ -12,11 +12,11 @@
 
 package com.riverssen.core.transactions;
 
-import com.riverssen.core.Config;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.system.Config;
 import com.riverssen.utils.SmartDataTransferer;
 
 import java.io.DataInputStream;
@@ -95,11 +95,6 @@ public class Contract implements TransactionI
 
     @Override
     public TXIList getTXIDs() {
-        return null;
-    }
-
-    @Override
-    public List<TransactionOutput> generateOutputs() {
         return null;
     }
 

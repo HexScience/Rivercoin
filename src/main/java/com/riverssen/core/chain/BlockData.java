@@ -12,18 +12,16 @@
 
 package com.riverssen.core.chain;
 
-import com.riverssen.core.Config;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.system.Context;
 import com.riverssen.core.transactions.TXIList;
 import com.riverssen.core.transactions.TransactionInput;
-import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.utils.Serializer;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.utils.MerkleTree;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.InflaterInputStream;
 
@@ -33,6 +31,7 @@ public class BlockData implements Encodeable
     private MerkleTree  merkleTree;
     private long        time;
     private long        dataSize;
+    private Context     context;
     private List<TransactionInput> fees;
 
     public BlockData()
@@ -40,11 +39,12 @@ public class BlockData implements Encodeable
         this.merkleTree = new MerkleTree();
     }
 
-    public BlockData(long blockID)
+    public BlockData(long blockID, Context context)
     {
+        this.context = context;
         try
         {
-            File file = new File(Config.getConfig().BLOCKCHAIN_DIRECTORY + File.separator + "block["+blockID+"]");
+            File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "block["+blockID+"]");
             DataInputStream stream = new DataInputStream(new InflaterInputStream(new FileInputStream(file)));
 
             stream.skip(BlockHeader.SIZE);

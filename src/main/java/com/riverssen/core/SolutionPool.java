@@ -42,6 +42,6 @@ public class SolutionPool
 
     public void add(Solution solution)
     {
-        if(solution.blockID() < RVCCore.get().getChain().currentBlock()) return;
+//        if(solution.blockID() < RVCCore.get().getChain().currentBlock()) return;
     }
 }

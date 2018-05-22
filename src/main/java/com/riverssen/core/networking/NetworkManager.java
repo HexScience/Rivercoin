@@ -5,6 +5,7 @@ import com.riverssen.core.events.TerminateEvent;
 import com.riverssen.core.headers.Event;
 import com.riverssen.core.headers.Listener;
 import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.system.Context;
 import com.riverssen.utils.TimeUtil;
 import com.riverssen.utils.Tuple;
 import org.json.JSONArray;
@@ -25,14 +26,11 @@ public class NetworkManager implements Listener
     private SolutionPool    solutionPool;
     private TransactionPool transactionPool;
     private Set<String>     ipAddresses;
+    private final Context   context;
 
-    public NetworkManager()
+    public NetworkManager(Context context)
     {
-        this(8);
-    }
-
-    public NetworkManager(int size)
-    {
+        this.context = context;
         peers = Collections.synchronizedList(new ArrayList<>());
     }
 
@@ -42,7 +40,7 @@ public class NetworkManager implements Listener
 
         /** get the seed ip address from a central server **/
         try{
-            String json = Jsoup.connect(Config.getConfig().UNIQUE_PEER_LINK).ignoreContentType(true).execute().body();
+            String json = Jsoup.connect(context.getConfig().getUniquePeerLink()).ignoreContentType(true).execute().body();
 
             JSONObject object = new JSONObject(json);
 
@@ -76,12 +74,12 @@ public class NetworkManager implements Listener
     private void listenToIncomingConnections(ExecutorService service) throws Exception
     {
         InetAddress address = InetAddress.getByName("localhost");
-        socket = new ServerSocket(Config.getConfig().PORT, 100, address);
+        socket = new ServerSocket(context.getConfig().getPort(), 100, address);
 
-        Logger.alert("listening on: " + address.getHostAddress() + ":" + Config.getConfig().PORT);
+        Logger.alert("listening on: " + address.getHostAddress() + ":" + context.getConfig().getPort());
 
         service.execute(()->{
-            while(RVCCore.get().run())
+            while(context.isRunning())
             {
                 try
                 {
@@ -89,13 +87,14 @@ public class NetworkManager implements Listener
                     Socket socketpeer = socket.accept();
 
                     Peer peer = new Peer(socketpeer);
-                    if(peer.performHandshake())
-                    {
+//                    if(peer.performHandshake(context))
+//                    {
+                        /** no need to perform handshake, the peer client will the send the request **/
                         Set<String> list = peer.requestPeerList();
                         ipAddresses.addAll(list);
                         peer.requestChainInfo();
                         peers.add(peer);
-                    } else socketpeer.close();
+//                    } else socketpeer.close();
                 } catch (IOException e)
                 {
                     e.printStackTrace();
@@ -120,10 +119,10 @@ public class NetworkManager implements Listener
                         continue;
                     }
 
-                    Socket socket = new Socket(address, Config.getConfig().PORT);
+                    Socket socket = new Socket(address, context.getConfig().getPort());
 
                     Peer peer = new Peer(socket);
-                    if(peer.performHandshake())
+                    if(peer.performHandshake(context))
                     {
                         Set<String> list = peer.requestPeerList();
                         ipAddresses.addAll(list);
@@ -178,7 +177,7 @@ public class NetworkManager implements Listener
         Set<String> ips = new HashSet<>();
 
         try {
-            File file = new File(Config.getConfig().BLOCKCHAIN_DIRECTORY + File.separator + "network.info");
+            File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "network.info");
             BufferedReader reader = new BufferedReader(new FileReader(file));
 
             String line = "";
@@ -201,7 +200,7 @@ public class NetworkManager implements Listener
         for(String peer : this.ipAddresses) ipAddresses += peer + "\n";
 
         try {
-            File file = new File(Config.getConfig().BLOCKCHAIN_DIRECTORY + File.separator + "network.info");
+            File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "network.info");
 
             FileWriter writer = new FileWriter(file);
 

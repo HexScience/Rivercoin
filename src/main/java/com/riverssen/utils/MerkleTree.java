@@ -17,7 +17,6 @@ import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.headers.Serialisable;
 import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.consensus.ConsensusAlgorithm;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -152,11 +151,6 @@ public class MerkleTree implements Serialisable, Encodeable
     public String hash()
     {
         return root.hash();
-    }
-
-    public String consensusHash(long nonce, String parentBlockHash)
-    {
-        return ConsensusAlgorithm.applyPoW(nonce, parentBlockHash, this);
     }
 
     @Override

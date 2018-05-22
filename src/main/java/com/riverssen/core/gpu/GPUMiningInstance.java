@@ -816,7 +816,7 @@ public class GPUMiningInstance
         } catch (LWJGLException e)
         {
             e.printStackTrace();
-            RVCCore.setGPUMining(false);
+//            RVCCore.setGPUMining(false);
         }
     }
 

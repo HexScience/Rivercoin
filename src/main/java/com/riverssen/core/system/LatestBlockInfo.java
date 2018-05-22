@@ -1,6 +1,5 @@
 package com.riverssen.core.system;
 
-import com.riverssen.core.Config;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.chain.BlockHeader;
 
@@ -10,15 +9,17 @@ import java.math.BigInteger;
 
 public class LatestBlockInfo
 {
-    private static boolean available = true;
-    private long        lastBlockCheck;
-    private long        lastBlockCheckTimestamp;
-    private long        lastBlock;
-    private BigDecimal  difficulty;
-    private BigInteger  totalHashes;
+    private static boolean  available = true;
+    private long            lastBlockCheck;
+    private long            lastBlockCheckTimestamp;
+    private long            lastBlock;
+    private BigInteger      difficulty;
+    private BigInteger      totalHashes;
+    private Config          config;
 
-    public LatestBlockInfo()
+    public LatestBlockInfo(Config config)
     {
+        this.config = config;
     }
 
     public synchronized void read() throws Exception
@@ -27,14 +28,14 @@ public class LatestBlockInfo
         {
         }
 
-        File file = new File(Config.getConfig().BLOCKCHAIN_DIRECTORY + File.separator + "latestblock");
+        File file = new File(config.getBlockChainDirectory() + File.separator + "latestblock");
 
         if(!file.exists())
         {
             lastBlock = -1;
             lastBlockCheck = 0;
             lastBlockCheckTimestamp = System.currentTimeMillis();
-            difficulty = new BigDecimal("225269536353234632640832032722171634457188848844000484574312395358531977087");
+            difficulty = Config.getMinimumDifficulty();
             totalHashes = BigInteger.ONE;
 
             return;
@@ -51,7 +52,7 @@ public class LatestBlockInfo
         byte difficultyByte[]   = new byte[dataInputStream.readInt()];
         dataInputStream.read(difficultyByte);
 
-        difficulty              = new BigDecimal(new BigInteger(difficultyByte));
+        difficulty              = new BigInteger(difficultyByte);
         byte totalHashesArrray[] = new byte[dataInputStream.readInt()];
 
         dataInputStream.read(totalHashesArrray);
@@ -63,7 +64,7 @@ public class LatestBlockInfo
         available = true;
     }
 
-    public synchronized void write(long lastBlock, long lastBlockCheck, long lastBlockCheckTimestamp, BigDecimal difficulty, BigInteger totalHashes) throws Exception
+    public synchronized void write(long lastBlock, long lastBlockCheck, long lastBlockCheckTimestamp, BigInteger difficulty, BigInteger totalHashes) throws Exception
     {
         while(!available)
         {
@@ -71,13 +72,13 @@ public class LatestBlockInfo
 
         available = false;
 
-        DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(new File(Config.getConfig().BLOCKCHAIN_DIRECTORY + File.separator + "latestblock")));
+        DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(new File(config.getBlockChainDirectory() + File.separator + "latestblock")));
 
         dataOutputStream.writeLong(lastBlock);
         dataOutputStream.writeLong(lastBlockCheck);
         dataOutputStream.writeLong(lastBlockCheckTimestamp);
-        dataOutputStream.writeInt(difficulty.toBigInteger().toByteArray().length);
-        dataOutputStream.write(difficulty.toBigInteger().toByteArray());
+        dataOutputStream.writeInt(difficulty.toByteArray().length);
+        dataOutputStream.write(difficulty.toByteArray());
         dataOutputStream.writeInt(totalHashes.toByteArray().length);
         dataOutputStream.write(totalHashes.toByteArray());
 
@@ -102,14 +103,9 @@ public class LatestBlockInfo
         return lastBlockCheckTimestamp;
     }
 
-    public synchronized BigDecimal getDifficulty()
+    public synchronized BigInteger getDifficulty()
     {
         return difficulty;
-    }
-
-    public static boolean exists()
-    {
-        return new File(Config.getConfig().BLOCKCHAIN_DIRECTORY + File.separator + "latestblock").exists();
     }
 
     public BigInteger getTotalHashes()
@@ -117,17 +113,17 @@ public class LatestBlockInfo
         return totalHashes;
     }
 
-    public BlockHeader getLatestBlockHeader()
+    public BlockHeader getLatestBlockHeader(Context context)
     {
         if(lastBlock >= 0)
-            return new BlockHeader(lastBlock);
+            return new BlockHeader(lastBlock, context);
         return null;
     }
 
-    public FullBlock getLatestFullBlock()
+    public FullBlock getLatestFullBlock(Context context)
     {
         if(lastBlock >= 0)
-            return BlockHeader.FullBlock(lastBlock);
+            return BlockHeader.FullBlock(lastBlock, context);
         return null;
     }
 }

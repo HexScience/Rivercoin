@@ -16,6 +16,7 @@ import com.riverssen.core.FullBlock;
 import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.compression.Base58Hash;
 import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.system.Context;
 import com.riverssen.core.system.LatestBlockInfo;
 import com.riverssen.utils.Base58;
 import com.riverssen.utils.MerkleTree;
@@ -37,13 +38,13 @@ public class UTXOManager
         return get(Base58.decode(hash));
     }
 
-    public static void loadUTXOs()
+    public static void loadUTXOs(Context context)
     {
-        LatestBlockInfo blockInfo = new LatestBlockInfo();
+        LatestBlockInfo blockInfo = new LatestBlockInfo(context.getConfig());
         long l = blockInfo.getLatestBlock();
 
         for(long lng = 0; lng < l; l ++)
-            add(BlockHeader.FullBlock(lng));
+            add(BlockHeader.FullBlock(lng, context));
     }
 
     public static void add(FullBlock block)

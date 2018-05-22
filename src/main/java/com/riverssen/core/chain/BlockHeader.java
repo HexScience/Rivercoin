@@ -12,9 +12,9 @@
 
 package com.riverssen.core.chain;
 
-import com.riverssen.core.Config;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.system.Context;
 import com.riverssen.utils.ByteUtil;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.utils.MerkleTree;
@@ -60,11 +60,11 @@ public class BlockHeader implements Encodeable
     {
     }
 
-    public BlockHeader(long block)
+    public BlockHeader(long block, Context context)
     {
         if(block < 0) return;
 
-        File file = new File(Config.getConfig().BLOCKCHAIN_DIRECTORY + File.separator + "block["+block+"]");
+        File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "block["+block+"]");
 
         try
         {
@@ -256,15 +256,15 @@ public class BlockHeader implements Encodeable
         return new FullBlock(getBlockID() + 1, this);
     }
 
-    public static FullBlock FullBlock(long block)
+    public static FullBlock FullBlock(long block, Context context)
     {
-        File file = new File(Config.getConfig().BLOCKCHAIN_DIRECTORY + File.separator + "block["+block+"]");
+        File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "block["+block+"]");
         DataInputStream stream = null;
         try
         {
             stream = new DataInputStream(new InflaterInputStream(new FileInputStream(file)));
             BlockHeader header = new BlockHeader(stream);
-            BlockHeader parent = new BlockHeader(header.getBlockID());
+            BlockHeader parent = new BlockHeader(header.getBlockID(), context);
             FullBlock fBlock = new FullBlock(header, new BlockData(stream), parent);
 
             stream.close();

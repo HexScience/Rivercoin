@@ -14,9 +14,9 @@ package com.riverssen.core;
 
 import com.riverssen.core.chain.BlockData;
 import com.riverssen.core.chain.BlockHeader;
-import com.riverssen.core.consensus.ConsensusAlgorithm;
 import com.riverssen.core.headers.*;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.system.Context;
 import com.riverssen.core.transactions.RewardTransaction;
 import com.riverssen.utils.*;
 
@@ -72,12 +72,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         return header.getBlockID();
     }
 
-    public synchronized int validate()
-    {
-        return validate(parent);
-    }
-
-    public synchronized int validate(BlockHeader parent)
+    public synchronized int validate(BlockHeader parent, Context context)
     {
         byte pHash[] = null;
 
@@ -97,7 +92,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         if (body.getTimeStamp() != header.getTimeStampAsLong()) return err_timestamp;
 
         /** verify nonce **/
-        HashAlgorithm algorithm = ConsensusAlgorithm.getInstance(new Random(new BigInteger(pHash).longValue()).nextInt());
+        HashAlgorithm algorithm = context.getHashAlgorithm(pHash);
         ByteBuffer data = getBodyAsByteBuffer();
         data.putLong(data.capacity() - 8, header.getNonceAsInt());
         String hash = algorithm.encode16(data.array());
@@ -116,8 +111,12 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     /**
      * mine the block
      **/
-    public synchronized void mine(HashAlgorithm algorithm, BigInteger difficulty, PublicAddress miner, SolutionPool pool)
+    public synchronized void mine(Context context)
     {
+        HashAlgorithm algorithm     = context.getHashAlgorithm(this.parent.getHash());
+        BigInteger    difficulty    = context.getDifficulty();
+        PublicAddress miner         = context.getMiner();
+
         String difficultyHash = HashUtil.hashToStringBase16(difficulty.toByteArray());
         while (difficultyHash.length() < 64) difficultyHash = "0" + difficultyHash;
 
@@ -151,16 +150,16 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: hashing took '" + time + "s' '" + this.hash + "'");
 
         /** send solution **/
-        pool.Send(this);
+        context.getBlockPool().Send(this);
 
         /** check solutions **/
-        List<FullBlock> solutions = pool.Fetch();
+        List<FullBlock> solutions = context.getBlockPool().Fetch();
 
         for (FullBlock block : solutions)
         {
             if (block.getBlockID() < getBlockID()) continue;
             if(!block.getHeader().getParentHash().equals(getHeader().getParentHash())) continue;
-            if (block.validate() == 0)
+            if (block.validate(parent, context) == 0)
             {
                 if (!(block.getHeader().getTimeStampAsLong() > getHeader().getTimeStampAsLong() - (150000 + new Random(System.currentTimeMillis()).nextInt(150000))
                         && block.getHeader().getTimeStampAsLong() < getHeader().getTimeStampAsLong())) continue;
@@ -200,9 +199,9 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         return data;
     }
 
-    public synchronized void serialize()
+    public synchronized void serialize(Context context)
     {
-        File file = new File(Config.getConfig().BLOCKCHAIN_DIRECTORY + File.separator + "block["+getBlockID()+"]");
+        File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "block["+getBlockID()+"]");
 
         try
         {
@@ -222,8 +221,9 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         }
     }
 
-    public synchronized FullBlock getParent() {
-        return BlockHeader.FullBlock(getBlockID()-1);
+    public synchronized FullBlock getParent(Context context)
+    {
+        return BlockHeader.FullBlock(getBlockID()-1, context);
     }
 
     @Override

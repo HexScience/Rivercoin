@@ -12,7 +12,6 @@
 
 package com.riverssen.core.messages;
 
-import com.riverssen.core.RVCCore;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.Message;
 
@@ -34,7 +33,7 @@ public class NewTransaction implements Message<TransactionI>
         try
         {
             out.writeLong(header());
-            information.write(out);
+            information.export(out);
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -50,6 +49,6 @@ public class NewTransaction implements Message<TransactionI>
     @Override
     public void performAction(DataInputStream in)
     {
-        RVCCore.get().getTransactionPool().add(receive(in));
+//        RVCCore.get().getTransactionPool().add(receive(in));
     }
 }

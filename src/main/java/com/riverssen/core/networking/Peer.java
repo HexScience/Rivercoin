@@ -12,14 +12,13 @@
 
 package com.riverssen.core.networking;
 
-import com.riverssen.core.Config;
 import com.riverssen.core.Logger;
 import com.riverssen.core.RVCCore;
 import com.riverssen.core.chain.BlockData;
-import com.riverssen.core.consensus.Solution;
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.messages.NewTransaction;
 import com.riverssen.core.messages.RequestChain;
+import com.riverssen.core.system.Context;
 import com.riverssen.utils.Base58;
 
 import java.io.DataInputStream;
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
 
 public class Peer
 {
@@ -88,14 +86,14 @@ public class Peer
         }
     }
 
-    public boolean performHandshake()
+    public boolean performHandshake(Context context)
     {
         try
         {
             stream.writeUTF("handshake");
             stream.writeShort(RVCCore.versionBytes);
-            stream.writeUTF(Base58.encode(Config.getConfig().TARGET_DIFFICULTY.toBigInteger().toByteArray()));
-            stream.writeUTF((Config.getConfig().PUBLIC_ADDRESS));
+            stream.writeUTF(Base58.encode(context.getConfig().getCurrentDifficulty().toByteArray()));
+            stream.writeUTF(context.getMiner().toString());
 
             stream.flush();
 
@@ -110,7 +108,7 @@ public class Peer
                 return false;
             }
 
-            if(!Base58.encode(Config.getConfig().TARGET_DIFFICULTY.toBigInteger().toByteArray()).equals(difficulty))
+            if(!Base58.encode(context.getConfig().getCurrentDifficulty().toByteArray()).equals(difficulty))
                 Logger.err("difficulty mismatch");
 
             return true;

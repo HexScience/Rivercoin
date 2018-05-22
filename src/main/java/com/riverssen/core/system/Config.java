@@ -37,7 +37,18 @@ public class Config
     private String      PUBLIC_ADDRESS;
     private boolean     PRUNE;
     private String      BLOCK_CHAIN_DB;
-    private BigDecimal  TARGET_DIFFICULTY;
+    private BigInteger  CURRENT_TARGET = MINIMUM_TARGET_DIFFICULTY;
+    private static Config self;
+
+    public static String getMiningFee()
+    {
+        return "0.0000015";
+    }
+
+    public static String getMinimumTransactionAmount()
+    {
+        return "100000";
+    }
 
     public int getPort()
     {
@@ -72,6 +83,7 @@ public class Config
     public Config(File config)
     {
         String root = ".//";
+        self = this;
 
         if(config != null && config.length() > 0)
             root = config.toString();
@@ -114,10 +126,10 @@ public class Config
             Logger.alert("wallet: "       + BLOCKCHAIN_WLT_DB);
             Logger.alert("transaction: "  + BLOCKCHAIN_TRX_DB);
 
-            LatestBlockInfo info = new LatestBlockInfo();
+            LatestBlockInfo info = new LatestBlockInfo(this);
             info.read();
 
-            this.TARGET_DIFFICULTY = info.getDifficulty();
+            this.CURRENT_TARGET = info.getDifficulty();
 
             if(this.PUBLIC_ADDRESS == null)
             {
@@ -145,7 +157,7 @@ public class Config
 
     public static String getReward()
     {
-        LatestBlockInfo info = new LatestBlockInfo();
+        LatestBlockInfo info = new LatestBlockInfo(self);
         try
         {
             info.read();
@@ -162,12 +174,12 @@ public class Config
         return new RiverCoin(decimal).toRiverCoinString();
     }
 
-    public BigInteger getMinimumDifficulty()
+    public static BigInteger getMinimumDifficulty()
     {
         return MINIMUM_TARGET_DIFFICULTY;
     }
 
-    private final BigInteger MINIMUM_TARGET_DIFFICULTY = new BigDecimal("225269536353234632640832032722171634457188848844000484574312395358531977087").toBigInteger();
+    private static final BigInteger MINIMUM_TARGET_DIFFICULTY = new BigDecimal("225269536353234632640832032722171634457188848844000484574312395358531977087").toBigInteger();
 
     public PublicAddress getMinerAddress() {
         return null;
@@ -175,5 +187,9 @@ public class Config
 
     public Wallet getWallet() {
         return null;
+    }
+
+    public BigInteger getCurrentDifficulty() {
+        return CURRENT_TARGET;
     }
 }

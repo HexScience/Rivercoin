@@ -10,54 +10,33 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.messages;
+package com.riverssen.core.algorithms;
 
-import com.riverssen.core.RVCCore;
-import com.riverssen.core.consensus.Solution;
-import com.riverssen.core.headers.Message;
+import com.riverssen.core.headers.HashAlgorithm;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-public class NewSolution implements Message<Solution>
+public class Provider
 {
-    @Override
-    public long header()
+    private final List<HashAlgorithm> algorithms;
+
+    public Provider()
     {
-        return 3;
+        algorithms = new ArrayList<>();
+        algorithms.add(new Sha1());
+        algorithms.add(new Sha3());
+        algorithms.add(new Sha256());
+        algorithms.add(new Keccak());
+        algorithms.add(new RipeMD256());
     }
 
-    @Override
-    public void send(DataOutputStream out, Solution information)
+    public HashAlgorithm getRandomFromHash(byte hash[])
     {
-        try
-        {
-            out.writeLong(header());
-            out.write(information.getBytes());
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
+        int algorithm = new Random(new BigInteger(hash).longValue()).nextInt(algorithms.size());
 
-    @Override
-    public Solution receive(DataInputStream in)
-    {
-        try
-        {
-            return new Solution(in);
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        return new Solution();
-    }
-
-    @Override
-    public void performAction(DataInputStream in)
-    {
-//        RVCCore.get().getSolutionPool().add(receive(in));
+        return algorithms.get(algorithm);
     }
 }

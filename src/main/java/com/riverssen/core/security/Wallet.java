@@ -12,8 +12,8 @@
 
 package com.riverssen.core.security;
 
-import com.riverssen.core.Config;
 import com.riverssen.core.Logger;
+import com.riverssen.core.system.Context;
 
 import java.io.*;
 import java.security.KeyFactory;
@@ -93,19 +93,14 @@ public class Wallet
         this.publicKey = publicKey;
     }
 
-    public void export()
-    {
-        export(null);
-    }
-
-    public void export(String password)
+    public void export(String password, Context context)
     {
         try
         {
-            File diry = new File(Config.getConfig().WALLET_DIRECTORY + name + "//");
+            File diry = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//");
             diry.mkdirs();
-            File file = new File(Config.getConfig().WALLET_DIRECTORY + name + "//" + name + ".rwt");
-            File pub = new File(Config.getConfig().WALLET_DIRECTORY + name + "//readme.txt");
+            File file = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//" + name + ".rwt");
+            File pub = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//readme.txt");
 
             FileOutputStream writer = new FileOutputStream(file);
             DataOutputStream stream = new DataOutputStream(writer);

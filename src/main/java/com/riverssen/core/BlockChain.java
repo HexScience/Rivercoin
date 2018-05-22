@@ -13,10 +13,8 @@
 package com.riverssen.core;
 
 import com.riverssen.core.chain.BlockHeader;
-import com.riverssen.core.consensus.ConsensusAlgorithm;
 import com.riverssen.core.headers.BlockChainI;
-import com.riverssen.core.networking.NetworkManager;
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.system.Context;
 import com.riverssen.core.system.LatestBlockInfo;
 import com.riverssen.utils.Tuple;
 
@@ -26,20 +24,12 @@ import java.util.List;
 public class BlockChain implements BlockChainI
 {
     private FullBlock       block;
-    private TransactionPool transactionPool;
-    private BlockPool       blockPool;
-    private SolutionPool    solutionPool;
-    private NetworkManager network;
+    private Context         context;
     private long            lastvalidated;
-    private PublicAddress   miner;
 
-    public BlockChain(TransactionPool tPool, BlockPool bPool, SolutionPool solutionPool, NetworkManager network, PublicAddress miner)
+    public BlockChain(Context context)
     {
-        this.transactionPool = tPool;
-        this.blockPool       = bPool;
-        this.solutionPool    = solutionPool;
-        this.network         = network;
-        this.miner           = miner;
+        this.context = context;
     }
 
     @Override
@@ -66,9 +56,9 @@ public class BlockChain implements BlockChainI
     public void FetchBlockChainFromPeers()
     {
         Logger.alert("attempting to download chain from peers");
-        List<FullBlock> blocks = blockPool.Fetch();
+        List<FullBlock> blocks = context.getBlockPool().Fetch();
 
-        for(FullBlock block : blocks) block.serialize();
+        for(FullBlock block : blocks) block.serialize(context);
     }
 
     @Override
@@ -76,9 +66,9 @@ public class BlockChain implements BlockChainI
     {
         Logger.alert("attempting to load the blockchain from disk");
 
-        File blockChainDirectory = new File(Config.getConfig().BLOCKCHAIN_DIRECTORY);
+        File blockChainDirectory = new File(context.getConfig().getBlockChainDirectory());
 
-        LatestBlockInfo info = new LatestBlockInfo();
+        LatestBlockInfo info = new LatestBlockInfo(context.getConfig());
         try
         {
             info.read();
@@ -91,7 +81,7 @@ public class BlockChain implements BlockChainI
 
         if(latestblock < 0) return;
 
-        this.block = new BlockHeader(latestblock).continueChain();
+        this.block = new BlockHeader(latestblock, context).continueChain();
 
         Logger.alert("chain loaded successfully");
     }
@@ -105,7 +95,7 @@ public class BlockChain implements BlockChainI
 
         lastvalidated = System.currentTimeMillis();
 
-        Tuple<String, Long> forkInfo = network.getForkInfo();
+        Tuple<String, Long> forkInfo = context.getNetworkManager().getForkInfo();
         long latestFork = forkInfo.getJ();
 
         /** check that our chain is the longest chain, if it is, then return **/
@@ -131,7 +121,7 @@ public class BlockChain implements BlockChainI
             block = new FullBlock(-1, new BlockHeader());
         Validate();
 
-        while(RVCCore.get().run())
+        while(true)
         {
             FetchTransactions();
             ValidateTransactions();
@@ -139,10 +129,7 @@ public class BlockChain implements BlockChainI
             Validate();
 
             if(block.getBody().mine())
-                block.mine(ConsensusAlgorithm.getLatestInstance(block.getHeader().getParentHash()),
-                Config.getConfig().TARGET_DIFFICULTY.toBigInteger(),
-                miner,
-                solutionPool);
+                block.mine(context);
         }
     }
 }

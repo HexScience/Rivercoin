@@ -49,12 +49,13 @@ public class NewBlock implements Message<FullBlock>
     {
         BlockHeader header = new BlockHeader(in);
         BlockData data = new BlockData(in);
-        return new FullBlock(header, data, new BlockHeader(header.getBlockID() - 1));
+//        return new FullBlock(header, data, new BlockHeader(header.getBlockID() - 1));
+        return null;
     }
 
     @Override
     public void performAction(DataInputStream in)
     {
-        RVCCore.get().getBlockPool().add(receive(in));
+//        RVCCore.get().getBlockPool().add(receive(in));
     }
 }

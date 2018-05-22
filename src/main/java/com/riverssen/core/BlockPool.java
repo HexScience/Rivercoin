@@ -14,7 +14,6 @@ package com.riverssen.core;
 
 import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.networking.Peer;
-import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.system.Context;
 import com.riverssen.core.system.LatestBlockInfo;
 
@@ -24,15 +23,15 @@ public class BlockPool
 {
     private final HashMap<Peer, Long> chainSizes = new HashMap<>();
     private boolean             loading;
-    private Context             network;
+    private Context             context;
     private List<FullBlock>     blocks;
     private LatestBlockInfo     lbi;
 
     public BlockPool(Context network)
     {
-        this.network    = network;
+        this.context = network;
         blocks          = Collections.synchronizedList(new ArrayList<>());
-        lbi             = new LatestBlockInfo();
+        lbi             = new LatestBlockInfo(context.getConfig());
         try {
             lbi.read();
         } catch (Exception e) {
@@ -66,15 +65,15 @@ public class BlockPool
 
     private void load()
     {
-        long chainsize = network.getNetworkManager().GetChainSize();
+        long chainsize = context.getNetworkManager().GetChainSize();
 
         if(chainsize > lbi.getLatestBlock())
         {
             List<FullBlock> pool = new ArrayList<>();
-            network.getNetworkManager().fetchAllBlocks(pool, lbi.getLatestBlock());
+            context.getNetworkManager().fetchAllBlocks(pool, lbi.getLatestBlock());
 
             Set<String> blocks = new HashSet<>();
-            FullBlock header = lbi.getLatestFullBlock();
+            FullBlock header = lbi.getLatestFullBlock(context);
 
             if(header != null)
                 blocks.add(header.getHashAsString());
@@ -89,7 +88,7 @@ public class BlockPool
 
                 if(headerID >= unverified.getBlockID()) continue;
 
-                int err = unverified.validate(header.getHeader());
+                int err = unverified.validate(header.getHeader(), context);
 
                 if(err > 0) continue;
 
@@ -121,18 +120,18 @@ public class BlockPool
 
     public void Send(FullBlock fullBlock)
     {
-        network.getNetworkManager().SendMined(fullBlock);
+        context.getNetworkManager().SendMined(fullBlock);
     }
 
     public void add(FullBlock receive)
     {
         /** if its an old block then don't add it **/
-        if(receive.getBlockID() <= RVCCore.get().getChain().currentBlock()) return;
+//        if(receive.getBlockID() <= RVCCore.get().getChain().currentBlock()) return;
 
         BlockHeader parent = null;
         if(blocks.size() > 0) parent = blocks.get(blocks.size() - 1).getHeader();
-        else parent = new BlockHeader(receive.getBlockID() - 1);
+        else parent = new BlockHeader(receive.getBlockID() - 1, context);
 
-        if(receive.validate() == 0) blocks.add(receive);
+        if(receive.validate(parent, context) == 0) blocks.add(receive);
     }
 }

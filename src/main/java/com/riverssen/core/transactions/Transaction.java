@@ -12,13 +12,13 @@
 
 package com.riverssen.core.transactions;
 
-import com.riverssen.core.Config;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PrivKey;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.system.Config;
 import com.riverssen.utils.Base58;
 import com.riverssen.utils.ByteUtil;
 import com.riverssen.utils.SmartDataTransferer;
@@ -93,7 +93,7 @@ public class Transaction implements TransactionI, Encodeable
         for(TransactionInput input : txids) if(!input.getUTXO().getOwner().equals(sender)) return false;
 
         /** check amount is more than or equal to the minimum transaction amount **/
-        if(amount.toBigInteger().compareTo(new BigInteger(Config.getConfig().MINIMUM_TRANSACTION_AMOUNT)) < 0) return false;
+        if(amount.toBigInteger().compareTo(new BigInteger(Config.getMinimumTransactionAmount())) < 0) return false;
 
         /** check utxo amount is more than transaction amount **/
         if (amount.toBigInteger().compareTo(getInputAmount()) > 0) return false;
@@ -143,7 +143,7 @@ public class Transaction implements TransactionI, Encodeable
 
     public BigInteger getFee()
     {
-        return new RiverCoin(Config.getConfig().MINING_FEE).toBigInteger();
+        return new RiverCoin(Config.getMiningFee()).toBigInteger();
     }
 
     public List<TransactionOutput> generateOutputs(PublicAddress miner)
