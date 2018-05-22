@@ -15,12 +15,15 @@ package com.riverssen.core.chain;
 import com.riverssen.core.Config;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.PublicAddress;
-import com.riverssen.core.transactions.UTXO;
+import com.riverssen.core.transactions.TXIList;
+import com.riverssen.core.transactions.TransactionInput;
+import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.utils.Serializer;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.utils.MerkleTree;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.InflaterInputStream;
 
@@ -30,6 +33,7 @@ public class BlockData implements Encodeable
     private MerkleTree  merkleTree;
     private long        time;
     private long        dataSize;
+    private List<TransactionInput> fees;
 
     public BlockData()
     {
@@ -135,11 +139,16 @@ public class BlockData implements Encodeable
         dataSize += token.toJSON().getBytes().length;
     }
 
-    public void FetchUTXOs(PublicAddress address, List<UTXO> tokens)
+//    public void FetchUTXOs(PublicAddress address, List<UTXO> tokens)
+//    {
+//        for(TransactionI token : merkleTree.flatten())
+//        {
+//            tokens.addAll(token.getTXIDs());
+//        }
+//    }
+
+    public TXIList collectOutputs(PublicAddress miner)
     {
-        for(TransactionI token : merkleTree.flatten())
-        {
-            tokens.addAll(token.getTXIDs());
-        }
+        return null;
     }
 }

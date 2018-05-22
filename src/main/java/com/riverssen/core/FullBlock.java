@@ -125,7 +125,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: new job {"+ algorithm.getClass().getSimpleName() + ":" + (difficultyHash) + "}");
 
         /** add the reward BEFORE mining the block **/
-        body.add(new RewardTransaction(miner));
+        body.add(new RewardTransaction(miner, this));
 
         //System.out.println(new RewardTransaction(miner).toJSON());
 

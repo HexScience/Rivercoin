@@ -22,7 +22,7 @@ import com.riverssen.utils.*;
 
 import java.io.DataOutputStream;
 
-/** Instances of this class will be created during runtime using the Transaction::getOutputs(Transaction*); **/
+/** Instances of this class will be created during runtime using the Transaction::generateOutputs(Transaction*); **/
 public class TransactionOutput/**<T extends Encodeable & JSONFormattable & Exportable>**/ implements Encodeable, JSONFormattable, Exportable
 {
     private final PublicAddress owner;

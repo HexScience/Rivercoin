@@ -99,12 +99,12 @@ public class Contract implements TransactionI
     }
 
     @Override
-    public List<TransactionOutput> getOutputs() {
+    public List<TransactionOutput> generateOutputs() {
         return null;
     }
 
     @Override
-    public List<TransactionOutput> getOutputs(PublicAddress miner) {
+    public List<TransactionOutput> generateOutputs(PublicAddress miner) {
         return null;
     }
 

@@ -30,8 +30,8 @@ public class Config
 
     /** max blocl size in bytes **/
     public final int MAX_BLOCK_SIZE           = 5_000_000;
-    /** The mining fee is a constant, any mined solutions taking more than the specified amount should be discarded **/
-    public final String MINING_FEE            = "0.00025";
+    /** The mining fee is a constant, any mined solutions taking more than the specified amount should be discarded, flat rate; not percentage. **/
+    public final String MINING_FEE            = "0.0000015";//"0.00025";
     /** The minimum amount allowed per transaction in nano-value **/
     public final String MINIMUM_TRANSACTION_AMOUNT = "100000";
     public int PORT                           = 5110;

@@ -41,13 +41,12 @@ public class RewardTransaction implements TransactionI
         txids    = new TXIList(stream);
     }
 
-    public RewardTransaction(PublicAddress receiver, FullBlock block, TXIList feeInputs)
+    public RewardTransaction(PublicAddress receiver, FullBlock block)
     {
         this.receiver = receiver;
         this.time     = System.currentTimeMillis();
         this.txids    = new TXIList();
 
-        this.txids.addAll(feeInputs);
         this.txids.add(new TransactionInput(new TransactionOutput(receiver, new RiverCoin(Config.getReward()), block.getHeader().getMerkleRoot())));
     }
 
@@ -78,12 +77,12 @@ public class RewardTransaction implements TransactionI
     }
 
     @Deprecated
-    public List<TransactionOutput> getOutputs()
+    public List<TransactionOutput> generateOutputs()
     {
-        return getOutputs(null);
+        return generateOutputs(null);
     }
 
-    public List<TransactionOutput> getOutputs(PublicAddress miner)
+    public List<TransactionOutput> generateOutputs(PublicAddress miner)
     {
         List<TransactionOutput> utxos = new ArrayList<>();
 

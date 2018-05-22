@@ -14,6 +14,7 @@ package com.riverssen.core;
 
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.NetworkManager;
+import com.riverssen.core.system.Context;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,27 +24,32 @@ import java.util.Set;
 public class TransactionPool
 {
     private PriorityQueue<TransactionI> pool;
-    private Set<TransactionI>           hset;
-    private NetworkManager pnet;
+//    private Set<TransactionI>           hset;
+    private Context                     context;
+    private long                        lastTransactionTime;
 
-    public TransactionPool(NetworkManager network)
+    public TransactionPool(Context network)
     {
         pool = new PriorityQueue<>();
-        hset = Collections.synchronizedSet(new HashSet<>());
-        pnet = network;
+//        hset = Collections.synchronizedSet(new HashSet<>());
+        context = network;
     }
 
     public void add(TransactionI token)
     {
-        /** check token doesn't already exist in pool */
-        if(hset.contains(token)) return;
+//        /** check token doesn't already exist in pool */
+//        if(hset.contains(token)) return;
 
         /** check tokens timestamp isn't older than a block **/
-        if(System.currentTimeMillis() - token.getTimeStamp() > (450000)) return;
+        if(System.currentTimeMillis() - token.getTimeStamp() > (context.getConfig().getAverageBlockTime() * 1.5)) return;
 
         pool.add(token);
-        hset.add(token);
+//        hset.add(token);
 
-        pnet.BroadCastNewTransaction(token);
+        context.getNetworkManager().BroadCastNewTransaction(token);
+    }
+
+    public boolean getLastTransactionWas(long time) {
+        return System.currentTimeMillis() - lastTransactionTime >= time;
     }
 }

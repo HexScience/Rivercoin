@@ -12,7 +12,6 @@
 
 package com.riverssen.core.transactions;
 
-import com.riverssen.core.Config;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.compression.Base58Hash;
@@ -52,11 +51,7 @@ public class UTXOManager
         MerkleTree mt = block.getBody().getMerkleTree();
 
         for(TransactionI transaction : mt.flatten())
-            for(TransactionOutput transactionOutput : transaction.getOutputs())
+            for(TransactionOutput transactionOutput : transaction.generateOutputs(block.getHeader().getMinerAddressAsPublicAddress()))
                 map.put(transactionOutput.getHash(), transactionOutput);
-    }
-
-    static class ChainedMap
-    {
     }
 }

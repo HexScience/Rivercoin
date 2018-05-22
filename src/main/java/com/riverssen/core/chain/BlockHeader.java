@@ -34,6 +34,8 @@ public class BlockHeader implements Encodeable
     private final byte parentHash[] = new byte[32];
     /** 32 byte hash of the merkle root **/
     private final byte merkleRoot[] = new byte[32];
+    /** 32 byte hash of the UTXOChainmerkle root **/
+    private final byte riverMerkleRoot[] = new byte[32];
     /** 8 byte integer of the blocks timestamp **/
     private final byte timeStamp[] = new byte[8];
     /** 32 byte integer of the difficulty **/

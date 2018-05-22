@@ -26,7 +26,6 @@ import com.riverssen.utils.SmartDataTransferer;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +47,7 @@ public class Transaction implements TransactionI, Encodeable
     /** 8 byte 'honest' typestamp **/
     private byte                                timestamp[];
 
-    public
-
-    Transaction(DataInputStream stream) throws IOException, Exception
+    public Transaction(DataInputStream stream) throws IOException, Exception
     {
         sender      = new CompressedAddress(stream);
         receiver    = new PublicAddress(ByteUtil.read(stream, 20));
@@ -95,14 +92,14 @@ public class Transaction implements TransactionI, Encodeable
 
         for(TransactionInput input : txids) if(!input.getUTXO().getOwner().equals(sender)) return false;
 
-        if (amount.toBigInteger().compareTo(BigInteger.ZERO) <= 0) return false;
+        /** check amount is more than or equal to the minimum transaction amount **/
+        if(amount.toBigInteger().compareTo(new BigInteger(Config.getConfig().MINIMUM_TRANSACTION_AMOUNT)) < 0) return false;
 
         /** check utxo amount is more than transaction amount **/
         if (amount.toBigInteger().compareTo(getInputAmount()) > 0) return false;
         /** check utxo amount is contains a transaction fee **/
-        if (amount.toBigInteger().add(new BigDecimal(amount.toBigInteger()).multiply(new BigDecimal(Config.getConfig().MINING_FEE)).toBigInteger()).compareTo(getInputAmount()) >= 0) return false;
+        if (amount.toBigInteger().add(getFee()).compareTo(getInputAmount()) >= 0) return false;
 
-        if(amount.toBigInteger().compareTo(new BigInteger(Config.getConfig().MINIMUM_TRANSACTION_AMOUNT)) < 0) return false;
 
         return sender.toPublicKey().verifySignature(generateSignatureData(), Base58.encode(signature));
     }
@@ -138,17 +135,34 @@ public class Transaction implements TransactionI, Encodeable
         return amount;
     }
 
-    @Deprecated
-    public List<TransactionOutput> getOutputs()
+//    @Deprecated
+//    public List<TransactionOutput> generateOutputs()
+//    {
+//        return generateOutputs(null);
+//    }
+
+    public BigInteger getFee()
     {
-        return getOutputs(null);
+        return new RiverCoin(Config.getConfig().MINING_FEE).toBigInteger();
     }
 
-    public List<TransactionOutput> getOutputs(PublicAddress miner)
+    public List<TransactionOutput> generateOutputs(PublicAddress miner)
     {
         List<TransactionOutput> utxos = new ArrayList<>();
 
         utxos.add(new TransactionOutput(receiver, amount, encode(ByteUtil.defaultEncoder())));
+        RiverCoin leftOver = new RiverCoin(getInputAmount().subtract(amount.toBigInteger()));
+        /** if miner doesn't want fees, then all the leftover amount is returned to the sender as a new unspent output **/
+        if(miner == null) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
+        else{
+            RiverCoin fee = new RiverCoin(getFee());
+            leftOver = new RiverCoin(leftOver.toBigInteger().subtract(fee.toBigInteger()));
+
+            if(leftOver.toBigInteger().compareTo(BigInteger.ZERO) < 0) throw new RuntimeException("leftover must be bigger than zero");
+            if(fee.toBigInteger().compareTo(     BigInteger.ZERO) < 0) throw new RuntimeException("leftover must be bigger than zero");
+            if(fee.toBigInteger().compareTo(     BigInteger.ZERO) > 0) utxos.add(new TransactionOutput(miner, fee, encode(ByteUtil.defaultEncoder())));
+            if(leftOver.toBigInteger().compareTo(BigInteger.ZERO) > 0) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
+        }
 
         return utxos;
     }
@@ -191,12 +205,10 @@ public class Transaction implements TransactionI, Encodeable
 
     @Override
     public void export(SmartDataTransferer smdt) {
-
     }
 
     @Override
     public void export(DataOutputStream dost) {
-
     }
 
     @Override
