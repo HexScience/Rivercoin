@@ -15,6 +15,7 @@ package com.riverssen.core;
 import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.networking.Peer;
 import com.riverssen.core.networking.NetworkManager;
+import com.riverssen.core.system.Context;
 import com.riverssen.core.system.LatestBlockInfo;
 
 import java.util.*;
@@ -23,18 +24,21 @@ public class BlockPool
 {
     private final HashMap<Peer, Long> chainSizes = new HashMap<>();
     private boolean             loading;
-    private NetworkManager network;
+    private Context             network;
     private List<FullBlock>     blocks;
     private LatestBlockInfo     lbi;
 
-    BlockPool(NetworkManager network) throws Exception
+    public BlockPool(Context network)
     {
         this.network    = network;
         blocks          = Collections.synchronizedList(new ArrayList<>());
         lbi             = new LatestBlockInfo();
-        lbi.read();
+        try {
+            lbi.read();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         this.loading    = true;
-        this.network.addPool(this);
     }
 
     private Peer getBiggestChain()
@@ -62,12 +66,12 @@ public class BlockPool
 
     private void load()
     {
-        long chainsize = network.GetChainSize();
+        long chainsize = network.getNetworkManager().GetChainSize();
 
         if(chainsize > lbi.getLatestBlock())
         {
             List<FullBlock> pool = new ArrayList<>();
-            network.fetchAllBlocks(pool, lbi.getLatestBlock());
+            network.getNetworkManager().fetchAllBlocks(pool, lbi.getLatestBlock());
 
             Set<String> blocks = new HashSet<>();
             FullBlock header = lbi.getLatestFullBlock();
@@ -117,7 +121,7 @@ public class BlockPool
 
     public void Send(FullBlock fullBlock)
     {
-        network.SendMined(fullBlock);
+        network.getNetworkManager().SendMined(fullBlock);
     }
 
     public void add(FullBlock receive)

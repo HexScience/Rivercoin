@@ -14,11 +14,12 @@ package com.riverssen.core.system;
 
 import com.riverssen.core.BlockPool;
 import com.riverssen.core.TransactionPool;
+import com.riverssen.core.chainedmap.ChainedMap;
 import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
-import com.riverssen.core.transactions.UTXOManager;
 
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 
 public class Context
@@ -27,10 +28,21 @@ public class Context
     private NetworkManager  networkManager;
     private BlockPool       blockPool;
     private TransactionPool transactionPool;
-    private UTXOManager     utxoManager;
+    private ChainedMap      utxoManager;
     private PublicAddress   miner;
     private Wallet          wallet;
     private Config          config;
+
+    public Context(File config)
+    {
+        this.config = new Config(config);
+        networkManager  = new NetworkManager();
+        blockPool       = new BlockPool(this);
+        transactionPool = new TransactionPool(this);
+        utxoManager     = new ChainedMap();
+        this.miner      = this.config.getMinerAddress();
+        this.wallet     = this.config.getWallet();
+    }
 
     public long getTime()
     {
@@ -39,7 +51,7 @@ public class Context
 
     public boolean shouldMine()
     {
-        return transactionPool.getLastTransactionWas(config);
+        return transactionPool.getLastTransactionWas(config.getAverageBlockTime() / 2L);
     }
 
     public ExecutorService getExecutorService()
@@ -72,11 +84,11 @@ public class Context
         this.transactionPool = transactionPool;
     }
 
-    public UTXOManager getUtxoManager() {
+    public ChainedMap getUtxoManager() {
         return utxoManager;
     }
 
-    public void setUtxoManager(UTXOManager utxoManager) {
+    public void setUtxoManager(ChainedMap utxoManager) {
         this.utxoManager = utxoManager;
     }
 
