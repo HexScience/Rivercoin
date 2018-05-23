@@ -25,7 +25,7 @@ public class NewTransaction implements Message<TransactionI>
     @Override
     public long header()
     {
-        return 0;
+        return newtransaction;
     }
 
     @Override

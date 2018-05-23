@@ -27,7 +27,7 @@ public class NewBlock implements Message<FullBlock>
     @Override
     public long header()
     {
-        return 1;
+        return newblock;
     }
 
     @Override

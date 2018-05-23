@@ -24,7 +24,7 @@ public class RequestChain implements Message<Long>
     @Override
     public long header()
     {
-        return 4;
+        return requestchain;
     }
 
     @Override

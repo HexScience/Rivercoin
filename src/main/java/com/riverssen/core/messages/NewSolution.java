@@ -25,7 +25,7 @@ public class NewSolution implements Message<Solution>
     @Override
     public long header()
     {
-        return 3;
+        return newsolution;
     }
 
     @Override

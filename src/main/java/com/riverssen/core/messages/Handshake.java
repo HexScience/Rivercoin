@@ -28,7 +28,7 @@ public class Handshake implements Message<Handshake.ShakeInfo>
     @Override
     public long header()
     {
-        return 0;
+        return handshake;
     }
 
     @Override
