@@ -14,6 +14,7 @@ package com.riverssen.core.messages;
 
 import com.riverssen.core.consensus.Solution;
 import com.riverssen.core.headers.Message;
+import com.riverssen.core.system.Context;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
