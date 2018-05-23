@@ -13,10 +13,10 @@
 package com.riverssen.core.messages;
 
 import com.riverssen.core.FullBlock;
-import com.riverssen.core.RVCCore;
 import com.riverssen.core.chain.BlockData;
 import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.headers.Message;
+import com.riverssen.core.system.Context;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -31,7 +31,7 @@ public class NewBlock implements Message<FullBlock>
     }
 
     @Override
-    public void send(DataOutputStream out, FullBlock information)
+    public void send(DataOutputStream out, FullBlock information, Context context)
     {
         try
         {
@@ -45,7 +45,7 @@ public class NewBlock implements Message<FullBlock>
     }
 
     @Override
-    public FullBlock receive(DataInputStream in)
+    public FullBlock receive(DataInputStream in, Context context)
     {
         BlockHeader header = new BlockHeader(in);
         BlockData data = new BlockData(in);
@@ -54,8 +54,8 @@ public class NewBlock implements Message<FullBlock>
     }
 
     @Override
-    public void performAction(DataInputStream in)
+    public void onReceive(DataInputStream in, Context context)
     {
-//        RVCCore.get().getBlockPool().add(receive(in));
+//        RivercoinCore.get().getBlockPool().add(receive(in));
     }
 }

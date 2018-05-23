@@ -18,11 +18,8 @@ import com.riverssen.utils.FileUtils;
 import java.io.File;
 import java.security.Security;
 
-public class RVCCore
+public class RivercoinCore
 {
-    public static short versionBytes = 1;
-    public static final String version = "0.0.2a";
-
     public static void main(String args[]) throws Exception
     {
         String root = "";
@@ -31,10 +28,10 @@ public class RVCCore
             root = args[0];
         else throw new RuntimeException("Please specify a rivercoin.config file.");
 
-        new RVCCore(root);
+        new RivercoinCore(root);
     }
 
-    RVCCore(String file)
+    RivercoinCore(String file)
     {
         /** create a context **/
         Context context = new Context(new File(file));

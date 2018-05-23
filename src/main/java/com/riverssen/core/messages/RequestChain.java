@@ -13,6 +13,7 @@
 package com.riverssen.core.messages;
 
 import com.riverssen.core.headers.Message;
+import com.riverssen.core.system.Context;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -27,7 +28,7 @@ public class RequestChain implements Message<Long>
     }
 
     @Override
-    public void send(DataOutputStream out, Long information)
+    public void send(DataOutputStream out, Long information, Context context)
     {
         try
         {
@@ -39,7 +40,7 @@ public class RequestChain implements Message<Long>
     }
 
     @Override
-    public Long receive(DataInputStream in)
+    public Long receive(DataInputStream in, Context context)
     {
         try
         {
@@ -53,7 +54,7 @@ public class RequestChain implements Message<Long>
     }
 
     @Override
-    public void performAction(DataInputStream in)
+    public void onReceive(DataInputStream in, Context context)
     {
     }
 }

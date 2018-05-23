@@ -12,7 +12,6 @@
 
 package com.riverssen.core.messages;
 
-import com.riverssen.core.RVCCore;
 import com.riverssen.core.consensus.Solution;
 import com.riverssen.core.headers.Message;
 
@@ -29,7 +28,7 @@ public class NewSolution implements Message<Solution>
     }
 
     @Override
-    public void send(DataOutputStream out, Solution information)
+    public void send(DataOutputStream out, Solution information, Context context)
     {
         try
         {
@@ -42,7 +41,7 @@ public class NewSolution implements Message<Solution>
     }
 
     @Override
-    public Solution receive(DataInputStream in)
+    public Solution receive(DataInputStream in, Context context)
     {
         try
         {
@@ -56,8 +55,8 @@ public class NewSolution implements Message<Solution>
     }
 
     @Override
-    public void performAction(DataInputStream in)
+    public void onReceive(DataInputStream in, Context context)
     {
-//        RVCCore.get().getSolutionPool().add(receive(in));
+//        RivercoinCore.get().getSolutionPool().add(receive(in));
     }
 }

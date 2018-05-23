@@ -14,6 +14,7 @@ package com.riverssen.core.messages;
 
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.Message;
+import com.riverssen.core.system.Context;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -28,7 +29,7 @@ public class NewTransaction implements Message<TransactionI>
     }
 
     @Override
-    public void send(DataOutputStream out, TransactionI information)
+    public void send(DataOutputStream out, TransactionI information, Context context)
     {
         try
         {
@@ -41,14 +42,15 @@ public class NewTransaction implements Message<TransactionI>
     }
 
     @Override
-    public TransactionI receive(DataInputStream in)
+    public TransactionI receive(DataInputStream in, Context context)
     {
         return TransactionI.read(in);
     }
 
     @Override
-    public void performAction(DataInputStream in)
+    public void onReceive(DataInputStream in, Context context)
     {
-//        RVCCore.get().getTransactionPool().add(receive(in));
+        context.getTransactionPool().add(receive(in, context));
+//        RivercoinCore.get().getTransactionPool().add(receive(in));
     }
 }

@@ -13,7 +13,6 @@
 package com.riverssen.core.networking;
 
 import com.riverssen.core.Logger;
-import com.riverssen.core.RVCCore;
 import com.riverssen.core.chain.BlockData;
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.messages.NewTransaction;
@@ -35,8 +34,8 @@ public class Peer
     private final static List<Message> messages = new ArrayList<>();
     static {
         messages.add(new NewTransaction());
-//        messages.add()
     }
+    private Context             context;
     private Socket              socket;
     private DataOutputStream    stream;
     private DataInputStream     input;
@@ -50,13 +49,14 @@ public class Peer
     private static final int    msg_new_token    = 2;
     private static final int    msg_chain_size_r = 3;
 
-    public Peer(Socket socket) throws IOException
+    public Peer(Socket socket, Context context) throws IOException
     {
-        this.socket = socket;
-        this.stream = new DataOutputStream(socket.getOutputStream());
-        this.input  = new DataInputStream(socket.getInputStream());
-        this.run    = true;
-        this.name   = socket.getInetAddress().getHostName();
+        this.socket         = socket;
+        this.stream         = new DataOutputStream(socket.getOutputStream());
+        this.input          = new DataInputStream(socket.getInputStream());
+        this.run            = true;
+        this.name           = socket.getInetAddress().getHostName();
+        this.context        = context;
     }
 
     public void send()
@@ -74,7 +74,7 @@ public class Peer
                 for(Message message : messages)
                     if(message.header() == header)
                     {
-                        message.performAction(input);
+                        message.onReceive(input, context);
                         return;
                     }
 
@@ -91,16 +91,16 @@ public class Peer
         try
         {
             stream.writeUTF("handshake");
-            stream.writeShort(RVCCore.versionBytes);
+            stream.writeLong(context.getVersionBytes());
             stream.writeUTF(Base58.encode(context.getConfig().getCurrentDifficulty().toByteArray()));
             stream.writeUTF(context.getMiner().toString());
 
             stream.flush();
 
-            String handshake = input.readUTF();
-            short  version   = input.readShort();
-            String difficulty= input.readUTF();
-            String address   = input.readUTF();
+            String handshake    = input.readUTF();
+            short  version      = input.readShort();
+            String difficulty   = input.readUTF();
+            String address      = input.readUTF();
 
             if(handshake.equals("handshake"))
             {
@@ -135,8 +135,8 @@ public class Peer
 
     public void requestChainInfo()
     {
-        new RequestChain().send(stream, 0L);
-        Long size = new RequestChain().receive(input);
+        new RequestChain().send(stream, 0L, context);
+        Long size = new RequestChain().receive(input, context);
     }
 
     /** this method is redundant, it should be removed or kept for pool mining **/

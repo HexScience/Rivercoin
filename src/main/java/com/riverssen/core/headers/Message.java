@@ -12,14 +12,17 @@
 
 package com.riverssen.core.headers;
 
+import com.riverssen.core.system.Context;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 public interface Message<T>
 {
     long header();
-    void send(DataOutputStream out, T information);
-    T    receive(DataInputStream in);
+    void send(DataOutputStream out, T information, Context context) throws IOException;
+    T    receive(DataInputStream in, Context context) throws IOException;
 
-    void performAction(DataInputStream in);
+    void onReceive(DataInputStream in, Context context) throws IOException;
 }

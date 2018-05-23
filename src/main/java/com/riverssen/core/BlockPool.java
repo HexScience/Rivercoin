@@ -126,7 +126,7 @@ public class BlockPool
     public void add(FullBlock receive)
     {
         /** if its an old block then don't add it **/
-//        if(receive.getBlockID() <= RVCCore.get().getChain().currentBlock()) return;
+//        if(receive.getBlockID() <= RivercoinCore.get().getChain().currentBlock()) return;
 
         BlockHeader parent = null;
         if(blocks.size() > 0) parent = blocks.get(blocks.size() - 1).getHeader();

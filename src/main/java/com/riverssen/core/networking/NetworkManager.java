@@ -7,6 +7,7 @@ import com.riverssen.core.headers.Listener;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.system.Context;
 import com.riverssen.utils.TimeUtil;
+import com.riverssen.utils.Truple;
 import com.riverssen.utils.Tuple;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,19 +20,20 @@ import java.util.concurrent.ExecutorService;
 
 public class NetworkManager implements Listener
 {
-    private List<Peer>      peers;
+    private List<Peer>                              peers;
 
-    private ServerSocket    socket;
-    private BlockPool       blockPool;
-    private SolutionPool    solutionPool;
-    private TransactionPool transactionPool;
-    private Set<String>     ipAddresses;
-    private final Context   context;
+    private ServerSocket                            socket;
+    private BlockPool                               blockPool;
+    private TransactionPool                         transactionPool;
+    private Set<String>                             ipAddresses;
+    private final Context                           context;
+    private Map<Peer, Truple<Peer, String, Long>>   forkInfo;
 
     public NetworkManager(Context context)
     {
-        this.context = context;
-        peers = Collections.synchronizedList(new ArrayList<>());
+        this.context    = context;
+        peers           = Collections.synchronizedList(new ArrayList<>());
+        this.forkInfo   = new HashMap<>();
     }
 
     public synchronized void connect(ExecutorService service) throws Exception
@@ -86,15 +88,12 @@ public class NetworkManager implements Listener
                     socket.setSoTimeout(Integer.MAX_VALUE);
                     Socket socketpeer = socket.accept();
 
-                    Peer peer = new Peer(socketpeer);
-//                    if(peer.performHandshake(context))
-//                    {
+                    Peer peer = new Peer(socketpeer, context);
                         /** no need to perform handshake, the peer client will the send the request **/
                         Set<String> list = peer.requestPeerList();
                         ipAddresses.addAll(list);
                         peer.requestChainInfo();
                         peers.add(peer);
-//                    } else socketpeer.close();
                 } catch (IOException e)
                 {
                     e.printStackTrace();
@@ -121,7 +120,7 @@ public class NetworkManager implements Listener
 
                     Socket socket = new Socket(address, context.getConfig().getPort());
 
-                    Peer peer = new Peer(socket);
+                    Peer peer = new Peer(socket, context);
                     if(peer.performHandshake(context))
                     {
                         Set<String> list = peer.requestPeerList();
@@ -152,10 +151,6 @@ public class NetworkManager implements Listener
     public void SendMined(FullBlock fullBlock)
     {
         Logger.alert(TimeUtil.getPretty("[H:M:S]") + "["+fullBlock.getBlockID()+"]: broadcasting to peers");
-    }
-
-    public void addPool(SolutionPool solutionPool)
-    {
     }
 
     public Tuple<String,Long> getForkInfo()

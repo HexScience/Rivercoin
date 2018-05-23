@@ -13,7 +13,6 @@
 package com.riverssen.core.gpu;
 
 import com.riverssen.core.Logger;
-import com.riverssen.core.RVCCore;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.PointerBuffer;
@@ -816,7 +815,7 @@ public class GPUMiningInstance
         } catch (LWJGLException e)
         {
             e.printStackTrace();
-//            RVCCore.setGPUMining(false);
+//            RivercoinCore.setGPUMining(false);
         }
     }
 

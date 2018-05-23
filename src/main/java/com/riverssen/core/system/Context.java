@@ -56,13 +56,14 @@ public class Context
         this.wallet             = this.config.getWallet();
         this.provider           = new Provider();
         this.blockChain         = new BlockChain(this);
-        this.versionBytes       = ByteUtil.decode(new byte[] {'a',0,0,0,0,0,0,1});
+        this.versionBytes       = ByteUtil.decode(new byte[] {'a',0,0,0 ,0,0,0,1});
 
         try {
             this.getNetworkManager().connect(executorService);
             this.executorService.execute(blockChain);
         } catch (Exception e) {
             e.printStackTrace();
+            System.exit(0);
         }
     }
 
