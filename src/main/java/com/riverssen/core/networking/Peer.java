@@ -132,4 +132,9 @@ public class Peer
     {
         this.chainSize = chainSize;
     }
+
+    public String getAddress()
+    {
+        return socket.getRemoteSocketAddress().toString();
+    }
 }

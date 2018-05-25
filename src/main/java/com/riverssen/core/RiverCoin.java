@@ -21,6 +21,7 @@ import com.riverssen.utils.SmartDataTransferer;
 import java.awt.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -144,6 +145,10 @@ public class RiverCoin implements Encodeable, JSONFormattable, Exportable {
 
     @Override
     public void export(DataOutputStream dost) {
-
+        try {
+            dost.write(getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

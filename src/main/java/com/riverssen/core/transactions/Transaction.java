@@ -135,12 +135,6 @@ public class Transaction implements TransactionI, Encodeable
         return amount;
     }
 
-//    @Deprecated
-//    public List<TransactionOutput> generateOutputs()
-//    {
-//        return generateOutputs(null);
-//    }
-
     public BigInteger getFee()
     {
         return new RiverCoin(Config.getMiningFee()).toBigInteger();
@@ -177,7 +171,6 @@ public class Transaction implements TransactionI, Encodeable
         return generateSignatureData(sender, receiver, amount, txids, data, timestamp);
     }
 
-
     public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, RiverCoin amount, TXIList txilist, byte comment[], byte timestamp[])
     {
         return ByteUtil.concatenate(sender.getBytes(), receiver.getBytes(), amount.getBytes(), txilist.getBytes(), comment, timestamp);
@@ -195,7 +188,7 @@ public class Transaction implements TransactionI, Encodeable
 
     @Override
     public byte[] header() {
-        return new byte[0];
+        return new byte[] {TRANSACTION};
     }
 
     @Override
@@ -208,11 +201,26 @@ public class Transaction implements TransactionI, Encodeable
     }
 
     @Override
-    public void export(DataOutputStream dost) {
+    public void export(DataOutputStream dost)
+    {
+        try {
+            dost.write(TRANSACTION);
+
+            sender.export(dost);
+            dost.write(receiver.getBytes());
+            txids.export(dost);
+            amount.export(dost);
+            dost.write(data);
+            dost.write(signature.length);
+            dost.write(signature);
+            dost.write(timestamp);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public String toJSON() {
-        return null;
+        return new JSON().add("sender", getSender().toString()).add("receiver", getReceiver().toString()).toString();
     }
 }

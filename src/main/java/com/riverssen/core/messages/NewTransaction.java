@@ -52,6 +52,5 @@ public class NewTransaction implements Message<TransactionI>
     public void onReceive(DataInputStream in, Context context, Peer connection)
     {
         context.getTransactionPool().add(receive(in, context));
-//        RivercoinCore.get().getTransactionPool().add(receive(in));
     }
 }

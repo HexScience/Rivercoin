@@ -212,4 +212,13 @@ public class NetworkManager implements Listener
     public void onEvent(Event event) {
         if(event instanceof TerminateEvent) terminate();
     }
+
+    public List<Peer> getConnections() {
+        return peers;
+    }
+
+    public void addForeignAddresses(List<String> addresses)
+    {
+        ipAddresses.addAll(addresses);
+    }
 }

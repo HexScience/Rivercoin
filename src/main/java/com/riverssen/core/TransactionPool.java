@@ -24,29 +24,35 @@ import java.util.Set;
 public class TransactionPool
 {
     private PriorityQueue<TransactionI> pool;
-//    private Set<TransactionI>           hset;
     private Context                     context;
     private long                        lastTransactionTime;
 
     public TransactionPool(Context network)
     {
         pool = new PriorityQueue<>();
-//        hset = Collections.synchronizedSet(new HashSet<>());
         context = network;
     }
 
     public void add(TransactionI token)
     {
-//        /** check token doesn't already exist in pool */
-//        if(hset.contains(token)) return;
-
         /** check tokens timestamp isn't older than a block **/
         if(System.currentTimeMillis() - token.getTimeStamp() > (context.getConfig().getAverageBlockTime() * 1.5)) return;
 
+        lastTransactionTime = System.currentTimeMillis();
+
         pool.add(token);
-//        hset.add(token);
 
         context.getNetworkManager().BroadCastNewTransaction(token);
+    }
+
+    public boolean available()
+    {
+        return pool.size() > 0;
+    }
+
+    public TransactionI pull()
+    {
+        return pool.poll();
     }
 
     public boolean getLastTransactionWas(long time) {

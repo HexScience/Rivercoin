@@ -30,7 +30,14 @@ public class TXIList extends ArrayList<TransactionInput> implements Encodeable, 
     }
 
     public TXIList(DataInputStream stream) {
+        try {
+            int size = stream.readInt();
 
+            for(int i = 0; i < size; i ++)
+                add(new TransactionInput(ByteUtil.read(stream, 32)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     /** read all transaction inputs and return a rivercoin value **/
     /** this only works with Transactions & Rewards and not contracts **/

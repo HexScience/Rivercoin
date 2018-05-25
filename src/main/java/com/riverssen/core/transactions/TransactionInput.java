@@ -28,10 +28,10 @@ public class TransactionInput/**<T extends Encodeable & JSONFormattable & Export
         this.transactionOutputID    = utxo.getHash();
     }
 
-//    public T get()
-//    {
-//        return value;
-//    }
+    public TransactionInput(byte transactionInputID[])
+    {
+        this.transactionOutputID = transactionInputID;
+    }
 
     public TransactionOutput getUTXO()
     {

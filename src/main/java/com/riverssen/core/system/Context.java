@@ -14,6 +14,7 @@ package com.riverssen.core.system;
 
 import com.riverssen.core.BlockChain;
 import com.riverssen.core.BlockPool;
+import com.riverssen.core.Logger;
 import com.riverssen.core.TransactionPool;
 import com.riverssen.core.algorithms.Provider;
 import com.riverssen.core.chainedmap.ChainedMap;
@@ -21,7 +22,9 @@ import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
+import com.riverssen.core.transactions.Transaction;
 import com.riverssen.utils.ByteUtil;
+import com.riverssen.utils.TimeUtil;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -146,6 +149,17 @@ public class Context
 
     public void run()
     {
+        long timer = System.currentTimeMillis();
+
+        while(isRunning())
+        {
+
+            if(System.currentTimeMillis() - timer >= 1)
+            {
+                Logger.prt(Logger.COLOUR_BLUE, TimeUtil.getPretty("[H:M:S]: " + "info"));
+                timer = System.currentTimeMillis();
+            }
+        }
     }
 
     public HashAlgorithm getHashAlgorithm(byte blockHash[])

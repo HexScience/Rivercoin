@@ -10,21 +10,47 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.headers;
+package com.riverssen.core.messages;
 
+import com.riverssen.core.headers.Message;
 import com.riverssen.core.networking.Peer;
 import com.riverssen.core.system.Context;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public interface Message<T>
+public class PeerList implements Message<List<String>>
 {
-    public static final long handshake = 0, newblock = 1, newsolution = 2, newtransaction = 3, requestchain = 4, peerlist = 5;
-    long header();
-    void send(DataOutputStream out, T information, Context context) throws IOException;
-    T    receive(DataInputStream in, Context context) throws IOException;
+    @Override
+    public long header() {
+        return peerlist;
+    }
 
-    void onReceive(DataInputStream in, Context context, Peer connection) throws IOException;
+    @Override
+    public void send(DataOutputStream out, List<String> information, Context context) throws IOException {
+        out.writeInt(context.getNetworkManager().getConnections().size());
+        for(Peer peer : context.getNetworkManager().getConnections())
+            out.writeUTF(peer.getAddress());
+    }
+
+    @Override
+    public List<String> receive(DataInputStream in, Context context) throws IOException {
+        List<String> addresses = new ArrayList<>();
+
+        int size = in.readInt();
+        for(int i = 0; i < size; i ++)
+            addresses.add(in.readUTF());
+
+        return addresses;
+    }
+
+    @Override
+    public void onReceive(DataInputStream in, Context context, Peer connection) throws IOException {
+        List<String> addresses = receive(in, context);
+
+        context.getNetworkManager().addForeignAddresses(addresses);
+    }
 }
