@@ -14,6 +14,7 @@ package com.riverssen.core.messages;
 
 import com.riverssen.core.consensus.Solution;
 import com.riverssen.core.headers.Message;
+import com.riverssen.core.networking.Peer;
 import com.riverssen.core.system.Context;
 
 import java.io.DataInputStream;
@@ -56,7 +57,7 @@ public class NewSolution implements Message<Solution>
     }
 
     @Override
-    public void onReceive(DataInputStream in, Context context)
+    public void onReceive(DataInputStream in, Context context, Peer connection)
     {
 //        RivercoinCore.get().getSolutionPool().add(receive(in));
     }

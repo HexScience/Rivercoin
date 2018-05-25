@@ -16,6 +16,7 @@ import com.riverssen.core.FullBlock;
 import com.riverssen.core.chain.BlockData;
 import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.headers.Message;
+import com.riverssen.core.networking.Peer;
 import com.riverssen.core.system.Context;
 
 import java.io.DataInputStream;
@@ -54,7 +55,7 @@ public class NewBlock implements Message<FullBlock>
     }
 
     @Override
-    public void onReceive(DataInputStream in, Context context)
+    public void onReceive(DataInputStream in, Context context, Peer connection)
     {
 //        RivercoinCore.get().getBlockPool().add(receive(in));
     }

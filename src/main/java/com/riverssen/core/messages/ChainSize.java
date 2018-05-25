@@ -13,6 +13,7 @@
 package com.riverssen.core.messages;
 
 import com.riverssen.core.headers.Message;
+import com.riverssen.core.networking.Peer;
 import com.riverssen.core.system.Context;
 
 import java.io.DataInputStream;
@@ -55,7 +56,7 @@ public class ChainSize implements Message<Long>
     }
 
     @Override
-    public void onReceive(DataInputStream in, Context context)
+    public void onReceive(DataInputStream in, Context context, Peer connection)
     {
     }
 }

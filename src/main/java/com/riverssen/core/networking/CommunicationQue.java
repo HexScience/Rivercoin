@@ -10,48 +10,23 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.messages;
+package com.riverssen.core.networking;
 
-import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.Message;
-import com.riverssen.core.networking.Peer;
-import com.riverssen.core.system.Context;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 
-public class NewTransaction implements Message<TransactionI>
+public class CommunicationQue
 {
-    @Override
-    public long header()
+    private ArrayList<Message> messages;
+
+    public CommunicationQue()
     {
-        return newtransaction;
+        this.messages = new ArrayList<>();
     }
 
-    @Override
-    public void send(DataOutputStream out, TransactionI information, Context context)
+    public void send(Message message)
     {
-        try
-        {
-            out.writeLong(header());
-            information.export(out);
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public TransactionI receive(DataInputStream in, Context context)
-    {
-        return TransactionI.read(in);
-    }
-
-    @Override
-    public void onReceive(DataInputStream in, Context context, Peer connection)
-    {
-        context.getTransactionPool().add(receive(in, context));
-//        RivercoinCore.get().getTransactionPool().add(receive(in));
+        this.messages.add(message);
     }
 }

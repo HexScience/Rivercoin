@@ -12,6 +12,7 @@
 
 package com.riverssen.core.headers;
 
+import com.riverssen.core.networking.Peer;
 import com.riverssen.core.system.Context;
 
 import java.io.DataInputStream;
@@ -25,5 +26,5 @@ public interface Message<T>
     void send(DataOutputStream out, T information, Context context) throws IOException;
     T    receive(DataInputStream in, Context context) throws IOException;
 
-    void onReceive(DataInputStream in, Context context) throws IOException;
+    void onReceive(DataInputStream in, Context context, Peer connection) throws IOException;
 }

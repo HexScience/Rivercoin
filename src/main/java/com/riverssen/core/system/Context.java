@@ -160,4 +160,8 @@ public class Context
     public boolean isRunning() {
         return running;
     }
+
+    public BlockChain getBlockChain() {
+        return blockChain;
+    }
 }

@@ -14,6 +14,7 @@ package com.riverssen.core.messages;
 
 import com.riverssen.core.Logger;
 import com.riverssen.core.headers.Message;
+import com.riverssen.core.networking.Peer;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Context;
 import com.riverssen.utils.Base58;
@@ -67,7 +68,7 @@ public class Handshake implements Message<Handshake.ShakeInfo>
     }
 
     @Override
-    public void onReceive(DataInputStream input, Context context)
+    public void onReceive(DataInputStream input, Context context, Peer connection)
             throws IOException
     {
         ShakeInfo info = receive(input, context);

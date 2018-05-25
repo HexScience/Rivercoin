@@ -15,24 +15,24 @@ package com.riverssen.core.networking;
 import com.riverssen.core.Logger;
 import com.riverssen.core.chain.BlockData;
 import com.riverssen.core.headers.Message;
-import com.riverssen.core.messages.NewTransaction;
-import com.riverssen.core.messages.RequestChain;
+import com.riverssen.core.messages.*;
 import com.riverssen.core.system.Context;
-import com.riverssen.utils.Base58;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Peer
 {
     private final static List<Message> messages = new ArrayList<>();
     static {
+        messages.add(new NewTransaction());
+        messages.add(new Handshake());
+        messages.add(new NewBlock());
+        messages.add(new NewSolution());
+        messages.add(new RequestChain());
         messages.add(new NewTransaction());
     }
     private Context             context;
@@ -43,6 +43,7 @@ public class Peer
     private int                 messageHeaderLength = 64;
     private boolean             run;
     private String              name;
+    private long                chainSize;
 
     private static final int    msg_block_header = 0;
     private static final int    msg_block_       = 1;
@@ -74,7 +75,7 @@ public class Peer
                 for(Message message : messages)
                     if(message.header() == header)
                     {
-                        message.onReceive(input, context);
+                        message.onReceive(input, context, this);
                         return;
                     }
 
@@ -88,34 +89,13 @@ public class Peer
 
     public boolean performHandshake(Context context)
     {
-        try
-        {
-            stream.writeUTF("handshake");
-            stream.writeLong(context.getVersionBytes());
-            stream.writeUTF(Base58.encode(context.getConfig().getCurrentDifficulty().toByteArray()));
-            stream.writeUTF(context.getMiner().toString());
-
-            stream.flush();
-
-            String handshake    = input.readUTF();
-            short  version      = input.readShort();
-            String difficulty   = input.readUTF();
-            String address      = input.readUTF();
-
-            if(handshake.equals("handshake"))
-            {
-                Logger.err("message mismatch");
-                return false;
-            }
-
-            if(!Base58.encode(context.getConfig().getCurrentDifficulty().toByteArray()).equals(difficulty))
-                Logger.err("difficulty mismatch");
-
+        try {
+            new Handshake().send(stream, null, context);
             return true;
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
         return false;
     }
 
@@ -135,8 +115,7 @@ public class Peer
 
     public void requestChainInfo()
     {
-        new RequestChain().send(stream, 0L, context);
-        Long size = new RequestChain().receive(input, context);
+        new RequestChain().send(stream, context.getBlockChain().currentBlock(), context);
     }
 
     /** this method is redundant, it should be removed or kept for pool mining **/
@@ -147,5 +126,10 @@ public class Peer
     public Set<String> requestPeerList()
     {
         return new HashSet<>();
+    }
+
+    public void setChainSize(long chainSize)
+    {
+        this.chainSize = chainSize;
     }
 }
