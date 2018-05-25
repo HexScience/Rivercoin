@@ -141,22 +141,6 @@ public class Peer
 
     public synchronized void sendMissingBlocks(List<FullBlock> blockList)
     {
-        context.getExecutorService().execute(()->{
-            synchronized (stream)
-            {
-                try
-                {
-                    stream.writeLong(blockList.size());
-
-                    for(FullBlock block : blockList)
-                        block.export(stream);
-
-                    stream.flush();
-                } catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
+        new SendChain().send(stream, blockList, context);
     }
 }

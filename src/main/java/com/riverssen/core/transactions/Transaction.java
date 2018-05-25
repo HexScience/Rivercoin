@@ -19,6 +19,7 @@ import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PrivKey;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
+import com.riverssen.core.system.Context;
 import com.riverssen.utils.Base58;
 import com.riverssen.utils.ByteUtil;
 import com.riverssen.utils.SmartDataTransferer;
@@ -135,12 +136,8 @@ public class Transaction implements TransactionI, Encodeable
         return amount;
     }
 
-    public BigInteger getFee()
-    {
-        return new RiverCoin(Config.getMiningFee()).toBigInteger();
-    }
-
-    public List<TransactionOutput> generateOutputs(PublicAddress miner)
+    @Override
+    public void revertOutputs(PublicAddress miner, Context context)
     {
         List<TransactionOutput> utxos = new ArrayList<>();
 
@@ -152,11 +149,45 @@ public class Transaction implements TransactionI, Encodeable
             RiverCoin fee = new RiverCoin(getFee());
             leftOver = new RiverCoin(leftOver.toBigInteger().subtract(fee.toBigInteger()));
 
-            if(leftOver.toBigInteger().compareTo(BigInteger.ZERO) < 0) throw new RuntimeException("leftover must be bigger than zero");
-            if(fee.toBigInteger().compareTo(     BigInteger.ZERO) < 0) throw new RuntimeException("leftover must be bigger than zero");
+            if(leftOver.toBigInteger().compareTo(BigInteger.ZERO) < 0) return;//("leftover must be bigger than zero");
+            if(fee.toBigInteger().compareTo(     BigInteger.ZERO) < 0) return;//("leftover must be bigger than zero");
             if(fee.toBigInteger().compareTo(     BigInteger.ZERO) > 0) utxos.add(new TransactionOutput(miner, fee, encode(ByteUtil.defaultEncoder())));
             if(leftOver.toBigInteger().compareTo(BigInteger.ZERO) > 0) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
         }
+
+        for(TransactionInput input : txids)
+            context.getUtxoManager().add(input.getUTXO());
+        for(TransactionOutput output : utxos)
+            context.getUtxoManager().remove(output);
+    }
+
+    public BigInteger getFee()
+    {
+        return new RiverCoin(Config.getMiningFee()).toBigInteger();
+    }
+
+    public List<TransactionOutput> generateOutputs(PublicAddress miner, Context context)
+    {
+        List<TransactionOutput> utxos = new ArrayList<>();
+
+        utxos.add(new TransactionOutput(receiver, amount, encode(ByteUtil.defaultEncoder())));
+        RiverCoin leftOver = new RiverCoin(getInputAmount().subtract(amount.toBigInteger()));
+        /** if miner doesn't want fees, then all the leftover amount is returned to the sender as a new unspent output **/
+        if(miner == null) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
+        else{
+            RiverCoin fee = new RiverCoin(getFee());
+            leftOver = new RiverCoin(leftOver.toBigInteger().subtract(fee.toBigInteger()));
+
+            if(leftOver.toBigInteger().compareTo(BigInteger.ZERO) < 0) return null;//("leftover must be bigger than zero");
+            if(fee.toBigInteger().compareTo(     BigInteger.ZERO) < 0) return null;//("leftover must be bigger than zero");
+            if(fee.toBigInteger().compareTo(     BigInteger.ZERO) > 0) utxos.add(new TransactionOutput(miner, fee, encode(ByteUtil.defaultEncoder())));
+            if(leftOver.toBigInteger().compareTo(BigInteger.ZERO) > 0) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
+        }
+
+        for(TransactionInput input : txids)
+            context.getUtxoManager().remove(input.getTransactionOutputID());
+        for(TransactionOutput output : utxos)
+            context.getUtxoManager().add(output);
 
         return utxos;
     }

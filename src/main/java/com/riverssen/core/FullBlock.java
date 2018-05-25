@@ -62,6 +62,10 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         this.timeCreated = System.currentTimeMillis();
     }
 
+    public FullBlock(DataInputStream in)
+    {
+    }
+
     public synchronized String getHashAsString()
     {
         return header.getHashAsString();
@@ -70,6 +74,11 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     public synchronized long getBlockID()
     {
         return header.getBlockID();
+    }
+
+    public synchronized int validate(Context context)
+    {
+        return validate(getBlockID() > 0 ? new BlockHeader(getBlockID() - 1, context) : null, context);
     }
 
     public synchronized int validate(BlockHeader parent, Context context)

@@ -15,6 +15,7 @@ package com.riverssen.core.chainedmap;
 import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.utils.Base58;
 import com.riverssen.utils.ByteUtil;
 
@@ -73,7 +74,12 @@ public class ChainedMap implements Encodeable
         return this.allElements.contains(value);
     }
 
-    public boolean add(PublicAddress address, byte value[])
+    public boolean add(TransactionOutput output)
+    {
+        return add(output.getOwner(), output.getHash());
+    }
+
+    private boolean add(PublicAddress address, byte value[])
     {
         if(get(value)) return false;
 
@@ -121,6 +127,11 @@ public class ChainedMap implements Encodeable
 
         this.allElements.remove(new Element(value));
         return true;
+    }
+
+    public void remove(TransactionOutput output)
+    {
+        remove(output.getHash());
     }
 
     @Override

@@ -18,6 +18,7 @@ import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
+import com.riverssen.core.system.Context;
 import com.riverssen.utils.ByteUtil;
 import com.riverssen.utils.SmartDataTransferer;
 
@@ -79,10 +80,10 @@ public class RewardTransaction implements TransactionI
     @Deprecated
     public List<TransactionOutput> generateOutputs()
     {
-        return generateOutputs(null);
+        return generateOutputs(null, context);
     }
 
-    public List<TransactionOutput> generateOutputs(PublicAddress miner)
+    public List<TransactionOutput> generateOutputs(PublicAddress miner, Context context)
     {
         List<TransactionOutput> utxos = new ArrayList<>();
 
@@ -138,6 +139,7 @@ public class RewardTransaction implements TransactionI
     public void export(DataOutputStream dost)
     {
         try{
+            dost.write(REWARD);
             getSender().export(dost);
             dost.writeLong(time);
             txids.export(dost);

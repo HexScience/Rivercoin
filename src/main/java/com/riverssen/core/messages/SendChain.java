@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SendChain implements Message<Long>
+public class SendChain implements Message<List<FullBlock>>
 {
     @Override
     public long header()
@@ -34,12 +34,17 @@ public class SendChain implements Message<Long>
     }
 
     @Override
-    public void send(DataOutputStream out, Long information, Context context)
+    public void send(DataOutputStream out, List<FullBlock> information, Context context)
     {
         try
         {
             out.writeLong(header());
-            out.writeLong(context.getBlockChain().currentBlock());
+            out.writeLong(information.size());
+
+            for(FullBlock block : information)
+                block.export(out);
+
+            out.flush();
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -47,33 +52,31 @@ public class SendChain implements Message<Long>
     }
 
     @Override
-    public Long receive(DataInputStream in, Context context)
+    public List<FullBlock> receive(DataInputStream in, Context context)
     {
         try
         {
-            return in.readLong();
+            long size = in.readLong();
+
+            List<FullBlock> blocks = new ArrayList<>();
+
+            for(long i = 0; i < size; i ++)
+            {
+                blocks.add(new FullBlock(in));
+            }
         } catch (IOException e)
         {
             e.printStackTrace();
         }
 
-        return new Long(0);
+        return null;
     }
 
     @Override
     public void onReceive(DataInputStream in, Context context, Peer connection)
     {
-        final long receive = receive(in, context);
+        List<FullBlock> blocks = receive(in, context);
 
-        if(receive < 0) return;
-
-        context.getExecutorService().execute(()->{
-            List<FullBlock> blockList = Collections.synchronizedList(new ArrayList<>());
-
-            for(long i = receive; i < context.getBlockChain().currentBlock(); i ++)
-                blockList.add(BlockHeader.FullBlock(i, context));
-
-            connection.sendMissingBlocks(blockList);
-        });
+        context.getBlockPool().add(blocks);
     }
 }

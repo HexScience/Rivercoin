@@ -21,10 +21,11 @@ import java.util.*;
 
 public class BlockPool
 {
-    private final HashMap<Peer, Long> chainSizes = new HashMap<>();
+    private List<Peer>          peers;
     private boolean             loading;
     private Context             context;
     private List<FullBlock>     blocks;
+    private long                latestBlock;
     private LatestBlockInfo     lbi;
 
     public BlockPool(Context network)
@@ -34,33 +35,11 @@ public class BlockPool
         lbi             = new LatestBlockInfo(context.getConfig());
         try {
             lbi.read();
+            latestBlock = lbi.getLatestBlock();
         } catch (Exception e) {
             e.printStackTrace();
         }
         this.loading    = true;
-    }
-
-    private Peer getBiggestChain()
-    {
-        Peer p = null;
-        Long pl = null;
-
-        for(Peer peer : chainSizes.keySet())
-        {
-            if(p == null)
-            {
-                p = peer;
-                pl = chainSizes.get(pl);
-                continue;
-            }
-
-            if(chainSizes.get(peer).compareTo(pl) >= 0){
-                p=peer;
-                pl=chainSizes.get(peer);
-            }
-        }
-
-        return p;
     }
 
     private void load()
@@ -69,6 +48,15 @@ public class BlockPool
 
         if(chainsize > lbi.getLatestBlock())
         {
+            loading = true;
+
+            context.getExecutorService().execute(()->{
+                while(chainsize > lbi.getLatestBlock() + blocks.size())
+                {}
+
+                loading = false;
+            });
+
             List<FullBlock> pool = new ArrayList<>();
             context.getNetworkManager().fetchAllBlocks(pool, lbi.getLatestBlock());
 
@@ -123,7 +111,13 @@ public class BlockPool
         context.getNetworkManager().SendMined(fullBlock);
     }
 
-    public void add(FullBlock receive)
+    public void add(List<FullBlock> blocks)
+    {
+        for(FullBlock block : blocks)
+            if(!add(block)) return;
+    }
+
+    public boolean add(FullBlock receive)
     {
         /** if its an old block then don't add it **/
 //        if(receive.getBlockID() <= RivercoinCore.get().getChain().currentBlock()) return;
@@ -133,5 +127,8 @@ public class BlockPool
         else parent = new BlockHeader(receive.getBlockID() - 1, context);
 
         if(receive.validate(parent, context) == 0) blocks.add(receive);
+        else return false;
+
+        return true;
     }
 }

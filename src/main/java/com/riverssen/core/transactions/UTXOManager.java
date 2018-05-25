@@ -52,7 +52,7 @@ public class UTXOManager
         MerkleTree mt = block.getBody().getMerkleTree();
 
         for(TransactionI transaction : mt.flatten())
-            for(TransactionOutput transactionOutput : transaction.generateOutputs(block.getHeader().getMinerAddressAsPublicAddress()))
+            for(TransactionOutput transactionOutput : transaction.generateOutputs(block.getHeader().getMinerAddressAsPublicAddress(), context))
                 map.put(transactionOutput.getHash(), transactionOutput);
     }
 }

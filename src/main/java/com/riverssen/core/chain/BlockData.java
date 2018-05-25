@@ -12,27 +12,32 @@
 
 package com.riverssen.core.chain;
 
+import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.headers.Write;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Context;
 import com.riverssen.core.transactions.TXIList;
 import com.riverssen.core.transactions.TransactionInput;
+import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.utils.Serializer;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.utils.MerkleTree;
+import com.riverssen.utils.SmartDataTransferer;
+import jdk.Exported;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.InflaterInputStream;
 
-public class BlockData implements Encodeable
+public class BlockData implements Encodeable, Exportable
 {
     public static final int MAX_BLOCK_SIZE = 4_000_000;
-    private MerkleTree  merkleTree;
-    private long        time;
-    private long        dataSize;
-    private Context     context;
-    private List<TransactionInput> fees;
+    @Write private MerkleTree merkleTree;
+    @Write private long time;
+    private long dataSize;
+    private Context context;
 
     public BlockData()
     {
@@ -44,7 +49,7 @@ public class BlockData implements Encodeable
         this.context = context;
         try
         {
-            File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "block["+blockID+"]");
+            File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "block[" + blockID + "]");
             DataInputStream stream = new DataInputStream(new InflaterInputStream(new FileInputStream(file)));
 
             stream.skip(BlockHeader.SIZE);
@@ -68,7 +73,7 @@ public class BlockData implements Encodeable
 
     private void load(DataInputStream stream)
     {
-        merkleTree      = new MerkleTree();
+        merkleTree = new MerkleTree();
 
         try
         {
@@ -92,8 +97,8 @@ public class BlockData implements Encodeable
     public boolean transactionsValid()
     {
         List<TransactionI> flat = merkleTree.flatten();
-        for(TransactionI token : flat)
-            if(!token.valid()) return false;
+        for (TransactionI token : flat)
+            if (!token.valid()) return false;
         return true;
     }
 
@@ -102,7 +107,7 @@ public class BlockData implements Encodeable
     {
         byte bytes[] = null;
 
-        try(Serializer serializer = new Serializer())
+        try (Serializer serializer = new Serializer())
         {
             getMerkleTree().serialize(serializer.asDataOutputStream());
             serializer.writeLong(time);
@@ -133,22 +138,48 @@ public class BlockData implements Encodeable
 
     public void add(TransactionI token)
     {
-        if(!token.valid()) return;
+        if (!token.valid()) return;
 
         merkleTree.add(token);
         dataSize += token.toJSON().getBytes().length;
     }
 
-//    public void FetchUTXOs(PublicAddress address, List<UTXO> tokens)
-//    {
-//        for(TransactionI token : merkleTree.flatten())
-//        {
-//            tokens.addAll(token.getTXIDs());
-//        }
-//    }
-
-    public TXIList collectOutputs(PublicAddress miner)
+    /** Generate Outputs From Old Inputs **/
+    public List<TransactionOutput> collectOutputs(PublicAddress miner, Context context)
     {
-        return null;
+        List<TransactionOutput> list = new ArrayList<>();
+
+        for(TransactionI transactionI : merkleTree.flatten())
+            list.addAll(transactionI.generateOutputs(miner, context));
+
+        return list;
+    }
+
+    public void revertOutputs(PublicAddress miner, Context context)
+    {
+        for(TransactionI transactionI : merkleTree.flatten())
+            transactionI.revertOutputs(miner, context);
+    }
+
+    @Override
+    public byte[] header()
+    {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] content()
+    {
+        return new byte[0];
+    }
+
+    @Override
+    public void export(SmartDataTransferer smdt)
+    {
+    }
+
+    @Override
+    public void export(DataOutputStream dost) throws IOException
+    {
     }
 }

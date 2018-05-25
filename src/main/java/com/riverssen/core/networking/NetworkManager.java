@@ -23,8 +23,6 @@ public class NetworkManager implements Listener
     private List<Peer>                              peers;
 
     private ServerSocket                            socket;
-    private BlockPool                               blockPool;
-    private TransactionPool                         transactionPool;
     private Set<String>                             ipAddresses;
     private final Context                           context;
     private Map<Peer, Truple<Peer, String, Long>>   forkInfo;
