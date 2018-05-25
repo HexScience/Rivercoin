@@ -154,7 +154,7 @@ public class Context
         while(isRunning())
         {
 
-            if(System.currentTimeMillis() - timer >= 1)
+            if(System.currentTimeMillis() - timer >= 1000)
             {
                 Logger.prt(Logger.COLOUR_BLUE, TimeUtil.getPretty("[H:M:S]: " + "info"));
                 timer = System.currentTimeMillis();
