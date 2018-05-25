@@ -22,38 +22,87 @@ import com.riverssen.utils.SmartDataTransferer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
 public class Contract implements TransactionI
 {
-    static final short opcode = -1,
-    /** push object/var to stack **/
-            push    = 0,
-    /** pop from stack **/
-            pop     = 1,
-    /** var: long **/
-            i64     = 2,
-    /** var: double **/
-            f64     = 2,
-    /** var: int256 **/
-            i256    = 3,
-    /** var: double64+ **/
-            bgf     = 4,
+    public static final short opcode = -1,
+    /**
+     * push object/var to stack
+     **/
+    push = 0,
+    /**
+     * pop from stack
+     **/
+    pop = 1,
+    /**
+     * var: long
+     **/
+    i64 = 2,
+    /**
+     * var: double
+     **/
+    f64 = 2,
+    /**
+     * var: int256
+     **/
+    i256 = 3,
+    /**
+     * var: double64+
+     **/
+    bgf = 4,
 
-            print   = 5,
-            send    = 6,
-            get     = 7,
-            add     = 8,
-            sub     = 9,
-            mul     = 10,
-            div     = 11,
-            mod     = 12,
+    rspk = 5,
 
-            thrw    = 255;
+    rspv = 6,
+
+    func = 7,
+
+    call = 8,
+
+    strn = 9,
+
+    encr = 10,
+
+    lkup = 11,
+
+    arg0 = 12,
+
+    arg1 = 13,
+
+    arg2 = 14,
+
+    arg3 = 15,
+
+    arg4 = 16,
+
+    arg5 = 17,
+
+    arg6 = 18,
+
+    arg7 = 19,
+
+    arg8 = 20,
+
+    arg9 = 21,
+
+    list = 22,
+
+    print = 5,
+    send = 6,
+            get = 7,
+            add = 8,
+            sub = 9,
+            mul = 10,
+            div = 11,
+            mod = 12,
+
+    thrw = 255;
 
     private byte bytecode[];
-    private int  computationalCost;
+    private int computationalCost;
 
     public Contract(DataInputStream stream)
     {
@@ -75,72 +124,96 @@ public class Contract implements TransactionI
     }
 
     @Override
-    public boolean valid() {
+    public boolean valid()
+    {
         return false;
     }
 
     @Override
-    public long getTimeStamp() {
+    public long getTimeStamp()
+    {
         return 0;
     }
 
     @Override
-    public CompressedAddress getSender() {
+    public CompressedAddress getSender()
+    {
         return null;
     }
 
     @Override
-    public PublicAddress getReceiver() {
+    public PublicAddress getReceiver()
+    {
         return null;
     }
 
     @Override
-    public TXIList getTXIDs() {
+    public TXIList getTXIDs()
+    {
         return null;
     }
 
     @Override
-    public List<TransactionOutput> generateOutputs(PublicAddress miner, Context context) {
+    public List<TransactionOutput> generateOutputs(PublicAddress miner, Context context)
+    {
         return null;
     }
 
     @Override
-    public RiverCoin cost() {
+    public RiverCoin cost()
+    {
         return new RiverCoin(Config.getCost(computationalCost));
     }
 
     @Override
-    public BigInteger getInputAmount() {
+    public BigInteger getInputAmount()
+    {
         return null;
     }
 
     @Override
-    public byte[] getBytes() {
+    public void revertOutputs(PublicAddress miner, Context context)
+    {
+    }
+
+    @Override
+    public byte[] getBytes()
+    {
         return new byte[0];
     }
 
     @Override
-    public byte[] header() {
+    public byte[] header()
+    {
         return new byte[0];
     }
 
     @Override
-    public byte[] content() {
+    public byte[] content()
+    {
         return new byte[0];
     }
 
     @Override
-    public void export(SmartDataTransferer smdt) {
-
+    public void export(SmartDataTransferer smdt)
+    {
     }
 
     @Override
-    public void export(DataOutputStream dost) {
-
+    public void export(DataOutputStream dost)
+    {
+        try
+        {
+            dost.write(CONTRACT);
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public String toJSON() {
+    public String toJSON()
+    {
         return null;
     }
 }
