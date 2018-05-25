@@ -35,7 +35,7 @@ public class NewSolution implements Message<Solution>
         try
         {
             out.writeLong(header());
-            out.write(information.getBytes());
+            information.export(out);
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -53,12 +53,15 @@ public class NewSolution implements Message<Solution>
             e.printStackTrace();
         }
 
-        return new Solution();
+        return null;
     }
 
     @Override
     public void onReceive(DataInputStream in, Context context, Peer connection)
     {
-//        RivercoinCore.get().getSolutionPool().add(receive(in));
+        Solution solution = receive(in, context);
+
+        if(solution != null && solution.solutionValid(context))
+            context.getBlockPool().add(solution.getBlock());
     }
 }

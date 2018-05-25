@@ -12,19 +12,31 @@
 
 package com.riverssen.core.consensus;
 
+import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.Encodeable;
+import com.riverssen.core.headers.Exportable;
+import com.riverssen.core.system.Context;
+import com.riverssen.utils.SmartDataTransferer;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class Solution implements Encodeable
+public class Solution implements Encodeable, Exportable
 {
+    private boolean   isLocal;
+    private FullBlock block;
+
     public Solution(DataInputStream in) throws IOException
     {
+        this.isLocal = false;
+        this.block   = new FullBlock(in);
     }
 
-    public Solution()
+    public Solution(FullBlock block)
     {
+        this.isLocal = true;
+        this.block   = block;
     }
 
     @Override
@@ -35,6 +47,39 @@ public class Solution implements Encodeable
 
     public long blockID()
     {
-        return 0;
+        return block.getBlockID();
+    }
+
+    public boolean solutionValid(Context context)
+    {
+        return block.validate(context) == 0;
+    }
+
+    public FullBlock getBlock()
+    {
+        return block;
+    }
+
+    @Override
+    public byte[] header()
+    {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] content()
+    {
+        return new byte[0];
+    }
+
+    @Override
+    public void export(SmartDataTransferer smdt)
+    {
+    }
+
+    @Override
+    public void export(DataOutputStream dost) throws IOException
+    {
+        block.export(dost);
     }
 }

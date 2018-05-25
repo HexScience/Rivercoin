@@ -34,37 +34,39 @@ import java.util.concurrent.Executors;
 public class Context
 {
     private ExecutorService executorService;
-    private NetworkManager  networkManager;
-    private BlockPool       blockPool;
+    private NetworkManager networkManager;
+    private BlockPool blockPool;
     private TransactionPool transactionPool;
-    private ChainedMap      utxoManager;
-    private PublicAddress   miner;
-    private Wallet          wallet;
-    private Config          config;
-    private BlockChain      blockChain;
-    private Provider        provider;
-    private boolean         running;
-    private final long      versionBytes;
+    private ChainedMap utxoManager;
+    private PublicAddress miner;
+    private Wallet wallet;
+    private Config config;
+    private BlockChain blockChain;
+    private Provider provider;
+    private boolean running;
+    private final long versionBytes;
 
     public Context(File config)
     {
-        this.config             = new Config(config);
-        this.running            = true;
-        this.executorService    = Executors.newCachedThreadPool();
-        this.networkManager     = new NetworkManager(this);
-        this.blockPool          = new BlockPool(this);
-        this.transactionPool    = new TransactionPool(this);
-        this.utxoManager        = new ChainedMap();
-        this.miner              = this.config.getMinerAddress();
-        this.wallet             = this.config.getWallet();
-        this.provider           = new Provider();
-        this.blockChain         = new BlockChain(this);
-        this.versionBytes       = ByteUtil.decode(new byte[] {'a',0,0,0 ,0,0,0,1});
+        this.config = new Config(config);
+        this.running = true;
+        this.executorService = Executors.newCachedThreadPool();
+        this.networkManager = new NetworkManager(this);
+        this.blockPool = new BlockPool(this);
+        this.transactionPool = new TransactionPool(this);
+        this.utxoManager = new ChainedMap();
+        this.miner = this.config.getMinerAddress();
+        this.wallet = this.config.getWallet();
+        this.provider = new Provider();
+        this.blockChain = new BlockChain(this);
+        this.versionBytes = ByteUtil.decode(new byte[]{'a', 0, 0, 0, 0, 0, 0, 1});
 
-        try {
+        try
+        {
             this.getNetworkManager().connect(executorService);
             this.executorService.execute(blockChain);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
             System.exit(0);
         }
@@ -95,55 +97,68 @@ public class Context
         return networkManager;
     }
 
-    public void setNetworkManager(NetworkManager networkManager) {
+    public void setNetworkManager(NetworkManager networkManager)
+    {
         this.networkManager = networkManager;
     }
 
-    public BlockPool getBlockPool() {
+    public BlockPool getBlockPool()
+    {
         return blockPool;
     }
 
-    public void setBlockPool(BlockPool blockPool) {
+    public void setBlockPool(BlockPool blockPool)
+    {
         this.blockPool = blockPool;
     }
 
-    public TransactionPool getTransactionPool() {
+    public TransactionPool getTransactionPool()
+    {
         return transactionPool;
     }
 
-    public void setTransactionPool(TransactionPool transactionPool) {
+    public void setTransactionPool(TransactionPool transactionPool)
+    {
         this.transactionPool = transactionPool;
     }
 
-    public ChainedMap getUtxoManager() {
+    public ChainedMap getUtxoManager()
+    {
         return utxoManager;
     }
 
-    public void setUtxoManager(ChainedMap utxoManager) {
+    public void setUtxoManager(ChainedMap utxoManager)
+    {
         this.utxoManager = utxoManager;
     }
 
-    public PublicAddress getMiner() {
+    public PublicAddress getMiner()
+    {
         return miner;
     }
 
-    public void setMiner(PublicAddress miner) {
+    public void setMiner(PublicAddress miner)
+    {
         this.miner = miner;
     }
 
-    public Wallet getWallet() {
+    public Wallet getWallet()
+    {
         return wallet;
     }
 
-    public void setWallet(Wallet wallet) {
+    public void setWallet(Wallet wallet)
+    {
         this.wallet = wallet;
     }
 
-    public Config getConfig() {
+    public Config getConfig()
+    {
         return config;
     }
 
-    public void setConfig(Config config) {
+    public void setConfig(Config config)
+    {
         this.config = config;
     }
 
@@ -151,10 +166,9 @@ public class Context
     {
         long timer = System.currentTimeMillis();
 
-        while(isRunning())
+        while (isRunning())
         {
-
-            if(System.currentTimeMillis() - timer >= 1000)
+            if (System.currentTimeMillis() - timer >= 1000)
             {
                 Logger.prt(Logger.COLOUR_BLUE, TimeUtil.getPretty("[H:M:S]: " + "info"));
                 timer = System.currentTimeMillis();
@@ -167,15 +181,18 @@ public class Context
         return provider.getRandomFromHash(blockHash);
     }
 
-    public BigInteger getDifficulty() {
+    public BigInteger getDifficulty()
+    {
         return config.getCurrentDifficulty();
     }
 
-    public boolean isRunning() {
+    public boolean isRunning()
+    {
         return running;
     }
 
-    public BlockChain getBlockChain() {
+    public BlockChain getBlockChain()
+    {
         return blockChain;
     }
 }

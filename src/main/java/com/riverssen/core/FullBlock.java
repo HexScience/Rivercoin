@@ -100,6 +100,9 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         /** verify timestamp **/
         if (body.getTimeStamp() != header.getTimeStampAsLong()) return err_timestamp;
 
+        /** verify block started mining at least lastblock_time + blocktime/5 after **/
+        if (body.getTimeStamp() <= (header.getTimeStampAsLong() + (context.getConfig().getAverageBlockTime() / 5))) return err_timestamp;
+
         /** verify nonce **/
         HashAlgorithm algorithm = context.getHashAlgorithm(pHash);
         ByteBuffer data = getBodyAsByteBuffer();
