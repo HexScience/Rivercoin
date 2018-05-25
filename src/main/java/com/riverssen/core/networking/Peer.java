@@ -12,6 +12,7 @@
 
 package com.riverssen.core.networking;
 
+import com.riverssen.core.FullBlock;
 import com.riverssen.core.Logger;
 import com.riverssen.core.chain.BlockData;
 import com.riverssen.core.headers.Message;
@@ -136,5 +137,26 @@ public class Peer
     public String getAddress()
     {
         return socket.getRemoteSocketAddress().toString();
+    }
+
+    public synchronized void sendMissingBlocks(List<FullBlock> blockList)
+    {
+        context.getExecutorService().execute(()->{
+            synchronized (stream)
+            {
+                try
+                {
+                    stream.writeLong(blockList.size());
+
+                    for(FullBlock block : blockList)
+                        block.export(stream);
+
+                    stream.flush();
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

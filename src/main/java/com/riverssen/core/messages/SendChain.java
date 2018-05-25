@@ -12,6 +12,8 @@
 
 package com.riverssen.core.messages;
 
+import com.riverssen.core.FullBlock;
+import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.networking.Peer;
 import com.riverssen.core.system.Context;
@@ -19,13 +21,16 @@ import com.riverssen.core.system.Context;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class RequestChainSize implements Message<Long>
+public class SendChain implements Message<Long>
 {
     @Override
     public long header()
     {
-        return requestchainsize;
+        return sendchain;
     }
 
     @Override
@@ -34,6 +39,7 @@ public class RequestChainSize implements Message<Long>
         try
         {
             out.writeLong(header());
+            out.writeLong(context.getBlockChain().currentBlock());
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -57,7 +63,17 @@ public class RequestChainSize implements Message<Long>
     @Override
     public void onReceive(DataInputStream in, Context context, Peer connection)
     {
-        long receive = receive(in, context);
-        connection.setChainSize(receive);
+        final long receive = receive(in, context);
+
+        if(receive < 0) return;
+
+        context.getExecutorService().execute(()->{
+            List<FullBlock> blockList = Collections.synchronizedList(new ArrayList<>());
+
+            for(long i = receive; i < context.getBlockChain().currentBlock(); i ++)
+                blockList.add(BlockHeader.FullBlock(i, context));
+
+            connection.sendMissingBlocks(blockList);
+        });
     }
 }
