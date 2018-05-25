@@ -20,12 +20,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class RequestChain implements Message<Long>
+public class RequestChainSize implements Message<Long>
 {
     @Override
     public long header()
     {
-        return requestchain;
+        return requestchainsize;
     }
 
     @Override

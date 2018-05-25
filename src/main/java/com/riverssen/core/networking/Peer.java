@@ -32,7 +32,7 @@ public class Peer
         messages.add(new Handshake());
         messages.add(new NewBlock());
         messages.add(new NewSolution());
-        messages.add(new RequestChain());
+        messages.add(new RequestChainSize());
         messages.add(new NewTransaction());
     }
     private Context             context;
@@ -115,7 +115,7 @@ public class Peer
 
     public void requestChainInfo()
     {
-        new RequestChain().send(stream, context.getBlockChain().currentBlock(), context);
+        new RequestChainSize().send(stream, context.getBlockChain().currentBlock(), context);
     }
 
     /** this method is redundant, it should be removed or kept for pool mining **/

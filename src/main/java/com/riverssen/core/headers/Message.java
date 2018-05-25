@@ -21,7 +21,7 @@ import java.io.IOException;
 
 public interface Message<T>
 {
-    public static final long handshake = 0, newblock = 1, newsolution = 2, newtransaction = 3, requestchain = 4, peerlist = 5;
+    public static final long handshake = 0, newblock = 1, newsolution = 2, newtransaction = 3, requestchain = 4, peerlist = 5, requestchainsize = 6;
     long header();
     void send(DataOutputStream out, T information, Context context) throws IOException;
     T    receive(DataInputStream in, Context context) throws IOException;
