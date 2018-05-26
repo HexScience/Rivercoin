@@ -17,12 +17,11 @@ import com.riverssen.core.BlockPool;
 import com.riverssen.core.Logger;
 import com.riverssen.core.TransactionPool;
 import com.riverssen.core.algorithms.Provider;
-import com.riverssen.core.chainedmap.ChainedMap;
+import com.riverssen.core.chainedmap.RiverFlowMap;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
-import com.riverssen.core.transactions.Transaction;
 import com.riverssen.utils.ByteUtil;
 import com.riverssen.utils.TimeUtil;
 
@@ -37,7 +36,7 @@ public class Context
     private NetworkManager networkManager;
     private BlockPool blockPool;
     private TransactionPool transactionPool;
-    private ChainedMap utxoManager;
+    private RiverFlowMap utxoManager;
     private PublicAddress miner;
     private Wallet wallet;
     private Config config;
@@ -54,7 +53,7 @@ public class Context
         this.networkManager = new NetworkManager(this);
         this.blockPool = new BlockPool(this);
         this.transactionPool = new TransactionPool(this);
-        this.utxoManager = new ChainedMap();
+        this.utxoManager = new RiverFlowMap();
         this.miner = this.config.getMinerAddress();
         this.wallet = this.config.getWallet();
         this.provider = new Provider();
@@ -122,12 +121,12 @@ public class Context
         this.transactionPool = transactionPool;
     }
 
-    public ChainedMap getUtxoManager()
+    public RiverFlowMap getUtxoManager()
     {
         return utxoManager;
     }
 
-    public void setUtxoManager(ChainedMap utxoManager)
+    public void setUtxoManager(RiverFlowMap utxoManager)
     {
         this.utxoManager = utxoManager;
     }

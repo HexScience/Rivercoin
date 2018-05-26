@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-public class ChainedMap implements Encodeable
+public class RiverFlowMap implements Encodeable
 {
     static interface CallBack<K, V>{
         void onEvent(K k, V v);

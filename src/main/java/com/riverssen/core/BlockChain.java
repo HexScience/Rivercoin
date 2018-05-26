@@ -121,7 +121,7 @@ public class BlockChain implements BlockChainI
             block = new FullBlock(-1, new BlockHeader());
         Validate();
 
-        while(true)
+        while(context.isRunning())
         {
             FetchTransactions();
             ValidateTransactions();
