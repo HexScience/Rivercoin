@@ -10,32 +10,23 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.rvm;
+package com.riverssen.core.rvm.opcodes;
 
-public class VirtualMachine
+import com.riverssen.core.rvm.MemObject;
+import com.riverssen.core.rvm.Opcode;
+import com.riverssen.core.rvm.VirtualMachine;
+
+import java.nio.ByteBuffer;
+
+public class If implements Opcode
 {
-    private VirtualMemory memory;
-    private Opcode        program[];
-
-    public VirtualMachine(byte program[])
+    public If(ByteBuffer opcodes)
     {
-        this(new OpcodeParser(program).getOpcode());
     }
 
-    public VirtualMachine(Opcode program[])
+    @Override
+    public void execute(VirtualMachine context)
     {
-        this.program    = program;
-        this.memory     = new VirtualMemory();
-    }
-
-    public VirtualMemory getMemory()
-    {
-        return memory;
-    }
-
-    public void execute(String... args)
-    {
-        for(Opcode opcode : program)
-            opcode.execute(this);
+        MemObject bool = context.getMemory().pop();
     }
 }

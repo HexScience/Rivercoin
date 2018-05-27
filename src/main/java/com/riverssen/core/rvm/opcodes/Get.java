@@ -29,6 +29,6 @@ public class Get implements Opcode
     @Override
     public void execute(VirtualMachine context)
     {
-        context.getMemory().peek().get(address);
+        context.getMemory().push(context.getMemory().pop().get(address));
     }
 }
