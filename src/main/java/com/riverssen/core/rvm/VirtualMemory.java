@@ -19,10 +19,57 @@ public class VirtualMemory
 {
     private Stack<MemObject>            stack;
     private HashMap<Long, MemObject>    memPool;
+    private MemObject                   NULL;
 
     public VirtualMemory()
     {
         this.stack      = new Stack<>();
         this.memPool    = new HashMap<>();
+        this.NULL = new MemObject()
+        {
+            @Override
+            public int getType()
+            {
+                return -1;
+            }
+
+            @Override
+            public String toString()
+            {
+                return "NULL";
+            }
+        };
+    }
+
+    public void addObject(MemObject object, long ptr)
+    {
+        memPool.put(ptr, object);
+    }
+
+    public MemObject getObject(long ptr)
+    {
+        if(!memPool.containsKey(ptr))
+            return NULL;
+        return memPool.get(ptr);
+    }
+
+    public MemObject peek()
+    {
+        return stack.peek();
+    }
+
+    public MemObject pop()
+    {
+        return stack.pop();
+    }
+
+    public void      push(MemObject object)
+    {
+        stack.push(object);
+    }
+
+    public MemObject getFromStack(long pointer)
+    {
+        return stack.get((int) pointer);
     }
 }

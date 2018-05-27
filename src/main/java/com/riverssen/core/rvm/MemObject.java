@@ -14,4 +14,7 @@ package com.riverssen.core.rvm;
 
 public interface MemObject
 {
+    static final int BYTE_ARRAY = 0;
+
+    public int getType();
 }

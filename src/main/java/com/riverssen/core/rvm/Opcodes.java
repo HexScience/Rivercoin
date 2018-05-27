@@ -12,21 +12,13 @@
 
 package com.riverssen.core.rvm;
 
-public class VirtualMachine
+public class Opcodes
 {
-    private VirtualMemory memory;
+    public static final short
 
-    public VirtualMachine(byte program[])
-    {
-        this(new OpcodeParser(program).getOpcode());
-    }
+    push    = 0,
+    pop     = 1,
+    print   = 2,
 
-    public VirtualMachine(Opcode program[])
-    {
-    }
-
-    public VirtualMemory getMemory()
-    {
-        return memory;
-    }
+    halt    = Short.MAX_VALUE;
 }

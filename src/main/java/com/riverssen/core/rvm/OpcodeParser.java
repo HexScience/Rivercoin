@@ -12,21 +12,35 @@
 
 package com.riverssen.core.rvm;
 
-public class VirtualMachine
+import com.riverssen.core.rvm.opcodes.Print;
+
+import java.nio.BufferUnderflowException;
+import java.nio.ByteBuffer;
+import static com.riverssen.core.rvm.Opcodes.*;
+
+public class OpcodeParser
 {
-    private VirtualMemory memory;
+    Opcode list[];
 
-    public VirtualMachine(byte program[])
+    public OpcodeParser(byte opcode[]) throws BufferUnderflowException
     {
-        this(new OpcodeParser(program).getOpcode());
+        ByteBuffer opcodes = ByteBuffer.allocate(opcode.length);
+        opcodes.put(opcode);
+        opcodes.flip();
+
+        while(opcodes.remaining() > 0)
+        {
+            int b = opcodes.get();
+
+            switch (b)
+            {
+                case push: new Print(opcodes);
+            }
+        }
     }
 
-    public VirtualMachine(Opcode program[])
+    public Opcode[] getOpcode()
     {
-    }
-
-    public VirtualMemory getMemory()
-    {
-        return memory;
+        return list;
     }
 }
