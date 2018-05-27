@@ -12,7 +12,7 @@
 
 package com.riverssen.core.rvm;
 
-import com.riverssen.core.rvm.opcodes.Print;
+import com.riverssen.core.rvm.opcodes.*;
 
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
@@ -34,7 +34,17 @@ public class OpcodeParser
 
             switch (b)
             {
-                case push: new Print(opcodes);
+                case push:  new Push(opcodes);
+                case pop:   new Pop(opcodes);
+                case print: new Print(opcodes);
+
+                /** math **/
+                case add:   new Add(opcodes);
+                case sub:   new Sub(opcodes);
+                case mul:   new Mul(opcodes);
+                case div:   new Div(opcodes);
+                case mod:   new Mod(opcodes);
+                case get:   new Get(opcodes);
             }
         }
     }

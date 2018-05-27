@@ -12,11 +12,11 @@
 
 package com.riverssen.core.rvm;
 
-public interface MemObject extends MathContext
+public interface MathContext
 {
-    static final int BYTE_ARRAY = 0;
-
-    public int getType();
-
-    MemObject get(long address);
+    <T extends MathContext> T add(T b);
+    <T extends MathContext> T sub(T b);
+    <T extends MathContext> T mul(T b);
+    <T extends MathContext> T div(T b);
+    <T extends MathContext> T mod(T b);
 }

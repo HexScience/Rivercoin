@@ -12,6 +12,7 @@
 
 package com.riverssen.core.rvm.objects;
 
+import com.riverssen.core.rvm.MathContext;
 import com.riverssen.core.rvm.MemObject;
 
 public class ByteArrayMemObject implements MemObject
@@ -27,5 +28,35 @@ public class ByteArrayMemObject implements MemObject
     public int getType()
     {
         return BYTE_ARRAY;
+    }
+
+    @Override
+    public <T extends MathContext> T add(T b)
+    {
+        return null;
+    }
+
+    @Override
+    public <T extends MathContext> T sub(T b)
+    {
+        return null;
+    }
+
+    @Override
+    public <T extends MathContext> T mul(T b)
+    {
+        return null;
+    }
+
+    @Override
+    public <T extends MathContext> T div(T b)
+    {
+        return null;
+    }
+
+    @Override
+    public <T extends MathContext> T mod(T b)
+    {
+        return null;
     }
 }

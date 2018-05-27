@@ -12,11 +12,17 @@
 
 package com.riverssen.core.rvm;
 
-public interface MemObject extends MathContext
+import java.nio.ByteBuffer;
+
+public class Pop implements Opcode
 {
-    static final int BYTE_ARRAY = 0;
+    public Pop(ByteBuffer opcode)
+    {
+    }
 
-    public int getType();
-
-    MemObject get(long address);
+    @Override
+    public void execute(VirtualMachine context)
+    {
+        context.getMemory().pop();
+    }
 }

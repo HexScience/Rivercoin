@@ -16,9 +16,19 @@ public class Opcodes
 {
     public static final short
 
-    push    = 0,
-    pop     = 1,
-    print   = 2,
+    push        = 0,
+    pop         = 1,
+    print       = 2,
+    add         = 3,
+    sub         = 4,
+    mul         = 5,
+    div         = 6,
+    mod         = 7,
+    get         = 8,
+    call        = 9,
+    if_         = 10,
+    else_       = 11,
+    elif_       = 12,
 
     halt    = Short.MAX_VALUE;
 }

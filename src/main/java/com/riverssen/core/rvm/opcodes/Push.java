@@ -10,13 +10,27 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.rvm;
+package com.riverssen.core.rvm.opcodes;
 
-public interface MemObject extends MathContext
+import com.riverssen.core.rvm.Opcode;
+import com.riverssen.core.rvm.VirtualMachine;
+import com.riverssen.core.rvm.objects.ByteArrayMemObject;
+
+import java.nio.ByteBuffer;
+
+public class Push implements Opcode
 {
-    static final int BYTE_ARRAY = 0;
+    private byte data[];
 
-    public int getType();
+    public Push(ByteBuffer opcodes)
+    {
+        data = new byte[opcodes.getInt()];
+        opcodes.get(data);
+    }
 
-    MemObject get(long address);
+    @Override
+    public void execute(VirtualMachine context)
+    {
+        context.getMemory().push(new ByteArrayMemObject(data));
+    }
 }
