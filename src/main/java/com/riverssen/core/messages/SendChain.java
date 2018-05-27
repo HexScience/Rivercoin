@@ -61,9 +61,7 @@ public class SendChain implements Message<List<FullBlock>>
             List<FullBlock> blocks = new ArrayList<>();
 
             for(long i = 0; i < size; i ++)
-            {
                 blocks.add(new FullBlock(in));
-            }
         } catch (IOException e)
         {
             e.printStackTrace();
