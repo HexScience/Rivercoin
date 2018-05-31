@@ -13,8 +13,8 @@
 package com.riverssen.core.messages;
 
 import com.riverssen.core.FullBlock;
-import com.riverssen.core.chain.BlockData;
-import com.riverssen.core.chain.BlockHeader;
+import com.riverssen.core.block.BlockData;
+import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.networking.Peer;
 import com.riverssen.core.system.Context;

@@ -1,10 +1,9 @@
 package com.riverssen.core.system;
 
 import com.riverssen.core.FullBlock;
-import com.riverssen.core.chain.BlockHeader;
+import com.riverssen.core.block.BlockHeader;
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class LatestBlockInfo

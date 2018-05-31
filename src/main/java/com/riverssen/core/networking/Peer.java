@@ -14,7 +14,7 @@ package com.riverssen.core.networking;
 
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.Logger;
-import com.riverssen.core.chain.BlockData;
+import com.riverssen.core.block.BlockData;
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.messages.*;
 import com.riverssen.core.system.Context;

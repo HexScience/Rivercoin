@@ -12,8 +12,8 @@
 
 package com.riverssen.core;
 
-import com.riverssen.core.chain.BlockData;
-import com.riverssen.core.chain.BlockHeader;
+import com.riverssen.core.block.BlockData;
+import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.*;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Context;

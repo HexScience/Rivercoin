@@ -10,21 +10,18 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.chain;
+package com.riverssen.core.block;
 
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.Write;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Context;
-import com.riverssen.core.transactions.TXIList;
-import com.riverssen.core.transactions.TransactionInput;
 import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.utils.Serializer;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.utils.MerkleTree;
 import com.riverssen.utils.SmartDataTransferer;
-import jdk.Exported;
 
 import java.io.*;
 import java.util.ArrayList;

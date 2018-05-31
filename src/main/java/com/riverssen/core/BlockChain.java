@@ -12,7 +12,7 @@
 
 package com.riverssen.core;
 
-import com.riverssen.core.chain.BlockHeader;
+import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.BlockChainI;
 import com.riverssen.core.system.Context;
 import com.riverssen.core.system.LatestBlockInfo;
@@ -55,7 +55,7 @@ public class BlockChain implements BlockChainI
     @Override
     public void FetchBlockChainFromPeers()
     {
-        Logger.alert("attempting to download chain from peers");
+        Logger.alert("attempting to download block from peers");
         List<FullBlock> blocks = context.getBlockPool().Fetch();
 
         for(FullBlock block : blocks) block.serialize(context);
@@ -83,7 +83,7 @@ public class BlockChain implements BlockChainI
 
         this.block = new BlockHeader(latestblock, context).continueChain();
 
-        Logger.alert("chain loaded successfully");
+        Logger.alert("block loaded successfully");
     }
 
     @Override
@@ -91,17 +91,17 @@ public class BlockChain implements BlockChainI
     {
         /** check (25 minutes) time passed since last validation **/
         if(System.currentTimeMillis() - lastvalidated < 1_500_000L) return;
-        Logger.alert("attempting to validate chain");
+        Logger.alert("attempting to validate block");
 
         lastvalidated = System.currentTimeMillis();
 
         Tuple<String, Long> forkInfo = context.getNetworkManager().getForkInfo();
         long latestFork = forkInfo.getJ();
 
-        /** check that our chain is the longest chain, if it is, then return **/
+        /** check that our block is the longest block, if it is, then return **/
         if(latestFork < block.getBlockID()) return;
 
-        /** if our chain is short then update it with the longest chain **/
+        /** if our block is short then update it with the longest block **/
         if(block.getBlockID() < forkInfo.getJ())
             FetchBlockChainFromPeers();
     }

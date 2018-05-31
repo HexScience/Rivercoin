@@ -12,7 +12,7 @@
 
 package com.riverssen.core;
 
-import com.riverssen.core.chain.BlockHeader;
+import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.networking.Peer;
 import com.riverssen.core.system.Context;
 import com.riverssen.core.system.LatestBlockInfo;

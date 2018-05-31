@@ -31,7 +31,7 @@ public class RivercoinCore
         new RivercoinCore(root);
     }
 
-    RivercoinCore(String file)
+    private RivercoinCore(String file)
     {
         /** create a context **/
         Context context = new Context(new File(file));

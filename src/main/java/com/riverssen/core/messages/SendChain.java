@@ -13,7 +13,6 @@
 package com.riverssen.core.messages;
 
 import com.riverssen.core.FullBlock;
-import com.riverssen.core.chain.BlockHeader;
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.networking.Peer;
 import com.riverssen.core.system.Context;
@@ -22,7 +21,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class SendChain implements Message<List<FullBlock>>
