@@ -10,29 +10,22 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.networking.node;
+package com.riverssen.core.networking;
 
-import com.riverssen.core.headers.Message;
+import com.riverssen.core.headers.Exportable;
 
-import java.net.Socket;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
-public class Node
-{
-    private Socket socket;
+public class ResendTransmission {
+    private Exportable exportable;
 
-    public Node(Socket socket) {
-        this.socket = socket;
-    }
-
-    public boolean performHandshake()
+    public ResendTransmission(Exportable exportable)
     {
-        return false;
+        this.exportable = exportable;
     }
-
-    public void fetch(MasterNode masterNode)
-    {
-    }
-
-    public void send(Message message) {
+    public void resend(DataOutputStream stream) throws IOException {
+        exportable.export(stream);
     }
 }

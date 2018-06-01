@@ -14,6 +14,8 @@ package com.riverssen.core.networking.node;
 
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.Message;
+import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.messages.NewTransaction;
 import com.riverssen.core.networking.Peer;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
@@ -23,8 +25,8 @@ import java.util.*;
 
 public class MasterNode
 {
-    private List<Node>              peerNodes;
-    private List<Peer>              peerClients;
+    private List<PeerNode>          peerNodes;
+    private List<PeerClient>        peerClients;
     private Map<Long, FullBlock>    newBlocks;
     private boolean                 running;
     private PublicAddress           nodeAddress;
@@ -32,6 +34,8 @@ public class MasterNode
     private Socket                  socket;
     private List<Message>           outgoingCommunicationStream;
     private List<Message>           incomingCommunicationStream;
+
+    private LinkedHashSet<TransactionI> transactionPool;
 
     public MasterNode(Config config)
     {
@@ -41,14 +45,15 @@ public class MasterNode
         this.running        = true;
         this.config         = config;
         this.nodeAddress    = config.getMinerAddress();
+        this.transactionPool= new LinkedHashSet<>();
     }
 
     private void fetchAll()
     {
-        for(Node node : peerNodes)
+        for(PeerNode node : peerNodes)
             node.fetch(this);
 
-        for(Peer peer : peerClients)
+        for(PeerClient peer : peerClients)
             peer.fetch(this);
 
         decipherMessages();
@@ -64,7 +69,7 @@ public class MasterNode
         {
             Message message = outgoingCommunicationStream.get(0);
 
-            for(Node node : peerNodes)
+            for(PeerNode node : peerNodes)
                 node.send(message);
 
             outgoingCommunicationStream.remove(0);
@@ -92,6 +97,7 @@ public class MasterNode
         while(running)
         {
             fetchAll();
+            prepare();
             sendAll();
 
             try {
@@ -100,5 +106,15 @@ public class MasterNode
                 e.printStackTrace();
             }
         }
+    }
+
+    private void prepare() {
+        /** prepare transaction pool for sending **/
+        ArrayList<TransactionI> transactions = new ArrayList<>();
+        for(TransactionI transactionI : transactionPool)
+            if(transactionI.valid()) transactions.add(transactionI);
+
+        NewTransaction newTransaction = new NewTransaction();
+        for(PeerClient client : peerClients) client.sendTransactionPool(transactions);
     }
 }

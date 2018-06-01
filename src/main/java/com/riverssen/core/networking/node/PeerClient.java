@@ -10,74 +10,57 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.rvm.objects;
+package com.riverssen.core.networking.node;
 
-import com.riverssen.core.rvm.MathContext;
-import com.riverssen.core.rvm.MemObject;
-import com.riverssen.core.rvm.VirtualMachine;
+import com.riverssen.core.FullBlock;
+import com.riverssen.core.headers.Message;
+import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.networking.NodeOutputCommunicator;
 
-public class ByteArrayMemObject implements MemObject
+import java.net.Socket;
+import java.util.Collection;
+
+public class PeerClient implements NodeOutputCommunicator
 {
-    private byte data[];
+    private Socket socket;
 
-    public ByteArrayMemObject(byte data[])
+    public PeerClient(Socket socket) {
+        this.socket = socket;
+    }
+
+    public boolean performHandshake()
     {
-        this.data = data;
+        return false;
     }
 
-    @Override
-    public int getType()
+    public void fetch(MasterNode masterNode)
     {
-        return BYTE_ARRAY;
+    }
+
+    public void send(Message message) {
     }
 
     @Override
-    public long getPointer() {
-        return 0;
-    }
-
-    @Override
-    public MemObject get(long address) {
-        return null;
-    }
-
-    @Override
-    public void store(VirtualMachine virtualMachine) {
+    public void sendTransactionPool(Collection<TransactionI> transactions) {
 
     }
 
     @Override
-    public <T extends MathContext> T add(T b)
-    {
-        return null;
+    public void sendBlockPool(Collection<FullBlock> blocks) {
+
     }
 
     @Override
-    public <T extends MathContext> T sub(T b)
-    {
-        return null;
+    public void sendTransaction(TransactionI transactionI) {
+
     }
 
     @Override
-    public <T extends MathContext> T mul(T b)
-    {
-        return null;
+    public void sendBlock(FullBlock block) {
+
     }
 
     @Override
-    public <T extends MathContext> T div(T b)
-    {
-        return null;
-    }
-
-    @Override
-    public <T extends MathContext> T mod(T b)
-    {
-        return null;
-    }
-
-    @Override
-    public void call(VirtualMachine virtualMachine) {
-
+    public void send() {
     }
 }
