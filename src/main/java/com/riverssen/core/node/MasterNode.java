@@ -32,6 +32,10 @@ public class MasterNode
 
     private void fetchAll()
     {
+        for(Node node : peerNodes)
+        {
+            node.fetch(this);
+        }
     }
 
     private void sendAll()

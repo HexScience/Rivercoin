@@ -21,4 +21,7 @@ public class Node
     public Node(Socket socket) {
         this.socket = socket;
     }
+
+    public void fetch(MasterNode masterNode) {
+    }
 }
