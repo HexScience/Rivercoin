@@ -20,10 +20,7 @@ import com.riverssen.utils.Base58;
 import com.riverssen.utils.ByteUtil;
 
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
 
 public class RiverFlowMap implements Encodeable
 {
@@ -65,9 +62,26 @@ public class RiverFlowMap implements Encodeable
         }
     }
 
-    HashMap<PublicAddress, Set<byte[]>>     elements;
+    Map<PublicAddress, Set<byte[]>>         elements;
     Set<byte[]>                             allElements;
     String                                  roothash;
+
+    public RiverFlowMap()
+    {
+        this(null);
+    }
+
+    public RiverFlowMap(String file)
+    {
+        this.elements       = new LinkedHashMap<>();
+        this.allElements    = new LinkedHashSet<>();
+        this.roothash       = "";
+
+        if(file != null)
+        {
+            this.roothash = calculateHash();
+        }
+    }
 
     public boolean get(byte value[])
     {
