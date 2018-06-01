@@ -12,17 +12,23 @@
 
 package com.riverssen.core.networking;
 
-import com.riverssen.core.FullBlock;
-import com.riverssen.core.headers.TransactionI;
-
-import java.util.Collection;
-
-public interface NodeOutputCommunicator extends CommunicationStream
+public interface CommunicationStream
 {
-    void sendTransactionPool(Collection<TransactionI> transactions);
-    void sendBlockPool(Collection<FullBlock> blocks);
-    void sendTransaction(TransactionI transactionI);
-    void sendBlock(FullBlock block);
+    /** TYPES **/
+    public static final int
+            TRANSACTION = 0,
+            TRANSACTION_LIST = 1,
+            BLOCK = 2,
+            BLOCK_LIST = 3,
+            HELLO = 4,
+            GOODBYE = 5,
+            CHAIN_SIZE = 6,
+            CHAIN = 7,
+            LIST_CLIENTS = 7,
+            LIST_NODES = 8;
 
-    void send();
+    /** COMMANDS **/
+    public static final byte
+    GET = 0, /** To Receive **/
+    TCP = 1; /** Network Communication **/
 }

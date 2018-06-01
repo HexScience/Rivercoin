@@ -17,12 +17,7 @@ import com.riverssen.core.headers.TransactionI;
 
 import java.util.Collection;
 
-public interface NodeOutputCommunicator extends CommunicationStream
+public interface NodeInputCommunicator
 {
-    void sendTransactionPool(Collection<TransactionI> transactions);
-    void sendBlockPool(Collection<FullBlock> blocks);
-    void sendTransaction(TransactionI transactionI);
-    void sendBlock(FullBlock block);
-
-    void send();
+    void receive();
 }

@@ -13,44 +13,32 @@
 package com.riverssen.core.networking.node;
 
 import com.riverssen.core.FullBlock;
-import com.riverssen.core.headers.Encodeable;
-import com.riverssen.core.headers.Exportable;
-import com.riverssen.core.headers.Message;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.NodeOutputCommunicator;
-import com.riverssen.core.networking.ResendTransmission;
-import com.riverssen.utils.ByteUtil;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 
 public class PeerNode implements NodeOutputCommunicator
 {
     private Socket socket;
     private DataOutputStream outputStream;
 
-    private class TransmissionList<T extends Exportable & Encodeable>
-    {
-        private LinkedHashMap<String, T> failedTransmissions;
-        public void add(T t) { failedTransmissions.put(t.encode58(ByteUtil.defaultEncoder()), t); }
-        public void remove(String hash) { failedTransmissions.remove(hash); }
-        public T    get(String hash) { return failedTransmissions.get(hash); }
-    }
-
-    private TransmissionList transmissionList;
-
-
     public PeerNode(Socket socket) {
-        this.socket = socket;
-        this.transmissionList = new TransmissionList<>();
+        this.socket             = socket;
+        try {
+            this.outputStream       = new DataOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public boolean performHandshake()
+    public void performHandshake()
     {
-        return false;
+        String msg;
     }
 
     public void fetch(MasterNode masterNode) {
@@ -59,35 +47,95 @@ public class PeerNode implements NodeOutputCommunicator
     @Override
     public void sendTransactionPool(Collection<TransactionI> transactions)
     {
-        for(TransactionI transactionI : transactions)
-            transmissionList.add(transactionI);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream      bdops  = new DataOutputStream(stream);
+
+        try{
+            bdops.writeByte(TCP);
+            bdops.writeInt(TRANSACTION_LIST);
+            bdops.writeInt(transactions.size());
+            for(TransactionI transactionI : transactions)
+                transactionI.export(bdops);
+
+            bdops.flush();
+            bdops.close();
+
+            this.outputStream.write(stream.toByteArray());
+            this.outputStream.flush();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void sendBlockPool(Collection<FullBlock> blocks) {
-        for(FullBlock block : blocks)
-            transmissionList.add(block);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream      bdops  = new DataOutputStream(stream);
+
+        try{
+            bdops.writeByte(TCP);
+            bdops.writeInt(BLOCK_LIST);
+            bdops.writeInt(blocks.size());
+            for(FullBlock block : blocks)
+                block.export(bdops);
+
+            bdops.flush();
+            bdops.close();
+
+            this.outputStream.write(stream.toByteArray());
+            this.outputStream.flush();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void sendTransaction(TransactionI transactionI) {
-        transmissionList.add(transactionI);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream      bdops  = new DataOutputStream(stream);
+
+        try{
+            bdops.writeByte(TCP);
+            bdops.writeInt(TRANSACTION);
+            transactionI.export(bdops);
+
+            bdops.flush();
+            bdops.close();
+
+            this.outputStream.write(stream.toByteArray());
+            this.outputStream.flush();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void sendBlock(FullBlock block) {
-        transmissionList.add(block);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream      bdops  = new DataOutputStream(stream);
+
+        try{
+            bdops.writeByte(TCP);
+            bdops.writeInt(BLOCK);
+            block.export(bdops);
+
+            bdops.flush();
+            bdops.close();
+
+            this.outputStream.write(stream.toByteArray());
+            this.outputStream.flush();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /** Attempt To Send New Messages And Failed Messages **/
     @Override
-    public void send() {
-        for(Object exportable : transmissionList.failedTransmissions.values()) {
-            try {
-                ((Exportable)exportable).export(outputStream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public void send()
+    {
     }
 }
