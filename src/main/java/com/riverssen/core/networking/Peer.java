@@ -45,6 +45,7 @@ public class Peer
     private boolean             run;
     private String              name;
     private long                chainSize;
+    private boolean             isNode;
 
     private static final int    msg_block_header = 0;
     private static final int    msg_block_       = 1;
