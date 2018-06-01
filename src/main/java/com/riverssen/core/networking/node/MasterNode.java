@@ -13,37 +13,78 @@
 package com.riverssen.core.networking.node;
 
 import com.riverssen.core.FullBlock;
+import com.riverssen.core.headers.Message;
+import com.riverssen.core.networking.Peer;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.system.Config;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.Socket;
+import java.util.*;
 
 public class MasterNode
 {
     private List<Node>              peerNodes;
-    private List<Node>              peerClients;
+    private List<Peer>              peerClients;
     private Map<Long, FullBlock>    newBlocks;
     private boolean                 running;
     private PublicAddress           nodeAddress;
+    private Config                  config;
+    private Socket                  socket;
+    private List<Message>           outgoingCommunicationStream;
+    private List<Message>           incomingCommunicationStream;
 
-    public MasterNode()
+    public MasterNode(Config config)
     {
         this.peerNodes      = new ArrayList<>();
         this.peerClients    = new ArrayList<>();
-        this.newBlocks      = new LinkedHashMap<>();
+        this.newBlocks      = Collections.synchronizedMap(new LinkedHashMap<>());
         this.running        = true;
+        this.config         = config;
+        this.nodeAddress    = config.getMinerAddress();
     }
 
     private void fetchAll()
     {
         for(Node node : peerNodes)
             node.fetch(this);
+
+        for(Peer peer : peerClients)
+            peer.fetch(this);
+
+        decipherMessages();
+    }
+
+    private void decipherMessages()
+    {
     }
 
     private void sendAll()
     {
+        while(outgoingCommunicationStream.size() > 0)
+        {
+            Message message = outgoingCommunicationStream.get(0);
+
+            for(Node node : peerNodes)
+                node.send(message);
+
+            outgoingCommunicationStream.remove(0);
+        }
+        chooseSolution();
+    }
+
+    private void chooseSolution()
+    {
+        int numSolutions = newBlocks.size();
+        if(numSolutions > 2)
+        {
+            int middleSolution = numSolutions/2+1;
+            deleteList(middleSolution);
+        } else sendAll();
+    }
+
+    private void deleteList(int deleteFrom)
+    {
+        while(newBlocks.size() > deleteFrom) newBlocks.remove(deleteFrom + 1);
     }
 
     public void run()

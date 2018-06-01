@@ -12,6 +12,8 @@
 
 package com.riverssen.core.networking.node;
 
+import com.riverssen.core.headers.Message;
+
 import java.net.Socket;
 
 public class Node
@@ -29,5 +31,8 @@ public class Node
 
     public void fetch(MasterNode masterNode)
     {
+    }
+
+    public void send(Message message) {
     }
 }

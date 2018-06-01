@@ -12,11 +12,27 @@
 
 package com.riverssen.core.rvm;
 
-public interface MemObject extends MathContext
+import jdk.nashorn.internal.codegen.CompilerConstants;
+
+public interface MemObject extends MathContext, Callable
 {
-    static final int BYTE_ARRAY = 0;
+    static final int
+            BYTE_ARRAY = 0,
+            INT_ARRAY  = 1,
+            FLT_ARRAY  = 2,
+            BOOL_ARRAY = 3,
+            PTR_ARRAY  = 4,
+
+            POINTER    = 5,
+            INTEGER    = 6,
+            UINT256    = 8,
+            BOOL       = 9;
 
     public int getType();
 
+    public long getPointer();
+
     MemObject get(long address);
+
+    void store(VirtualMachine virtualMachine);
 }

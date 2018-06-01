@@ -12,11 +12,7 @@
 
 package com.riverssen.core.rvm;
 
-public interface RObject
+public interface Callable
 {
-    void contrsuct(VirtualMachine context);
-
-    String toString();
-
-    byte[] bytes();
+    void call(VirtualMachine virtualMachine);
 }

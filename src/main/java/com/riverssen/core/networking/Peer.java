@@ -17,6 +17,7 @@ import com.riverssen.core.Logger;
 import com.riverssen.core.block.BlockData;
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.messages.*;
+import com.riverssen.core.networking.node.MasterNode;
 import com.riverssen.core.system.Context;
 
 import java.io.DataInputStream;
@@ -143,5 +144,8 @@ public class Peer
     public synchronized void sendMissingBlocks(List<FullBlock> blockList)
     {
         new SendChain().send(stream, blockList, context);
+    }
+
+    public void fetch(MasterNode masterNode) {
     }
 }
