@@ -14,18 +14,67 @@ package com.riverssen.core.networking;
 
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
+import com.riverssen.utils.ByteUtil;
+import com.riverssen.utils.SmartDataTransferer;
+import com.riverssen.utils.Tuple;
 
-public class DataPacket implements Encodeable
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
+/** This DataPacket class is used to decrease spam in the network **/
+public class DataPacket<T extends Exportable & Encodeable> implements Encodeable, Exportable
 {
-    private final Exportable packet;
+    private final T     packet;
+    private final long  time;
+    private final int   type;
 
-    public DataPacket(Exportable exportable)
+    public DataPacket(T exportable, int type)
     {
         this.packet = exportable;
+        this.time   = System.currentTimeMillis();
+        this.type   = type;
     }
 
     @Override
     public byte[] getBytes() {
         return packet.data();
+    }
+
+    private Tuple<byte[], Long> hashcash()
+    {
+        byte data[] = ByteUtil.concatenate(ByteUtil.encodei(type), ByteUtil.encode(time), new byte[8]);
+
+        ByteBuffer buffer = ByteBuffer.wrap(data);
+
+        String hashCashDifficulty = "000000";
+        long   nonce              = -1;
+
+        while(ByteUtil.defaultEncoder().encode16(buffer.array()).startsWith(hashCashDifficulty))
+            buffer.putLong(12, ++ nonce);
+
+        return new Tuple<>(buffer.array(), nonce);
+    }
+
+    @Override
+    public byte[] header() {
+
+        Tuple<byte[], Long> hashcash = hashcash();
+        return ByteUtil.concatenate(ByteUtil.encodei(type), ByteUtil.encode(time), hashcash.getI(), ByteUtil.encode(hashcash.getJ()));
+    }
+
+    @Override
+    public byte[] content() {
+        return new byte[0];
+    }
+
+    @Override
+    public void export(SmartDataTransferer smdt) {
+
+    }
+
+    @Override
+    public void export(DataOutputStream dost) throws IOException {
+
     }
 }

@@ -13,10 +13,8 @@
 package com.riverssen.core.networking.node;
 
 import com.riverssen.core.FullBlock;
-import com.riverssen.core.headers.Message;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.messages.NewTransaction;
-import com.riverssen.core.networking.Peer;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
 
@@ -32,8 +30,6 @@ public class MasterNode
     private PublicAddress           nodeAddress;
     private Config                  config;
     private Socket                  socket;
-    private List<Message>           outgoingCommunicationStream;
-    private List<Message>           incomingCommunicationStream;
 
     private LinkedHashSet<TransactionI> transactionPool;
 
@@ -50,8 +46,8 @@ public class MasterNode
 
     private void fetchAll()
     {
-        for(PeerNode node : peerNodes)
-            node.fetch(this);
+//        for(PeerNode node : peerNodes)
+//            node.fetch(this);
 
         for(PeerClient peer : peerClients)
             peer.fetch(this);
@@ -65,15 +61,6 @@ public class MasterNode
 
     private void sendAll()
     {
-        while(outgoingCommunicationStream.size() > 0)
-        {
-            Message message = outgoingCommunicationStream.get(0);
-
-            for(PeerNode node : peerNodes)
-                node.send(message);
-
-            outgoingCommunicationStream.remove(0);
-        }
         chooseSolution();
     }
 

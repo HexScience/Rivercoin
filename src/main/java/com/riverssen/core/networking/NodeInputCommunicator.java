@@ -19,5 +19,9 @@ import java.util.Collection;
 
 public interface NodeInputCommunicator
 {
+    void receiveTransactionPool(Collection<TransactionI> transactions);
+    void receiveBlockPool(Collection<FullBlock> blocks);
+    void receiveTransaction(TransactionI transactionI[]);
+    void receiveBlock(FullBlock block[]);
     void receive();
 }

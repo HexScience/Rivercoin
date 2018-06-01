@@ -15,8 +15,10 @@ package com.riverssen.core.networking.node;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.NodeOutputCommunicator;
+import com.riverssen.utils.EncodeableString;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -26,22 +28,29 @@ public class PeerNode implements NodeOutputCommunicator
 {
     private Socket socket;
     private DataOutputStream outputStream;
+    private DataInputStream  inputStream;
 
     public PeerNode(Socket socket) {
         this.socket             = socket;
         try {
             this.outputStream       = new DataOutputStream(socket.getOutputStream());
+            this.inputStream        = new DataInputStream(socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void performHandshake()
-    {
-        String msg;
-    }
+    public void performHandshake() {
+        String msg = socket.toString() + ":" + System.currentTimeMillis();
+        String coded = new EncodeableString(msg).encode58();
 
-    public void fetch(MasterNode masterNode) {
+        try {
+            outputStream.write(TCP);
+            outputStream.writeInt(HELLO);
+            outputStream.writeUTF(coded);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -18,6 +18,7 @@ import com.riverssen.core.Logger;
 import com.riverssen.core.TransactionPool;
 import com.riverssen.core.algorithms.Provider;
 import com.riverssen.core.chainedmap.RiverFlowMap;
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.security.PublicAddress;
@@ -30,7 +31,7 @@ import java.math.BigInteger;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Context
+public class Context implements ContextI
 {
     private ExecutorService executorService;
     private NetworkManager networkManager;
