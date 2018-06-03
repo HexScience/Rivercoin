@@ -14,53 +14,50 @@ package com.riverssen.core.compiler;
 
 import java.util.*;
 
-public class MppCompiler
+public class LexedProgram
 {
-    private interface ASTGrammar
+    private Set<LexicalChar> allChars = new LinkedHashSet<>();
+    private char             last     = '\0';
+
+    public LexedProgram(String program)
     {
-        void onMain();
+        List<Character> exploded = explode(program);
 
-        void onCallMethod();
-
-        void onAccessValue();
-    }
-
-    public static byte[] compile(String string, ASTGrammar astGrammar)
-    {
-        return compile(parse(lex(string)), astGrammar);
-    }
-
-    private static class LexicalString
-    {
-        private String  value;
-        private int     line;
-        private int     offset;
-        private int     whitespace;
-
-        public LexicalString(String value, int line, int offset, int whitespace)
+        while(exploded.size() > 0)
         {
-            this.value = value;
-            this.line = line;
-            this.offset = offset;
-            this.whitespace = whitespace;
+            char current = exploded.get(0);
+
+
+
+            exploded.remove(0);
         }
     }
 
-    private static LexedProgram lex(String text)
+    int line, offset, whitespace;
+
+    private void add(char chr)
     {
-        return new LexedProgram();
+        if(chr == '\n')
+        {
+            line ++;
+            offset = 1;
+            whitespace = 0;
+        }
+
+        if(chr == last)
+        {
+        }
+
+        allChars.add(new LexicalChar(chr, line, offset, whitespace));
     }
 
-    private static class ParsedProgram
-    {}
-
-    private static ParsedProgram parse(LexedProgram program)
+    private List<Character> explode(String program)
     {
-        return new ParsedProgram();
-    }
+        List<Character> list = new ArrayList<>();
 
-    private static byte[] compile(ParsedProgram program, ASTGrammar astGrammar)
-    {
-        return null;
+        for(char chr : program.toCharArray())
+            list.add(chr);
+
+        return list;
     }
 }

@@ -12,55 +12,18 @@
 
 package com.riverssen.core.compiler;
 
-import java.util.*;
-
-public class MppCompiler
+public class LexicalChar
 {
-    private interface ASTGrammar
+    private char    value;
+    private int     line;
+    private int     offset;
+    private int     whitespace;
+
+    public LexicalChar(char value, int line, int offset, int whitespace)
     {
-        void onMain();
-
-        void onCallMethod();
-
-        void onAccessValue();
-    }
-
-    public static byte[] compile(String string, ASTGrammar astGrammar)
-    {
-        return compile(parse(lex(string)), astGrammar);
-    }
-
-    private static class LexicalString
-    {
-        private String  value;
-        private int     line;
-        private int     offset;
-        private int     whitespace;
-
-        public LexicalString(String value, int line, int offset, int whitespace)
-        {
-            this.value = value;
-            this.line = line;
-            this.offset = offset;
-            this.whitespace = whitespace;
-        }
-    }
-
-    private static LexedProgram lex(String text)
-    {
-        return new LexedProgram();
-    }
-
-    private static class ParsedProgram
-    {}
-
-    private static ParsedProgram parse(LexedProgram program)
-    {
-        return new ParsedProgram();
-    }
-
-    private static byte[] compile(ParsedProgram program, ASTGrammar astGrammar)
-    {
-        return null;
+        this.value = value;
+        this.line = line;
+        this.offset = offset;
+        this.whitespace = whitespace;
     }
 }

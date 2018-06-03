@@ -19,10 +19,10 @@ public class Clas
 {
     private static final Set<Clas> const_parents = new LinkedHashSet<>();
     static {
-        Method hashcode = new Method();
+        Method toString = new ToStringMethod();
 
-        Clas origin_class = new Clas("class").addMethod();
-        const_parents.add(new Clas("class"));
+        Clas origin_class = new Clas("class").addMethod(toString);
+        const_parents.add(origin_class);
     }
 
     private String          name;
