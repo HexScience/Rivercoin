@@ -24,9 +24,6 @@ public class MppCompiler
         void onAccessValue();
     }
 
-    private static enum Modifier{
-        PUBLIC, STATIC, FINAL, CONST, UNSAFE, PRIVATE, PROTECTED, SAFE, INSYNC, UNSIGNED;
-    }
     private static class Object{
     }
     private static class Method {
