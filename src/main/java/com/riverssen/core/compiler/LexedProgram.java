@@ -33,22 +33,42 @@ public class LexedProgram
         }
     }
 
-    int line, offset, whitespace;
+    int line = 1, offset = 1, whitespace = 0;
 
-    private void add(char chr)
+    private boolean add(char chr)
     {
         if(chr == '\n')
         {
             line ++;
             offset = 1;
             whitespace = 0;
+        } else if (chr == ' ')
+            whitespace ++;
+        else if (chr == '\t')
+            whitespace += 4;
+        else {
+            boolean escaped = last == '\\';
+
+            if(escaped)
+            {
+                if(chr == last)
+                {
+                }
+
+                allChars.add(new LexicalChar(chr, line, offset, whitespace));
+                return true;
+            } else
+            {
+                if(chr == last)
+                {
+                }
+
+                allChars.add(new LexicalChar(chr, line, offset, whitespace));
+            }
+            offset ++;
         }
 
-        if(chr == last)
-        {
-        }
-
-        allChars.add(new LexicalChar(chr, line, offset, whitespace));
+        return false;
     }
 
     private List<Character> explode(String program)
