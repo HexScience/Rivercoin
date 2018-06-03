@@ -19,7 +19,9 @@ public class Method
     private String name;
     private Opcode opcode[];
 
-    public Method(String name, Opcode opcode)
+    public Method(String name, Opcode opcode[])
     {
+        this.name   = name;
+        this.opcode = opcode;
     }
 }

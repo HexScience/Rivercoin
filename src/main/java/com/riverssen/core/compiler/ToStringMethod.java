@@ -12,34 +12,10 @@
 
 package com.riverssen.core.compiler;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-public class Clas
+public class ToStringMethod extends Method
 {
-    private static final Set<Clas> const_parents = new LinkedHashSet<>();
-    static {
-        Method hashcode = new Method();
-
-        Clas origin_class = new Clas("class").addMethod();
-        const_parents.add(new Clas("class"));
-    }
-
-    private String          name;
-    private Set<Clas>       parents;
-    private Set<Field>      fields;
-    private Set<Method>     methods;
-
-    public Clas(String name)
+    public ToStringMethod()
     {
-        this.name = name;
-        this.parents = new LinkedHashSet<>();
-        this.parents.addAll(const_parents);
-    }
-
-    public Clas addMethod(Method method)
-    {
-        this.methods.add(method);
-        return this;
+        super("toString", null);
     }
 }
