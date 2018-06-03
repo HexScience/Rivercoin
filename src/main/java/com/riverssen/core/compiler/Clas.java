@@ -12,42 +12,10 @@
 
 package com.riverssen.core.compiler;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class Field {
-    private String          fieldName;
-    private String          fieldType;
-    private Set<Modifier>   fieldModifiers;
-
-    public Field(String name, String type) {
-        this(name, type, null);
-    }
-
-    public Field(String name, String type, Collection<Modifier> modifiers) {
-        this.fieldName = name;
-        this.fieldType = type;
-        this.fieldModifiers = new LinkedHashSet<>();
-
-        if (modifiers != null)
-            this.fieldModifiers.addAll(modifiers);
-    }
-
-    public Field addModifier(Modifier modifier) {
-        this.fieldModifiers.add(modifier);
-        return this;
-    }
-
-    public String getName() {
-        return this.fieldName;
-    }
-
-    public String getType() {
-        return this.fieldType;
-    }
-
-    public Collection<Modifier> getModifiers() {
-        return this.fieldModifiers;
-    }
+public class Clas
+{
+    private Set<Field>  fields;
+    private Set<Method> methods;
 }

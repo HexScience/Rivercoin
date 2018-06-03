@@ -24,11 +24,6 @@ public class MppCompiler
         void onAccessValue();
     }
 
-    private static class Object{
-    }
-    private static class Method {
-    }
-
     public static byte[] compile(String string, ASTGrammar astGrammar) {
         return compile(parse(lex(string)), astGrammar);
     }
