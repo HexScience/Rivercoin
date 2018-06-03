@@ -37,6 +37,11 @@ public class uint256 implements MemObject
     }
 
     @Override
+    public void fromBytes(byte[] data) {
+
+    }
+
+    @Override
     public MemObject get(long address) {
         return null;
     }

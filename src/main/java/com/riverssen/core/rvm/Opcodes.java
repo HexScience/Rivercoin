@@ -24,13 +24,17 @@ public class Opcodes
     mul         = 5,
     div         = 6,
     mod         = 7,
+
     get         = 8,
     call        = 9,
     if_         = 10,
     else_       = 11,
     elif_       = 12,
+
+    /** RSA KeyPair **/
     rsa_kp      = 13,
 
+    /** ECDSA KeyPair **/
     ecdsa_kp    = 14,
     cmprsd_k    = 15,
     privte_k    = 16,

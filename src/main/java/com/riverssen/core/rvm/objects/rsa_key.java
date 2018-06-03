@@ -16,19 +16,12 @@ import com.riverssen.core.rvm.MathContext;
 import com.riverssen.core.rvm.MemObject;
 import com.riverssen.core.rvm.VirtualMachine;
 
-public class ByteArrayMemObject implements MemObject
-{
-    private byte data[];
-
-    public ByteArrayMemObject(byte data[])
-    {
-        this.data = data;
-    }
+public class rsa_key implements MemObject {
+    private byte seed[];
 
     @Override
-    public int getType()
-    {
-        return BYTE_ARRAY;
+    public int getType() {
+        return RSA_KEY;
     }
 
     @Override
@@ -38,6 +31,7 @@ public class ByteArrayMemObject implements MemObject
 
     @Override
     public void fromBytes(byte[] data) {
+        
     }
 
     @Override
@@ -47,41 +41,34 @@ public class ByteArrayMemObject implements MemObject
 
     @Override
     public void store(VirtualMachine virtualMachine) {
-
-    }
-
-    @Override
-    public <T extends MathContext> T add(T b)
-    {
-        return null;
-    }
-
-    @Override
-    public <T extends MathContext> T sub(T b)
-    {
-        return null;
-    }
-
-    @Override
-    public <T extends MathContext> T mul(T b)
-    {
-        return null;
-    }
-
-    @Override
-    public <T extends MathContext> T div(T b)
-    {
-        return null;
-    }
-
-    @Override
-    public <T extends MathContext> T mod(T b)
-    {
-        return null;
     }
 
     @Override
     public void call(VirtualMachine virtualMachine) {
+    }
 
+    @Override
+    public <T extends MathContext> T add(T b) {
+        return null;
+    }
+
+    @Override
+    public <T extends MathContext> T sub(T b) {
+        return null;
+    }
+
+    @Override
+    public <T extends MathContext> T mul(T b) {
+        return null;
+    }
+
+    @Override
+    public <T extends MathContext> T div(T b) {
+        return null;
+    }
+
+    @Override
+    public <T extends MathContext> T mod(T b) {
+        return null;
     }
 }

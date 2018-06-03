@@ -26,11 +26,20 @@ public interface MemObject extends MathContext, Callable
             POINTER    = 5,
             INTEGER    = 6,
             UINT256    = 8,
-            BOOL       = 9;
+            BOOL       = 9,
+
+
+            RSA_KP     = 10,
+            RSA_KEY    = 11,
+            ECDSA_KP   = 12,
+            ECDSA_KEY  = 13,
+            PUBLIC_ADDRESS = 14;
 
     public int getType();
 
     public long getPointer();
+
+    public void fromBytes(byte data[]);
 
     MemObject get(long address);
 

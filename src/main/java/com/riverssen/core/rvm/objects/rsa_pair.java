@@ -16,23 +16,41 @@ import com.riverssen.core.rvm.MathContext;
 import com.riverssen.core.rvm.MemObject;
 import com.riverssen.core.rvm.VirtualMachine;
 
-public class ByteArrayMemObject implements MemObject
+import java.security.KeyPairGenerator;
+
+public class rsa_pair implements MemObject
 {
-    private byte data[];
+    private rsa_key pair[];
 
-    public ByteArrayMemObject(byte data[])
+    public rsa_pair()
     {
-        this.data = data;
+    }
+
+    public rsa_pair(int length)
+    {
+        try{
+            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+            keyGen.initialize(length);
+            byte[] publicKey = keyGen.genKeyPair().getPublic().getEncoded();
+            StringBuffer retString = new StringBuffer();
+            for (int i = 0; i < publicKey.length; ++i)
+            {
+                retString.append(Integer.toHexString(0x0100 + (publicKey[i] & 0x00FF)).substring(1));
+            }
+            System.out.println(retString);
+        } catch (Exception e)
+        {
+        }
     }
 
     @Override
-    public int getType()
-    {
-        return BYTE_ARRAY;
+    public int getType() {
+        return RSA_KP;
     }
 
     @Override
-    public long getPointer() {
+    public long getPointer()
+    {
         return 0;
     }
 
@@ -42,7 +60,7 @@ public class ByteArrayMemObject implements MemObject
 
     @Override
     public MemObject get(long address) {
-        return null;
+        return pair[(int) address];
     }
 
     @Override
@@ -51,37 +69,32 @@ public class ByteArrayMemObject implements MemObject
     }
 
     @Override
-    public <T extends MathContext> T add(T b)
-    {
-        return null;
-    }
-
-    @Override
-    public <T extends MathContext> T sub(T b)
-    {
-        return null;
-    }
-
-    @Override
-    public <T extends MathContext> T mul(T b)
-    {
-        return null;
-    }
-
-    @Override
-    public <T extends MathContext> T div(T b)
-    {
-        return null;
-    }
-
-    @Override
-    public <T extends MathContext> T mod(T b)
-    {
-        return null;
-    }
-
-    @Override
     public void call(VirtualMachine virtualMachine) {
 
+    }
+
+    @Override
+    public <T extends MathContext> T add(T b) {
+        return null;
+    }
+
+    @Override
+    public <T extends MathContext> T sub(T b) {
+        return null;
+    }
+
+    @Override
+    public <T extends MathContext> T mul(T b) {
+        return null;
+    }
+
+    @Override
+    public <T extends MathContext> T div(T b) {
+        return null;
+    }
+
+    @Override
+    public <T extends MathContext> T mod(T b) {
+        return null;
     }
 }
