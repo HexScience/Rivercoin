@@ -19,9 +19,7 @@ public class MppCompiler
     private interface ASTGrammar
     {
         void onMain();
-
         void onCallMethod();
-
         void onAccessValue();
     }
 
@@ -48,7 +46,7 @@ public class MppCompiler
 
     private static LexedProgram lex(String text)
     {
-        return new LexedProgram();
+        return new LexedProgram(text);
     }
 
     private static class ParsedProgram

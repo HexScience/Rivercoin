@@ -12,18 +12,30 @@
 
 package com.riverssen.core.compiler;
 
-public class LexicalChar
+public class LexicalToken
 {
-    private char    value;
-    private int     line;
-    private int     offset;
-    private int     whitespace;
+    private StringBuilder       value;
+    private int                 line;
+    private int                 offset;
+    private int                 whitespace;
 
-    public LexicalChar(char value, int line, int offset, int whitespace)
+    public LexicalToken(char value, int line, int offset, int whitespace)
     {
-        this.value = value;
+        this.value = new StringBuilder(value);
         this.line = line;
         this.offset = offset;
         this.whitespace = whitespace;
+    }
+
+    public LexicalToken append(char chr)
+    {
+        value.append(chr);
+        return this;
+    }
+
+    @Override
+    public String toString()
+    {
+        return value.toString();
     }
 }

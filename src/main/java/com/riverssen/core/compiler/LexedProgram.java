@@ -16,7 +16,9 @@ import java.util.*;
 
 public class LexedProgram
 {
-    private Set<LexicalChar> allChars = new LinkedHashSet<>();
+    private Set<LexicalToken> allChars = new LinkedHashSet<>();
+    private LexicalToken      curtoken = null;
+
     private char             last     = '\0';
 
     public LexedProgram(String program)
@@ -26,9 +28,7 @@ public class LexedProgram
         while(exploded.size() > 0)
         {
             char current = exploded.get(0);
-
-
-
+            add(current);
             exploded.remove(0);
         }
     }
@@ -46,29 +46,49 @@ public class LexedProgram
             whitespace ++;
         else if (chr == '\t')
             whitespace += 4;
-        else {
-            boolean escaped = last == '\\';
+        else
+        {
+            if(curtoken == null)
+                curtoken = new LexicalToken(chr, line, offset, whitespace);
 
-            if(escaped)
+            /** check char is a separator **/
+            final char separators[] = {'.','=','+','-','\'','"',',','<','>','?',';',':','!','\\','/',
+            '[',']','{','}','(',')','*','&','^','%','$','#','@'};
+
+            boolean isSeparator = false;
+
+            for(char s : separators) if(chr == s) isSeparator = true;
+
+            if(isSeparator)
             {
-                if(chr == last)
-                {
-                }
+               allChars.add(curtoken);
 
-                allChars.add(new LexicalChar(chr, line, offset, whitespace));
-                return true;
-            } else
-            {
-                if(chr == last)
-                {
-                }
-
-                allChars.add(new LexicalChar(chr, line, offset, whitespace));
+               curtoken = new LexicalToken(chr, line, offset, whitespace);
+               allChars.add(curtoken);
+               curtoken = null;
             }
-            offset ++;
+
+            if (chr == last) allChars.add(new LexicalToken(chr, line, offset, whitespace));
+            else
+            {
+                boolean escaped = last == '\\';
+
+                if (escaped)
+                {
+                    allChars.add(new LexicalToken(chr, line, offset, whitespace));
+                    return true;
+                } else
+                {
+                    if (chr == last)
+                    {
+                    }
+
+                    allChars.add(new LexicalToken(chr, line, offset, whitespace));
+                }
+            }
         }
 
-        return false;
+            return false;
     }
 
     private List<Character> explode(String program)
