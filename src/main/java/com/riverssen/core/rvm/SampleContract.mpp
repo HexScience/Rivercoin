@@ -1,0 +1,20 @@
+class Contract{
+    unimp onReceive();
+    unimp onSend();
+}
+
+
+class MyContract implements Contract
+{
+    uint256 lasthash;
+    uint    thisvalu;
+    int     thatvalu;
+
+    function MyContract() : void
+    {
+    }
+    function toString() : String
+    {
+        return Encoder::sha256(lasthash, thisvalu, thatvalu);
+    }
+}

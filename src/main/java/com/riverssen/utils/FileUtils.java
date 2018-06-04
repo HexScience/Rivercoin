@@ -135,4 +135,24 @@ public class FileUtils
             e.printStackTrace();
         }
     }
+
+    public static String readUTF(InputStream resourceAsStream)
+    {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(resourceAsStream));
+
+            String line = "";
+            String text = "";
+
+            while((line = reader.readLine()) != null) text += line + "\n";
+
+            reader.close();
+
+            return text;
+        } catch (Exception e)
+        {
+        }
+
+        return "";
+    }
 }

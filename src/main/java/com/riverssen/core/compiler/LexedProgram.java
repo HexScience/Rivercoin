@@ -35,6 +35,11 @@ public class LexedProgram
 
     int line = 1, offset = 1, whitespace = 0;
 
+    private void wrap()
+    {
+        allChars.add(curtoken);
+    }
+
     private boolean add(char chr)
     {
         if(chr == '\n')
@@ -42,10 +47,17 @@ public class LexedProgram
             line ++;
             offset = 1;
             whitespace = 0;
+            wrap();
         } else if (chr == ' ')
+        {
             whitespace ++;
+            wrap();
+        }
         else if (chr == '\t')
+        {
             whitespace += 4;
+            wrap();
+        }
         else
         {
             if(curtoken == null)
@@ -57,35 +69,31 @@ public class LexedProgram
 
             boolean isSeparator = false;
 
+            boolean escaped     = last == '\\';
+
+            boolean string      = curtoken.toString().startsWith("\"") || curtoken.toString().startsWith("'");
+
             for(char s : separators) if(chr == s) isSeparator = true;
 
-            if(isSeparator)
+            if(isSeparator && !escaped)
             {
-               allChars.add(curtoken);
+               wrap();
 
-               curtoken = new LexicalToken(chr, line, offset, whitespace);
-               allChars.add(curtoken);
-               curtoken = null;
-            }
-
-            if (chr == last) allChars.add(new LexicalToken(chr, line, offset, whitespace));
-            else
-            {
-                boolean escaped = last == '\\';
-
-                if (escaped)
-                {
-                    allChars.add(new LexicalToken(chr, line, offset, whitespace));
-                    return true;
-                } else
-                {
-                    if (chr == last)
+               if(chr == '\'' || chr == '"')
+               {
+                    if(curtoken.toString().startsWith("\"") || curtoken.toString().startsWith("'"))
                     {
-                    }
+                        curtoken.append(chr);
+                        curtoken = null;
+                    } else
+                        curtoken = new LexicalToken(chr, line, offset, whitespace);
+               } else {
+                    curtoken = new LexicalToken(chr, line, offset, whitespace);
+                    allChars.add(curtoken);
+               }
 
-                    allChars.add(new LexicalToken(chr, line, offset, whitespace));
-                }
-            }
+               curtoken = null;
+            } else curtoken.append(chr);
         }
 
             return false;
@@ -99,5 +107,10 @@ public class LexedProgram
             list.add(chr);
 
         return list;
+    }
+
+    public Set<LexicalToken> getTokens()
+    {
+        return allChars;
     }
 }

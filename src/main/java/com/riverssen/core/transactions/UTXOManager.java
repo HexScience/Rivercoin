@@ -50,6 +50,7 @@ public class UTXOManager
     public static void add(FullBlock block)
     {
         MerkleTree mt = block.getBody().getMerkleTree();
+        Context context = null;
 
         for(TransactionI transaction : mt.flatten())
             for(TransactionOutput transactionOutput : transaction.generateOutputs(block.getHeader().getMinerAddressAsPublicAddress(), context))

@@ -12,11 +12,16 @@
 
 package com.riverssen.core;
 
+import com.riverssen.core.compiler.LexedProgram;
+import com.riverssen.core.compiler.LexicalToken;
+import com.riverssen.core.rvm.VirtualMachine;
 import com.riverssen.core.system.Context;
+import com.riverssen.utils.ByteUtil;
 import com.riverssen.utils.FileUtils;
 
 import java.io.File;
 import java.security.Security;
+import java.util.Set;
 
 public class RivercoinCore
 {
@@ -33,6 +38,13 @@ public class RivercoinCore
 
     private RivercoinCore(String file)
     {
+        Set<LexicalToken> list = new LexedProgram(FileUtils.readUTF(VirtualMachine.class.getResourceAsStream("SampleContract.mpp"))).getTokens();
+
+        for(LexicalToken token : list)
+        {
+            System.out.println(token.toString());
+        }
+
         /** create a context **/
         Context context = new Context(new File(file));
 

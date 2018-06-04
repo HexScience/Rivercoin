@@ -1,0 +1,28 @@
+contract Email is Direct
+{
+    CompressedDirectAddress sender
+    CompressedDirectAddress receiver
+    byte                    subject[256]
+    string                  body
+    DateTime                time
+
+    Email(CompressedAddress sender, CompressedAddress receiver, byte subject[256], string body):
+        this.sender   = sender
+        this.receiver = receiver
+        this.subject  = rsa_encrypt(receiver, subject)
+        this.body     = rsa_encrypt(receiver, body)
+        this.time     = getTime()
+
+    onReceive(PrivateDirectKey key):
+        if not isReceiver(key) stayAlive(true)
+        this.subject  = rsa_decrypt(key, subject)
+        this.body     = rsa_decrypt(key, body)
+        
+        store('email_' . subject . ' from_' . sender)
+        display('email: ' . subject . ' from: ' . sender, body)
+        
+        stayAlive(false)
+
+    onSendFail():
+        stayAlive(true)
+}

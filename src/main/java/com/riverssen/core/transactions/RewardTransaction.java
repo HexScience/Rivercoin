@@ -80,7 +80,7 @@ public class RewardTransaction implements TransactionI
     @Deprecated
     public List<TransactionOutput> generateOutputs()
     {
-        return generateOutputs(null, context);
+        return generateOutputs(null, null);
     }
 
     public List<TransactionOutput> generateOutputs(PublicAddress miner, Context context)
@@ -105,6 +105,11 @@ public class RewardTransaction implements TransactionI
             amount = amount.add(((txi.getUTXO()).getValue().toBigInteger()));
 
         return amount;
+    }
+
+    @Override
+    public void revertOutputs(PublicAddress miner, Context context)
+    {
     }
 
     @Override
