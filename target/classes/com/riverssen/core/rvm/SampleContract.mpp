@@ -3,6 +3,8 @@ class Contract{
     unimp onSend();
 }
 
+"hello world\""
+'dada dasda d'
 
 class MyContract implements Contract
 {

@@ -3,7 +3,6 @@ class Contract{
     unimp onSend();
 }
 
-
 class MyContract implements Contract
 {
     uint256 lasthash;

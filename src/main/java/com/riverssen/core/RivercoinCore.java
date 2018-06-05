@@ -42,8 +42,10 @@ public class RivercoinCore
 
         for(LexicalToken token : list)
         {
-            System.out.println(token.toString());
+            System.out.println(token);
         }
+
+        System.exit(0);
 
         /** create a context **/
         Context context = new Context(new File(file));

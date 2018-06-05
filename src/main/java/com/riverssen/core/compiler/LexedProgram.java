@@ -12,6 +12,7 @@
 
 package com.riverssen.core.compiler;
 
+import java.nio.CharBuffer;
 import java.util.*;
 
 public class LexedProgram
@@ -19,94 +20,103 @@ public class LexedProgram
     private Set<LexicalToken> allChars = new LinkedHashSet<>();
     private LexicalToken      curtoken = null;
 
-    private char             last     = '\0';
+    private char             last      = '\0';
 
     public LexedProgram(String program)
     {
-        List<Character> exploded = explode(program);
+        CharBuffer stream = CharBuffer.wrap(program.toCharArray());
 
-        while(exploded.size() > 0)
+        char b = 0;
+
+        final char separators[] = {'.','=','+','-','\'','"',',','<','>','?',';',':','!','\\','/',
+                '[',']','{','}','(',')','*','&','^','%','$','#','@'};
+
+        /** this type of splitting into tokens will not work with strings, ie: "hello world" will turn into "hello and world" **/
+        String raw_words[] = program.replaceAll("\n", " ").split("\\s+");
+
+        final char EOF = '\0';
+        final char END = '\n';
+        final char WTS = ' ';
+        final char TAB = '\t';
+
+        boolean isString = false;
+
+        LexicalToken token = null;
+        int line = 1;
+        int whitespace = 0;
+        int offset = 1;
+
+        for(int i = 0; i < program.length(); i ++)
         {
-            char current = exploded.get(0);
-            add(current);
-            exploded.remove(0);
-        }
-    }
+            char current = program.charAt(i);
+            char last    = i > 0 ? program.charAt(i - 1) : '\0';
+            char next    = i < program.length() - 1 ? program.charAt(i + 1) : '\0';
 
-    int line = 1, offset = 1, whitespace = 0;
-
-    private void wrap()
-    {
-        allChars.add(curtoken);
-    }
-
-    private boolean add(char chr)
-    {
-        if(chr == '\n')
-        {
-            line ++;
-            offset = 1;
-            whitespace = 0;
-            wrap();
-        } else if (chr == ' ')
-        {
-            whitespace ++;
-            wrap();
-        }
-        else if (chr == '\t')
-        {
-            whitespace += 4;
-            wrap();
-        }
-        else
-        {
-            if(curtoken == null)
-                curtoken = new LexicalToken(chr, line, offset, whitespace);
-
-            /** check char is a separator **/
-            final char separators[] = {'.','=','+','-','\'','"',',','<','>','?',';',':','!','\\','/',
-            '[',']','{','}','(',')','*','&','^','%','$','#','@'};
-
-            boolean isSeparator = false;
-
-            boolean escaped     = last == '\\';
-
-            boolean string      = curtoken.toString().startsWith("\"") || curtoken.toString().startsWith("'");
-
-            for(char s : separators) if(chr == s) isSeparator = true;
-
-            if(isSeparator && !escaped)
+            if(current == END)
             {
-               wrap();
+                line ++;
+                allChars.add(token);
+                token = null;
+                continue;
+            } else if(current == WTS && !(token != null && (token.toString().startsWith("\"") || token.toString().startsWith("\'"))))
+            {
+                whitespace ++;
+                allChars.add(token);
+                token = null;
+                continue;
+            } else if(current == TAB && !(token != null && (token.toString().startsWith("\"") || token.toString().startsWith("\'"))))
+            {
+                whitespace += 4;
+                allChars.add(token);
+                token = null;
+                continue;
+            }
 
-               if(chr == '\'' || chr == '"')
-               {
-                    if(curtoken.toString().startsWith("\"") || curtoken.toString().startsWith("'"))
+            boolean separator = false;
+
+            for(char s : separators) if(current == s) separator = true;
+
+            boolean wasnull = token == null;
+
+            if(token == null)
+                token = new LexicalToken("", line, offset, whitespace);
+
+            isString = (token.toString().startsWith("\"") || token.toString().startsWith("\'"));
+
+            if(isString || wasnull)
+            {
+                if(current == '"' || current == '\'' || separator)
+                {
+                    if(last == '\\')
+                        token.append(current);
+                    else if(token.toString().startsWith(current + ""))
                     {
-                        curtoken.append(chr);
-                        curtoken = null;
+                        token.append(current);
+                        allChars.add(token);
+                        token = null;
                     } else
-                        curtoken = new LexicalToken(chr, line, offset, whitespace);
-               } else {
-                    curtoken = new LexicalToken(chr, line, offset, whitespace);
-                    allChars.add(curtoken);
-               }
+                    {
+                        token.append(current);
+                    }
+                } else token.append(current);
 
-               curtoken = null;
-            } else curtoken.append(chr);
+                offset ++;
+                continue;
+            }
+
+            if(separator)
+            {
+                allChars.add(token);
+                token = new LexicalToken(""+current, line, offset, whitespace);
+                allChars.add(token);
+                token = null;
+            } else
+                token.append(current);
+
+            offset ++;
         }
 
-            return false;
-    }
-
-    private List<Character> explode(String program)
-    {
-        List<Character> list = new ArrayList<>();
-
-        for(char chr : program.toCharArray())
-            list.add(chr);
-
-        return list;
+        allChars.remove(null);
     }
 
     public Set<LexicalToken> getTokens()

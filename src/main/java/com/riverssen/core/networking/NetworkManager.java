@@ -10,6 +10,7 @@ import com.riverssen.utils.TimeUtil;
 import com.riverssen.utils.Truple;
 import com.riverssen.utils.Tuple;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 
@@ -50,6 +51,8 @@ public class NetworkManager implements Listener
 
             for(int i = start; i < array.length(); i ++)
                 ipAddresses.add(array.getString(i));
+        } catch (JSONException e)
+        {
         } catch (Exception e)
         {
             e.printStackTrace();

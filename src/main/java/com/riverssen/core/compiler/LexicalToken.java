@@ -19,6 +19,14 @@ public class LexicalToken
     private int                 offset;
     private int                 whitespace;
 
+    public LexicalToken(String value, int line, int offset, int whitespace)
+    {
+        this.value = new StringBuilder(value);
+        this.line = line;
+        this.offset = offset;
+        this.whitespace = whitespace;
+    }
+
     public LexicalToken(char value, int line, int offset, int whitespace)
     {
         this.value = new StringBuilder(value);
