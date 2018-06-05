@@ -42,10 +42,27 @@ public class ParsedProgram
         } else throw new ParseException(errmsg, offset);
     }
 
+    private Token getNextToken(List<LexicalToken> tokens, int offset, String errmsg) throws ParseException
+    {
+        try{
+            if(tokens.size() > 0)
+            {
+                Token falsy = new Token(null);
+                parse(tokens, falsy, true);
+                return falsy.getTokens().get(0);
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        throw new ParseException(errmsg, offset);
+    }
+
     private Token getNextInBraces(List<LexicalToken> tokens, int offset, String errmsg) throws ParseException
     {
         return null;
     }
+
     private Token getNextInParenthesis(List<LexicalToken> tokens, int offset, String errmsg) throws ParseException
     {
         if(tokens.size() >= 2 && tokens.get(0).getType() == LexicalToken.Type.PARENTHESIS_OPEN)
@@ -129,6 +146,7 @@ public class ParsedProgram
             case "class":
                     parseClass      (tokens, root, currentToken);
                 break;
+            case "new":
             case "if":
                 break;
             case "for":
@@ -140,51 +158,71 @@ public class ParsedProgram
 
     private void parseMath(List<LexicalToken> tokens, Token root, LexicalToken a) throws ParseException
     {
-        HashMap<String, LexicalToken> map = new HashMap<>();
-        String operation = a.toString();
-        map.put(a.toString(), a);
-        while(tokens.get(0).isMathOp())
+        List<LexicalToken> math_tokens = new ArrayList<>();
+        math_tokens.add(a);
+
+        while(tokens.size() > 0 && tokens.get(0).isMathOp())
         {
-            LexicalToken operator = getNext(tokens, a.getOffset(), "invalid math operation");
-            LexicalToken b        = getNext(tokens, a.getOffset(), "invalid math operation");
+            LexicalToken operator   = getNext(tokens, a.getOffset(), "invalid math operation");
+//            Token        operation= operator.asToken();
+            LexicalToken b          = getNext(tokens, a.getOffset(), "invalid math operation a " + operator + " null");//getNextToken(tokens, a.getOffset(), "invalid math operation a " + operation.toString() + " null");
+            math_tokens.add(operator);
+            math_tokens.add(b);
 
-            operation += operation + b;
-
-            map.put(b.toString(), b);
+//            LexicalToken c        = getNext(tokens, a.getOffset(), "invalid math operation b " + operation.toString() + " null");//getNextToken(tokens, a.getOffset(), "invalid math operation a " + operation.toString() + " null");
         }
 
-        Token math = new Token(Token.Type.MATH_OP);
+        Stack<LexicalToken> output = new Stack<>();
+        Stack<LexicalToken> stack  = new Stack<>();
 
-//        1. Create a stack
-//        2. For each character t in the expression
-//            - If t is an operand, append it to the output
-//        - Else if t is ')',then pop from the stack till '(' is encountered and append
-//        it to the output. do not append '(' to the output.
-//            - If t is an operator or '('
-//            -- If t has higher precedence than the top of the stack, then push t
-//        on to the stack.
-//        -- If t has lower precedence than top of the stack, then keep popping
-//        from the stack and appending to the output until either stack is
-//        empty or a lower priority operator is encountered.
-//
-//        After the input is over, keep popping and appending to the output until the
-//        stack is empty.
+        Stack<LexicalToken> result = new Stack<>();
 
-//        String split[] = operation.split("\\+");
-//        Stack<String> operations = new Stack<>();
+        for (int i = 0; i<math_tokens.size(); ++i)
+        {
+            LexicalToken c = math_tokens.get(i);
 
-        Stack<LexicalToken> outputs = new Stack<>();
+            // If the scanned character is an operand, add it to output.
+            if (!c.isMathOp())
+                output.push(c);
+            else
+            {
+                while (!stack.isEmpty() && prec(c.toString().charAt(0)) <= prec(stack.peek().toString().charAt(0)))
+                    output.push(stack.pop());
+                stack.push(c);
+            }
+        }
 
-//        for(String op : split)
-//            operations.add(op);
+        while   (stack.size() > 0) output.push(stack.pop());
+        while   (output.size() > 0) stack.push(stack.pop());
 
-//        while(operations.size() > 1)
-//        {
-//            Token B = mathParse(map, operations.pop());
-//            Token A = mathParse(map, operations.pop());
-//
-//
-//        }
+        while   (stack.size() > 2)
+        {
+            result.push(new Tok)
+            System.out.println(output.pop());
+        }
+
+        System.out.println(output);
+    }
+
+    static int prec(char ch)
+    {
+        switch (ch)
+        {
+            case '+':
+            case '-':
+                return 1;
+
+            case '*':
+            case '/':
+                return 2;
+
+            case '%':
+                return 3;
+            case '^':
+                return 4;
+        }
+
+        return -1;
     }
 
     private Token mathParse(HashMap<String, LexicalToken> map, String operation, String op, Token.Type type)
@@ -228,12 +266,12 @@ public class ParsedProgram
                         if(equals.getType()     == LexicalToken.Type.EQUALS)
                         {
                             declaration         = new Token(Token.Type.FULL_DECLARATION).add(type).add(name);
-                            parse   (tokens, declaration, true);
-                            getNext (tokens, currentToken.getOffset(), "");
+                            parse               (tokens, declaration, true);
+                            getNext             (tokens, currentToken.getOffset(), "");
                         } else if(equals.getType() == LexicalToken.Type.END)
                         {
                             declaration         = new Token(Token.Type.EMPTY_DECLARATION).add(type).add(name);
-                            getNext (tokens,     currentToken.getOffset(), "");
+                            getNext             (tokens,     currentToken.getOffset(), "");
                         } else
                             throw new ParseException("Unidentified token. '" + equals + "'", currentToken.getOffset());
 

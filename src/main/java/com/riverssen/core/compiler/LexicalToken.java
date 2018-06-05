@@ -136,6 +136,27 @@ public class LexicalToken
         return this.type;
     }
 
+    public Token asToken()
+    {
+        if(getType() == Type.MATH_OP)
+        {
+            if(toString().charAt(0) == '+')
+                return new Token(Token.Type.ADDITION);
+            if(toString().charAt(0) == '-')
+                return new Token(Token.Type.SUBTRACTION);
+            if(toString().charAt(0) == '*')
+                return new Token(Token.Type.MULTIPLICATION);
+            if(toString().charAt(0) == '/')
+                return new Token(Token.Type.SUBDIVISION);
+            if(toString().charAt(0) == '^')
+                return new Token(Token.Type.POW);
+            if(toString().charAt(0) == '%')
+                return new Token(Token.Type.MOD);
+        }
+
+        return null;
+    }
+
     @Override
     public String toString()
     {
