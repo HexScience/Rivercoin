@@ -31,6 +31,13 @@ public class Token
         PARENTHESIS,
         BRACES,
         INPUT,
+        MATH_OP,
+        ADDITION,
+        SUBTRACTION,
+        MULTIPLICATION,
+        SUBDIVISION,
+        POW,
+        MOD,
         BRACKETS
     }
     private Type                type;

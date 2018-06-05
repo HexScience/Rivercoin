@@ -13,8 +13,7 @@
 package com.riverssen.core.compiler;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ParsedProgram
 {
@@ -139,6 +138,60 @@ public class ParsedProgram
         }
     }
 
+    private void parseMath(List<LexicalToken> tokens, Token root, LexicalToken a) throws ParseException
+    {
+        HashMap<String, LexicalToken> map = new HashMap<>();
+        String operation = a.toString();
+        map.put(a.toString(), a);
+        while(tokens.get(0).isMathOp())
+        {
+            LexicalToken operator = getNext(tokens, a.getOffset(), "invalid math operation");
+            LexicalToken b        = getNext(tokens, a.getOffset(), "invalid math operation");
+
+            operation += operation + b;
+
+            map.put(b.toString(), b);
+        }
+
+        Token math = new Token(Token.Type.MATH_OP);
+
+//        1. Create a stack
+//        2. For each character t in the expression
+//            - If t is an operand, append it to the output
+//        - Else if t is ')',then pop from the stack till '(' is encountered and append
+//        it to the output. do not append '(' to the output.
+//            - If t is an operator or '('
+//            -- If t has higher precedence than the top of the stack, then push t
+//        on to the stack.
+//        -- If t has lower precedence than top of the stack, then keep popping
+//        from the stack and appending to the output until either stack is
+//        empty or a lower priority operator is encountered.
+//
+//        After the input is over, keep popping and appending to the output until the
+//        stack is empty.
+
+//        String split[] = operation.split("\\+");
+//        Stack<String> operations = new Stack<>();
+
+        Stack<LexicalToken> outputs = new Stack<>();
+
+//        for(String op : split)
+//            operations.add(op);
+
+//        while(operations.size() > 1)
+//        {
+//            Token B = mathParse(map, operations.pop());
+//            Token A = mathParse(map, operations.pop());
+//
+//
+//        }
+    }
+
+    private Token mathParse(HashMap<String, LexicalToken> map, String operation, String op, Token.Type type)
+    {
+        return new Token(Token.Type.INPUT).add(map.get(operation));
+    }
+
     private void parse(List<LexicalToken> tokens, Token root, boolean onlyOnce) throws ParseException
     {
         while(tokens.size() > 0)
@@ -151,7 +204,12 @@ public class ParsedProgram
                         root.add(getNextInParenthesis(tokens, currentToken.getOffset(), ""));
                     break;
                 case NUMBER:
-                        root.add(new Token(Token.Type.INPUT).add(getNext(tokens, currentToken.getOffset(), "")));
+                        LexicalToken A = getNext(tokens, currentToken.getOffset(), "");
+                        if(tokens.size() > 0 && tokens.get(0).isMathOp())
+                        {
+                            parseMath(tokens, root, A);
+                        } else
+                            root.add(new Token(Token.Type.INPUT).add(A));
                     break;
                 case STRING:
                         root.add(new Token(Token.Type.INPUT).add(getNext(tokens, currentToken.getOffset(), "")));

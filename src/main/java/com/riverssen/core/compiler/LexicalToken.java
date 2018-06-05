@@ -19,7 +19,13 @@ public class LexicalToken
     private int                 offset;
     private int                 whitespace;
     private Type                type;
-    public static enum          Type {KEYWORD, IDENTIFIER, SYMBOL, STRING, NUMBER, PARENTHESIS_OPEN, PARENTHESIS_CLOSED, BRACES_OPEN, BRACES_CLOSED, BRACKETS_OPEN, BRACKETS_CLOSED, EQUALS, END};
+
+    public boolean isMathOp()
+    {
+        return getType() == Type.MATH_OP;
+    }
+
+    public static enum          Type {KEYWORD, IDENTIFIER, SYMBOL, STRING, NUMBER, PARENTHESIS_OPEN, PARENTHESIS_CLOSED, BRACES_OPEN, BRACES_CLOSED, BRACKETS_OPEN, BRACKETS_CLOSED, MATH_OP, EQUALS, END};
 
     public LexicalToken(String value, int line, int offset, int whitespace)
     {
@@ -110,6 +116,10 @@ public class LexicalToken
                 } else if (toString().charAt(0) == '=')
                 {
                     type = Type.EQUALS;
+                    return type;
+                } else if(toString().charAt(0) == '+' || toString().charAt(0) == '-' || toString().charAt(0) == '*' || toString().charAt(0) == '/' || toString().charAt(0) == '%')
+                {
+                    type = Type.MATH_OP;
                     return type;
                 }
 
