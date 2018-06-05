@@ -43,7 +43,7 @@ public class RivercoinCore
     {
         List<Token> list = new ParsedProgram(new LexedProgram(FileUtils.readUTF(VirtualMachine.class.getResourceAsStream("SampleContract.mpp")))).getTokens();
 
-        for(LexicalToken token : list)
+        for(Token token : list)
         {
             System.out.println(token);
         }

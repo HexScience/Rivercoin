@@ -22,9 +22,18 @@ public class ParsedProgram
     public ParsedProgram(LexedProgram program)
     {
         this.tokens = new ArrayList<>();
+        List<LexicalToken> tokens = new ArrayList<>();
+        tokens.addAll(program.getTokens());
+
+        Token root = new Token(Token.Type.ROOT);
+        parse(tokens, root);
+
+        this.tokens.addAll(root.getTokens());
     }
 
-    private Token parse(List<LexicalToken> )
+    private void parse(List<LexicalToken> tokens, Token root)
+    {
+    }
 
     public List<Token> getTokens()
     {

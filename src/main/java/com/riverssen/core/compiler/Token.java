@@ -18,8 +18,9 @@ import java.util.List;
 public class Token
 {
     public static enum Type {ROOT, STATIC_ACCESS, PROCEDURAL_ACCESS, INITIALIZATION, EMPTY_DECLARATION, FULL_DECLARATION, METHOD_CALL, METHOD_DECLARATION, METHOD_EMPTY_DECLARATION, CLASS_DECLARATION}
-    private Type type;
-    private List<LexicalToken> children;
+    private Type                type;
+    private List<Token>         children;
+    private List<LexicalToken>  tokens;
 
     public Token(Type type)
     {
@@ -29,6 +30,12 @@ public class Token
 
     public Token add(LexicalToken token)
     {
+        this.tokens.add(token);
+        return this;
+    }
+
+    public Token add(Token token)
+    {
         this.children.add(token);
         return this;
     }
@@ -36,9 +43,16 @@ public class Token
     public Token clone()
     {
         Token token = new Token(type);
-        for(LexicalToken lexicalToken : children)
+        for(LexicalToken lexicalToken : tokens)
             token.add(lexicalToken.clone());
+        for(Token child : children)
+            token.add(child.clone());
 
         return token;
+    }
+
+    public List<Token> getTokens()
+    {
+        return this.children;
     }
 }
