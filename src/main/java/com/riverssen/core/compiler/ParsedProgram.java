@@ -12,6 +12,7 @@
 
 package com.riverssen.core.compiler;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class ParsedProgram
 {
     private List<Token> tokens;
 
-    public ParsedProgram(LexedProgram program)
+    public ParsedProgram(LexedProgram program) throws ParseException
     {
         this.tokens = new ArrayList<>();
         List<LexicalToken> tokens = new ArrayList<>();
@@ -31,8 +32,48 @@ public class ParsedProgram
         this.tokens.addAll(root.getTokens());
     }
 
-    private void parse(List<LexicalToken> tokens, Token root)
+    private void parseKeyword(List<LexicalToken> tokens, Token root) throws ParseException
     {
+        LexicalToken currentToken = tokens.get(0);
+        switch (currentToken.toString())
+        {
+            case "function":
+                break;
+            case "fun":
+                break;
+            case "class":
+                break;
+            case "if":
+                break;
+            case "for":
+                break;
+            case "while":
+                break;
+        }
+    }
+
+    private void parse(List<LexicalToken> tokens, Token root) throws ParseException
+    {
+        while(tokens.size() > 0)
+        {
+            LexicalToken currentToken = tokens.get(0);
+
+            switch (currentToken.getType())
+            {
+                case NUMBER:
+                    break;
+                case STRING:
+                    break;
+                case SYMBOL:
+                    break;
+                case KEYWORD:
+                    parseKeyword(tokens, root);
+                    break;
+                case IDENTIFIER:break;
+                default:
+                    throw new ParseException("Token unidentified. '"+currentToken.toString()+"'", currentToken.getOffset());
+            }
+        }
     }
 
     public List<Token> getTokens()

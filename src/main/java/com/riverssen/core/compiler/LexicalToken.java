@@ -48,9 +48,29 @@ public class LexicalToken
         return new LexicalToken(value.toString(), line, offset, whitespace);
     }
 
+    public int getLine()
+    {
+        return line;
+    }
+
+    public int getOffset()
+    {
+        return offset;
+    }
+
+    public int getWhitespace()
+    {
+        return whitespace;
+    }
+
     public void setType(Type type)
     {
         this.type = type;
+    }
+
+    public Type getType()
+    {
+        return this.type;
     }
 
     @Override

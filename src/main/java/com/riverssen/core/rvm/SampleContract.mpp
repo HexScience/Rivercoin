@@ -17,3 +17,12 @@ class MyContract implements Contract
         return Encoder::sha256(lasthash, thisvalu, thatvalu);
     }
 }
+
+function declaration:
+    full    declaration: [function] [name] [parenthesis] [:] [type] [braces]
+    empty   declaration: [function] [name] [parenthesis] [:] [type]
+
+if statements and loops:
+    [if]    [parenthesis] [braces] or [statement]
+    [for]   [for] [parenthesis] [braces] or [statement]
+    [while] [for] [parenthesis] [braces] or [statement]
