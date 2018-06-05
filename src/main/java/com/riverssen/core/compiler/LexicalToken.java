@@ -19,7 +19,7 @@ public class LexicalToken
     private int                 offset;
     private int                 whitespace;
     private Type                type;
-    public static enum                 Type {KEYWORD, IDENTIFIER, SYMBOL, STRING, NUMBER};
+    public static enum          Type {KEYWORD, IDENTIFIER, SYMBOL, STRING, NUMBER, PARENTHESIS_OPEN, PARENTHESIS_CLOSED, BRACES_OPEN, BRACES_CLOSED, BRACKETS_OPEN, BRACKETS_CLOSED, EQUALS, END};
 
     public LexicalToken(String value, int line, int offset, int whitespace)
     {
@@ -70,6 +70,59 @@ public class LexicalToken
 
     public Type getType()
     {
+        if(type == null)
+        {
+            final char separators[] = {'.','=','+','-','\'','"',',','<','>','?',';',':','!','\\','/',
+                    '[',']','{','}','(',')','*','&','^','%','$','#','@'};
+
+            boolean separator = false;
+
+            if(toString().length() == 1)
+            {
+                if (toString().charAt(0) == ')')
+                {
+                    type = Type.PARENTHESIS_CLOSED;
+                    return type;
+                } else if (toString().charAt(0) == '(')
+                {
+                    type = Type.PARENTHESIS_OPEN;
+                    return type;
+                } else if (toString().charAt(0) == '}')
+                {
+                    type = Type.BRACES_CLOSED;
+                    return type;
+                } else if (toString().charAt(0) == '{')
+                {
+                    type = Type.BRACES_OPEN;
+                    return type;
+                } else if (toString().charAt(0) == ']')
+                {
+                    type = Type.BRACKETS_CLOSED;
+                    return type;
+                } else if (toString().charAt(0) == '[')
+                {
+                    type = Type.BRACKETS_OPEN;
+                    return type;
+                } else if (toString().charAt(0) == ';')
+                {
+                    type = Type.END;
+                    return type;
+                } else if (toString().charAt(0) == '=')
+                {
+                    type = Type.EQUALS;
+                    return type;
+                }
+
+                for (char s : separators) if (toString().charAt(0) == s) separator = true;
+            }
+
+            if(separator) type = Type.SYMBOL;
+            else {
+                if(toString().startsWith("\"") || toString().startsWith("'")) type = Type.STRING;
+                else if(toString().matches("([_]*[A-z]+\\d*)+")) type = Type.IDENTIFIER;
+                else if(toString().matches("(\\d[_]*\\d*)+")) type = Type.NUMBER;
+            }
+        }
         return this.type;
     }
 

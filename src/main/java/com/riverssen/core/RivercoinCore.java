@@ -23,6 +23,7 @@ import com.riverssen.utils.FileUtils;
 
 import java.io.File;
 import java.security.Security;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Set;
 
@@ -39,14 +40,11 @@ public class RivercoinCore
         new RivercoinCore(root);
     }
 
-    private RivercoinCore(String file)
+    private RivercoinCore(String file) throws Exception
     {
-        List<Token> list = new ParsedProgram(new LexedProgram(FileUtils.readUTF(VirtualMachine.class.getResourceAsStream("SampleContract.mpp")))).getTokens();
+        Token list = new ParsedProgram(new LexedProgram(FileUtils.readUTF(VirtualMachine.class.getResourceAsStream("SampleContract.mpp")))).getTokens();
 
-        for(Token token : list)
-        {
-            System.out.println(token);
-        }
+        System.out.println(list);
 
         System.exit(0);
 

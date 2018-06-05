@@ -17,7 +17,22 @@ import java.util.List;
 
 public class Token
 {
-    public static enum Type {ROOT, STATIC_ACCESS, PROCEDURAL_ACCESS, INITIALIZATION, EMPTY_DECLARATION, FULL_DECLARATION, METHOD_CALL, METHOD_DECLARATION, METHOD_EMPTY_DECLARATION, CLASS_DECLARATION}
+    public static enum Type {
+        ROOT,
+        STATIC_ACCESS,
+        PROCEDURAL_ACCESS,
+        INITIALIZATION,
+        EMPTY_DECLARATION,
+        FULL_DECLARATION,
+        METHOD_CALL,
+        METHOD_DECLARATION,
+        METHOD_EMPTY_DECLARATION,
+        CLASS_DECLARATION,
+        PARENTHESIS,
+        BRACES,
+        INPUT,
+        BRACKETS
+    }
     private Type                type;
     private List<Token>         children;
     private List<LexicalToken>  tokens;
@@ -25,6 +40,7 @@ public class Token
     public Token(Type type)
     {
         this.children = new ArrayList<>();
+        this.tokens   = new ArrayList<>();
         this.type     = type;
     }
 
@@ -54,5 +70,33 @@ public class Token
     public List<Token> getTokens()
     {
         return this.children;
+    }
+
+    private String whitespace(int length)
+    {
+        length*=4;
+        String string = "";
+
+        for(int i = 0; i < length; i ++)
+            string += ' ';
+
+        return string;
+    }
+
+    public String humanReadable(int i)
+    {
+        String s = (whitespace(i) + type) + "\n";
+        for(LexicalToken token : tokens)
+            s += (whitespace(i) + token) + "\n";
+        for(Token token : children)
+            s += token.humanReadable(i + 1) + "\n";
+
+        return s;
+    }
+
+    @Override
+    public String toString()
+    {
+        return humanReadable(0);
     }
 }

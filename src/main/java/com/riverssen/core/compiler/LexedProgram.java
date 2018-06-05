@@ -12,21 +12,17 @@
 
 package com.riverssen.core.compiler;
 
-import java.nio.CharBuffer;
 import java.util.*;
 
 public class LexedProgram
 {
     private Set<LexicalToken> allChars = new LinkedHashSet<>();
-    private LexicalToken      curtoken = null;
-
-    private char             last      = '\0';
-
     public LexedProgram(String program)
     {
-        CharBuffer stream = CharBuffer.wrap(program.toCharArray());
+        program = program.replaceAll("//.*", "");
 
-        char b = 0;
+        while(program.contains("/*"))
+            program = program.replace(program.substring(program.indexOf("/*"), program.indexOf("*/") + 2), "");
 
         final char separators[] = {'.','=','+','-','\'','"',',','<','>','?',';',':','!','\\','/',
                 '[',']','{','}','(',')','*','&','^','%','$','#','@'};
@@ -83,31 +79,25 @@ public class LexedProgram
 
             isString = (token.toString().startsWith("\"") || token.toString().startsWith("\'"));
 
-            if(isString || wasnull)
+            if(isString || (wasnull && (current == '"' || current == '\'')))
             {
-                if(current == '"' || current == '\'' || separator)
+                if (current == '"' || current == '\'' || separator)
                 {
-                    if(last == '\\')
-                        token.append(current);
-                    else if(token.toString().startsWith(current + ""))
+                    if (last == '\\') token.append(current);
+                    else if (token.toString().startsWith(current + ""))
                     {
                         token.append(current);
                         allChars.add(token);
                         token = null;
-                    } else
-                    {
-                        token.append(current);
-                    }
+                    } else token.append(current);
                 } else token.append(current);
 
-                offset ++;
+                offset++;
                 continue;
-            }
-
-            if(separator)
+            } else if(separator)
             {
                 allChars.add(token);
-                token = new LexicalToken(""+current, line, offset, whitespace);
+                token = new LexicalToken("" + current, line, offset, whitespace);
                 allChars.add(token);
                 token = null;
             } else
