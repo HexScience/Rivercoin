@@ -12,50 +12,22 @@
 
 package com.riverssen.core.compiler;
 
-public class LexicalToken
+import java.util.ArrayList;
+import java.util.List;
+
+public class ParsedProgram
 {
-    private StringBuilder       value;
-    private int                 line;
-    private int                 offset;
-    private int                 whitespace;
-    private Type                type;
-    public static enum                 Type {KEYWORD, IDENTIFIER, SYMBOL, STRING, NUMBER};
+    private List<Token> tokens;
 
-    public LexicalToken(String value, int line, int offset, int whitespace)
+    public ParsedProgram(LexedProgram program)
     {
-        this.value = new StringBuilder(value);
-        this.line = line;
-        this.offset = offset;
-        this.whitespace = whitespace;
+        this.tokens = new ArrayList<>();
     }
 
-    public LexicalToken(char value, int line, int offset, int whitespace)
-    {
-        this.value = new StringBuilder(value);
-        this.line = line;
-        this.offset = offset;
-        this.whitespace = whitespace;
-    }
+    private Token parse(List<LexicalToken> )
 
-    public LexicalToken append(char chr)
+    public List<Token> getTokens()
     {
-        value.append(chr);
-        return this;
-    }
-
-    public LexicalToken clone()
-    {
-        return new LexicalToken(value.toString(), line, offset, whitespace);
-    }
-
-    public void setType(Type type)
-    {
-        this.type = type;
-    }
-
-    @Override
-    public String toString()
-    {
-        return value.toString();
+        return tokens;
     }
 }

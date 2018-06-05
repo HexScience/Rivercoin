@@ -12,50 +12,33 @@
 
 package com.riverssen.core.compiler;
 
-public class LexicalToken
+import java.util.ArrayList;
+import java.util.List;
+
+public class Token
 {
-    private StringBuilder       value;
-    private int                 line;
-    private int                 offset;
-    private int                 whitespace;
-    private Type                type;
-    public static enum                 Type {KEYWORD, IDENTIFIER, SYMBOL, STRING, NUMBER};
+    public static enum Type {ROOT, STATIC_ACCESS, PROCEDURAL_ACCESS, INITIALIZATION, EMPTY_DECLARATION, FULL_DECLARATION, METHOD_CALL, METHOD_DECLARATION, METHOD_EMPTY_DECLARATION, CLASS_DECLARATION}
+    private Type type;
+    private List<LexicalToken> children;
 
-    public LexicalToken(String value, int line, int offset, int whitespace)
+    public Token(Type type)
     {
-        this.value = new StringBuilder(value);
-        this.line = line;
-        this.offset = offset;
-        this.whitespace = whitespace;
+        this.children = new ArrayList<>();
+        this.type     = type;
     }
 
-    public LexicalToken(char value, int line, int offset, int whitespace)
+    public Token add(LexicalToken token)
     {
-        this.value = new StringBuilder(value);
-        this.line = line;
-        this.offset = offset;
-        this.whitespace = whitespace;
-    }
-
-    public LexicalToken append(char chr)
-    {
-        value.append(chr);
+        this.children.add(token);
         return this;
     }
 
-    public LexicalToken clone()
+    public Token clone()
     {
-        return new LexicalToken(value.toString(), line, offset, whitespace);
-    }
+        Token token = new Token(type);
+        for(LexicalToken lexicalToken : children)
+            token.add(lexicalToken.clone());
 
-    public void setType(Type type)
-    {
-        this.type = type;
-    }
-
-    @Override
-    public String toString()
-    {
-        return value.toString();
+        return token;
     }
 }
