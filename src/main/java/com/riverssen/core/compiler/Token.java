@@ -22,7 +22,7 @@ public class Token
     private int                 offset;
     private int                 whitespace;
     private Type                type;
-    private List<Token> children;
+    private List<Token>         children;
 
     public boolean isMathOp()
     {
@@ -87,6 +87,7 @@ public class Token
     {
         this.type = type;
         this.value = new StringBuilder(type.toString());
+        this.children   = new ArrayList<>();
     }
 
     private Token()
@@ -218,16 +219,15 @@ public class Token
 
     public String humanReadable(int i)
     {
-        String s = (whitespace(i) + type) + "\n";
+        String s = (whitespace(i) + type + " " + value) + "\n";
         for(Token token : children)
             s += token.humanReadable(i + 1) + "\n";
-
         return s;
     }
 
     @Override
     public String toString()
     {
-        return humanReadable(0);
+        return value.toString();//humanReadable(0);
     }
 }

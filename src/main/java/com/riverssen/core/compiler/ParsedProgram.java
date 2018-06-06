@@ -25,7 +25,7 @@ public class ParsedProgram
         for(Token token : program.getTokens())
             if(token != null && !token.toString().isEmpty()) {
                 tokens.add(token);
-//                System.out.println(token.getType() + " " + token);
+                token.getType();
             }
 
         this.tokens = new Token(Token.Type.ROOT);
@@ -199,11 +199,13 @@ public class ParsedProgram
             Token A = stack.pop();
 
             Token O = stack.pop();
-
-//            stack.push(O.asToken().add(A).add(B));
+            stack.push(O.add(A).add(B));
         }
 
-        System.out.println(stack);
+        for(Token token : stack)
+        {
+            System.out.println(token.humanReadable(0));
+        }
     }
 
     static int prec(char ch)
@@ -237,7 +239,7 @@ public class ParsedProgram
         while(tokens.size() > 0)
         {
             Token currentToken = tokens.get(0);
-
+            System.out.println(currentToken);
             switch (currentToken.getType())
             {
                 case PARENTHESIS_OPEN:
