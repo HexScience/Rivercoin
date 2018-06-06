@@ -67,7 +67,7 @@ public class ParsedProgram
     {
         if(tokens.size() >= 2 && tokens.get(0).getType() == Token.Type.PARENTHESIS_OPEN)
         {
-            Token parenthesis_open   = getNext(tokens, offset, errmsg);
+            Token parenthesis_open          = getNext(tokens, offset, errmsg);
             Token parenthesis               = new Token(Token.Type.PARENTHESIS);
 
             while(tokens.size() > 0)
@@ -164,11 +164,9 @@ public class ParsedProgram
         while(tokens.size() > 0 && tokens.get(0).isMathOp())
         {
             Token operator   = getNext(tokens, a.getOffset(), "invalid math operation");
-//            Token        operation= operator.asToken();
-            Token b          = getNext(tokens, a.getOffset(), "invalid math operation a " + operator + " null");//getNextToken(tokens, a.getOffset(), "invalid math operation a " + operation.toString() + " null");
+            Token b          = getNextMath(tokens, a.getOffset(), "invalid math operation a " + operator + " null");//getNextToken(tokens, a.getOffset(), "invalid math operation a " + operation.toString() + " null");
             math_tokens.add(operator);
             math_tokens.add(b);
-//            Token c        = getNext(tokens, a.getOffset(), "invalid math operation b " + operation.toString() + " null");//getNextToken(tokens, a.getOffset(), "invalid math operation a " + operation.toString() + " null");
         }
 
         Stack<Token> output = new Stack<>();
@@ -192,6 +190,9 @@ public class ParsedProgram
         while   (stack.size() > 0)  output.push(stack.pop());
         while   (output.size() > 0) stack.push(output.pop());
 
+        System.out.println(stack);
+                System.exit(0);
+
         while   (stack.size() > 1)
         {
             Token B = stack.pop();
@@ -206,7 +207,25 @@ public class ParsedProgram
             System.out.println(token.humanReadable(0));
         }
 
-        System.exit(0);
+        root.add(stack.pop());
+
+//        System.exit(0);
+    }
+
+    private Token getNextMath(List<Token> tokens, int offset, String errmsg) throws ParseException
+    {
+        try{
+            if(tokens.size() > 0)
+            {
+                Token falsy = new Token(Token.Type.ROOT);
+                parse(tokens, falsy, true, false);
+                return falsy.getTokens().get(0);
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        throw new ParseException(errmsg, offset);
     }
 
     static int prec(char ch)
@@ -242,6 +261,11 @@ public class ParsedProgram
 
     private void parse(List<Token> tokens, Token root, boolean onlyOnce, boolean parseMath) throws ParseException
     {
+        this.parse(tokens, root, onlyOnce, parseMath, false);
+    }
+
+    private void parse(List<Token> tokens, Token root, boolean onlyOnce, boolean parseMath, boolean inParenthesis) throws ParseException
+    {
         while(tokens.size() > 0)
         {
             Token currentToken = tokens.get(0);
@@ -249,8 +273,18 @@ public class ParsedProgram
             switch (currentToken.getType())
             {
                 case PARENTHESIS_OPEN:
-                        root.add(getNextInParenthesis(tokens, currentToken.getOffset(), ""));
+                        Token parenthesis = new Token(Token.Type.PARENTHESIS);
+                        getNext(tokens, currentToken.getOffset(), "");
+                        parse(tokens, parenthesis, false, true, true);
+
+                        root.add(parenthesis);
                     break;
+                case PARENTHESIS_CLOSED:
+                        if(inParenthesis) {
+                                getNext(tokens, currentToken.getOffset(), "");
+                            return;
+                        }
+                        else throw new ParseException("Redundant ')'", currentToken.getOffset());
                 case NUMBER:
                         Token A = getNext(tokens, currentToken.getOffset(), "");
                         if(tokens.size() > 0 && tokens.get(0).isMathOp() && parseMath)
@@ -265,6 +299,7 @@ public class ParsedProgram
                 case SYMBOL:
                     break;
                 case END:
+                        tokens.remove(0);
                     break;
                 case KEYWORD:
                         parseKeyword(tokens, root);
@@ -279,11 +314,9 @@ public class ParsedProgram
                         {
                             declaration         = new Token(Token.Type.FULL_DECLARATION).add(type).add(name);
                             parse               (tokens, declaration, true, true);
-                            getNext             (tokens, currentToken.getOffset(), "");
                         } else if(equals.getType() == Token.Type.END)
                         {
                             declaration         = new Token(Token.Type.EMPTY_DECLARATION).add(type).add(name);
-                            getNext             (tokens,     currentToken.getOffset(), "");
                         } else
                             throw new ParseException("Unidentified token. '" + equals + "'", currentToken.getOffset());
 
