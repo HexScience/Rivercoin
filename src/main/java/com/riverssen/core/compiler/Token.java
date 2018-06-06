@@ -85,8 +85,8 @@ public class Token
 
     public Token(Type type)
     {
-        this.type = type;
-        this.value = new StringBuilder(type.toString());
+        this.type       = type;
+        this.value      = new StringBuilder(type.toString());
         this.children   = new ArrayList<>();
     }
 

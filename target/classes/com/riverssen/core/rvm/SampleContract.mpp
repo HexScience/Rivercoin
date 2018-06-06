@@ -12,4 +12,5 @@
 
 int i           = 55_0;
 String string   = "ffs";
-int g = 5 + 9 * 9;
+
+int g = a * b + c + (d * e);

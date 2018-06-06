@@ -182,16 +182,19 @@ public class ParsedProgram
             else
             {
                 while (!stack.isEmpty() && prec(c.toString().charAt(0)) <= prec(stack.peek().toString().charAt(0)))
-                    output.push(stack.pop());
+                {
+                    output.push(stack.pop().add(output.pop()).add(output.pop()));
+                }
                 stack.push(c);
             }
         }
 
-        while   (stack.size() > 0)  output.push(stack.pop());
-        while   (output.size() > 0) stack.push(output.pop());
+        while   (stack.size() > 0)  output.push(stack.pop().add(output.pop()).add(output.pop()));
+//        while   (output.size() > 0) stack.push(output.pop());
 
-        System.out.println(stack);
-                System.exit(0);
+        System.out.println(output.size() + " " + output.pop().humanReadable(0));
+//        root.add(postFixToAST(output));
+        System.exit(0);
 
         while   (stack.size() > 1)
         {
@@ -210,6 +213,72 @@ public class ParsedProgram
         root.add(stack.pop());
 
 //        System.exit(0);
+    }
+
+    private Token getOperator(Stack<Token> stack)
+    {
+        for(int i = 0; i < stack.size(); i ++)
+        {
+            if(stack.get(i).isMathOp()) {
+                Token t = stack.get(i);
+                stack.remove(i);
+
+                return t;
+            }
+        }
+
+        return null;
+    }
+
+    private Token getOperand(Stack<Token> stack)
+    {
+        int i = 0;
+        while(i < stack.size())
+        {
+            if(!stack.get(i).isMathOp()) {
+                Token t = stack.get(i);
+                stack.remove(i);
+
+                return t;
+            }
+
+            i ++;
+        }
+
+        return null;
+    }
+
+    private Token postFixToAST(Stack<Token> stack)
+    {
+        Token token = new Token(Token.Type.MATH_OP);
+
+        while(stack.size() > 1)
+        {
+            Token a = getOperand(stack);
+            Token b = getOperand(stack);
+            Token o = getOperator(stack);
+            o.add(a).add(b);
+
+            if(o.toString().charAt(0) == '+')
+                o.setType(Token.Type.ADDITION);
+            else if(o.toString().charAt(0) == '-')
+                o.setType(Token.Type.SUBTRACTION);
+            else if(o.toString().charAt(0) == '*')
+                o.setType(Token.Type.MULTIPLICATION);
+            else if(o.toString().charAt(0) == '/')
+                o.setType(Token.Type.SUBDIVISION);
+            else if(o.toString().charAt(0) == '^')
+                o.setType(Token.Type.POW);
+            else if(o.toString().charAt(0) == '%')
+                o.setType(Token.Type.MOD);
+
+            stack.insertElementAt(o, 0);
+
+            System.out.println("----------");
+            for(int i = 0; i < stack.size(); i ++) System.out.println(stack.get(i).humanReadable(0));
+        }
+
+        return stack.pop();
     }
 
     private Token getNextMath(List<Token> tokens, int offset, String errmsg) throws ParseException
@@ -306,21 +375,30 @@ public class ParsedProgram
                     break;
                 case IDENTIFIER:
                         Token type       = getNext(tokens, currentToken.getOffset(), "");
-                        Token name       = getNext(tokens, currentToken.getOffset(), "");
-                        Token equals     = getNext(tokens, currentToken.getOffset(), "declarations should end with ';' or be initialized with '='");
 
-                        Token declaration       = null;
-                        if(equals.getType()     == Token.Type.EQUALS)
+                        if (tokens.size() > 0 && tokens.get(0).isMathOp() && parseMath)
                         {
-                            declaration         = new Token(Token.Type.FULL_DECLARATION).add(type).add(name);
-                            parse               (tokens, declaration, true, true);
-                        } else if(equals.getType() == Token.Type.END)
+                            parseMath(tokens, root, type);
+                            break;
+                        }
+                        else if(tokens.size() > 0 && tokens.get(0).getType() == Token.Type.IDENTIFIER)
                         {
-                            declaration         = new Token(Token.Type.EMPTY_DECLARATION).add(type).add(name);
-                        } else
-                            throw new ParseException("Unidentified token. '" + equals + "'", currentToken.getOffset());
+                            Token name       = getNext(tokens, currentToken.getOffset(), "");
+                            Token equals     = getNext(tokens, currentToken.getOffset(), "declarations should end with ';' or be initialized with '='");
 
-                        root.add(declaration);
+                            Token declaration       = null;
+                            if(equals.getType()     == Token.Type.EQUALS)
+                            {
+                                declaration         = new Token(Token.Type.FULL_DECLARATION).add(type).add(name);
+                                parse               (tokens, declaration, true, true);
+                            } else if(equals.getType() == Token.Type.END)
+                            {
+                                declaration         = new Token(Token.Type.EMPTY_DECLARATION).add(type).add(name);
+                            }
+
+                            root.add(declaration);
+                        } else root.add(type);
+//                            throw new ParseException("Unidentified token. '" + equals + "'", currentToken.getOffset());
                     break;
                 default:
                     throw new ParseException("Token unidentified. '" + currentToken.toString() + "(" + currentToken.getType() + ")'", currentToken.getOffset());
