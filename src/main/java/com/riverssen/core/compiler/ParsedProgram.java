@@ -21,8 +21,8 @@ public class ParsedProgram
 
     public ParsedProgram(LexedProgram program) throws ParseException
     {
-        List<LexicalToken> tokens = new ArrayList<>();
-        for(LexicalToken token : program.getTokens())
+        List<Token> tokens = new ArrayList<>();
+        for(Token token : program.getTokens())
             if(token != null && !token.toString().isEmpty()) {
                 tokens.add(token);
 //                System.out.println(token.getType() + " " + token);
@@ -32,17 +32,17 @@ public class ParsedProgram
         parse(tokens, this.tokens, false);
     }
 
-    private LexicalToken getNext(List<LexicalToken> tokens, int offset, String errmsg) throws ParseException
+    private Token getNext(List<Token> tokens, int offset, String errmsg) throws ParseException
     {
         if(tokens.size() > 0)
         {
-            LexicalToken currentToken = tokens.get(0);
+            Token currentToken = tokens.get(0);
             tokens.remove(0);
             return currentToken;
         } else throw new ParseException(errmsg, offset);
     }
 
-    private Token getNextToken(List<LexicalToken> tokens, int offset, String errmsg) throws ParseException
+    private Token getNextToken(List<Token> tokens, int offset, String errmsg) throws ParseException
     {
         try{
             if(tokens.size() > 0)
@@ -58,21 +58,21 @@ public class ParsedProgram
         throw new ParseException(errmsg, offset);
     }
 
-    private Token getNextInBraces(List<LexicalToken> tokens, int offset, String errmsg) throws ParseException
+    private Token getNextInBraces(List<Token> tokens, int offset, String errmsg) throws ParseException
     {
         return null;
     }
 
-    private Token getNextInParenthesis(List<LexicalToken> tokens, int offset, String errmsg) throws ParseException
+    private Token getNextInParenthesis(List<Token> tokens, int offset, String errmsg) throws ParseException
     {
-        if(tokens.size() >= 2 && tokens.get(0).getType() == LexicalToken.Type.PARENTHESIS_OPEN)
+        if(tokens.size() >= 2 && tokens.get(0).getType() == Token.Type.PARENTHESIS_OPEN)
         {
-            LexicalToken parenthesis_open   = getNext(tokens, offset, errmsg);
+            Token parenthesis_open   = getNext(tokens, offset, errmsg);
             Token parenthesis               = new Token(Token.Type.PARENTHESIS);
 
             while(tokens.size() > 0)
             {
-                LexicalToken currentToken = tokens.get(0);
+                Token currentToken = tokens.get(0);
                 switch (currentToken.getType())
                 {
                     case PARENTHESIS_CLOSED:
@@ -89,16 +89,16 @@ public class ParsedProgram
         } else throw new ParseException(errmsg, offset);
     }
 
-    private void parseClass(List<LexicalToken> tokens, Token rootm, LexicalToken currentToken) throws ParseException
+    private void parseClass(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
     }
 
-    private void parseFunction(List<LexicalToken> tokens, Token rootm, LexicalToken currentToken) throws ParseException
+    private void parseFunction(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
-        LexicalToken    name            = getNext(tokens, currentToken.getOffset(), "function must have a name.");
+        Token    name            = getNext(tokens, currentToken.getOffset(), "function must have a name.");
         Token           parenthesis     = getNextInParenthesis(tokens, currentToken.getOffset(), "function must have arguments in parenthesis.");
-        LexicalToken    symbol          = getNext(tokens, currentToken.getOffset(), "function must have a return symbol ':'.");
-        LexicalToken    returnType      = getNext(tokens, currentToken.getOffset(), "function must have a return type.");
+        Token    symbol          = getNext(tokens, currentToken.getOffset(), "function must have a return symbol ':'.");
+        Token    returnType      = getNext(tokens, currentToken.getOffset(), "function must have a return type.");
 
         Token           body            = null;
         try{
@@ -130,9 +130,9 @@ public class ParsedProgram
         }
     }
 
-    private void parseKeyword(List<LexicalToken> tokens, Token root) throws ParseException
+    private void parseKeyword(List<Token> tokens, Token root) throws ParseException
     {
-        LexicalToken currentToken = tokens.get(0);
+        Token currentToken = tokens.get(0);
         tokens.remove(0);
 
         switch (currentToken.toString())
@@ -156,30 +156,28 @@ public class ParsedProgram
         }
     }
 
-    private void parseMath(List<LexicalToken> tokens, Token root, LexicalToken a) throws ParseException
+    private void parseMath(List<Token> tokens, Token root, Token a) throws ParseException
     {
-        List<LexicalToken> math_tokens = new ArrayList<>();
+        List<Token> math_tokens = new ArrayList<>();
         math_tokens.add(a);
 
         while(tokens.size() > 0 && tokens.get(0).isMathOp())
         {
-            LexicalToken operator   = getNext(tokens, a.getOffset(), "invalid math operation");
+            Token operator   = getNext(tokens, a.getOffset(), "invalid math operation");
 //            Token        operation= operator.asToken();
-            LexicalToken b          = getNext(tokens, a.getOffset(), "invalid math operation a " + operator + " null");//getNextToken(tokens, a.getOffset(), "invalid math operation a " + operation.toString() + " null");
+            Token b          = getNext(tokens, a.getOffset(), "invalid math operation a " + operator + " null");//getNextToken(tokens, a.getOffset(), "invalid math operation a " + operation.toString() + " null");
             math_tokens.add(operator);
             math_tokens.add(b);
 
-//            LexicalToken c        = getNext(tokens, a.getOffset(), "invalid math operation b " + operation.toString() + " null");//getNextToken(tokens, a.getOffset(), "invalid math operation a " + operation.toString() + " null");
+//            Token c        = getNext(tokens, a.getOffset(), "invalid math operation b " + operation.toString() + " null");//getNextToken(tokens, a.getOffset(), "invalid math operation a " + operation.toString() + " null");
         }
 
-        Stack<LexicalToken> output = new Stack<>();
-        Stack<LexicalToken> stack  = new Stack<>();
-
-        Stack<LexicalToken> result = new Stack<>();
+        Stack<Token> output = new Stack<>();
+        Stack<Token> stack  = new Stack<>();
 
         for (int i = 0; i<math_tokens.size(); ++i)
         {
-            LexicalToken c = math_tokens.get(i);
+            Token c = math_tokens.get(i);
 
             // If the scanned character is an operand, add it to output.
             if (!c.isMathOp())
@@ -192,16 +190,20 @@ public class ParsedProgram
             }
         }
 
-        while   (stack.size() > 0) output.push(stack.pop());
-        while   (output.size() > 0) stack.push(stack.pop());
+        while   (stack.size() > 0)  output.push(stack.pop());
+        while   (output.size() > 0) stack.push(output.pop());
 
-        while   (stack.size() > 2)
+        while   (stack.size() > 1)
         {
-            result.push(new Tok)
-            System.out.println(output.pop());
+            Token B = stack.pop();
+            Token A = stack.pop();
+
+            Token O = stack.pop();
+
+//            stack.push(O.asToken().add(A).add(B));
         }
 
-        System.out.println(output);
+        System.out.println(stack);
     }
 
     static int prec(char ch)
@@ -225,16 +227,16 @@ public class ParsedProgram
         return -1;
     }
 
-    private Token mathParse(HashMap<String, LexicalToken> map, String operation, String op, Token.Type type)
+    private Token mathParse(HashMap<String, Token> map, String operation, String op, Token.Type type)
     {
         return new Token(Token.Type.INPUT).add(map.get(operation));
     }
 
-    private void parse(List<LexicalToken> tokens, Token root, boolean onlyOnce) throws ParseException
+    private void parse(List<Token> tokens, Token root, boolean onlyOnce) throws ParseException
     {
         while(tokens.size() > 0)
         {
-            LexicalToken currentToken = tokens.get(0);
+            Token currentToken = tokens.get(0);
 
             switch (currentToken.getType())
             {
@@ -242,7 +244,7 @@ public class ParsedProgram
                         root.add(getNextInParenthesis(tokens, currentToken.getOffset(), ""));
                     break;
                 case NUMBER:
-                        LexicalToken A = getNext(tokens, currentToken.getOffset(), "");
+                        Token A = getNext(tokens, currentToken.getOffset(), "");
                         if(tokens.size() > 0 && tokens.get(0).isMathOp())
                         {
                             parseMath(tokens, root, A);
@@ -258,17 +260,17 @@ public class ParsedProgram
                         parseKeyword(tokens, root);
                     break;
                 case IDENTIFIER:
-                        LexicalToken type       = getNext(tokens, currentToken.getOffset(), "");
-                        LexicalToken name       = getNext(tokens, currentToken.getOffset(), "");
-                        LexicalToken equals     = getNext(tokens, currentToken.getOffset(), "declarations should end with ';' or be initialized with '='");
+                        Token type       = getNext(tokens, currentToken.getOffset(), "");
+                        Token name       = getNext(tokens, currentToken.getOffset(), "");
+                        Token equals     = getNext(tokens, currentToken.getOffset(), "declarations should end with ';' or be initialized with '='");
 
                         Token declaration       = null;
-                        if(equals.getType()     == LexicalToken.Type.EQUALS)
+                        if(equals.getType()     == Token.Type.EQUALS)
                         {
                             declaration         = new Token(Token.Type.FULL_DECLARATION).add(type).add(name);
                             parse               (tokens, declaration, true);
                             getNext             (tokens, currentToken.getOffset(), "");
-                        } else if(equals.getType() == LexicalToken.Type.END)
+                        } else if(equals.getType() == Token.Type.END)
                         {
                             declaration         = new Token(Token.Type.EMPTY_DECLARATION).add(type).add(name);
                             getNext             (tokens,     currentToken.getOffset(), "");

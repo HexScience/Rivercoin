@@ -16,7 +16,7 @@ import java.util.*;
 
 public class LexedProgram
 {
-    private Set<LexicalToken> allChars = new LinkedHashSet<>();
+    private Set<Token> allChars = new LinkedHashSet<>();
     public LexedProgram(String program)
     {
         program = program.replaceAll("//.*", "");
@@ -37,7 +37,7 @@ public class LexedProgram
 
         boolean isString = false;
 
-        LexicalToken token = null;
+        Token token = null;
         int line = 1;
         int whitespace = 0;
         int offset = 1;
@@ -75,7 +75,7 @@ public class LexedProgram
             boolean wasnull = token == null;
 
             if(token == null)
-                token = new LexicalToken("", line, offset, whitespace);
+                token = new Token("", line, offset, whitespace);
 
             isString = (token.toString().startsWith("\"") || token.toString().startsWith("\'"));
 
@@ -97,7 +97,7 @@ public class LexedProgram
             } else if(separator)
             {
                 allChars.add(token);
-                token = new LexicalToken("" + current, line, offset, whitespace);
+                token = new Token("" + current, line, offset, whitespace);
                 allChars.add(token);
                 token = null;
             } else
@@ -109,7 +109,7 @@ public class LexedProgram
         allChars.remove(null);
     }
 
-    public Set<LexicalToken> getTokens()
+    public Set<Token> getTokens()
     {
         return allChars;
     }

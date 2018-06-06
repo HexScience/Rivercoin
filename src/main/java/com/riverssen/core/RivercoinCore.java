@@ -15,17 +15,12 @@ package com.riverssen.core;
 import com.riverssen.core.compiler.LexedProgram;
 import com.riverssen.core.compiler.LexicalToken;
 import com.riverssen.core.compiler.ParsedProgram;
-import com.riverssen.core.compiler.Token;
 import com.riverssen.core.rvm.VirtualMachine;
 import com.riverssen.core.system.Context;
-import com.riverssen.utils.ByteUtil;
 import com.riverssen.utils.FileUtils;
 
 import java.io.File;
 import java.security.Security;
-import java.text.ParseException;
-import java.util.List;
-import java.util.Set;
 
 public class RivercoinCore
 {
