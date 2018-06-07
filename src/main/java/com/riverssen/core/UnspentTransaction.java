@@ -18,19 +18,20 @@ import com.riverssen.utils.ByteUtil;
 
 public class UnspentTransaction implements Encodeable
 {
-    private byte            hash[];
-    private PublicAddress   receiver;
-    private RiverCoin       value;
+    private byte hash[];
+    private PublicAddress receiver;
+    private RiverCoin value;
 
     public UnspentTransaction(byte hash[], String txhash, RiverCoin value, PublicAddress receiver)
     {
-        this.hash       = hash;
-        this.value      = value;
-        this.receiver   = receiver;
-        this.hash       = hash;
+        this.hash = hash;
+        this.value = value;
+        this.receiver = receiver;
+        this.hash = hash;
     }
 
-    public PublicAddress receiver() {
+    public PublicAddress receiver()
+    {
         return receiver;
     }
 
@@ -40,7 +41,8 @@ public class UnspentTransaction implements Encodeable
     }
 
     @Override
-    public byte[] getBytes() {
+    public byte[] getBytes()
+    {
         return ByteUtil.concatenate(hash, receiver.getBytes(), value.getBytes());
     }
 }
