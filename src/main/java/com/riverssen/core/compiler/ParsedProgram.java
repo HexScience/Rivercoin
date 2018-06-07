@@ -121,6 +121,7 @@ public class ParsedProgram
     {
         Token    name               = getNext               (tokens, currentToken.getOffset(), "function must have a name.");
         Token    parenthesis        = getNextInParenthesis  (tokens, currentToken.getOffset(), "function must have arguments in parenthesis.");
+        System.out.println(parenthesis.humanReadable(0));
         Token    symbol             = getNext               (tokens, currentToken.getOffset(), "function must have a return symbol ':'.");
         Token    returnType         = getNext               (tokens, currentToken.getOffset(), "function must have a return type.");
         Token    body               = getNextInBraces       (tokens, currentToken.getOffset(), "function must have a body");
@@ -367,7 +368,7 @@ public class ParsedProgram
                     break;
                 case PARENTHESIS_CLOSED:
                         if(inParenthesis) {
-                                getNext(tokens, currentToken.getOffset(), "");
+                                tokens.remove(0);
                             return;
                         }
                         else throw new ParseException("Redundant ')'", currentToken.getOffset());
