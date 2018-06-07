@@ -79,8 +79,8 @@ public class Token
         ASSERT,
         AND,
         OR,
-        LEFT_SHIFT,
         RIGHT_SHIFT,
+        LEFT_SHIFT,
         PLUSPLUS,
         MINUSMINUS,
         WHILE
@@ -247,7 +247,7 @@ public class Token
 
     private boolean isKeyword()
     {
-        final String keywords[] = {"function", "func", "new", "class", "static", "extend", "header"};
+        final String keywords[] = {"function", "fun", "new", "class", "static", "extend", "header", "if", "for", "while", "foreach", "then"};
         for(String string : keywords) if(toString().equals(string)) return true;
         return false;
     }

@@ -18,18 +18,19 @@ import static com.riverssen.core.compiler.Token.Type.*;
 
 public class ParsedProgram
 {
-    private Token   tokens;
+    private Token tokens;
 
     public ParsedProgram(LexedProgram program) throws ParseException
     {
         List<Token> tokens = new ArrayList<>();
-        for(Token token : program.getTokens())
-            if(token != null && !token.toString().isEmpty()) {
+        for (Token token : program.getTokens())
+            if (token != null && !token.toString().isEmpty())
+            {
                 tokens.add(token);
                 token.getType();
             }
 
-        tokens      = initialparse(tokens);
+        tokens = initialparse(tokens);
 //        for(Token token : tokens) System.out.println(token + " " + token.getType());
         this.tokens = new Token(Token.Type.ROOT);
         parse(tokens, this.tokens, false);
@@ -37,7 +38,7 @@ public class ParsedProgram
 
     private Token getNext(List<Token> tokens, Token offset, String errmsg) throws ParseException
     {
-        if(tokens.size() > 0)
+        if (tokens.size() > 0)
         {
             Token currentToken = tokens.get(0);
             tokens.remove(0);
@@ -47,46 +48,45 @@ public class ParsedProgram
 
     private Token getNextToken(List<Token> tokens, Token offset, String errmsg) throws ParseException
     {
-        try{
-            if(tokens.size() > 0)
+        try
+        {
+            if (tokens.size() > 0)
             {
                 Token falsy = new Token(Token.Type.ROOT);
                 parse(tokens, falsy, true);
                 return falsy.getTokens().get(0);
             }
-        }catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
         throw new ParseException(errmsg, offset);
     }
 
-    private Token   getNextValid(List<Token> tokens)
+    private Token getNextValid(List<Token> tokens)
     {
-        for(Token token : tokens) if(token.getType() != Token.Type.END) return token;
+        for (Token token : tokens) if (token.getType() != Token.Type.END) return token;
         return null;
     }
 
     private boolean nextOfType(List<Token> tokens, Token.Type type)
     {
         Token t = getNextValid(tokens);
-        if(t != null)
-        return t.getType() == type;
+        if (t != null) return t.getType() == type;
         return false;
     }
 
     private void skipToValid(List<Token> tokens)
     {
-        while (tokens.size() > 0 && tokens.get(0).getType() == Token.Type.END)
-            tokens.remove(0);
+        while (tokens.size() > 0 && tokens.get(0).getType() == Token.Type.END) tokens.remove(0);
     }
 
     private Token getNextInBraces(List<Token> tokens, Token offset, String errmsg) throws ParseException
     {
-        if(tokens.size() >= 2 && nextOfType(tokens, Token.Type.BRACES_OPEN))
+        if (tokens.size() >= 2 && nextOfType(tokens, Token.Type.BRACES_OPEN))
         {
             skipToValid(tokens);
-            Token parenthesis               = new Token(Token.Type.BRACES);
+            Token parenthesis = new Token(Token.Type.BRACES);
             parse(tokens, parenthesis, true);
 
             return parenthesis.getTokens().get(0);
@@ -95,10 +95,10 @@ public class ParsedProgram
 
     private Token getNextInParenthesis(List<Token> tokens, Token offset, String errmsg) throws ParseException
     {
-        if(tokens.size() >= 2 && nextOfType(tokens, Token.Type.PARENTHESIS_OPEN))
+        if (tokens.size() >= 2 && nextOfType(tokens, Token.Type.PARENTHESIS_OPEN))
         {
             skipToValid(tokens);
-            Token parenthesis               = new Token(Token.Type.PARENTHESIS);
+            Token parenthesis = new Token(Token.Type.PARENTHESIS);
             parse(tokens, parenthesis, true);
 
             return parenthesis.getTokens().get(0);
@@ -107,11 +107,11 @@ public class ParsedProgram
 
     private void parseClass(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
-        Token    name               = getNext               (tokens, currentToken, "function must have a name.");
+        Token name = getNext(tokens, currentToken, "function must have a name.");
 
         Token extension = new Token(Token.Type.EXTEND);
 
-        if(tokens.size() > 0 && tokens.get(0).toString().equals("extends"))
+        if (tokens.size() > 0 && tokens.get(0).toString().equals("extends"))
         {
             tokens.remove(0);
             extension.add(getNext(tokens, currentToken, "class must extend a class type."));
@@ -129,35 +129,38 @@ public class ParsedProgram
         clasz.add(name);
 
         Token body = getNextInBraces(tokens, currentToken, "");
-        if(body != null) {
+        if (body != null)
+        {
             clasz.add(body);
             clasz.setType(Token.Type.CLASS_DECLARATION);
         }
-        if(extension.getTokens().size() > 0)
-            clasz.add(extension);
+        if (extension.getTokens().size() > 0) clasz.add(extension);
 
         rootm.add(clasz);
     }
 
     private void parseFunction(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
-        Token    name               = getNext               (tokens, currentToken, "function must have a name.");
-        Token    parenthesis        = getNextInParenthesis  (tokens, currentToken, "function must have arguments in parenthesis.");
-        Token    symbol             = getNext               (tokens, currentToken, "function must have a return symbol ':'.");
-        Token    returnType         = getNext               (tokens, currentToken, "function must have a return type.");
-        Token    body               = getNextInBraces       (tokens, currentToken, "function must have a body");
+        Token name = getNext(tokens, currentToken, "function must have a name.");
+        Token parenthesis = getNextInParenthesis(tokens, currentToken, "function must have arguments in parenthesis.");
+        Token symbol = getNext(tokens, currentToken, "function must have a return symbol ':'.");
+        if(symbol.toString().charAt(0) != ':')
+            throw new ParseException("Return symbol incorrect", symbol);
+        Token returnType = getNext(tokens, currentToken, "function must have a return type.");
+        Token body = getNextInBraces(tokens, currentToken, "function must have a body");
 
         /** unimplemented method **/
-        if(body == null)
+        if (body == null)
         {
-            Token       function        = new Token(Token.Type.METHOD_EMPTY_DECLARATION);
+            Token function = new Token(Token.Type.METHOD_EMPTY_DECLARATION);
 
             function.add(name);
             function.add(returnType);
             function.add(parenthesis);
             rootm.add(function);
-        } else {
-            Token       function        = new Token(Token.Type.METHOD_DECLARATION);
+        } else
+        {
+            Token function = new Token(Token.Type.METHOD_DECLARATION);
 
             function.add(name);
             function.add(returnType);
@@ -171,11 +174,14 @@ public class ParsedProgram
     {
         Token if_ = new Token(Token.Type.IF);
         Token parenthesis = getNextInParenthesis(tokens, currentToken, "if statement must have arguments in parenthesis.");
+        skipToValid(tokens);
         Token body = getNextInBraces(tokens, currentToken, "function must have a body");
+
         if (body == null)
-            rootm.add(if_.add(parenthesis).add(getNext(tokens, currentToken, "function must have a return type.")));
-        else
-            rootm.add(if_.add(parenthesis).add(body));
+        {
+            rootm.add(if_.add(parenthesis));
+            parse(tokens, if_, true);
+        } else rootm.add(if_.add(parenthesis).add(body));
     }
 
     private void parseForKeyword(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
@@ -193,9 +199,9 @@ public class ParsedProgram
         Token neW = new Token(Token.Type.NEW);
         parse(tokens, neW, true);
 
-        if(neW.getTokens().isEmpty()) throw new ParseException("new must be followed by a function", neW);
+        if (neW.getTokens().isEmpty()) throw new ParseException("new must be followed by a function", neW);
 
-        if(neW.getTokens().get(0).getType() != Token.Type.METHOD_CALL)  throw new ParseException("new must be followed by a function " + neW, neW);
+        if (neW.getTokens().get(0).getType() != Token.Type.METHOD_CALL) throw new ParseException("new must be followed by a function " + neW, neW);
 
         neW.getTokens().get(0).setType(Token.Type.NEW);
 
@@ -210,32 +216,32 @@ public class ParsedProgram
         switch (currentToken.toString())
         {
             case "function":
-                    parseFunction       (tokens, root, currentToken);
+                parseFunction(tokens, root, currentToken);
                 break;
             case "fun":
-                    parseFunction       (tokens, root, currentToken);
+                parseFunction(tokens, root, currentToken);
                 break;
             case "class":
-                    parseClass          (tokens, root, currentToken);
+                parseClass(tokens, root, currentToken);
                 break;
             case "new":
-                    parseNewKeyword     (tokens, root, currentToken);
+                parseNewKeyword(tokens, root, currentToken);
+                break;
             case "if":
-                    parseIfKeyword      (tokens, root, currentToken);
+                parseIfKeyword(tokens, root, currentToken);
                 break;
             case "for":
-                    parseForKeyword     (tokens, root, currentToken);
+                parseForKeyword(tokens, root, currentToken);
                 break;
             case "while":
-                    parseWhileKeyword   (tokens, root, currentToken);
+                parseWhileKeyword(tokens, root, currentToken);
                 break;
         }
     }
 
     private Token strip(Token token)
     {
-        if(token.getTokens().size() == 1 && token.getType() == Token.Type.PARENTHESIS)
-            return token.getTokens().get(0);
+        if (token.getTokens().size() == 1 && token.getType() == Token.Type.PARENTHESIS) return token.getTokens().get(0);
         else return token;
     }
 
@@ -244,24 +250,23 @@ public class ParsedProgram
         List<Token> math_tokens = new ArrayList<>();
         math_tokens.add(a);
 
-        while(tokens.size() > 0 && tokens.get(0).isMathOp())
+        while (tokens.size() > 0 && tokens.get(0).isMathOp())
         {
-            Token operator   = getNext(tokens, a, "invalid math operation");
-            Token b          = getNextMath(tokens, a, "invalid math operation a " + operator + " null");//getNextToken(tokens, a.getOffset(), "invalid math operation a " + operation.toString() + " null");
+            Token operator = getNext(tokens, a, "invalid math operation");
+            Token b = getNextMath(tokens, a, "invalid math operation a " + operator + " null");//getNextToken(tokens, a.getOffset(), "invalid math operation a " + operation.toString() + " null");
             math_tokens.add(operator);
             math_tokens.add(b);
         }
 
         Stack<Token> output = new Stack<>();
-        Stack<Token> stack  = new Stack<>();
+        Stack<Token> stack = new Stack<>();
 
-        for (int i = 0; i<math_tokens.size(); ++i)
+        for (int i = 0; i < math_tokens.size(); ++i)
         {
             Token c = math_tokens.get(i);
 
             // If the scanned character is an operand, add it to output.
-            if (!c.isMathOp())
-                output.push(c);
+            if (!c.isMathOp()) output.push(c);
             else
             {
                 while (!stack.isEmpty() && prec(c) <= prec(stack.peek()))
@@ -272,16 +277,17 @@ public class ParsedProgram
             }
         }
 
-        while   (stack.size() > 0)  output.push(stack.pop().add(output.pop()).add(output.pop()));
+        while (stack.size() > 0) output.push(stack.pop().add(output.pop()).add(output.pop()));
 
         root.add(output.pop());
     }
 
     private Token getOperator(Stack<Token> stack)
     {
-        for(int i = 0; i < stack.size(); i ++)
+        for (int i = 0; i < stack.size(); i++)
         {
-            if(stack.get(i).isMathOp()) {
+            if (stack.get(i).isMathOp())
+            {
                 Token t = stack.get(i);
                 stack.remove(i);
 
@@ -295,16 +301,17 @@ public class ParsedProgram
     private Token getOperand(Stack<Token> stack)
     {
         int i = 0;
-        while(i < stack.size())
+        while (i < stack.size())
         {
-            if(!stack.get(i).isMathOp()) {
+            if (!stack.get(i).isMathOp())
+            {
                 Token t = stack.get(i);
                 stack.remove(i);
 
                 return t;
             }
 
-            i ++;
+            i++;
         }
 
         return null;
@@ -314,30 +321,24 @@ public class ParsedProgram
     {
         Token token = new Token(Token.Type.MATH_OP);
 
-        while(stack.size() > 1)
+        while (stack.size() > 1)
         {
             Token a = getOperand(stack);
             Token b = getOperand(stack);
             Token o = getOperator(stack);
             o.add(a).add(b);
 
-            if(o.toString().charAt(0) == '+')
-                o.setType(Token.Type.ADDITION);
-            else if(o.toString().charAt(0) == '-')
-                o.setType(Token.Type.SUBTRACTION);
-            else if(o.toString().charAt(0) == '*')
-                o.setType(Token.Type.MULTIPLICATION);
-            else if(o.toString().charAt(0) == '/')
-                o.setType(Token.Type.SUBDIVISION);
-            else if(o.toString().charAt(0) == '^')
-                o.setType(Token.Type.POW);
-            else if(o.toString().charAt(0) == '%')
-                o.setType(Token.Type.MOD);
+            if (o.toString().charAt(0) == '+') o.setType(Token.Type.ADDITION);
+            else if (o.toString().charAt(0) == '-') o.setType(Token.Type.SUBTRACTION);
+            else if (o.toString().charAt(0) == '*') o.setType(Token.Type.MULTIPLICATION);
+            else if (o.toString().charAt(0) == '/') o.setType(Token.Type.SUBDIVISION);
+            else if (o.toString().charAt(0) == '^') o.setType(Token.Type.POW);
+            else if (o.toString().charAt(0) == '%') o.setType(Token.Type.MOD);
 
             stack.insertElementAt(o, 0);
 
             System.out.println("----------");
-            for(int i = 0; i < stack.size(); i ++) System.out.println(stack.get(i).humanReadable(0));
+            for (int i = 0; i < stack.size(); i++) System.out.println(stack.get(i).humanReadable(0));
         }
 
         return stack.pop();
@@ -345,14 +346,15 @@ public class ParsedProgram
 
     private Token getNextMath(List<Token> tokens, Token offset, String errmsg) throws ParseException
     {
-        try{
-            if(tokens.size() > 0)
+        try
+        {
+            if (tokens.size() > 0)
             {
                 Token falsy = new Token(Token.Type.ROOT);
                 parse(tokens, falsy, true, false);
                 return falsy.getTokens().get(0);
             }
-        }catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -424,24 +426,16 @@ public class ParsedProgram
 
         while (tokens.size() > 0)
         {
-            if(last.getType() == tokens.get(0).getType())
+            if (last.getType() == tokens.get(0).getType())
             {
-                if(last.getType() == Token.Type.EQUALS)
-                    last.setType(Token.Type.ASSERT);
-                else if(last.getType().equals(Token.Type.LESS_THAN))
-                    last.setType(LEFT_SHIFT);
-                else if(last.getType().equals(MORE_THAN))
-                    last.setType(RIGHT_SHIFT);
-                else if (last.getType().equals(MATH_OP) && last.toString().charAt(0) == '+')
-                    last.setType(PLUSPLUS);
-                else if (last.getType().equals(MATH_OP) && last.toString().charAt(0) == '-')
-                    last.setType(MINUSMINUS);
-                else if (last.getType().equals(MATH_OP) && last.toString().charAt(0) == '*')
-                    last.setType(POW);
-                else if (last.getType().equals(AND) && last.toString().charAt(0) == '&')
-                    last.setType(BOOL_OP);
-                else if (last.getType().equals(OR) && last.toString().charAt(0) == '|')
-                    last.setType(BOOL_OP);
+                if (last.getType() == Token.Type.EQUALS) last.setType(Token.Type.ASSERT);
+                else if (last.getType().equals(Token.Type.LESS_THAN)) last.setType(LEFT_SHIFT);
+                else if (last.getType().equals(MORE_THAN)) last.setType(RIGHT_SHIFT);
+                else if (last.getType().equals(MATH_OP) && last.toString().charAt(0) == '+') last.setType(PLUSPLUS);
+                else if (last.getType().equals(MATH_OP) && last.toString().charAt(0) == '-') last.setType(MINUSMINUS);
+                else if (last.getType().equals(MATH_OP) && last.toString().charAt(0) == '*') last.setType(POW);
+                else if (last.getType().equals(AND) && last.toString().charAt(0) == '&') last.setType(BOOL_OP);
+                else if (last.getType().equals(OR) && last.toString().charAt(0) == '|') last.setType(BOOL_OP);
                 else newList.add(tokens.get(0));
             } else newList.add(tokens.get(0));
 
@@ -454,27 +448,31 @@ public class ParsedProgram
 
     private void parse(List<Token> tokens, Token root, boolean onlyOnce, boolean parseMath, boolean inParenthesis, boolean inBraces, boolean inBrackets, boolean newLineAware) throws ParseException
     {
-        while(tokens.size() > 0)
+        this.parse(tokens, root, onlyOnce, parseMath, inParenthesis, inBraces, inBrackets, newLineAware, false);
+    }
+
+    private void parse(List<Token> tokens, Token root, boolean onlyOnce, boolean parseMath, boolean inParenthesis, boolean inBraces, boolean inBrackets, boolean newLineAware, boolean ignoreParenthesis) throws ParseException
+    {
+        while (tokens.size() > 0)
         {
             Token currentToken = tokens.get(0);
-//            System.out.println(currentToken + " " + currentToken.getType());
+            System.out.println(currentToken + " " + currentToken.getType());
             switch (currentToken.getType())
             {
                 case PARENTHESIS_OPEN:
-                        Token parenthesis = new Token(Token.Type.PARENTHESIS);
-                        getNext(tokens, currentToken, "");
-                        parse(tokens, parenthesis, false, true, true);
-                        if(nextOfType(tokens, Token.Type.MATH_OP))
-                            parseMath(tokens, root, parenthesis);
-                        else
-                            root.add(parenthesis);
+                    Token parenthesis = new Token(Token.Type.PARENTHESIS);
+                    getNext(tokens, currentToken, "");
+                    parse(tokens, parenthesis, false, true, true);
+                    if (nextOfType(tokens, Token.Type.MATH_OP)) parseMath(tokens, root, parenthesis);
+                    else root.add(parenthesis);
                     break;
                 case PARENTHESIS_CLOSED:
-                    if(inParenthesis) {
-                                tokens.remove(0);
-                            return;
-                        }
-                        else throw new ParseException("Redundant ')'", currentToken);
+                    if (ignoreParenthesis) return;
+                    if (inParenthesis)
+                    {
+                        tokens.remove(0);
+                        return;
+                    } else throw new ParseException("Redundant ')'", currentToken);
                 case BRACES_OPEN:
                     Token braces = new Token(Token.Type.BRACES);
                     getNext(tokens, currentToken, "");
@@ -483,80 +481,127 @@ public class ParsedProgram
                     root.add(braces);
                     break;
                 case BRACES_CLOSED:
-                    if(inBraces) {
+                    if (inBraces)
+                    {
                         tokens.remove(0);
                         return;
-                    }
-                    else throw new ParseException("Redundant '}'", currentToken);
+                    } else throw new ParseException("Redundant '}'", currentToken);
                 case NUMBER:
-                        Token A = getNext(tokens, currentToken, "");
-                        if(tokens.size() > 0 && tokens.get(0).isMathOp() && parseMath)
-                        {
-                            parseMath(tokens, root, A);
-                        } else
-                            root.add(A);
+                    Token A = getNext(tokens, currentToken, "");
+                    if (tokens.size() > 0 && tokens.get(0).isMathOp() && parseMath)
+                    {
+                        parseMath(tokens, root, A);
+                    } else root.add(A);
                     break;
                 case STRING:
-                        root.add(new Token(Token.Type.INPUT).add(getNext(tokens, currentToken, "")));
+                    root.add(new Token(Token.Type.INPUT).add(getNext(tokens, currentToken, "")));
                     break;
                 case SYMBOL:
-                        if(currentToken.toString().charAt(0) == ',') { tokens.remove(0); break; }
-                        else
-                            throw new ParseException("Token unidentified. '" + currentToken.toString() + "(" + currentToken.getType() + ")'", currentToken);
-                case END:
+                    if (currentToken.toString().charAt(0) == ',')
+                    {
                         tokens.remove(0);
-                        if(newLineAware) return;
+                        break;
+                    } else throw new ParseException("Token unidentified. '" + currentToken.toString() + "(" + currentToken.getType() + ")'", currentToken);
+                case END:
+                    tokens.remove(0);
+                    if (newLineAware) return;
                     break;
                 case KEYWORD:
-                        parseKeyword(tokens, root);
+                    parseKeyword(tokens, root);
                     break;
                 case IDENTIFIER:
-                        Token type       = getNext(tokens, currentToken, "");
+                    Token type = getNext(tokens, currentToken, "");
 
-                        if (getNextValid(tokens).isMathOp() && parseMath)
+                    if (getNextValid(tokens).isMathOp() && parseMath)
+                    {
+                        skipToValid(tokens);
+                        parseMath(tokens, root, type);
+                        break;
+                    } else if (tokens.size() > 2 && tokens.get(0).getType() == Token.Type.IDENTIFIER)
+                    {
+                        Token name = getNext(tokens, currentToken, "");
+
+                        Token declaration = null;
+                        if (nextOfType(tokens, Token.Type.EQUALS))
                         {
                             skipToValid(tokens);
-                            parseMath(tokens, root, type);
-                            break;
-                        }
-                        else if(tokens.size() > 2 && tokens.get(0).getType() == Token.Type.IDENTIFIER)
-                        {
-                            Token name              = getNext(tokens, currentToken, "");
+                            tokens.remove(0);
+                            declaration = new Token(Token.Type.FULL_DECLARATION).add(type).add(name);
+                            Token value = new Token(Token.Type.VALUE);
+                            parse(tokens, value, false, true, false, false, false, true);
+                            declaration.add(value);
+                        } else declaration = new Token(Token.Type.EMPTY_DECLARATION).add(type).add(name);
 
-                            Token declaration       = null;
-                            if(nextOfType(tokens, Token.Type.EQUALS))
-                            {
-                                skipToValid(tokens);
-                                tokens.remove(0);
-                                declaration         = new Token(Token.Type.FULL_DECLARATION).add(type).add(name);
-                                Token value         = new Token(Token.Type.VALUE);
-                                parse               (tokens, value, false, true, false, false, false, true);
-                                declaration.add(value);
-                            } else
-                                declaration         = new Token(Token.Type.EMPTY_DECLARATION).add(type).add(name);
+                        root.add(declaration);
+                        /** must be on same line to be valid, so nextValid isn't used here **/
+                    } else if (tokens.size() > 0 && tokens.get(0).getType() == Token.Type.PARENTHESIS_OPEN)
+                    {
+                        root.add(new Token(Token.Type.METHOD_CALL).add(type).add(getNextInParenthesis(tokens, currentToken, "Method calls should end with parenthesis.")));
+                    } else if (nextOfType(tokens, Token.Type.EQUALS))
+                    {
+                        skipToValid(tokens);
+                        Token initialization = new Token(Token.Type.INITIALIZATION);
+                        skipToValid(tokens);
+                        Token value = new Token(Token.Type.VALUE);
+                        parse(tokens, value, false, true, false, false, false, true);
+                        initialization.add(value);
 
-                            root.add(declaration);
-                            /** must be on same line to be valid, so nextValid isn't used here **/
-                        } else if(tokens.size() > 0 && tokens.get(0).getType() == Token.Type.PARENTHESIS_OPEN)
-                        {
-                            root.add(new Token(Token.Type.METHOD_CALL).add(type).add(getNextInParenthesis(tokens, currentToken, "Method calls should end with parenthesis.")));
-                        } else if(nextOfType(tokens, Token.Type.EQUALS))
-                        {
-                            skipToValid(tokens);
-                            Token initialization    = new Token(Token.Type.INITIALIZATION);
-                            skipToValid(tokens);
-                            Token value             = new Token(Token.Type.VALUE);
-                            parse               (tokens, value, false, true, false, false, false, true);
-                            initialization.add(value);
+                        root.add(initialization);
+                    } else if (nextOfType(tokens, LESS_THAN))
+                    {
+                        skipToValid(tokens);
+                        Token next = getNext(tokens, currentToken, "");
+                        next.add(type);
+                        parse(tokens, next, true);
 
-                            root.add(initialization);
-                        } else root.add(type);
+                        root.add(next);
+                    } else if (nextOfType(tokens, MORE_THAN))
+                    {
+                        skipToValid(tokens);
+                        Token next = getNext(tokens, currentToken, "");
+                        next.add(type);
+                        parse(tokens, next, true);
+
+                        root.add(next);
+                    } else if (nextOfType(tokens, AND))
+                    {
+                        skipToValid(tokens);
+                        Token next = getNext(tokens, currentToken, "");
+                        next.add(type);
+                        parse(tokens, next, true);
+
+                        root.add(next);
+                    } else if (nextOfType(tokens, OR))
+                    {
+                        skipToValid(tokens);
+                        Token next = getNext(tokens, currentToken, "");
+                        next.add(type);
+                        parse(tokens, next, true);
+
+                        root.add(next);
+                    } else if (nextOfType(tokens, RIGHT_SHIFT))
+                    {
+                        skipToValid(tokens);
+                        Token next = getNext(tokens, currentToken, "");
+                        next.add(type);
+                        parse(tokens, next, true);
+
+                        root.add(next);
+                    } else if (nextOfType(tokens, LEFT_SHIFT))
+                    {
+                        skipToValid(tokens);
+                        Token next = getNext(tokens, currentToken, "");
+                        next.add(type);
+                        parse(tokens, next, true);
+
+                        root.add(next);
+                    } else root.add(type);
                     break;
                 default:
                     throw new ParseException("Token unidentified. '" + currentToken.toString() + "(" + currentToken.getType() + ")'", currentToken);
             }
 
-            if(onlyOnce) return;
+            if (onlyOnce) return;
         }
     }
 
