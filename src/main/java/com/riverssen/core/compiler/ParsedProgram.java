@@ -88,10 +88,11 @@ public class ParsedProgram
     {
         if(tokens.size() >= 2 && tokens.get(0).getType() == Token.Type.PARENTHESIS_OPEN)
         {
-//            Token parenthesis_open          = getNext(tokens, offset, errmsg);
             Token parenthesis               = new Token(Token.Type.PARENTHESIS);
+            tokens.remove(0);
+            System.err.println(tokens.get(0));
 
-            parse(tokens, parenthesis, true, true, tr);
+            parse(tokens, parenthesis, true, true, true);
 
 //            while(tokens.size() > 0)
 //            {
