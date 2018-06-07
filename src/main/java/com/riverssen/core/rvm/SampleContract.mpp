@@ -31,3 +31,9 @@ function doSomethingElse() : void
     doSomething()
 }
 
+class Contract{
+    function Contract(int a)
+    {
+    }
+}
+

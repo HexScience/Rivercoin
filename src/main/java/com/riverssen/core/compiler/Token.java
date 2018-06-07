@@ -54,6 +54,7 @@ public class Token
         METHOD_DECLARATION,
         METHOD_EMPTY_DECLARATION,
         CLASS_DECLARATION,
+        EMPTY_CLASS_DECLARATION,
         PARENTHESIS,
         BRACES,
         INPUT,
@@ -65,7 +66,8 @@ public class Token
         MOD,
         BRACKETS,
         VALUE,
-        NEW
+        NEW,
+        EXTEND
     };
 
     public Token(String value, int line, int offset, int whitespace)
@@ -197,6 +199,8 @@ public class Token
             else
             {
                 if (toString().startsWith("\"") || toString().startsWith("'")) type = Type.STRING;
+                else if (toString().equals("extends"))
+                    type = Type.EXTEND;
                 else if (toString().matches("([_]*[A-z]+\\d*)+")) {
                     if(isKeyword()) type = Type.KEYWORD;
                     else

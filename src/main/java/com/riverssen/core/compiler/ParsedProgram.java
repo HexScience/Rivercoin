@@ -103,6 +103,35 @@ public class ParsedProgram
 
     private void parseClass(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
+        Token    name               = getNext               (tokens, currentToken, "function must have a name.");
+
+        Token extension = new Token(Token.Type.EXTEND);
+
+        if(tokens.size() > 0 && tokens.get(0).toString().equals("extends"))
+        {
+            extension.add(getNext(tokens, currentToken, "class must extend a class type."));
+
+            if (tokens.size() > 0 && tokens.get(0).toString().charAt(0) == ',') tokens.remove(0);
+
+            while (tokens.size() > 1 && tokens.get(1).toString().charAt(0) == ',')
+            {
+                extension.add(getNext(tokens, currentToken, "class must extend a class type."));
+
+                if (tokens.size() > 0 && tokens.get(0).toString().charAt(0) == ',') tokens.remove(0);
+            }
+        }
+
+        Token clasz = new Token(Token.Type.EMPTY_CLASS_DECLARATION);
+
+        clasz.add(name);
+
+        Token body = getNextInBraces(tokens, currentToken, "");
+        if(body != null) {
+            clasz.add(body);
+            clasz.setType(Token.Type.CLASS_DECLARATION);
+        }
+        if(extension.getTokens().size() > 0)
+            clasz.add(extension);
     }
 
     private void parseFunction(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
