@@ -194,11 +194,22 @@ public class Token
             else
             {
                 if (toString().startsWith("\"") || toString().startsWith("'")) type = Type.STRING;
-                else if (toString().matches("([_]*[A-z]+\\d*)+")) type = Type.IDENTIFIER;
+                else if (toString().matches("([_]*[A-z]+\\d*)+")) {
+                    if(isKeyword()) type = Type.KEYWORD;
+                    else
+                    type = Type.IDENTIFIER;
+                }
                 else if (toString().matches("(\\d[_]*\\d*)+")) type = Type.NUMBER;
             }
         }
         return this.type;
+    }
+
+    private boolean isKeyword()
+    {
+        final String keywords[] = {"function", "func", "new", "class", "static"};
+        for(String string : keywords) if(toString().equals(string)) return true;
+        return false;
     }
 
     public List<Token> getTokens()

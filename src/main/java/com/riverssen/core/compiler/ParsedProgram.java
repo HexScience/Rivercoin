@@ -81,7 +81,7 @@ public class ParsedProgram
                             parenthesis.add(getNextInParenthesis(tokens, offset, errmsg));
                         break;
                     default:
-                            parse(tokens, parenthesis, true);
+                            parse(tokens, parenthesis, true, true, true);
                         break;
                 }
             }
@@ -95,14 +95,14 @@ public class ParsedProgram
 
     private void parseFunction(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
-        Token    name            = getNext(tokens, currentToken.getOffset(), "function must have a name.");
-        Token    parenthesis     = getNextInParenthesis(tokens, currentToken.getOffset(), "function must have arguments in parenthesis.");
-        Token    symbol          = getNext(tokens, currentToken.getOffset(), "function must have a return symbol ':'.");
-        Token    returnType      = getNext(tokens, currentToken.getOffset(), "function must have a return type.");
+        Token    name            = getNext              (tokens, currentToken.getOffset(), "function must have a name.");
+        Token    parenthesis     = getNextInParenthesis (tokens, currentToken.getOffset(), "function must have arguments in parenthesis.");
+        Token    symbol          = getNext              (tokens, currentToken.getOffset(), "function must have a return symbol ':'.");
+        Token    returnType      = getNext              (tokens, currentToken.getOffset(), "function must have a return type.");
 
         Token           body            = null;
         try{
-            body                 = getNextInBraces(tokens, currentToken.getOffset(), "function must have a body");
+            body                 = getNextInBraces      (tokens, currentToken.getOffset(), "function must have a body");
         }
         catch (ParseException e)
         {
@@ -192,25 +192,25 @@ public class ParsedProgram
         while   (stack.size() > 0)  output.push(stack.pop().add(output.pop()).add(output.pop()));
 //        while   (output.size() > 0) stack.push(output.pop());
 
-        System.out.println(output.size() + " " + output.pop().humanReadable(0));
+//        System.out.println(output.size() + " " + output.pop().humanReadable(0));
 //        root.add(postFixToAST(output));
-        System.exit(0);
+//        System.exit(0);
 
-        while   (stack.size() > 1)
-        {
-            Token B = stack.pop();
-            Token A = stack.pop();
+//        while   (stack.size() > 1)
+//        {
+//            Token B = stack.pop();
+//            Token A = stack.pop();
+//
+//            Token O = stack.pop();
+//            stack.push(O.add(A).add(B));
+//        }
+//
+//        for(Token token : stack)
+//        {
+//            System.out.println(token.humanReadable(0));
+//        }
 
-            Token O = stack.pop();
-            stack.push(O.add(A).add(B));
-        }
-
-        for(Token token : stack)
-        {
-            System.out.println(token.humanReadable(0));
-        }
-
-        root.add(stack.pop());
+        root.add(output.pop());
 
 //        System.exit(0);
     }
@@ -338,7 +338,6 @@ public class ParsedProgram
         while(tokens.size() > 0)
         {
             Token currentToken = tokens.get(0);
-            System.out.println(currentToken + " " + currentToken.getType());
             switch (currentToken.getType())
             {
                 case PARENTHESIS_OPEN:
@@ -366,6 +365,7 @@ public class ParsedProgram
                         root.add(new Token(Token.Type.INPUT).add(getNext(tokens, currentToken.getOffset(), "")));
                     break;
                 case SYMBOL:
+                        if(currentToken.toString().equals(",")) { tokens.remove(0); break; }
                     break;
                 case END:
                         tokens.remove(0);
