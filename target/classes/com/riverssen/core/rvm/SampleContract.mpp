@@ -15,5 +15,8 @@ String string   = "ffs"
 
 int g = a * b + c + d * e
 
-function calculate(int a, int b) : void;
+function calculate(int a, int b) : void
+{
+    int g = a;
+}
 
