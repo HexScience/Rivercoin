@@ -22,11 +22,9 @@ function calculate(int a, int b) : void
 
 function doSomething()
 {
-    doSomethingElse();
 }
 
 func doSomethingElse()
 {
-    //Gotcha! This function does absolutely nothing!
 }
 
