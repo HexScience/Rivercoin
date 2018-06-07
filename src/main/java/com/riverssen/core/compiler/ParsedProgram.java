@@ -47,7 +47,7 @@ public class ParsedProgram
         try{
             if(tokens.size() > 0)
             {
-                Token falsy = new Token(null);
+                Token falsy = new Token(Token.Type.ROOT);
                 parse(tokens, falsy, true);
                 return falsy.getTokens().get(0);
             }
@@ -60,32 +60,55 @@ public class ParsedProgram
 
     private Token getNextInBraces(List<Token> tokens, int offset, String errmsg) throws ParseException
     {
-        return null;
-    }
-
-    private Token getNextInParenthesis(List<Token> tokens, int offset, String errmsg) throws ParseException
-    {
-        if(tokens.size() >= 2 && tokens.get(0).getType() == Token.Type.PARENTHESIS_OPEN)
+        if(tokens.size() >= 2 && tokens.get(0).getType() == Token.Type.BRACES_OPEN)
         {
             Token parenthesis_open          = getNext(tokens, offset, errmsg);
-            Token parenthesis               = new Token(Token.Type.PARENTHESIS);
+            Token parenthesis               = new Token(Token.Type.BRACES_OPEN);
 
             while(tokens.size() > 0)
             {
                 Token currentToken = tokens.get(0);
                 switch (currentToken.getType())
                 {
-                    case PARENTHESIS_CLOSED:
-                            return parenthesis;
-                    case PARENTHESIS_OPEN:
-                            parenthesis.add(getNextInParenthesis(tokens, offset, errmsg));
+                    case BRACES_CLOSED:
+                        return parenthesis;
+                    case BRACES_OPEN:
+                        parenthesis.add(getNextInBraces(tokens, offset, errmsg));
                         break;
                     default:
-                            parse(tokens, parenthesis, true, true, true);
+                        parse(tokens, parenthesis, true, true, true);
                         break;
                 }
             }
-            return null;
+            throw new ParseException("Braces must be closed", offset);
+        } else return null;
+    }
+
+    private Token getNextInParenthesis(List<Token> tokens, int offset, String errmsg) throws ParseException
+    {
+        if(tokens.size() >= 2 && tokens.get(0).getType() == Token.Type.PARENTHESIS_OPEN)
+        {
+//            Token parenthesis_open          = getNext(tokens, offset, errmsg);
+            Token parenthesis               = new Token(Token.Type.PARENTHESIS);
+
+            parse(tokens, parenthesis, true);
+
+//            while(tokens.size() > 0)
+//            {
+//                Token currentToken = tokens.get(0);
+////                switch (currentToken.getType())
+////                {
+////                    case PARENTHESIS_CLOSED:
+////                            return parenthesis;
+////                    case PARENTHESIS_OPEN:
+////                            parenthesis.add(getNextInParenthesis(tokens, offset, errmsg));
+////                        break;
+////                    default:
+////                            parse(tokens, parenthesis, true, true, true);
+////                        break;
+////                }
+//            }
+            return parenthesis.getTokens().get(0);
         } else throw new ParseException(errmsg, offset);
     }
 
@@ -95,18 +118,11 @@ public class ParsedProgram
 
     private void parseFunction(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
-        Token    name            = getNext              (tokens, currentToken.getOffset(), "function must have a name.");
-        Token    parenthesis     = getNextInParenthesis (tokens, currentToken.getOffset(), "function must have arguments in parenthesis.");
-        Token    symbol          = getNext              (tokens, currentToken.getOffset(), "function must have a return symbol ':'.");
-        Token    returnType      = getNext              (tokens, currentToken.getOffset(), "function must have a return type.");
-
-        Token           body            = null;
-        try{
-            body                 = getNextInBraces      (tokens, currentToken.getOffset(), "function must have a body");
-        }
-        catch (ParseException e)
-        {
-        }
+        Token    name               = getNext               (tokens, currentToken.getOffset(), "function must have a name.");
+        Token    parenthesis        = getNextInParenthesis  (tokens, currentToken.getOffset(), "function must have arguments in parenthesis.");
+        Token    symbol             = getNext               (tokens, currentToken.getOffset(), "function must have a return symbol ':'.");
+        Token    returnType         = getNext               (tokens, currentToken.getOffset(), "function must have a return type.");
+        Token    body               = getNextInBraces       (tokens, currentToken.getOffset(), "function must have a body");
 
         /** unimplemented method **/
         if(body == null)
@@ -338,6 +354,7 @@ public class ParsedProgram
         while(tokens.size() > 0)
         {
             Token currentToken = tokens.get(0);
+            System.out.println(currentToken + " " + currentToken.getType());
             switch (currentToken.getType())
             {
                 case PARENTHESIS_OPEN:
@@ -365,7 +382,7 @@ public class ParsedProgram
                         root.add(new Token(Token.Type.INPUT).add(getNext(tokens, currentToken.getOffset(), "")));
                     break;
                 case SYMBOL:
-                        if(currentToken.toString().equals(",")) { tokens.remove(0); break; }
+                        if(currentToken.toString().charAt(0) == ',') { tokens.remove(0); break; }
                     break;
                 case END:
                         tokens.remove(0);
@@ -391,7 +408,7 @@ public class ParsedProgram
                             {
                                 declaration         = new Token(Token.Type.FULL_DECLARATION).add(type).add(name);
                                 parse               (tokens, declaration, true, true);
-                            } else if(equals.getType() == Token.Type.END)
+                            } else
                             {
                                 declaration         = new Token(Token.Type.EMPTY_DECLARATION).add(type).add(name);
                             }
