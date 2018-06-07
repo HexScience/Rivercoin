@@ -12,8 +12,9 @@
 
 int i           = 55_0
 String string   = "ffs"
-//Variables
 var v           = null
+
+House h         = new House()
 
 int g = a * b + c + d * e
 

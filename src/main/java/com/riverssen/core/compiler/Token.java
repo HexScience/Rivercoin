@@ -64,7 +64,8 @@ public class Token
         POW,
         MOD,
         BRACKETS,
-        VALUE
+        VALUE,
+        NEW
     };
 
     public Token(String value, int line, int offset, int whitespace)
