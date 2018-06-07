@@ -163,6 +163,21 @@ public class ParsedProgram
         }
     }
 
+    private void parseIfKeyword(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
+    {
+
+    }
+
+    private void parseForKeyword(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
+    {
+
+    }
+
+    private void parseWhileKeyword(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
+    {
+
+    }
+    
     private void parseNewKeyword(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
         Token neW = new Token(Token.Type.NEW);
@@ -185,21 +200,24 @@ public class ParsedProgram
         switch (currentToken.toString())
         {
             case "function":
-                    parseFunction   (tokens, root, currentToken);
+                    parseFunction       (tokens, root, currentToken);
                 break;
             case "fun":
-                    parseFunction   (tokens, root, currentToken);
+                    parseFunction       (tokens, root, currentToken);
                 break;
             case "class":
-                    parseClass      (tokens, root, currentToken);
+                    parseClass          (tokens, root, currentToken);
                 break;
             case "new":
-                    parseNewKeyword (tokens, root, currentToken);
+                    parseNewKeyword     (tokens, root, currentToken);
             case "if":
+                    parseIfKeyword      (tokens, root, currentToken);
                 break;
             case "for":
+                    parseForKeyword     (tokens, root, currentToken);
                 break;
             case "while":
+                    parseWhileKeyword   (tokens, root, currentToken);
                 break;
         }
     }
