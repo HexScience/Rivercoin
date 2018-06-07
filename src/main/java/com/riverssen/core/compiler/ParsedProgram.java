@@ -14,6 +14,8 @@ package com.riverssen.core.compiler;
 
 import java.util.*;
 
+import static com.riverssen.core.compiler.Token.Type.*;
+
 public class ParsedProgram
 {
     private Token   tokens;
@@ -27,6 +29,8 @@ public class ParsedProgram
                 token.getType();
             }
 
+        tokens      = initialparse(tokens);
+//        for(Token token : tokens) System.out.println(token + " " + token.getType());
         this.tokens = new Token(Token.Type.ROOT);
         parse(tokens, this.tokens, false);
     }
@@ -165,7 +169,13 @@ public class ParsedProgram
 
     private void parseIfKeyword(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
-
+        Token if_ = new Token(Token.Type.IF);
+        Token parenthesis = getNextInParenthesis(tokens, currentToken, "if statement must have arguments in parenthesis.");
+        Token body = getNextInBraces(tokens, currentToken, "function must have a body");
+        if (body == null)
+            rootm.add(if_.add(parenthesis).add(getNext(tokens, currentToken, "function must have a return type.")));
+        else
+            rootm.add(if_.add(parenthesis).add(body));
     }
 
     private void parseForKeyword(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
@@ -177,7 +187,7 @@ public class ParsedProgram
     {
 
     }
-    
+
     private void parseNewKeyword(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
         Token neW = new Token(Token.Type.NEW);
@@ -404,6 +414,42 @@ public class ParsedProgram
     private void parse(List<Token> tokens, Token root, boolean onlyOnce, boolean parseMath, boolean inParenthesis, boolean inBraces, boolean inBrackets) throws ParseException
     {
         this.parse(tokens, root, onlyOnce, parseMath, inParenthesis, inBraces, inBrackets, false);
+    }
+
+    private List<Token> initialparse(List<Token> tokens)
+    {
+        List<Token> newList = new ArrayList<>();
+
+        Token last = new Token(Token.Type.ROOT);
+
+        while (tokens.size() > 0)
+        {
+            if(last.getType() == tokens.get(0).getType())
+            {
+                if(last.getType() == Token.Type.EQUALS)
+                    last.setType(Token.Type.ASSERT);
+                else if(last.getType().equals(Token.Type.LESS_THAN))
+                    last.setType(LEFT_SHIFT);
+                else if(last.getType().equals(MORE_THAN))
+                    last.setType(RIGHT_SHIFT);
+                else if (last.getType().equals(MATH_OP) && last.toString().charAt(0) == '+')
+                    last.setType(PLUSPLUS);
+                else if (last.getType().equals(MATH_OP) && last.toString().charAt(0) == '-')
+                    last.setType(MINUSMINUS);
+                else if (last.getType().equals(MATH_OP) && last.toString().charAt(0) == '*')
+                    last.setType(POW);
+                else if (last.getType().equals(AND) && last.toString().charAt(0) == '&')
+                    last.setType(BOOL_OP);
+                else if (last.getType().equals(OR) && last.toString().charAt(0) == '|')
+                    last.setType(BOOL_OP);
+                else newList.add(tokens.get(0));
+            } else newList.add(tokens.get(0));
+
+            last = tokens.get(0);
+            tokens.remove(0);
+        }
+
+        return newList;
     }
 
     private void parse(List<Token> tokens, Token root, boolean onlyOnce, boolean parseMath, boolean inParenthesis, boolean inBraces, boolean inBrackets, boolean newLineAware) throws ParseException

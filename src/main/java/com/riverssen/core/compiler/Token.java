@@ -67,7 +67,23 @@ public class Token
         BRACKETS,
         VALUE,
         NEW,
-        EXTEND
+        EXTEND,
+        IF,
+        FOR,
+        FOREACH,
+        BOOL_OP,
+        LESS_THAN,
+        MORE_THAN,
+        LESSTHAN_EQUAL,
+        MORETHAN_EQUAL,
+        ASSERT,
+        AND,
+        OR,
+        LEFT_SHIFT,
+        RIGHT_SHIFT,
+        PLUSPLUS,
+        MINUSMINUS,
+        WHILE
     };
 
     public Token(String value, int line, int offset, int whitespace)
@@ -186,9 +202,26 @@ public class Token
                 {
                     type = Type.EQUALS;
                     return type;
-                } else if (toString().charAt(0) == '+' || toString().charAt(0) == '-' || toString().charAt(0) == '*' || toString().charAt(0) == '/' || toString().charAt(0) == '%')
+                } else if (toString().charAt(0) == '+' || toString().charAt(0) == '-' || toString().charAt(0) == '*'
+                        || toString().charAt(0) == '/' || toString().charAt(0) == '%')
                 {
                     type = Type.MATH_OP;
+                    return type;
+                } else if (toString().charAt(0) == '&')
+                {
+                    type = Type.AND;
+                    return type;
+                } else if (toString().charAt(0) == '|')
+                {
+                    type = Type.OR;
+                    return type;
+                } else if (toString().charAt(0) == '<')
+                {
+                    type = Type.LESS_THAN;
+                    return type;
+                } else if (toString().charAt(0) == '>')
+                {
+                    type = Type.MORE_THAN;
                     return type;
                 }
 

@@ -15,6 +15,12 @@ String string   = "ffs"
 var v           = null
 
 House h         = new House()
+if(b) doSomething()
+if(i)
+{
+    doSomething()
+    doSomethingElse()
+}
 
 int g = (a * b) + c + (d * e)
 
