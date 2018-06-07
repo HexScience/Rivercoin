@@ -350,6 +350,11 @@ public class ParsedProgram
 
     private void parse(List<Token> tokens, Token root, boolean onlyOnce, boolean parseMath, boolean inParenthesis, boolean inBraces, boolean inBrackets) throws ParseException
     {
+        this.parse(tokens, root, onlyOnce, parseMath, inParenthesis, inBraces, inBrackets, false);
+    }
+
+    private void parse(List<Token> tokens, Token root, boolean onlyOnce, boolean parseMath, boolean inParenthesis, boolean inBraces, boolean inBrackets, boolean newLineAware) throws ParseException
+    {
         while(tokens.size() > 0)
         {
             Token currentToken = tokens.get(0);
@@ -399,6 +404,7 @@ public class ParsedProgram
                             throw new ParseException("Token unidentified. '" + currentToken.toString() + "(" + currentToken.getType() + ")'", currentToken);
                 case END:
                         tokens.remove(0);
+                        if(newLineAware) return;
                     break;
                 case KEYWORD:
                         parseKeyword(tokens, root);
@@ -421,7 +427,7 @@ public class ParsedProgram
                             {
                                 tokens.remove(0);
                                 declaration         = new Token(Token.Type.FULL_DECLARATION).add(type).add(name);
-                                parse               (tokens, declaration, true, true);
+                                parse               (tokens, declaration, false, true, false, false, false, true);
                             } else
                                 declaration         = new Token(Token.Type.EMPTY_DECLARATION).add(type).add(name);
 

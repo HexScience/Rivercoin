@@ -63,7 +63,9 @@ public class Token
         SUBDIVISION,
         POW,
         MOD,
-        BRACKETS};
+        BRACKETS,
+        VALUE
+    };
 
     public Token(String value, int line, int offset, int whitespace)
     {
