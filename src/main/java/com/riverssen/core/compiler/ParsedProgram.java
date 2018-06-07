@@ -174,6 +174,13 @@ public class ParsedProgram
         }
     }
 
+    private Token strip(Token token)
+    {
+        if(token.getTokens().size() == 1 && token.getType() == Token.Type.PARENTHESIS)
+            return token.getTokens().get(0);
+        else return token;
+    }
+
     private void parseMath(List<Token> tokens, Token root, Token a) throws ParseException
     {
         List<Token> math_tokens = new ArrayList<>();
@@ -199,7 +206,7 @@ public class ParsedProgram
                 output.push(c);
             else
             {
-                while (!stack.isEmpty() && prec(c.toString().charAt(0)) <= prec(stack.peek().toString().charAt(0)))
+                while (!stack.isEmpty() && prec(c) <= prec(stack.peek()))
                 {
                     output.push(stack.pop().add(output.pop()).add(output.pop()));
                 }
@@ -294,22 +301,28 @@ public class ParsedProgram
         throw new ParseException(errmsg, offset);
     }
 
-    static int prec(char ch)
+    static int prec(Token ch)
     {
-        switch (ch)
+        switch (ch.getType())
         {
-            case '+':
-            case '-':
-                return 1;
+            case MATH_OP:
+                switch (ch.toString().charAt(0))
+                {
+                    case '+':
+                    case '-':
+                        return 1;
 
-            case '*':
-            case '/':
+                    case '*':
+                    case '/':
+                        return 2;
+
+                    case '%':
+                        return 3;
+                    case '^':
+                        return 4;
+                }
+            case PARENTHESIS:
                 return 2;
-
-            case '%':
-                return 3;
-            case '^':
-                return 4;
         }
 
         return -1;
@@ -357,8 +370,10 @@ public class ParsedProgram
                         Token parenthesis = new Token(Token.Type.PARENTHESIS);
                         getNext(tokens, currentToken, "");
                         parse(tokens, parenthesis, false, true, true);
-
-                        root.add(parenthesis);
+                        if(nextOfType(tokens, Token.Type.MATH_OP))
+                            parseMath(tokens, root, parenthesis);
+                        else
+                            root.add(parenthesis);
                     break;
                 case PARENTHESIS_CLOSED:
                     if(inParenthesis) {

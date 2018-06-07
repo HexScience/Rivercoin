@@ -16,7 +16,7 @@ var v           = null
 
 House h         = new House()
 
-int g = a * b + c + d * e
+int g = (a * b) + c + (d * e)
 
 //Unimplemented Functions (For Abstract Classes)
 function calculate(int a, int b) : void
