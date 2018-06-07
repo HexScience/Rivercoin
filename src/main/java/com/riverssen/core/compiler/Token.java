@@ -81,6 +81,8 @@ public class Token
         OR,
         RIGHT_SHIFT,
         LEFT_SHIFT,
+        UNARY,
+        PREUNARY,
         PLUSPLUS,
         MINUSMINUS,
         WHILE

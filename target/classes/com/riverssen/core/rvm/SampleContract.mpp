@@ -13,6 +13,9 @@
 if(i < b)
     doSomething()
     doSomethingElse()
+for(int i = 0; i < 5; ++i;)
+    doSomething()
+while(true) {}
 
 int i           = 55_0
 String string   = "ffs"

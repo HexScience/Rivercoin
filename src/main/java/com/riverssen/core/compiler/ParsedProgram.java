@@ -186,12 +186,31 @@ public class ParsedProgram
 
     private void parseForKeyword(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
+        Token for_ = new Token(Token.Type.FOR);
+        Token parenthesis = getNextInParenthesis(tokens, currentToken, "if statement must have arguments in parenthesis.");
+        if(parenthesis.getTokens().size() != 3) throw new ParseException("For loops take 3 arguments.", currentToken);
+        skipToValid(tokens);
+        Token body = getNextInBraces(tokens, currentToken, "function must have a body");
 
+        if (body == null)
+        {
+            rootm.add(for_.add(parenthesis));
+            parse(tokens, for_, true);
+        } else rootm.add(for_.add(parenthesis).add(body));
     }
 
     private void parseWhileKeyword(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
+        Token while_ = new Token(Token.Type.WHILE);
+        Token parenthesis = getNextInParenthesis(tokens, currentToken, "if statement must have arguments in parenthesis.");
+        skipToValid(tokens);
+        Token body = getNextInBraces(tokens, currentToken, "function must have a body");
 
+        if (body == null)
+        {
+            rootm.add(while_.add(parenthesis));
+            parse(tokens, while_, true);
+        } else rootm.add(while_.add(parenthesis).add(body));
     }
 
     private void parseNewKeyword(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
@@ -431,8 +450,8 @@ public class ParsedProgram
                 if (last.getType() == Token.Type.EQUALS) last.setType(Token.Type.ASSERT);
                 else if (last.getType().equals(Token.Type.LESS_THAN)) last.setType(LEFT_SHIFT);
                 else if (last.getType().equals(MORE_THAN)) last.setType(RIGHT_SHIFT);
-                else if (last.getType().equals(MATH_OP) && last.toString().charAt(0) == '+') last.setType(PLUSPLUS);
-                else if (last.getType().equals(MATH_OP) && last.toString().charAt(0) == '-') last.setType(MINUSMINUS);
+                else if (last.getType().equals(MATH_OP) && last.toString().charAt(0) == '+') last.setType(UNARY);
+                else if (last.getType().equals(MATH_OP) && last.toString().charAt(0) == '-') last.setType(UNARY);
                 else if (last.getType().equals(MATH_OP) && last.toString().charAt(0) == '*') last.setType(POW);
                 else if (last.getType().equals(AND) && last.toString().charAt(0) == '&') last.setType(BOOL_OP);
                 else if (last.getType().equals(OR) && last.toString().charAt(0) == '|') last.setType(BOOL_OP);
@@ -508,6 +527,13 @@ public class ParsedProgram
                     break;
                 case KEYWORD:
                     parseKeyword(tokens, root);
+                    break;
+                case UNARY:
+                        Token unary = getNext(tokens, currentToken, "");
+                        unary.setType(PREUNARY);
+                        parse(tokens, unary, true);
+
+                        root.add(unary);
                     break;
                 case IDENTIFIER:
                     Token type = getNext(tokens, currentToken, "");
@@ -593,6 +619,13 @@ public class ParsedProgram
                         Token next = getNext(tokens, currentToken, "");
                         next.add(type);
                         parse(tokens, next, true);
+
+                        root.add(next);
+                    } else if (nextOfType(tokens, UNARY))
+                    {
+                        skipToValid(tokens);
+                        Token next = getNext(tokens, currentToken, "");
+                        next.add(type);
 
                         root.add(next);
                     } else root.add(type);
