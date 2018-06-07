@@ -31,8 +31,8 @@ function doSomethingElse() : void
     doSomething()
 }
 
-class Contract{
-    function Contract(int a)
+class Contract extends Jean, Dean, Huffey{
+    function Contract() : void
     {
     }
 }
