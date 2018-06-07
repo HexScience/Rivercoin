@@ -89,10 +89,7 @@ public class ParsedProgram
         if(tokens.size() >= 2 && tokens.get(0).getType() == Token.Type.PARENTHESIS_OPEN)
         {
             Token parenthesis               = new Token(Token.Type.PARENTHESIS);
-            tokens.remove(0);
-            System.err.println(tokens.get(0));
-
-            parse(tokens, parenthesis, true, true, true);
+            parse(tokens, parenthesis, true, true, false);
 
 //            while(tokens.size() > 0)
 //            {
@@ -367,7 +364,7 @@ public class ParsedProgram
                         root.add(parenthesis);
                     break;
                 case PARENTHESIS_CLOSED:
-                        if(inParenthesis) {
+                    if(inParenthesis) {
                                 tokens.remove(0);
                             return;
                         }
@@ -385,7 +382,8 @@ public class ParsedProgram
                     break;
                 case SYMBOL:
                         if(currentToken.toString().charAt(0) == ',') { tokens.remove(0); break; }
-                    break;
+                        else
+                            throw new ParseException("Token unidentified. '" + currentToken.toString() + "(" + currentToken.getType() + ")'", currentToken.getOffset());
                 case END:
                         tokens.remove(0);
                     break;
@@ -403,11 +401,12 @@ public class ParsedProgram
                         else if(tokens.size() > 0 && tokens.get(0).getType() == Token.Type.IDENTIFIER)
                         {
                             Token name       = getNext(tokens, currentToken.getOffset(), "");
-                            Token equals     = getNext(tokens, currentToken.getOffset(), "declarations should end with ';' or be initialized with '='");
+                            Token equals     = tokens.get(0);//getNext(tokens, currentToken.getOffset(), "declarations should end with ';' or be initialized with '='");
 
                             Token declaration       = null;
                             if(equals.getType()     == Token.Type.EQUALS)
                             {
+                                tokens.remove(0);
                                 declaration         = new Token(Token.Type.FULL_DECLARATION).add(type).add(name);
                                 parse               (tokens, declaration, true, true);
                             } else
