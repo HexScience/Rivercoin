@@ -15,8 +15,9 @@ package com.riverssen.core;
 import com.riverssen.core.compiler.LexedProgram;
 import com.riverssen.core.compiler.ParsedProgram;
 import com.riverssen.core.compiler.Token;
+import com.riverssen.core.system.MiningContext;
 import com.riverssen.core.rvm.VirtualMachine;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.utils.FileUtils;
 
 import java.io.File;
@@ -26,25 +27,30 @@ public class RivercoinCore
 {
     public static void main(String args[]) throws Exception
     {
-        String root = "";
-
-        if(args != null && args.length > 0)
-            root = args[0];
+        if(args != null && args.length > 1)
+        new RivercoinCore(args[0], args[1]);
         else throw new RuntimeException("Please specify a rivercoin.config file.");
-
-        new RivercoinCore(root);
     }
 
-    private RivercoinCore(String file) throws Exception
+    private RivercoinCore(String type, String file) throws Exception
     {
+        /** Test Code For The Mocha++ Compiler **/
         Token list = new ParsedProgram(new LexedProgram(FileUtils.readUTF(VirtualMachine.class.getResourceAsStream("SampleContract.mpp")))).getTokens();
 
         System.out.println("---------------------------------\n" + list.humanReadable(0));
 
         System.exit(0);
 
+        /** This Code Starts The Rivercoin Client **/
+
         /** create a context **/
-        Context context = new Context(new File(file));
+        ContextI context = null;
+        switch (type)
+        {
+            case "node": break;
+            case "miner": context = new MiningContext(new File(file));
+            case "wallet": break;
+        }
 
         /**
          * Add the bouncy castle provider

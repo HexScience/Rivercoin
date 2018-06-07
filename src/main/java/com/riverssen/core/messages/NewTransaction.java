@@ -15,7 +15,7 @@ package com.riverssen.core.messages;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.networking.Peer;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -30,7 +30,7 @@ public class NewTransaction implements Message<TransactionI>
     }
 
     @Override
-    public void send(DataOutputStream out, TransactionI information, Context context)
+    public void send(DataOutputStream out, TransactionI information, ContextI context)
     {
         try
         {
@@ -43,13 +43,13 @@ public class NewTransaction implements Message<TransactionI>
     }
 
     @Override
-    public TransactionI receive(DataInputStream in, Context context)
+    public TransactionI receive(DataInputStream in, ContextI context)
     {
         return TransactionI.read(in);
     }
 
     @Override
-    public void onReceive(DataInputStream in, Context context, Peer connection)
+    public void onReceive(DataInputStream in, ContextI context, Peer connection)
     {
         context.getTransactionPool().add(receive(in, context));
     }

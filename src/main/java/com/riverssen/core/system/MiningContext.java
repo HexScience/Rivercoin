@@ -31,7 +31,7 @@ import java.math.BigInteger;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Context implements ContextI
+public class MiningContext implements ContextI
 {
     private ExecutorService executorService;
     private NetworkManager networkManager;
@@ -46,7 +46,7 @@ public class Context implements ContextI
     private boolean running;
     private final long versionBytes;
 
-    public Context(File config)
+    public MiningContext(File config)
     {
         this.config = new Config(config);
         this.running = true;

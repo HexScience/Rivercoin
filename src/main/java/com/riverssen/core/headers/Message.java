@@ -13,7 +13,6 @@
 package com.riverssen.core.headers;
 
 import com.riverssen.core.networking.Peer;
-import com.riverssen.core.system.Context;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -23,8 +22,8 @@ public interface Message<T>
 {
     public static final long handshake = 0, newblock = 1, newsolution = 2, newtransaction = 3, requestchain = 4, peerlist = 5, requestchainsize = 6, sendchain = 7;
     long header();
-    void send(DataOutputStream out, T information, Context context) throws IOException;
-    T    receive(DataInputStream in, Context context) throws IOException;
+    void send(DataOutputStream out, T information, ContextI context) throws IOException;
+    T    receive(DataInputStream in, ContextI context) throws IOException;
 
-    void onReceive(DataInputStream in, Context context, Peer connection) throws IOException;
+    void onReceive(DataInputStream in, ContextI context, Peer connection) throws IOException;
 }

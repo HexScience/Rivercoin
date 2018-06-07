@@ -19,7 +19,7 @@ import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PrivKey;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.utils.Base58;
 import com.riverssen.utils.ByteUtil;
 import com.riverssen.utils.SmartDataTransferer;
@@ -137,7 +137,7 @@ public class Transaction implements TransactionI, Encodeable
     }
 
     @Override
-    public void revertOutputs(PublicAddress miner, Context context)
+    public void revertOutputs(PublicAddress miner, ContextI context)
     {
         List<TransactionOutput> utxos = new ArrayList<>();
 
@@ -166,7 +166,7 @@ public class Transaction implements TransactionI, Encodeable
         return new RiverCoin(Config.getMiningFee()).toBigInteger();
     }
 
-    public List<TransactionOutput> generateOutputs(PublicAddress miner, Context context)
+    public List<TransactionOutput> generateOutputs(PublicAddress miner, ContextI context)
     {
         List<TransactionOutput> utxos = new ArrayList<>();
 

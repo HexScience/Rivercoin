@@ -13,8 +13,8 @@
 package com.riverssen.core.block;
 
 import com.riverssen.core.FullBlock;
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.security.PublicAddress;
-import com.riverssen.core.system.Context;
 import com.riverssen.utils.ByteUtil;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.utils.MerkleTree;
@@ -60,7 +60,7 @@ public class BlockHeader implements Encodeable
     {
     }
 
-    public BlockHeader(long block, Context context)
+    public BlockHeader(long block, ContextI context)
     {
         if(block < 0) return;
 
@@ -256,7 +256,7 @@ public class BlockHeader implements Encodeable
         return new FullBlock(getBlockID() + 1, this);
     }
 
-    public static FullBlock FullBlock(long block, Context context)
+    public static FullBlock FullBlock(long block, ContextI context)
     {
         File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "block["+block+"]");
         DataInputStream stream = null;

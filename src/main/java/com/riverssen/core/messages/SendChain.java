@@ -15,7 +15,7 @@ package com.riverssen.core.messages;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.networking.Peer;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -32,7 +32,7 @@ public class SendChain implements Message<List<FullBlock>>
     }
 
     @Override
-    public void send(DataOutputStream out, List<FullBlock> information, Context context)
+    public void send(DataOutputStream out, List<FullBlock> information, ContextI context)
     {
         try
         {
@@ -50,7 +50,7 @@ public class SendChain implements Message<List<FullBlock>>
     }
 
     @Override
-    public List<FullBlock> receive(DataInputStream in, Context context)
+    public List<FullBlock> receive(DataInputStream in, ContextI context)
     {
         try
         {
@@ -69,7 +69,7 @@ public class SendChain implements Message<List<FullBlock>>
     }
 
     @Override
-    public void onReceive(DataInputStream in, Context context, Peer connection)
+    public void onReceive(DataInputStream in, ContextI context, Peer connection)
     {
         List<FullBlock> blocks = receive(in, context);
 

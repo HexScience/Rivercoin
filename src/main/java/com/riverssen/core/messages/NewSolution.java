@@ -15,7 +15,7 @@ package com.riverssen.core.messages;
 import com.riverssen.core.consensus.Solution;
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.networking.Peer;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -30,7 +30,7 @@ public class NewSolution implements Message<Solution>
     }
 
     @Override
-    public void send(DataOutputStream out, Solution information, Context context)
+    public void send(DataOutputStream out, Solution information, ContextI context)
     {
         try
         {
@@ -43,7 +43,7 @@ public class NewSolution implements Message<Solution>
     }
 
     @Override
-    public Solution receive(DataInputStream in, Context context)
+    public Solution receive(DataInputStream in, ContextI context)
     {
         try
         {
@@ -57,7 +57,7 @@ public class NewSolution implements Message<Solution>
     }
 
     @Override
-    public void onReceive(DataInputStream in, Context context, Peer connection)
+    public void onReceive(DataInputStream in, ContextI context, Peer connection)
     {
         Solution solution = receive(in, context);
 

@@ -14,7 +14,7 @@ package com.riverssen.core.messages;
 
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.networking.Peer;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -30,14 +30,14 @@ public class PeerList implements Message<List<String>>
     }
 
     @Override
-    public void send(DataOutputStream out, List<String> information, Context context) throws IOException {
+    public void send(DataOutputStream out, List<String> information, ContextI context) throws IOException {
         out.writeInt(context.getNetworkManager().getConnections().size());
         for(Peer peer : context.getNetworkManager().getConnections())
             out.writeUTF(peer.getAddress());
     }
 
     @Override
-    public List<String> receive(DataInputStream in, Context context) throws IOException {
+    public List<String> receive(DataInputStream in, ContextI context) throws IOException {
         List<String> addresses = new ArrayList<>();
 
         int size = in.readInt();
@@ -48,7 +48,7 @@ public class PeerList implements Message<List<String>>
     }
 
     @Override
-    public void onReceive(DataInputStream in, Context context, Peer connection) throws IOException {
+    public void onReceive(DataInputStream in, ContextI context, Peer connection) throws IOException {
         List<String> addresses = receive(in, context);
 
         context.getNetworkManager().addForeignAddresses(addresses);

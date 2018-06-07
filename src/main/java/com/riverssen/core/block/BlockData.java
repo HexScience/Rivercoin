@@ -16,7 +16,7 @@ import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.Write;
 import com.riverssen.core.security.PublicAddress;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.utils.Serializer;
 import com.riverssen.core.headers.Encodeable;
@@ -34,14 +34,14 @@ public class BlockData implements Encodeable, Exportable
     @Write private MerkleTree merkleTree;
     @Write private long time;
     private long dataSize;
-    private Context context;
+    private ContextI context;
 
     public BlockData()
     {
         this.merkleTree = new MerkleTree();
     }
 
-    public BlockData(long blockID, Context context)
+    public BlockData(long blockID, ContextI context)
     {
         this.context = context;
         try
@@ -142,7 +142,7 @@ public class BlockData implements Encodeable, Exportable
     }
 
     /** Generate Outputs From Old Inputs **/
-    public List<TransactionOutput> collectOutputs(PublicAddress miner, Context context)
+    public List<TransactionOutput> collectOutputs(PublicAddress miner, ContextI context)
     {
         List<TransactionOutput> list = new ArrayList<>();
 
@@ -152,7 +152,7 @@ public class BlockData implements Encodeable, Exportable
         return list;
     }
 
-    public void revertOutputs(PublicAddress miner, Context context)
+    public void revertOutputs(PublicAddress miner, ContextI context)
     {
         for(TransactionI transactionI : merkleTree.flatten())
             transactionI.revertOutputs(miner, context);

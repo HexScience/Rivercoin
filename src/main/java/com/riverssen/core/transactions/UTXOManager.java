@@ -16,7 +16,7 @@ import com.riverssen.core.FullBlock;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.compression.Base58Hash;
 import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.system.LatestBlockInfo;
 import com.riverssen.utils.Base58;
 import com.riverssen.utils.MerkleTree;
@@ -38,7 +38,7 @@ public class UTXOManager
         return get(Base58.decode(hash));
     }
 
-    public static void loadUTXOs(Context context)
+    public static void loadUTXOs(ContextI context)
     {
         LatestBlockInfo blockInfo = new LatestBlockInfo(context.getConfig());
         long l = blockInfo.getLatestBlock();
@@ -50,7 +50,7 @@ public class UTXOManager
     public static void add(FullBlock block)
     {
         MerkleTree mt = block.getBody().getMerkleTree();
-        Context context = null;
+        ContextI context = null;
 
         for(TransactionI transaction : mt.flatten())
             for(TransactionOutput transactionOutput : transaction.generateOutputs(block.getHeader().getMinerAddressAsPublicAddress(), context))

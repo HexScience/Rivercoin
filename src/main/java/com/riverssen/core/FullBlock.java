@@ -16,7 +16,6 @@ import com.riverssen.core.block.BlockData;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.*;
 import com.riverssen.core.security.PublicAddress;
-import com.riverssen.core.system.Context;
 import com.riverssen.core.transactions.RewardTransaction;
 import com.riverssen.utils.*;
 
@@ -76,12 +75,12 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         return header.getBlockID();
     }
 
-    public synchronized int validate(Context context)
+    public synchronized int validate(ContextI context)
     {
         return validate(getBlockID() > 0 ? new BlockHeader(getBlockID() - 1, context) : null, context);
     }
 
-    public synchronized int validate(BlockHeader parent, Context context)
+    public synchronized int validate(BlockHeader parent, ContextI context)
     {
         byte pHash[] = null;
 
@@ -123,7 +122,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     /**
      * mine the block
      **/
-    public synchronized void mine(Context context)
+    public synchronized void mine(ContextI context)
     {
         HashAlgorithm algorithm     = context.getHashAlgorithm(this.parent.getHash());
         BigInteger    difficulty    = context.getDifficulty();
@@ -211,7 +210,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         return data;
     }
 
-    public synchronized void serialize(Context context)
+    public synchronized void serialize(ContextI context)
     {
         File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "block["+getBlockID()+"]");
 
@@ -233,7 +232,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         }
     }
 
-    public synchronized FullBlock getParent(Context context)
+    public synchronized FullBlock getParent(ContextI context)
     {
         return BlockHeader.FullBlock(getBlockID()-1, context);
     }

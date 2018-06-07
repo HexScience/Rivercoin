@@ -13,21 +13,17 @@
 package com.riverssen.core;
 
 import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.networking.NetworkManager;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.PriorityQueue;
-import java.util.Set;
 
 public class TransactionPool
 {
     private PriorityQueue<TransactionI> pool;
-    private Context                     context;
+    private ContextI context;
     private long                        lastTransactionTime;
 
-    public TransactionPool(Context network)
+    public TransactionPool(ContextI network)
     {
         pool = new PriorityQueue<>();
         context = network;

@@ -2,6 +2,7 @@ package com.riverssen.core.system;
 
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.block.BlockHeader;
+import com.riverssen.core.headers.ContextI;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -112,14 +113,14 @@ public class LatestBlockInfo
         return totalHashes;
     }
 
-    public BlockHeader getLatestBlockHeader(Context context)
+    public BlockHeader getLatestBlockHeader(ContextI context)
     {
         if(lastBlock >= 0)
             return new BlockHeader(lastBlock, context);
         return null;
     }
 
-    public FullBlock getLatestFullBlock(Context context)
+    public FullBlock getLatestFullBlock(ContextI context)
     {
         if(lastBlock >= 0)
             return BlockHeader.FullBlock(lastBlock, context);

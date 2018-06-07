@@ -14,7 +14,7 @@ package com.riverssen.core;
 
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.BlockChainI;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.system.LatestBlockInfo;
 import com.riverssen.utils.Tuple;
 
@@ -24,10 +24,10 @@ import java.util.List;
 public class BlockChain implements BlockChainI
 {
     private FullBlock       block;
-    private Context         context;
+    private ContextI context;
     private long            lastvalidated;
 
-    public BlockChain(Context context)
+    public BlockChain(ContextI context)
     {
         this.context = context;
     }

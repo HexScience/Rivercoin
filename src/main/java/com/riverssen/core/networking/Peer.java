@@ -18,7 +18,7 @@ import com.riverssen.core.block.BlockData;
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.messages.*;
 import com.riverssen.core.networking.node.MasterNode;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -37,7 +37,7 @@ public class Peer
         messages.add(new RequestChainSize());
         messages.add(new NewTransaction());
     }
-    private Context             context;
+    private ContextI context;
     private Socket              socket;
     private DataOutputStream    stream;
     private DataInputStream     input;
@@ -53,7 +53,7 @@ public class Peer
     private static final int    msg_new_token    = 2;
     private static final int    msg_chain_size_r = 3;
 
-    public Peer(Socket socket, Context context) throws IOException
+    public Peer(Socket socket, ContextI context) throws IOException
     {
         this.socket         = socket;
         this.stream         = new DataOutputStream(socket.getOutputStream());
@@ -90,7 +90,7 @@ public class Peer
         }
     }
 
-    public boolean performHandshake(Context context)
+    public boolean performHandshake(ContextI context)
     {
         try {
             new Handshake().send(stream, null, context);

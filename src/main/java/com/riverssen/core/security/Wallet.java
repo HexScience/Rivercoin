@@ -13,7 +13,7 @@
 package com.riverssen.core.security;
 
 import com.riverssen.core.Logger;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 
 import java.io.*;
 import java.security.KeyFactory;
@@ -93,7 +93,7 @@ public class Wallet
         this.publicKey = publicKey;
     }
 
-    public void export(String password, Context context)
+    public void export(String password, ContextI context)
     {
         try
         {

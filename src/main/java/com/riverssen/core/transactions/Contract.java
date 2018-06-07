@@ -17,7 +17,7 @@ import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.utils.SmartDataTransferer;
 
 import java.io.DataInputStream;
@@ -154,7 +154,7 @@ public class Contract implements TransactionI
     }
 
     @Override
-    public List<TransactionOutput> generateOutputs(PublicAddress miner, Context context)
+    public List<TransactionOutput> generateOutputs(PublicAddress miner, ContextI context)
     {
         return null;
     }
@@ -172,7 +172,7 @@ public class Contract implements TransactionI
     }
 
     @Override
-    public void revertOutputs(PublicAddress miner, Context context)
+    public void revertOutputs(PublicAddress miner, ContextI context)
     {
     }
 

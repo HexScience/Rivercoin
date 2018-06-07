@@ -14,7 +14,7 @@ package com.riverssen.core.messages;
 
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.networking.Peer;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -29,7 +29,7 @@ public class RequestChainSize implements Message<Long>
     }
 
     @Override
-    public void send(DataOutputStream out, Long information, Context context)
+    public void send(DataOutputStream out, Long information, ContextI context)
     {
         try
         {
@@ -41,7 +41,7 @@ public class RequestChainSize implements Message<Long>
     }
 
     @Override
-    public Long receive(DataInputStream in, Context context)
+    public Long receive(DataInputStream in, ContextI context)
     {
         try
         {
@@ -55,7 +55,7 @@ public class RequestChainSize implements Message<Long>
     }
 
     @Override
-    public void onReceive(DataInputStream in, Context context, Peer connection)
+    public void onReceive(DataInputStream in, ContextI context, Peer connection)
     {
         long receive = receive(in, context);
         connection.setChainSize(receive);

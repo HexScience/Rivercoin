@@ -17,7 +17,7 @@ import com.riverssen.core.block.BlockData;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.networking.Peer;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -32,7 +32,7 @@ public class NewBlock implements Message<FullBlock>
     }
 
     @Override
-    public void send(DataOutputStream out, FullBlock information, Context context)
+    public void send(DataOutputStream out, FullBlock information, ContextI context)
     {
         try
         {
@@ -46,7 +46,7 @@ public class NewBlock implements Message<FullBlock>
     }
 
     @Override
-    public FullBlock receive(DataInputStream in, Context context)
+    public FullBlock receive(DataInputStream in, ContextI context)
     {
         BlockHeader header = new BlockHeader(in);
         BlockData data = new BlockData(in);
@@ -55,7 +55,7 @@ public class NewBlock implements Message<FullBlock>
     }
 
     @Override
-    public void onReceive(DataInputStream in, Context context, Peer connection)
+    public void onReceive(DataInputStream in, ContextI context, Peer connection)
     {
 //        RivercoinCore.get().getBlockPool().add(receive(in));
     }

@@ -15,7 +15,7 @@ package com.riverssen.core.consensus;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.utils.SmartDataTransferer;
 
 import java.io.DataInputStream;
@@ -50,7 +50,7 @@ public class Solution implements Encodeable, Exportable
         return block.getBlockID();
     }
 
-    public boolean solutionValid(Context context)
+    public boolean solutionValid(ContextI context)
     {
         return block.validate(context) == 0;
     }

@@ -14,7 +14,7 @@ package com.riverssen.core;
 
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.networking.Peer;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.system.LatestBlockInfo;
 
 import java.util.*;
@@ -23,12 +23,12 @@ public class BlockPool
 {
     private List<Peer>          peers;
     private boolean             loading;
-    private Context             context;
+    private ContextI context;
     private List<FullBlock>     blocks;
     private long                latestBlock;
     private LatestBlockInfo     lbi;
 
-    public BlockPool(Context network)
+    public BlockPool(ContextI network)
     {
         this.context = network;
         blocks          = Collections.synchronizedList(new ArrayList<>());

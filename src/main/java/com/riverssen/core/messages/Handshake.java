@@ -16,7 +16,7 @@ import com.riverssen.core.Logger;
 import com.riverssen.core.headers.Message;
 import com.riverssen.core.networking.Peer;
 import com.riverssen.core.security.PublicAddress;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.utils.Base58;
 
 import java.io.DataInputStream;
@@ -33,7 +33,7 @@ public class Handshake implements Message<Handshake.ShakeInfo>
     }
 
     @Override
-    public void send(DataOutputStream stream, ShakeInfo information, Context context)
+    public void send(DataOutputStream stream, ShakeInfo information, ContextI context)
             throws IOException
     {
         stream.writeUTF("handshake");
@@ -45,7 +45,7 @@ public class Handshake implements Message<Handshake.ShakeInfo>
     }
 
     @Override
-    public ShakeInfo receive(DataInputStream input, Context context)
+    public ShakeInfo receive(DataInputStream input, ContextI context)
             throws IOException
     {
         String handshake    = input.readUTF();
@@ -68,7 +68,7 @@ public class Handshake implements Message<Handshake.ShakeInfo>
     }
 
     @Override
-    public void onReceive(DataInputStream input, Context context, Peer connection)
+    public void onReceive(DataInputStream input, ContextI context, Peer connection)
             throws IOException
     {
         ShakeInfo info = receive(input, context);

@@ -5,7 +5,7 @@ import com.riverssen.core.events.TerminateEvent;
 import com.riverssen.core.headers.Event;
 import com.riverssen.core.headers.Listener;
 import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.system.Context;
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.utils.TimeUtil;
 import com.riverssen.utils.Truple;
 import com.riverssen.utils.Tuple;
@@ -25,10 +25,10 @@ public class NetworkManager implements Listener
 
     private ServerSocket                            socket;
     private Set<String>                             ipAddresses;
-    private final Context                           context;
+    private final ContextI context;
     private Map<Peer, Truple<Peer, String, Long>>   forkInfo;
 
-    public NetworkManager(Context context)
+    public NetworkManager(ContextI context)
     {
         this.context    = context;
         peers           = Collections.synchronizedList(new ArrayList<>());
