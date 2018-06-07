@@ -427,7 +427,9 @@ public class ParsedProgram
                             {
                                 tokens.remove(0);
                                 declaration         = new Token(Token.Type.FULL_DECLARATION).add(type).add(name);
-                                parse               (tokens, declaration, false, true, false, false, false, true);
+                                Token value         = new Token(Token.Type.VALUE);
+                                parse               (tokens, value, false, true, false, false, false, true);
+                                declaration.add(value);
                             } else
                                 declaration         = new Token(Token.Type.EMPTY_DECLARATION).add(type).add(name);
 
