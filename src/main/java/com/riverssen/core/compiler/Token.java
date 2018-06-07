@@ -47,6 +47,7 @@ public class Token
         ROOT,
         STATIC_ACCESS,
         PROCEDURAL_ACCESS,
+        POINTER_ACCESS,
         INITIALIZATION,
         EMPTY_DECLARATION,
         FULL_DECLARATION,
@@ -118,6 +119,12 @@ public class Token
     }
 
     public Token append(char chr)
+    {
+        value.append(chr);
+        return this;
+    }
+
+    public Token append(String chr)
     {
         value.append(chr);
         return this;
@@ -230,7 +237,13 @@ public class Token
                 for (char s : separators) if (toString().charAt(0) == s) separator = true;
             }
 
-            if (separator) type = Type.SYMBOL;
+            if (separator) {
+                if(toString().charAt(0) == '.') {
+                    type = Type.PROCEDURAL_ACCESS;
+                    return type;
+                }
+                type = Type.SYMBOL;
+            }
             else
             {
                 if (toString().startsWith("\"") || toString().startsWith("'")) type = Type.STRING;
@@ -276,6 +289,11 @@ public class Token
         for(Token token : children)
             s += token.humanReadable(i + 1) + "\n";
         return s;
+    }
+
+    public boolean isInteger()
+    {
+        return toString().contains(".");
     }
 
     @Override
