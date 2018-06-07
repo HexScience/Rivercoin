@@ -145,7 +145,7 @@ public class ParsedProgram
         while(tokens.size() > 0 && tokens.get(0).isMathOp())
         {
             Token operator   = getNext(tokens, a, "invalid math operation");
-            Token b          = getNextMath(tokens, a.getOffset(), "invalid math operation a " + operator + " null");//getNextToken(tokens, a.getOffset(), "invalid math operation a " + operation.toString() + " null");
+            Token b          = getNextMath(tokens, a, "invalid math operation a " + operator + " null");//getNextToken(tokens, a.getOffset(), "invalid math operation a " + operation.toString() + " null");
             math_tokens.add(operator);
             math_tokens.add(b);
         }
