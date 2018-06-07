@@ -15,7 +15,6 @@ package com.riverssen.core;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.utils.ByteUtil;
-import com.sun.istack.internal.NotNull;
 
 public class UnspentTransaction implements Encodeable
 {
@@ -23,7 +22,7 @@ public class UnspentTransaction implements Encodeable
     private PublicAddress   receiver;
     private RiverCoin       value;
 
-    public UnspentTransaction(@NotNull byte hash[], @NotNull String txhash, @NotNull RiverCoin value, @NotNull PublicAddress receiver)
+    public UnspentTransaction(byte hash[], String txhash, RiverCoin value, PublicAddress receiver)
     {
         this.hash       = hash;
         this.value      = value;
