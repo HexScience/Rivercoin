@@ -57,10 +57,31 @@ public class ParsedProgram
         throw new ParseException(errmsg, offset);
     }
 
+    private Token   getNextValid(List<Token> tokens)
+    {
+        for(Token token : tokens) if(token.getType() != Token.Type.END) return token;
+        return null;
+    }
+
+    private boolean nextOfType(List<Token> tokens, Token.Type type)
+    {
+        Token t = getNextValid(tokens);
+        if(t != null)
+        return t.getType() == type;
+        return false;
+    }
+
+    private void skipToValid(List<Token> tokens)
+    {
+        while (tokens.size() > 0 && tokens.get(0).getType() == Token.Type.END)
+            tokens.remove(0);
+    }
+
     private Token getNextInBraces(List<Token> tokens, Token offset, String errmsg) throws ParseException
     {
-        if(tokens.size() >= 2 && tokens.get(0).getType() == Token.Type.BRACES_OPEN)
+        if(tokens.size() >= 2 && nextOfType(tokens, Token.Type.BRACES_OPEN))
         {
+            skipToValid(tokens);
             Token parenthesis               = new Token(Token.Type.BRACES);
             parse(tokens, parenthesis, true);
 
@@ -70,8 +91,9 @@ public class ParsedProgram
 
     private Token getNextInParenthesis(List<Token> tokens, Token offset, String errmsg) throws ParseException
     {
-        if(tokens.size() >= 2 && tokens.get(0).getType() == Token.Type.PARENTHESIS_OPEN)
+        if(tokens.size() >= 2 && nextOfType(tokens, Token.Type.PARENTHESIS_OPEN))
         {
+            skipToValid(tokens);
             Token parenthesis               = new Token(Token.Type.PARENTHESIS);
             parse(tokens, parenthesis, true);
 
@@ -90,6 +112,8 @@ public class ParsedProgram
         Token    symbol             = getNext               (tokens, currentToken, "function must have a return symbol ':'.");
         Token    returnType         = getNext               (tokens, currentToken, "function must have a return type.");
         Token    body               = getNextInBraces       (tokens, currentToken, "function must have a body");
+
+        System.out.println(name + " " + body);
 
         /** unimplemented method **/
         if(body == null)
@@ -399,11 +423,12 @@ public class ParsedProgram
                                 declaration         = new Token(Token.Type.FULL_DECLARATION).add(type).add(name);
                                 parse               (tokens, declaration, true, true);
                             } else
-                            {
                                 declaration         = new Token(Token.Type.EMPTY_DECLARATION).add(type).add(name);
-                            }
 
                             root.add(declaration);
+                        } else if(tokens.size() > 0 && tokens.get(0).getType() == Token.Type.PARENTHESIS_OPEN)
+                        {
+                            root.add(new Token(Token.Type.METHOD_CALL).add(type).add(getNextInParenthesis(tokens, currentToken, "Method calls should end with parenthesis.")));
                         } else root.add(type);
 //                            throw new ParseException("Unidentified token. '" + equals + "'", currentToken.getOffset());
                     break;

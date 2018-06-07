@@ -20,11 +20,13 @@ int g = a * b + c + d * e
 //Unimplemented Functions (For Abstract Classes)
 function calculate(int a, int b) : void
 
-function doSomething()
+function doSomething() : void
 {
+    doSomethingElse()
 }
 
-func doSomethingElse()
+function doSomethingElse() : void
 {
+    doSomething()
 }
 
