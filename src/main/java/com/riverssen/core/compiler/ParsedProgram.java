@@ -208,29 +208,8 @@ public class ParsedProgram
         }
 
         while   (stack.size() > 0)  output.push(stack.pop().add(output.pop()).add(output.pop()));
-//        while   (output.size() > 0) stack.push(output.pop());
-
-//        System.out.println(output.size() + " " + output.pop().humanReadable(0));
-//        root.add(postFixToAST(output));
-//        System.exit(0);
-
-//        while   (stack.size() > 1)
-//        {
-//            Token B = stack.pop();
-//            Token A = stack.pop();
-//
-//            Token O = stack.pop();
-//            stack.push(O.add(A).add(B));
-//        }
-//
-//        for(Token token : stack)
-//        {
-//            System.out.println(token.humanReadable(0));
-//        }
 
         root.add(output.pop());
-
-//        System.exit(0);
     }
 
     private Token getOperator(Stack<Token> stack)
