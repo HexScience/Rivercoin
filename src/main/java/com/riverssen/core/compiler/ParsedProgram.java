@@ -66,7 +66,7 @@ public class ParsedProgram
             parse(tokens, parenthesis, true);
 
             return parenthesis.getTokens().get(0);
-        } else throw new ParseException(errmsg, offset);
+        } else return null;
     }
 
     private Token getNextInParenthesis(List<Token> tokens, int offset, String errmsg) throws ParseException

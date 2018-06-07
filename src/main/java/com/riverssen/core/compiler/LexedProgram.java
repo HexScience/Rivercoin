@@ -52,6 +52,7 @@ public class LexedProgram
             {
                 line ++;
                 allChars.add(token);
+                allChars.add(new Token(Token.Type.END));
                 token = null;
                 continue;
             } else if(current == WTS && !(token != null && (token.toString().startsWith("\"") || token.toString().startsWith("\'"))))
