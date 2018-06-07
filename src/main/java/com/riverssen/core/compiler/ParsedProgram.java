@@ -91,7 +91,7 @@ public class ParsedProgram
 //            Token parenthesis_open          = getNext(tokens, offset, errmsg);
             Token parenthesis               = new Token(Token.Type.PARENTHESIS);
 
-            parse(tokens, parenthesis, true);
+            parse(tokens, parenthesis, true, true, tr);
 
 //            while(tokens.size() > 0)
 //            {
