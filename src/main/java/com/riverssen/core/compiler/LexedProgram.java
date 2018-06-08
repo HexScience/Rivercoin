@@ -60,11 +60,13 @@ public class LexedProgram
             {
                 whitespace++;
                 allChars.add(token);
+                offset ++;
                 token = null;
                 continue;
             } else if (current == TAB && !(token != null && (token.toString().startsWith("\"") || token.toString().startsWith("\'"))))
             {
                 whitespace += 4;
+                offset += 4;
                 allChars.add(token);
                 token = null;
                 continue;
