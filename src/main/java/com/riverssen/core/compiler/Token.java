@@ -34,6 +34,15 @@ public class Token
         return modifiers;
     }
 
+    public List<Token> getChildByType(Type type)
+    {
+        List<Token> tokens = new ArrayList<>();
+
+        for(Token token : children) if(token.getType().equals(type)) ((ArrayList<Token>) tokens).add(token);
+
+        return tokens;
+    }
+
     public void setModifiers(Modifier modifier)
     {
         this.modifiers.add(modifier);
