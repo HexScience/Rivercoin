@@ -12,8 +12,7 @@
 
 package com.riverssen.core.compiler;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Token
 {
@@ -23,10 +22,26 @@ public class Token
     private int                 whitespace;
     private Type                type;
     private List<Token>         children;
+    private Set<Modifier>       modifiers = new LinkedHashSet<>();
 
     public boolean isMathOp()
     {
         return getType() == Type.MATH_OP;
+    }
+
+    public Collection<Modifier> getModifiers()
+    {
+        return modifiers;
+    }
+
+    public void setModifiers(Modifier modifier)
+    {
+        this.modifiers.add(modifier);
+    }
+
+    public boolean isModifier(Modifier modifier)
+    {
+        return modifiers.contains(modifier);
     }
 
     public static enum          Type {
@@ -265,7 +280,7 @@ public class Token
 
     private boolean isKeyword()
     {
-        final String keywords[] = {"function", "fun", "new", "class", "static", "extend", "header", "if", "for", "while", "foreach", "then", "namespace"};
+        final String keywords[] = {"function", "fun", "new", "class", "static", "public", "private", "protected", "const", "final", "extend", "header", "if", "for", "while", "foreach", "then", "namespace"};
         for(String string : keywords) if(toString().equals(string)) return true;
         return false;
     }

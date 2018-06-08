@@ -19,10 +19,12 @@ import static com.riverssen.core.compiler.Token.Type.*;
 public class ParsedProgram
 {
     private Token tokens;
+    private Stack<Modifier> modifiers;
 
     public ParsedProgram(LexedProgram program) throws ParseException
     {
         List<Token> tokens = new ArrayList<>();
+        modifiers          = new Stack<>();
         for (Token token : program.getTokens())
             if (token != null && !token.toString().isEmpty())
             {
@@ -241,6 +243,9 @@ public class ParsedProgram
             case "class":
                 parseClass(tokens, root, currentToken);
                 break;
+            case "header":
+                parseClass(tokens, root, currentToken);
+                break;
             case "new":
                 parseNewKeyword(tokens, root, currentToken);
                 break;
@@ -252,6 +257,18 @@ public class ParsedProgram
                 break;
             case "while":
                 parseWhileKeyword(tokens, root, currentToken);
+                break;
+            case "namespace":
+                parseClass(tokens, root, currentToken);
+                break;
+            case "public":
+                modifiers.push(Modifier.PUBLIC);
+                break;
+            case "private":
+                modifiers.push(Modifier.PRIVATE);
+                break;
+            case "protected":
+                modifiers.push(Modifier.PROTECTED);
                 break;
         }
     }
