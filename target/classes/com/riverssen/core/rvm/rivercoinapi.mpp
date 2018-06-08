@@ -11,5 +11,26 @@
  */
 
 header Contract{
+    function onRequest(Keychain requestee) : var
+    function onSend(Keychain sender) : bool
     function kill() : void
 }
+
+namespace SCT{
+    header MiningStrategy{
+        function getAlgorithm() : uint
+        function getStrategy() : uint
+    }
+
+    header Token extends Contract{
+        function spend(Keychain sender) : bool
+        function balance(Keychain requestee) : var
+
+        public static function getReward() : var
+        public static function getMaximumInCirculation() : var
+        public static function getDifficulty() : var
+        public static function getStrategy() : MiningStrategy
+    }
+}
+
+function collectContracts(Generic A) : A[~]

@@ -10,40 +10,18 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+class HelloToken extends Contract{
+    final uint256 max_tokens = 120_000_000__000_000;
 
-class IRC20
+    function onRequest(Keychain requestee) : var
+    {
+    }
 
-if(i < b)
-    doSomething()
-    doSomethingElse()
-for(int i = 0; i < 5; ++i)
-    doSomething()
-while(true) {}
+    function onSend(Keychain sender) : bool
+    {
+    }
 
-int i           = 55_0
-String string   = "ffs"
-var v           = null
-
-House h         = new House()
-
-int g = (a * b) + c + (d * e)
-
-//Unimplemented Functions (For Abstract Classes)
-function calculate(int a, int b) : void
-
-function doSomething() : void
-{
-    doSomethingElse()
-}
-
-function doSomethingElse() : void
-{
-    doSomething()
-}
-
-class Contract extends Jean, Dean, Huffey{
-    function Contract() : void
+    function HelloVM()
     {
     }
 }
-

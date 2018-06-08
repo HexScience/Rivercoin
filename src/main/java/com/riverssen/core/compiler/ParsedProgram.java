@@ -108,6 +108,13 @@ public class ParsedProgram
 
     private void parseClass(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
+        if(modifiers.size() > 0)
+        {
+            if(modifiers.contains(Modifier.PRIVATE)) throw new ParseException("classes cannot be private", currentToken);
+            else if(modifiers.contains(Modifier.PROTECTED)) throw new ParseException("classes cannot be protected", currentToken);
+            else if(modifiers.contains(Modifier.CONST)) throw new ParseException("classes cannot be const", currentToken);
+        }
+
         Token name = getNext(tokens, currentToken, "function must have a name.");
 
         Token extension = new Token(Token.Type.EXTEND);
@@ -126,6 +133,7 @@ public class ParsedProgram
         }
 
         Token clasz = new Token(Token.Type.EMPTY_CLASS_DECLARATION);
+        clasz.getModifiers().addAll(modifiers);
 
         clasz.add(name);
 
@@ -153,6 +161,8 @@ public class ParsedProgram
         if (body == null)
         {
             Token function = new Token(Token.Type.METHOD_EMPTY_DECLARATION);
+            function.getModifiers().addAll(modifiers);
+
 
             function.add(name);
             function.add(returnType);
@@ -161,6 +171,7 @@ public class ParsedProgram
         } else
         {
             Token function = new Token(Token.Type.METHOD_DECLARATION);
+            function.getModifiers().addAll(modifiers);
 
             function.add(name);
             function.add(returnType);
@@ -269,6 +280,12 @@ public class ParsedProgram
                 break;
             case "protected":
                 modifiers.push(Modifier.PROTECTED);
+                break;
+            case "static":
+                modifiers.push(Modifier.STATIC);
+                break;
+            case "const":
+                modifiers.push(Modifier.CONST);
                 break;
         }
     }

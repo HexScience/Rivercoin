@@ -35,7 +35,7 @@ public class RivercoinCore
     private RivercoinCore(String type, String file) throws Exception
     {
         /** Test Code For The Mocha++ Compiler **/
-        Token list = new ParsedProgram(new LexedProgram(FileUtils.readUTF(VirtualMachine.class.getResourceAsStream("SampleContract.mpp")))).getTokens();
+        Token list = new ParsedProgram(new LexedProgram(FileUtils.readUTF(VirtualMachine.class.getResourceAsStream("test.mpp")))).getTokens();
 
         System.out.println("---------------------------------\n" + list.humanReadable(0));
 
