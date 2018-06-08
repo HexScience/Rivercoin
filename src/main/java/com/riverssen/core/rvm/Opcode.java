@@ -12,7 +12,7 @@
 
 package com.riverssen.core.rvm;
 
-import java.util.Stack;
+import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
 
 public interface Opcode
 {

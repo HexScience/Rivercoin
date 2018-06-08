@@ -10,32 +10,47 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.rvm;
+package com.riverssen.core.mpp.runtime;
 
-public class VirtualMachine
+public class Opcodes
 {
-    private VirtualMemory memory;
-    private Opcode        program[];
+    public static final short
 
-    public VirtualMachine(byte program[])
-    {
-        this(new OpcodeParser(program).getOpcode());
-    }
+    push        = 0,
+    pop         = 1,
+    print       = 2,
+    add         = 3,
+    sub         = 4,
+    mul         = 5,
+    div         = 6,
+    mod         = 7,
 
-    public VirtualMachine(Opcode program[])
-    {
-        this.program    = program;
-        this.memory     = new VirtualMemory();
-    }
+    get         = 8,
+    call        = 9,
+    if_         = 10,
+    else_       = 11,
+    elif_       = 12,
 
-    public VirtualMemory getMemory()
-    {
-        return memory;
-    }
+    /** RSA KeyPair **/
+    rsa_kp      = 13,
 
-    public void execute(String... args)
-    {
-        for(Opcode opcode : program)
-            opcode.execute(this);
-    }
+    /** ECDSA KeyPair **/
+    ecdsa_kp    = 14,
+    cmprsd_k    = 15,
+    privte_k    = 16,
+    public_k    = 17,
+    addressk    = 18,
+
+    rsa_pubk    = 19,
+    rsa_priv    = 20,
+
+    file_out    = 21,
+    file_in_    = 22,
+
+    int64       = 23,
+    flt64       = 24,
+    uint256     = 25,
+    encode      = 26,
+
+    halt    = Short.MAX_VALUE;
 }

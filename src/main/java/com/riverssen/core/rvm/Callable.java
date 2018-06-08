@@ -12,6 +12,8 @@
 
 package com.riverssen.core.rvm;
 
+import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
+
 public interface Callable
 {
     void call(VirtualMachine virtualMachine);

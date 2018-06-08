@@ -13,7 +13,7 @@
 package com.riverssen.core.rvm.opcodes;
 
 import com.riverssen.core.rvm.Opcode;
-import com.riverssen.core.rvm.VirtualMachine;
+import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
 import com.riverssen.core.rvm.objects.ByteArrayMemObject;
 
 import java.nio.ByteBuffer;

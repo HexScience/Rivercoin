@@ -16,7 +16,7 @@ import com.riverssen.core.mpp.compiler.LexedProgram;
 import com.riverssen.core.mpp.compiler.ParsedProgram;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.system.MiningContext;
-import com.riverssen.core.rvm.VirtualMachine;
+import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.utils.FileUtils;
 

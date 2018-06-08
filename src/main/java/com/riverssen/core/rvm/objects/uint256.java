@@ -13,8 +13,8 @@
 package com.riverssen.core.rvm.objects;
 
 import com.riverssen.core.rvm.MathContext;
-import com.riverssen.core.rvm.MemObject;
-import com.riverssen.core.rvm.VirtualMachine;
+import com.riverssen.core.mpp.runtime.vm.memory.MemObject;
+import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
 
 import java.math.BigInteger;
 
