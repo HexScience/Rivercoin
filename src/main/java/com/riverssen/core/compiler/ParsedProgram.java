@@ -148,6 +148,44 @@ public class ParsedProgram
         rootm.add(clasz);
     }
 
+    private void parseNamespace(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
+    {
+        if(modifiers.size() > 0)
+            throw new ParseException("namespaces cannot have modifiers: " + modifiers, currentToken);
+
+        Token name = getNext(tokens, currentToken, "function must have a name.");
+
+        Token extension = new Token(Token.Type.EXTEND);
+
+        if (tokens.size() > 0 && tokens.get(0).toString().equals("extends"))
+        {
+            tokens.remove(0);
+            extension.add(getNext(tokens, currentToken, "class must extend a class type."));
+
+            while (tokens.size() > 1 && tokens.get(0).toString().charAt(0) == ',')
+            {
+                if (tokens.size() > 0 && tokens.get(0).toString().charAt(0) == ',') tokens.remove(0);
+
+                extension.add(getNext(tokens, currentToken, "class must extend a class type."));
+            }
+        }
+
+        Token namespace = new Token(Token.Type.NAMESPACE);
+        namespace.getModifiers().addAll(modifiers);
+
+        namespace.add(name);
+
+        Token body = getNextInBraces(tokens, currentToken, "");
+        if (body != null)
+        {
+            namespace.add(body);
+            namespace.setType(Token.Type.NAMESPACE);
+        } else throw new ParseException("namespaces cannot be empty", currentToken);
+        if (extension.getTokens().size() > 0) namespace.add(extension);
+
+        rootm.add(namespace);
+    }
+
     private void parseFunction(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
         Token name = getNext(tokens, currentToken, "function must have a name.");
@@ -270,7 +308,7 @@ public class ParsedProgram
                 parseWhileKeyword(tokens, root, currentToken);
                 break;
             case "namespace":
-                parseClass(tokens, root, currentToken);
+                parseNamespace(tokens, root, currentToken);
                 break;
             case "public":
                 modifiers.push(Modifier.PUBLIC);
