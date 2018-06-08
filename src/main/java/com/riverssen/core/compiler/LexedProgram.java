@@ -40,7 +40,7 @@ public class LexedProgram
         Token token = null;
         int line = 1;
         int whitespace = 0;
-        int offset = 1;
+        int offset = 0;
 
         for (int i = 0; i < program.length(); i++)
         {
@@ -54,7 +54,7 @@ public class LexedProgram
                 allChars.add(token);
                 allChars.add(new Token(Token.Type.END));
                 token = null;
-                offset = 1;
+                offset = 0;
                 continue;
             } else if (current == WTS && !(token != null && (token.toString().startsWith("\"") || token.toString().startsWith("\'"))))
             {
