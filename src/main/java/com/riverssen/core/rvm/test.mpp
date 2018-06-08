@@ -11,8 +11,6 @@
  */
 
 
-class IRC20
-
 if(i < b)
     doSomething()
     doSomethingElse()

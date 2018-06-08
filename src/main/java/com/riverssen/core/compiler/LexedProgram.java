@@ -17,15 +17,15 @@ import java.util.*;
 public class LexedProgram
 {
     private Set<Token> allChars = new LinkedHashSet<>();
+
     public LexedProgram(String program)
     {
         program = program.replaceAll("//.*", "");
 
-        while(program.contains("/*"))
+        while (program.contains("/*"))
             program = program.replace(program.substring(program.indexOf("/*"), program.indexOf("*/") + 2), "");
 
-        final char separators[] = {'.','=','+','-','\'','"',',','<','>','?',';',':','!','\\','/',
-                '[',']','{','}','(',')','*','&','^','%','$','#','@'};
+        final char separators[] = { '.', '=', '+', '-', '\'', '"', ',', '<', '>', '?', ';', ':', '!', '\\', '/', '[', ']', '{', '}', '(', ')', '*', '&', '^', '%', '$', '#', '@', '~' };
 
         /** this type of splitting into tokens will not work with strings, ie: "hello world" will turn into "hello and world" **/
         String raw_words[] = program.replaceAll("\n", " ").split("\\s+");
@@ -42,27 +42,27 @@ public class LexedProgram
         int whitespace = 0;
         int offset = 1;
 
-        for(int i = 0; i < program.length(); i ++)
+        for (int i = 0; i < program.length(); i++)
         {
             char current = program.charAt(i);
-            char last    = i > 0 ? program.charAt(i - 1) : '\0';
-            char next    = i < program.length() - 1 ? program.charAt(i + 1) : '\0';
+            char last = i > 0 ? program.charAt(i - 1) : '\0';
+            char next = i < program.length() - 1 ? program.charAt(i + 1) : '\0';
 
-            if(current == END)
+            if (current == END)
             {
-                line ++;
+                line++;
                 allChars.add(token);
                 allChars.add(new Token(Token.Type.END));
                 token = null;
                 offset = 1;
                 continue;
-            } else if(current == WTS && !(token != null && (token.toString().startsWith("\"") || token.toString().startsWith("\'"))))
+            } else if (current == WTS && !(token != null && (token.toString().startsWith("\"") || token.toString().startsWith("\'"))))
             {
-                whitespace ++;
+                whitespace++;
                 allChars.add(token);
                 token = null;
                 continue;
-            } else if(current == TAB && !(token != null && (token.toString().startsWith("\"") || token.toString().startsWith("\'"))))
+            } else if (current == TAB && !(token != null && (token.toString().startsWith("\"") || token.toString().startsWith("\'"))))
             {
                 whitespace += 4;
                 allChars.add(token);
@@ -72,16 +72,15 @@ public class LexedProgram
 
             boolean separator = false;
 
-            for(char s : separators) if(current == s) separator = true;
+            for (char s : separators) if (current == s) separator = true;
 
             boolean wasnull = token == null;
 
-            if(token == null)
-                token = new Token("", line, offset, whitespace);
+            if (token == null) token = new Token("", line, offset, whitespace);
 
             isString = (token.toString().startsWith("\"") || token.toString().startsWith("\'"));
 
-            if(isString || (wasnull && (current == '"' || current == '\'')))
+            if (isString || (wasnull && (current == '"' || current == '\'')))
             {
                 if (current == '"' || current == '\'' || separator)
                 {
@@ -96,16 +95,15 @@ public class LexedProgram
 
                 offset++;
                 continue;
-            } else if(separator)
+            } else if (separator)
             {
                 allChars.add(token);
                 token = new Token("" + current, line, offset, whitespace);
                 allChars.add(token);
                 token = null;
-            } else
-                token.append(current);
+            } else token.append(current);
 
-            offset ++;
+            offset++;
         }
 
         allChars.remove(null);

@@ -31,7 +31,6 @@ public class ParsedProgram
             }
 
         tokens = initialparse(tokens);
-//        for(Token token : tokens) System.out.println(token + " " + token.getType());
         this.tokens = new Token(Token.Type.ROOT);
         parse(tokens, this.tokens, false);
     }
@@ -144,8 +143,7 @@ public class ParsedProgram
         Token name = getNext(tokens, currentToken, "function must have a name.");
         Token parenthesis = getNextInParenthesis(tokens, currentToken, "function must have arguments in parenthesis.");
         Token symbol = getNext(tokens, currentToken, "function must have a return symbol ':'.");
-        if(symbol.toString().charAt(0) != ':')
-            throw new ParseException("Return symbol incorrect", symbol);
+        if (symbol.toString().charAt(0) != ':') throw new ParseException("Return symbol incorrect", symbol);
         Token returnType = getNext(tokens, currentToken, "function must have a return type.");
         Token body = getNextInBraces(tokens, currentToken, "function must have a body");
 
@@ -188,7 +186,7 @@ public class ParsedProgram
     {
         Token for_ = new Token(Token.Type.FOR);
         Token parenthesis = getNextInParenthesis(tokens, currentToken, "if statement must have arguments in parenthesis.");
-        if(parenthesis.getTokens().size() != 3) throw new ParseException("For loops take 3 arguments.", currentToken);
+        if (parenthesis.getTokens().size() != 3) throw new ParseException("For loops take 3 arguments.", currentToken);
         skipToValid(tokens);
         Token body = getNextInBraces(tokens, currentToken, "function must have a body");
 
@@ -457,12 +455,19 @@ public class ParsedProgram
                 else if (last.getType().equals(OR) && last.toString().charAt(0) == '|') last.setType(BOOL_OP);
                 else if (last.getType().equals(SYMBOL) && last.toString().charAt(0) == ':') last.setType(STATIC_ACCESS);
                 else newList.add(tokens.get(0));
-            } else if(last.getType() == NUMBER && tokens.get(0).getType() == PROCEDURAL_ACCESS)
+            } else if (last.getType() == NUMBER && tokens.get(0).getType() == PROCEDURAL_ACCESS)
             {
                 last.append(tokens.get(0).toString());
-            } else if(last.getType() == NUMBER && tokens.get(0).getType() == NUMBER)
+            } else if (last.getType() == NUMBER && tokens.get(0).getType() == NUMBER)
             {
                 last.append(tokens.get(0).toString());
+            } else if (last.getType().equals(SYMBOL) && last.toString().charAt(0) == '[' && tokens.get(0).getType() == SYMBOL && tokens.get(0).toString().charAt(0) == '~' && tokens.size() > 1 && tokens.get(1).getType() == SYMBOL && tokens.get(1).toString().charAt(0) == ']')
+            {
+                last.setType(LIST);
+                last.append(tokens.get(0).toString());
+                last.append(tokens.get(1).toString());
+
+                tokens.remove(1);
             } else newList.add(tokens.get(0));
 
             last = tokens.get(0);
@@ -482,7 +487,6 @@ public class ParsedProgram
         while (tokens.size() > 0)
         {
             Token currentToken = tokens.get(0);
-            System.out.println(currentToken + " " + currentToken.getType());
             switch (currentToken.getType())
             {
                 case PARENTHESIS_OPEN:
@@ -536,11 +540,11 @@ public class ParsedProgram
                     parseKeyword(tokens, root);
                     break;
                 case UNARY:
-                        Token unary = getNext(tokens, currentToken, "");
-                        unary.setType(PREUNARY);
-                        parse(tokens, unary, true);
+                    Token unary = getNext(tokens, currentToken, "");
+                    unary.setType(PREUNARY);
+                    parse(tokens, unary, true);
 
-                        root.add(unary);
+                    root.add(unary);
                     break;
                 case IDENTIFIER:
                     Token type = getNext(tokens, currentToken, "");

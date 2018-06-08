@@ -30,6 +30,7 @@ public class Token
     }
 
     public static enum          Type {
+        NAMESPACE,
         KEYWORD,
         IDENTIFIER,
         SYMBOL,
@@ -86,6 +87,8 @@ public class Token
         PREUNARY,
         PLUSPLUS,
         MINUSMINUS,
+        LIST,
+        ARRAY,
         WHILE
     };
 
@@ -173,7 +176,7 @@ public class Token
     {
         if (type == null)
         {
-            final char separators[] = { '.', '=', '+', '-', '\'', '"', ',', '<', '>', '?', ';', ':', '!', '\\', '/', '[', ']', '{', '}', '(', ')', '*', '&', '^', '%', '$', '#', '@' };
+            final char separators[] = { '.', '=', '+', '-', '\'', '"', ',', '<', '>', '?', ';', ':', '!', '\\', '/', '[', ']', '{', '}', '(', ')', '*', '&', '^', '%', '$', '#', '@', '~' };
 
             boolean separator = false;
 
@@ -262,7 +265,7 @@ public class Token
 
     private boolean isKeyword()
     {
-        final String keywords[] = {"function", "fun", "new", "class", "static", "extend", "header", "if", "for", "while", "foreach", "then"};
+        final String keywords[] = {"function", "fun", "new", "class", "static", "extend", "header", "if", "for", "while", "foreach", "then", "namespace"};
         for(String string : keywords) if(toString().equals(string)) return true;
         return false;
     }
