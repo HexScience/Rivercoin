@@ -10,11 +10,14 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.compiler;
+package com.riverssen.core.mpp.compiler;
+
+import com.riverssen.core.mpp.runtime.Modifier;
+import com.riverssen.core.mpp.exceptions.ParseException;
 
 import java.util.*;
 
-import static com.riverssen.core.compiler.Token.Type.*;
+import static com.riverssen.core.mpp.compiler.Token.Type.*;
 
 public class ParsedProgram
 {

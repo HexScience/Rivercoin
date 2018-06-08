@@ -1,4 +1,6 @@
-package com.riverssen.core.compiler;
+package com.riverssen.core.mpp.exceptions;
+
+import com.riverssen.core.mpp.compiler.Token;
 
 public class ParseException extends Exception
 {

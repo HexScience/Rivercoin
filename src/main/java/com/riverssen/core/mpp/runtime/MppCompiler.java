@@ -10,36 +10,55 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.compiler;
+package com.riverssen.core.mpp.runtime;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import com.riverssen.core.mpp.compiler.LexedProgram;
 
-public class Clas
+public class MppCompiler
 {
-    private static final Set<Clas> const_parents = new LinkedHashSet<>();
-    static {
-        Method toString = new ToStringMethod();
-
-        Clas origin_class = new Clas("class").addMethod(toString);
-        const_parents.add(origin_class);
+    private interface ASTGrammar
+    {
+        void onMain();
+        void onCallMethod();
+        void onAccessValue();
     }
 
-    private String          name;
-    private Set<Clas>       parents;
-    private Set<Field>      fields;
-    private Set<Method>     methods;
-
-    public Clas(String name)
+    public static byte[] compile(String string, ASTGrammar astGrammar)
     {
-        this.name = name;
-        this.parents = new LinkedHashSet<>();
-        this.parents.addAll(const_parents);
+        return compile(parse(lex(string)), astGrammar);
     }
 
-    public Clas addMethod(Method method)
+    private static class LexicalString
     {
-        this.methods.add(method);
-        return this;
+        private String  value;
+        private int     line;
+        private int     offset;
+        private int     whitespace;
+
+        public LexicalString(String value, int line, int offset, int whitespace)
+        {
+            this.value = value;
+            this.line = line;
+            this.offset = offset;
+            this.whitespace = whitespace;
+        }
+    }
+
+    private static LexedProgram lex(String text)
+    {
+        return new LexedProgram(text);
+    }
+
+    private static class ParsedProgram
+    {}
+
+    private static ParsedProgram parse(LexedProgram program)
+    {
+        return new ParsedProgram();
+    }
+
+    private static byte[] compile(ParsedProgram program, ASTGrammar astGrammar)
+    {
+        return null;
     }
 }

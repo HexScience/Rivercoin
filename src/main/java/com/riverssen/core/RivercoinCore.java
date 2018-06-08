@@ -12,9 +12,9 @@
 
 package com.riverssen.core;
 
-import com.riverssen.core.compiler.LexedProgram;
-import com.riverssen.core.compiler.ParsedProgram;
-import com.riverssen.core.compiler.Token;
+import com.riverssen.core.mpp.compiler.LexedProgram;
+import com.riverssen.core.mpp.compiler.ParsedProgram;
+import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.system.MiningContext;
 import com.riverssen.core.rvm.VirtualMachine;
 import com.riverssen.core.headers.ContextI;
