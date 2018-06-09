@@ -23,90 +23,22 @@ public class VirtualMemory
     private Stack<MemObject>            stack;
     private HashMap<Long, MemObject>    memPool;
     private MemObject                   NULL;
+    private long                        counter;
 
     public VirtualMemory()
     {
         this.stack      = new Stack<>();
         this.memPool    = new HashMap<>();
-        this.NULL = new MemObject()
-        {
-            @Override
-            public <T extends MathContext> T add(T b)
-            {
-                return null;
-            }
-
-            @Override
-            public <T extends MathContext> T sub(T b)
-            {
-                return null;
-            }
-
-            @Override
-            public <T extends MathContext> T mul(T b)
-            {
-                return null;
-            }
-
-            @Override
-            public <T extends MathContext> T div(T b)
-            {
-                return null;
-            }
-
-            @Override
-            public <T extends MathContext> T mod(T b)
-            {
-                return null;
-            }
-
-            @Override
-            public void call(VirtualMachine virtualMachine)
-            {
-
-            }
-
-            @Override
-            public int getType()
-            {
-                return -1;
-            }
-
-            @Override
-            public long getPointer()
-            {
-                return 0;
-            }
-
-            @Override
-            public void fromBytes(byte[] data)
-            {
-
-            }
-
-            @Override
-            public MemObject get(long address)
-            {
-                return null;
-            }
-
-            @Override
-            public void store(VirtualMachine virtualMachine)
-            {
-
-            }
-
-            @Override
-            public String toString()
-            {
-                return "NULL";
-            }
-        };
     }
 
     public void addObject(MemObject object, long ptr)
     {
         memPool.put(ptr, object);
+    }
+
+    public void addObject(MemObject object)
+    {
+        this.addObject(object, counter ++);
     }
 
     public MemObject getObject(long ptr)

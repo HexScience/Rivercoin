@@ -13,37 +13,142 @@
 package com.riverssen.core.mpp.runtime.vm.memory;
 
 import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
-import com.riverssen.core.rvm.Callable;
-import com.riverssen.core.rvm.MathContext;
 
-public interface MemObject extends MathContext, Callable
+import java.nio.ByteBuffer;
+
+public interface MemObject
 {
-    static final int
-            BYTE_ARRAY = 0,
-            INT_ARRAY  = 1,
-            FLT_ARRAY  = 2,
-            BOOL_ARRAY = 3,
-            PTR_ARRAY  = 4,
+    void set(int address, int size, MemObject object);
 
-            POINTER    = 5,
-            INTEGER    = 6,
-            UINT256    = 8,
-            BOOL       = 9,
+    void set(byte arr[]);
 
+    public void setNull();
 
-            RSA_KP     = 10,
-            RSA_KEY    = 11,
-            ECDSA_KP   = 12,
-            ECDSA_KEY  = 13,
-            PUBLIC_ADDRESS = 14;
+    public int  size();
 
-    public int getType();
+    public byte[] get();
 
-    public long getPointer();
+    public long getLong(int address);
 
-    public void fromBytes(byte data[]);
+    public void getObject(int address, int size, MemObject object);
 
-    MemObject get(long address);
+    public static MemObject allocate(int size)
+    {
+        return new ByteArrayMemObject(new byte[size]);
+    }
 
-    void store(VirtualMachine virtualMachine);
+    public static MemObject allocate(byte array[])
+    {
+        return new ByteArrayMemObject(array);
+    }
+
+    public static MemObject allocate(int address, int size, MemObject object)
+    {
+        return new ByteArrayMemObject(new byte[size]);
+    }
+
+    public default boolean isNull()
+    {
+        return get() == null;
+    }
+
+    public default void call(VirtualMachine context)
+    {
+    }
+
+    class ByteArrayMemObject
+    implements MemObject{
+        private byte array[];
+
+        public ByteArrayMemObject(byte arr[])
+        {
+            this.array = arr;
+        }
+
+        public void set(int address, int size, MemObject object)
+        {
+        }
+
+        public void set(byte arr[])
+        {
+            this.array = arr;
+        }
+
+        public void setNull()
+        {
+            this.array = null;
+        }
+
+        public int  size()
+        {
+            return array.length;
+        }
+
+        public byte[] get()
+        {
+            return array;
+        }
+
+        public long getLong(int address)
+        {
+            return ByteBuffer.wrap(new byte[] {array[address], array[address + 1], array[address + 2], array[address + 3], array[address + 4], array[address + 5], array[address + 6], array[address + 7]}).getLong();
+        }
+
+        public void getObject(int address, int size, MemObject object)
+        {
+            object.set(address, size, this);
+        }
+    }
+
+    class PointerToArrayMemObject
+            implements MemObject{
+        private MemObject array;
+        private int       address;
+        private int       size;
+
+        public PointerToArrayMemObject(int address, int size, MemObject object)
+        {
+            this.address = address;
+            this.array   = object;
+            this.size    = size;
+        }
+
+        public void set(int address, int size, MemObject object)
+        {
+            this.address = address;
+            this.array   = object;
+            this.size    = size;
+        }
+
+        public void set(byte arr[])
+        {
+        }
+
+        public void setNull()
+        {
+            this.array = null;
+        }
+
+        public int  size()
+        {
+            return size;
+        }
+
+        public byte[] get()
+        {
+            return null;
+        }
+
+        public long getLong(int address)
+        {
+            address = this.address + address;
+            byte[] array = this.array.get();
+            return ByteBuffer.wrap(new byte[] {array[address], array[address + 1], array[address + 2], array[address + 3], array[address + 4], array[address + 5], array[address + 6], array[address + 7]}).getLong();
+        }
+
+        public void getObject(int address, int size, MemObject object)
+        {
+            object.set(this.address + address, size, this.array);
+        }
+    }
 }

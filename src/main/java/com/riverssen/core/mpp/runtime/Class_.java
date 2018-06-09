@@ -12,53 +12,41 @@
 
 package com.riverssen.core.mpp.runtime;
 
-import com.riverssen.core.mpp.compiler.LexedProgram;
+import com.riverssen.core.mpp.compiler.Token;
+import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
 
-public class MppCompiler
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+public class Class_
 {
-    private interface ASTGrammar
-    {
-        void onMain();
-        void onCallMethod();
-        void onAccessValue();
+    private static final Set<Class_> const_parents = new LinkedHashSet<>();
+    static {
+        Method toString = new ToStringMethod();
+
+//        Class_ origin_class = new Class_("class").addMethod(toString);
+//        const_parents.add(origin_class);
     }
 
-    public static byte[] compile(String string, ASTGrammar astGrammar)
+    private String          name;
+    private Set<Class_>     parents;
+    private Set<Field>      fields;
+    private Set<Method>     methods;
+
+    public Class_(Token token)
     {
-        return compile(parse(lex(string)), astGrammar);
+        this.name = name;
+        this.parents = new LinkedHashSet<>();
+//        this.parents.addAll(const_parents);
     }
 
-    private static class LexicalString
+    public Class_ addMethod(Method method)
     {
-        private String  value;
-        private int     line;
-        private int     offset;
-        private int     whitespace;
-
-        public LexicalString(String value, int line, int offset, int whitespace)
-        {
-            this.value = value;
-            this.line = line;
-            this.offset = offset;
-            this.whitespace = whitespace;
-        }
+        this.methods.add(method);
+        return this;
     }
 
-    private static LexedProgram lex(String text)
+    public void newInstance()
     {
-        return new LexedProgram(text);
-    }
-
-    private static class ParsedProgram
-    {}
-
-    private static ParsedProgram parse(LexedProgram program)
-    {
-        return new ParsedProgram();
-    }
-
-    private static byte[] compile(ParsedProgram program, ASTGrammar astGrammar)
-    {
-        return null;
     }
 }
