@@ -32,7 +32,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MethodCall implements TransactionI, Encodeable
+public class ContractInvoke implements TransactionI, Encodeable
 {
     /** 64 byte compressed ecdsa public key **/
     private CompressedAddress                   sender;
@@ -53,7 +53,7 @@ public class MethodCall implements TransactionI, Encodeable
     /** The contract creator **/
     private PublicAddress                       contractCreator;
 
-    public MethodCall(DataInputStream stream) throws IOException, Exception
+    public ContractInvoke(DataInputStream stream) throws IOException, Exception
     {
         sender      = new CompressedAddress(stream);
         method      = new ContractAddress(ByteUtil.read(stream, 20));
@@ -64,12 +64,12 @@ public class MethodCall implements TransactionI, Encodeable
         timestamp   = ByteUtil.read(stream, 8);
     }
 
-    public MethodCall(CompressedAddress        sender,
-                      ContractAddress             receiver,
-                      TXIList                   goods,
-                      RiverCoin                 amount,
-                      String                    comment,
-                      long                      timestamp)
+    public ContractInvoke(CompressedAddress        sender,
+                          ContractAddress             receiver,
+                          TXIList                   goods,
+                          RiverCoin                 amount,
+                          String                    comment,
+                          long                      timestamp)
     {
         this.sender     = sender;
         this.method     = receiver;
@@ -122,7 +122,7 @@ public class MethodCall implements TransactionI, Encodeable
 
     @Override
     public PublicAddress getReceiver() {
-        return method;
+        return null;
     }
 
     @Override
@@ -146,7 +146,7 @@ public class MethodCall implements TransactionI, Encodeable
     {
         List<TransactionOutput> utxos = new ArrayList<>();
 
-        utxos.add(new TransactionOutput(method, amount, encode(ByteUtil.defaultEncoder())));
+//        utxos.add(new TransactionOutput(method, amount, encode(ByteUtil.defaultEncoder())));
         RiverCoin leftOver = new RiverCoin(getInputAmount().subtract(amount.toBigInteger()));
         /** if miner doesn't want fees, then all the leftover amount is returned to the sender as a new unspent output **/
         if(miner == null) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
@@ -175,7 +175,7 @@ public class MethodCall implements TransactionI, Encodeable
     {
         List<TransactionOutput> utxos = new ArrayList<>();
 
-        utxos.add(new TransactionOutput(method, amount, encode(ByteUtil.defaultEncoder())));
+//        utxos.add(new TransactionOutput(method, amount, encode(ByteUtil.defaultEncoder())));
         RiverCoin leftOver = new RiverCoin(getInputAmount().subtract(amount.toBigInteger()));
         /** if miner doesn't want fees, then all the leftover amount is returned to the sender as a new unspent output **/
         if(miner == null) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
@@ -207,7 +207,7 @@ public class MethodCall implements TransactionI, Encodeable
         return generateSignatureData(sender, method, amount, txids, data, timestamp);
     }
 
-    public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, RiverCoin amount, TXIList txilist, byte comment[], byte timestamp[])
+    public static byte[] generateSignatureData(CompressedAddress sender, ContractAddress receiver, RiverCoin amount, TXIList txilist, byte comment[], byte timestamp[])
     {
         return ByteUtil.concatenate(sender.getBytes(), receiver.getBytes(), amount.getBytes(), txilist.getBytes(), comment, timestamp);
     }
