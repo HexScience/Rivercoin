@@ -12,8 +12,6 @@
 
 package com.riverssen.core.rvm;
 
-import com.riverssen.core.rvm.objects.uint256;
-
 public interface MathContext
 {
     <T extends MathContext> T add(T b);
@@ -22,8 +20,8 @@ public interface MathContext
     <T extends MathContext> T div(T b);
     <T extends MathContext> T mod(T b);
 
-    default uint256 asUnsignedInteger()
-    {
-        return (uint256)this;
-    }
+//    default uint256 asUnsignedInteger()
+//    {
+//        return (uint256)this;
+//    }
 }

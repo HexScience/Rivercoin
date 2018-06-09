@@ -35,7 +35,7 @@ public class Class_
 
     public Class_(Token token)
     {
-        this.name = name;
+        this.name = token.toString();
         this.parents = new LinkedHashSet<>();
 //        this.parents.addAll(const_parents);
     }

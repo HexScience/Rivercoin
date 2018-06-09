@@ -29,6 +29,6 @@ public class Sub implements Opcode
     {
         MemObject b = context.getMemory().pop();
         MemObject a = context.getMemory().pop();
-        context.getMemory().push(a.sub(b));
+//        context.getMemory().push(a.sub(b));
     }
 }

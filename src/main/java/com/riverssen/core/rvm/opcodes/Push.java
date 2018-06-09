@@ -14,7 +14,6 @@ package com.riverssen.core.rvm.opcodes;
 
 import com.riverssen.core.rvm.Opcode;
 import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
-import com.riverssen.core.rvm.objects.ByteArrayMemObject;
 
 import java.nio.ByteBuffer;
 
@@ -31,6 +30,6 @@ public class Push implements Opcode
     @Override
     public void execute(VirtualMachine context)
     {
-        context.getMemory().push(new ByteArrayMemObject(data));
+//        context.getMemory().push(new ByteArrayMemObject(data));
     }
 }

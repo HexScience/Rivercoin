@@ -36,7 +36,7 @@ public class ContractInvoke implements TransactionI, Encodeable
 {
     /** 64 byte compressed ecdsa public key **/
     private CompressedAddress                   sender;
-    /** 20 byte method public address that starts with 0x20 **/
+    /** 20 byte contract public address that starts with 0x20 **/
     private ContractAddress                     method;
     /** A 64 byte ip address of the method (for value returns) **/
     private byte                                receiveIPAddress[];

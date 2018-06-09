@@ -1,14 +1,18 @@
 package com.riverssen.core.mpp.compiler;
 
+import com.riverssen.core.mpp.runtime.Class_;
 import com.riverssen.core.rvm.Opcode;
 import com.riverssen.core.rvm.opcodes.FunctionOpcode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AST
 {
     private List<Opcode> opcodes;
+
+    private HashMap<String, Class_> classes = new HashMap<>();
 
     public AST(ParsedProgram program)
     {
@@ -31,7 +35,7 @@ public class AST
     private void enterClass(Token clasz)
     {
 //        Opcode rootCode = new ClassOpcode(null);
-
+        Class_ clss = new Class_(clasz);
         FunctionOpcode functionOpcode = new FunctionOpcode();
     }
 }

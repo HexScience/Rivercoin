@@ -29,6 +29,6 @@ public class Mul implements Opcode
     {
         MemObject b = context.getMemory().pop();
         MemObject a = context.getMemory().pop();
-        context.getMemory().push(a.mul(b));
+//        context.getMemory().push(a.mul(b));
     }
 }
