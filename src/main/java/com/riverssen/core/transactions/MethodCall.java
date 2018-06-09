@@ -17,6 +17,7 @@ import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.CompressedAddress;
+import com.riverssen.core.security.ContractAddress;
 import com.riverssen.core.security.PrivKey;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
@@ -35,25 +36,27 @@ public class MethodCall implements TransactionI, Encodeable
 {
     /** 64 byte compressed ecdsa public key **/
     private CompressedAddress                   sender;
-    /** 20 byte receiver public address **/
-    private PublicAddress                       receiver;
-    /** A 64 byte ip address of the receiver (for value returns) **/
+    /** 20 byte method public address that starts with 0x20 **/
+    private ContractAddress                     method;
+    /** A 64 byte ip address of the method (for value returns) **/
     private byte                                receiveIPAddress[];
     /** list containing the type and amount of txids to be transferred **/
     private TXIList                             txids;
     /** amount of txids to be transferred **/
     private RiverCoin                           amount;
-    /** 256 byte comment in UTF format **/
+    /** 256 byte argument data **/
     private byte                                data[];
     /** var size byte signature **/
     private byte                                signature[];
     /** 8 byte 'honest' typestamp **/
     private byte                                timestamp[];
+    /** The contract creator **/
+    private PublicAddress                       contractCreator;
 
     public MethodCall(DataInputStream stream) throws IOException, Exception
     {
         sender      = new CompressedAddress(stream);
-        receiver    = new PublicAddress(ByteUtil.read(stream, 20));
+        method      = new ContractAddress(ByteUtil.read(stream, 20));
         txids       = new TXIList(stream);
         amount      = RiverCoin.fromStream(stream);
         data        = ByteUtil.read(stream, 256);
@@ -62,14 +65,14 @@ public class MethodCall implements TransactionI, Encodeable
     }
 
     public MethodCall(CompressedAddress        sender,
-                      PublicAddress             receiver,
+                      ContractAddress             receiver,
                       TXIList                   goods,
                       RiverCoin                 amount,
                       String                    comment,
                       long                      timestamp)
     {
         this.sender     = sender;
-        this.receiver   = receiver;
+        this.method     = receiver;
         this.txids      = goods;
         this.amount     = amount;
 
@@ -119,7 +122,7 @@ public class MethodCall implements TransactionI, Encodeable
 
     @Override
     public PublicAddress getReceiver() {
-        return receiver;
+        return method;
     }
 
     @Override
@@ -143,7 +146,7 @@ public class MethodCall implements TransactionI, Encodeable
     {
         List<TransactionOutput> utxos = new ArrayList<>();
 
-        utxos.add(new TransactionOutput(receiver, amount, encode(ByteUtil.defaultEncoder())));
+        utxos.add(new TransactionOutput(method, amount, encode(ByteUtil.defaultEncoder())));
         RiverCoin leftOver = new RiverCoin(getInputAmount().subtract(amount.toBigInteger()));
         /** if miner doesn't want fees, then all the leftover amount is returned to the sender as a new unspent output **/
         if(miner == null) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
@@ -172,7 +175,7 @@ public class MethodCall implements TransactionI, Encodeable
     {
         List<TransactionOutput> utxos = new ArrayList<>();
 
-        utxos.add(new TransactionOutput(receiver, amount, encode(ByteUtil.defaultEncoder())));
+        utxos.add(new TransactionOutput(method, amount, encode(ByteUtil.defaultEncoder())));
         RiverCoin leftOver = new RiverCoin(getInputAmount().subtract(amount.toBigInteger()));
         /** if miner doesn't want fees, then all the leftover amount is returned to the sender as a new unspent output **/
         if(miner == null) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
@@ -201,7 +204,7 @@ public class MethodCall implements TransactionI, Encodeable
 
     public byte[] generateSignatureData()
     {
-        return generateSignatureData(sender, receiver, amount, txids, data, timestamp);
+        return generateSignatureData(sender, method, amount, txids, data, timestamp);
     }
 
     public static byte[] generateSignatureData(CompressedAddress sender, PublicAddress receiver, RiverCoin amount, TXIList txilist, byte comment[], byte timestamp[])
@@ -212,7 +215,7 @@ public class MethodCall implements TransactionI, Encodeable
     @Override
     public byte[] getBytes() {
         return ByteUtil.concatenate(sender.getBytes(),
-                                    receiver.getBytes(),
+                                    method.getBytes(),
                                     txids.getBytes(),
                                     amount.getBytes(),
                                     data,
@@ -240,7 +243,7 @@ public class MethodCall implements TransactionI, Encodeable
             dost.write(TRANSACTION);
 
             sender.export(dost);
-            dost.write(receiver.getBytes());
+            dost.write(method.getBytes());
             txids.export(dost);
             amount.export(dost);
             dost.write(data);
@@ -254,6 +257,6 @@ public class MethodCall implements TransactionI, Encodeable
 
     @Override
     public String toJSON() {
-        return new JSON().add("sender", getSender().toString()).add("receiver", getReceiver().toString()).toString();
+        return new JSON().add("sender", getSender().toString()).add("method", getReceiver().toString()).toString();
     }
 }

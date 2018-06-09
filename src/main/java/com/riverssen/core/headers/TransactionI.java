@@ -39,7 +39,7 @@ public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSON
 
     BigInteger                      getInputAmount();
 
-    public static final int         TRANSACTION = 0, REWARD = 1, CONTRACT = 2;
+    public static final int         TRANSACTION = 0, REWARD = 1, CONTRACT = 2, CONTRACT_INVOKE = 3;
 
     static TransactionI             read(DataInputStream stream)
     {
@@ -48,6 +48,7 @@ public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSON
             if(type         == TRANSACTION)     return new Transaction(stream);
             else if(type    == REWARD)          return new RewardTransaction(stream);
             else if(type    == CONTRACT)        return new Contract(stream);
+            else if(type    == CONTRACT_INVOKE) return new MethodCall(stream);
             else throw new Exception("corrupted transaction data");
         } catch (IOException e) {
             e.printStackTrace();
