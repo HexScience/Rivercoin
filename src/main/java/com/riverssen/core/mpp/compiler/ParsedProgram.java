@@ -557,13 +557,68 @@ public class ParsedProgram
         this.parse(tokens, root, onlyOnce, parseMath, inParenthesis, inBraces, inBrackets, newLineAware, false);
     }
 
+//    private void parseProceduralAccess(List<Token> tokens)
+//    {
+//        List<Token> newTokens = new ArrayList<>();
+//
+//        while (tokens.size() > 0)
+//        {
+//            Token currentToken = tokens.get(0);
+//            Token next         = tokens.size() > 1 ? tokens.get(1) : currentToken;
+//
+//            if(currentToken.equals(END))
+//            {
+//                newTokens.add(currentToken);
+//                tokens.remove(0);
+//
+//                List<Token> nTokens = new ArrayList<>();
+//
+//                boolean contains = false;
+//
+//                while (tokens.size() > 0)
+//                {
+//                    currentToken = tokens.get(0);
+//
+//                    if(currentToken.getType().equals(END)) break;
+//                    else {
+//                        nTokens.add(currentToken);
+//                        if(currentToken.getType().equals(PROCEDURAL_ACCESS))
+//                        tokens.remove(0);
+//                    }
+//                }
+//            } else newTokens.add(currentToken);
+//
+//            if(next.getType().equals(PROCEDURAL_ACCESS))
+//            {
+//                Token procedural = new Token(PROCEDURAL_ACCESS);
+//                procedural.add(currentToken);
+//
+//                while (tokens.size() > 0)
+//                {
+//                }
+//
+//                tokens.remove(0);
+//            } else newTokens.add(currentToken);
+//        }
+//
+//        tokens.clear();
+//        newTokens.addAll(newTokens);
+//    }
+
     private void parse(List<Token> tokens, Token root, boolean onlyOnce, boolean parseMath, boolean inParenthesis, boolean inBraces, boolean inBrackets, boolean newLineAware, boolean ignoreParenthesis) throws ParseException
     {
         while (tokens.size() > 0)
         {
             Token currentToken = tokens.get(0);
+
             switch (currentToken.getType())
             {
+                case PROCEDURAL_ACCESS:
+                    tokens.remove(0);
+                    parse(tokens, currentToken, false, true, false, false, false, true);
+
+                    root.add(currentToken);
+                    break;
                 case PARENTHESIS_OPEN:
                     Token parenthesis = new Token(Token.Type.PARENTHESIS);
                     getNext(tokens, currentToken, "");
@@ -648,17 +703,48 @@ public class ParsedProgram
                         /** must be on same line to be valid, so nextValid isn't used here **/
                     } else if (tokens.size() > 0 && tokens.get(0).getType() == Token.Type.PARENTHESIS_OPEN)
                     {
-                        root.add(new Token(Token.Type.METHOD_CALL).add(type).add(getNextInParenthesis(tokens, currentToken, "Method calls should end with parenthesis.")));
+                        Token methodCall = new Token(Token.Type.METHOD_CALL).add(type).add(getNextInParenthesis(tokens, currentToken, "Method calls should end with parenthesis."));
+
+                        if(tokens.size() > 0 && tokens.get(0).getType().equals(PROCEDURAL_ACCESS))
+                        {
+                            tokens.remove(0);
+                            Token initialization = new Token(Token.Type.PROCEDURAL_ACCESS);
+                            initialization.add(methodCall);
+                            skipToValid(tokens);
+                            parse(tokens, initialization, true, true, false, false, false, true);
+
+                            root.add(initialization);
+                        } else root.add(methodCall);
+                    } else if (nextOfType(tokens, Token.Type.PROCEDURAL_ACCESS))
+                    {
+                        skipToValid(tokens);
+                        tokens.remove(0);
+                        Token initialization = new Token(Token.Type.PROCEDURAL_ACCESS);
+                        initialization.add(type);
+                        skipToValid(tokens);
+                        parse(tokens, initialization, true, true, false, false, false, true);
+
+                        root.add(initialization);
                     } else if (nextOfType(tokens, Token.Type.EQUALS))
                     {
                         skipToValid(tokens);
+                        tokens.remove(0);
                         Token initialization = new Token(Token.Type.INITIALIZATION);
+                        initialization.add(type);
                         skipToValid(tokens);
                         Token value = new Token(Token.Type.VALUE);
                         parse(tokens, value, false, true, false, false, false, true);
                         initialization.add(value);
 
                         root.add(initialization);
+                    } else if (nextOfType(tokens, ASSERT))
+                    {
+                        skipToValid(tokens);
+                        Token next = getNext(tokens, currentToken, "");
+                        next.add(type);
+                        parse(tokens, next, true);
+
+                        root.add(next);
                     } else if (nextOfType(tokens, LESS_THAN))
                     {
                         skipToValid(tokens);
