@@ -12,6 +12,7 @@
 
 package com.riverssen.core.mpp.runtime;
 
+import com.riverssen.core.mpp.compiler.AST;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
 
@@ -33,11 +34,16 @@ public class Class_
     private Set<Field>      fields;
     private Set<Method>     methods;
 
-    public Class_(Token token)
+    public Class_(Token token, AST context)
     {
-        this.name = token.toString();
+        this.name = token.getTokens().get(0).toString();
         this.parents = new LinkedHashSet<>();
-//        this.parents.addAll(const_parents);
+
+        for(Token tok : token.getTokens().get(1).getTokens())
+        {
+            if(tok.getType().equals(Token.Type.EMPTY_DECLARATION) || tok.getType().equals(Token.Type.FULL_DECLARATION))
+                fields.add(new Field(tok));
+        }
     }
 
     public Class_ addMethod(Method method)

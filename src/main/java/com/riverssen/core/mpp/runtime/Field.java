@@ -12,6 +12,8 @@
 
 package com.riverssen.core.mpp.runtime;
 
+import com.riverssen.core.mpp.compiler.Token;
+
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -32,6 +34,14 @@ public class Field {
 
         if (modifiers != null)
             this.fieldModifiers.addAll(modifiers);
+    }
+
+    public Field(Token tok)
+    {
+        this.fieldName = tok.getTokens().get(1).toString();
+        this.fieldType = tok.getTokens().get(0).toString();
+        this.fieldModifiers = new LinkedHashSet<>();
+        fieldModifiers.addAll(tok.getModifiers());
     }
 
     public Field addModifier(Modifier modifier) {
