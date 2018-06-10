@@ -16,6 +16,7 @@ import com.riverssen.core.mpp.compiler.AST;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.rvm.Opcode;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Method
@@ -28,6 +29,9 @@ public class Method
     public Method(Token token, AST context)
     {
         this.name = token.getTokens().get(0).toString();
+        this.arguments = new LinkedHashSet<>();
+        for(Token tok : token.getTokens().get(1).getTokens())
+            this.arguments.add(new Field(tok));
     }
 
     public Method(String name, Opcode opcode[])

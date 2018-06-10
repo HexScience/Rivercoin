@@ -61,4 +61,9 @@ public class AST
     {
         return globalIndex++;
     }
+
+    public List<Opcode> getOpcodes()
+    {
+        return opcodes;
+    }
 }

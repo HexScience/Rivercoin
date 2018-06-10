@@ -12,16 +12,19 @@
 
 package com.riverssen.core;
 
+import com.riverssen.core.mpp.compiler.AST;
 import com.riverssen.core.mpp.compiler.LexedProgram;
 import com.riverssen.core.mpp.compiler.ParsedProgram;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.mpp.contracts.Contracts;
+import com.riverssen.core.rvm.Opcode;
 import com.riverssen.core.system.MiningContext;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.utils.FileUtils;
 
 import java.io.File;
 import java.security.Security;
+import java.util.List;
 
 public class RivercoinCore
 {
@@ -35,7 +38,13 @@ public class RivercoinCore
     private RivercoinCore(String type, String file) throws Exception
     {
         /** Test Code For The Mocha++ Compiler **/
-        Token list = new ParsedProgram(new LexedProgram(FileUtils.readUTF(Contracts.class.getResourceAsStream("contracts.mpp")))).getTokens();
+        ParsedProgram pp = new ParsedProgram(new LexedProgram(FileUtils.readUTF(Contracts.class.getResourceAsStream("contracts.mpp"))));
+        Token list = pp.getTokens();
+        AST ast = new AST(pp);
+
+        List<Opcode> opcodes = ast.getOpcodes();
+
+        System.out.println(opcodes.size());
 
         System.out.println("---------------------------------\n" + list.humanReadable(0));
 
