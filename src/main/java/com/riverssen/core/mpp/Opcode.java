@@ -14,7 +14,7 @@ package com.riverssen.core.mpp;
 
 public class Opcode
 {
-    public static final int
+    public static final short
     HLT = 0,
 
     //MATH

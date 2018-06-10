@@ -12,9 +12,10 @@
 
 package com.riverssen.core.mpp.runtime;
 
+import com.riverssen.core.mpp.Opcode;
 import com.riverssen.core.mpp.compiler.AST;
+import com.riverssen.core.mpp.compiler.OpcodeWriter;
 import com.riverssen.core.mpp.compiler.Token;
-import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -77,8 +78,9 @@ public class Class_
         return this;
     }
 
-    public void newInstance(AST context)
+    public void newInstance(OpcodeWriter context)
     {
+        context.write(Opcode.NEW);
     }
 
     protected void calculate(AST context)

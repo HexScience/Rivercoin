@@ -12,32 +12,48 @@
 
 package com.riverssen.core.mpp.compiler;
 
-import com.riverssen.core.rvm.Opcode;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 
 public class OpcodeWriter
 {
-    private List<Opcode> opcodes;
+    private ByteArrayOutputStream stream;
+    private DataOutputStream      dataOutputStream;
 
     public OpcodeWriter()
     {
-        opcodes = new ArrayList<>();
+        dataOutputStream = new DataOutputStream(stream = new ByteArrayOutputStream());
     }
 
-    public void add(Opcode opcode)
+    public void write(short opcode)
     {
-        this.opcodes.add(opcode);
+        try
+        {
+            dataOutputStream.writeShort(opcode);
+        } catch (Exception e)
+        {
+        }
+    }
+
+    public DataOutputStream getStream()
+    {
+        return dataOutputStream;
+    }
+
+    public void close()
+    {
+        try{
+            dataOutputStream.flush();
+            dataOutputStream.close();
+        } catch (Exception e)
+        {
+        }
     }
 
     @Override
     public String toString()
     {
         String opcodes = "";
-
-        for(Opcode opcode : this.opcodes)
-            opcodes += opcode + "\n";
 
         return opcodes;
     }
