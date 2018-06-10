@@ -1,6 +1,6 @@
 package com.riverssen.core.mpp.compiler;
 
-import com.riverssen.core.mpp.runtime.Class_;
+import com.riverssen.core.mpp.runtime.Class;
 import com.riverssen.core.mpp.runtime.Method;
 import com.riverssen.core.rvm.Opcode;
 import com.riverssen.core.rvm.opcodes.FunctionOpcode;
@@ -14,7 +14,7 @@ public class AST
 {
     private List<Opcode> opcodes;
 
-    private HashMap<String, Class_> classes = new HashMap<>();
+    private HashMap<String, Class> classes = new HashMap<>();
     private HashMap<String, Method> methods = new HashMap<>();
     private HashMap<String, Integer>sizes   = new HashMap<>();
 
@@ -26,13 +26,14 @@ public class AST
     {
         Token root = program.getTokens();
         this.opcodes = new ArrayList<>();
+        enterRoot(root);
     }
 
     private void enterRoot(Token root)
     {
         List<Token> classes = new ArrayList<>();
 
-        for(Token token : classes)
+        for(Token token : root.getTokens())
             if(token.getType() == Token.Type.CLASS_DECLARATION)
                 classes.add(token);
 
@@ -43,8 +44,10 @@ public class AST
     private void enterClass(Token clasz)
     {
 //        Opcode rootCode = new ClassOpcode(null);
-        Class_ clss = new Class_(clasz, this);
+        Class clss = new Class(clasz, this);
         FunctionOpcode functionOpcode = new FunctionOpcode();
+
+        System.out.println(clss);
     }
 
     protected int push(String name)

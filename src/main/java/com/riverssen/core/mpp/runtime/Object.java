@@ -12,6 +12,29 @@
 
 package com.riverssen.core.mpp.runtime;
 
+import com.riverssen.core.mpp.compiler.OpcodeWriter;
+import com.riverssen.core.mpp.compiler.Token;
+
+import java.io.IOException;
+
 public class Object
 {
+    private static int address = 0;
+
+    private int myAddress = 0;
+    private Class type;
+    private boolean onStack;
+
+    public Object(Class type, Token token)
+    {
+        this.myAddress = address ++;
+        this.type = type;
+//        this.type.getMethoddByName(this.type.getName()).call(this, token);
+    }
+
+    public void push_to_stack(OpcodeWriter writer) throws IOException
+    {
+        writer.write(com.riverssen.core.mpp.Opcode.LOAD);
+        writer.getStream().writeLong(myAddress);
+    }
 }

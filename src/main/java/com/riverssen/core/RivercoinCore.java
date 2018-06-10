@@ -44,9 +44,9 @@ public class RivercoinCore
 
         List<Opcode> opcodes = ast.getOpcodes();
 
-        System.out.println(opcodes.size());
-
-        System.out.println("---------------------------------\n" + list.humanReadable(0));
+//        System.out.println(opcodes.size());
+//
+//        System.out.println("---------------------------------\n" + list.humanReadable(0));
 
         System.exit(0);
 

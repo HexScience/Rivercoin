@@ -13,6 +13,7 @@
 package com.riverssen.core.mpp.runtime;
 
 import com.riverssen.core.mpp.compiler.AST;
+import com.riverssen.core.mpp.compiler.OpcodeWriter;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.rvm.Opcode;
 import com.riverssen.core.rvm.opcodes.FunctionOpcode;
@@ -64,7 +65,9 @@ public class Method
         return returnType;
     }
 
-    protected void call(Object...args)
+    protected void call(OpcodeWriter writer, Object self, Token token) throws Exception
     {
+        /** pass this as parameter **/
+        self.push_to_stack(writer);
     }
 }

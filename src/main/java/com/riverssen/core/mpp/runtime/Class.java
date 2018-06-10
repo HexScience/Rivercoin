@@ -21,23 +21,23 @@ import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class Class_
+public class Class
 {
-    private static final Set<Class_> const_parents = new LinkedHashSet<>();
+    private static final Set<Class> const_parents = new LinkedHashSet<>();
     static {
         Method toString = new ToStringMethod();
 
-//        Class_ origin_class = new Class_("class").addMethod(toString);
+//        Class origin_class = new Class("class").addMethod(toString);
 //        const_parents.add(origin_class);
     }
 
     private String          name;
-    private Set<Class_>     parents;
+    private Set<Class>      parents;
     private Set<Field>      fields;
     private Set<Method>     methods;
     private int             size;
 
-    public Class_(Token token, AST context)
+    public Class(Token token, AST context)
     {
         this.name       = token.getTokens().get(0).toString();
         this.parents    = new LinkedHashSet<>();
@@ -57,12 +57,13 @@ public class Class_
             method.setOffset(this.size ++);
     }
 
-    public void accessStaticField(String name, OpcodeWriter writer)
+    public void accessStaticField(String name, OpcodeWriter writer) throws IOException
     {
         for(Field field : fields)
             if (field.getName().equals(name))
             {
-                writer.write(Opcode.);field.getOffset();
+                writer.write(Opcode.LOAD);
+                writer.getStream().writeInt(field.getOffset());
             }
     }
 
@@ -74,23 +75,38 @@ public class Class_
         return 0;
     }
 
-    public int getMethoddByName(String name)
+    public Method getMethoddByName(String name)
     {
         for(Method method : methods)
-            if (method.getName().equals(name)) return method.getOffset();
+            if (method.getName().equals(name)) return method;
 
-        return 0;
+        return null;
     }
 
-    public Class_ addMethod(Method method)
+    public Class addMethod(Method method)
     {
         this.methods.add(method);
         return this;
     }
 
-    public void newInstance(OpcodeWriter context) throws IOException
+    public Object newInstance(OpcodeWriter context, Token new_t) throws IOException
     {
-        context.write(Opcode.NEW);
-        context.getStream().writeInt(size);
+        return new Object(this, new_t);
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    @Override
+    public String toString()
+    {
+        String string = "";
+
+        for (Field field : fields)
+            string += field.getName() + " " + field.getType() + "\n";
+
+        return string;
     }
 }
