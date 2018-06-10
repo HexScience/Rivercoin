@@ -54,5 +54,7 @@ public class Opcode
     ELSE = 28,
     FOR = 29,
     WHILE = 30,
-    LOOP = 40;
+    LOOP = 31,
+
+    FUN = 32;
 }

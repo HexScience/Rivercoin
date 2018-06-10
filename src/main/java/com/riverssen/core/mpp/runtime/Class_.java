@@ -52,7 +52,7 @@ public class Class_
         return this;
     }
 
-    public void newInstance()
+    public void newInstance(AST context)
     {
     }
 }

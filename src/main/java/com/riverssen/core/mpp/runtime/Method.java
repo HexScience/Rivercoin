@@ -15,6 +15,7 @@ package com.riverssen.core.mpp.runtime;
 import com.riverssen.core.mpp.compiler.AST;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.rvm.Opcode;
+import com.riverssen.core.rvm.opcodes.FunctionOpcode;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -25,13 +26,15 @@ public class Method
     private Set<Field>  arguments;
     private String      returnType;
     private Opcode      opcode[];
+    private Opcode      method;
 
     public Method(Token token, AST context)
     {
-        this.name = token.getTokens().get(0).toString();
-        this.arguments = new LinkedHashSet<>();
+        this.name       = token.getTokens().get(0).toString();
+        this.arguments  = new LinkedHashSet<>();
         for(Token tok : token.getTokens().get(1).getTokens())
             this.arguments.add(new Field(tok));
+        this.method     = new FunctionOpcode();
     }
 
     public Method(String name, Opcode opcode[])
