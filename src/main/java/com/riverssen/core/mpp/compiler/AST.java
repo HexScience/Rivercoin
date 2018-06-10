@@ -16,6 +16,7 @@ public class AST
 
     private HashMap<String, Class_> classes = new HashMap<>();
     private HashMap<String, Method> methods = new HashMap<>();
+    private HashMap<String, Integer>sizes   = new HashMap<>();
 
     private Stack<String>           globalStack = new Stack<>();
     private HashMap<Integer, String>globalMemry = new HashMap<>();
@@ -65,5 +66,10 @@ public class AST
     public List<Opcode> getOpcodes()
     {
         return opcodes;
+    }
+
+    public int sizeof(String type)
+    {
+        return sizes.get(type);
     }
 }

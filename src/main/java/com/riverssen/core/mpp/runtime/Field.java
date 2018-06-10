@@ -18,23 +18,26 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class Field {
-    private String          fieldName;
-    private String          fieldType;
-    private Set<Modifier>   fieldModifiers;
-    private Token           defaultValue;
+public class Field
+{
+    private String fieldName;
+    private String fieldType;
+    private Set<Modifier> fieldModifiers;
+    private Token defaultValue;
+    private int offset;
 
-    public Field(String name, String type) {
+    public Field(String name, String type)
+    {
         this(name, type, null);
     }
 
-    public Field(String name, String type, Collection<Modifier> modifiers) {
+    public Field(String name, String type, Collection<Modifier> modifiers)
+    {
         this.fieldName = name;
         this.fieldType = type;
         this.fieldModifiers = new LinkedHashSet<>();
 
-        if (modifiers != null)
-            this.fieldModifiers.addAll(modifiers);
+        if (modifiers != null) this.fieldModifiers.addAll(modifiers);
     }
 
     public Field(Token tok)
@@ -45,24 +48,37 @@ public class Field {
         this.fieldModifiers = new LinkedHashSet<>();
         this.fieldModifiers.addAll(tok.getModifiers());
 
-        if(tok.getType().equals(Token.Type.FULL_DECLARATION))
-            this.defaultValue = tok.getTokens().get(2);
+        if (tok.getType().equals(Token.Type.FULL_DECLARATION)) this.defaultValue = tok.getTokens().get(2);
     }
 
-    public Field addModifier(Modifier modifier) {
+    public Field addModifier(Modifier modifier)
+    {
         this.fieldModifiers.add(modifier);
         return this;
     }
 
-    public String getName() {
+    protected void setOffset(int offset)
+    {
+        this.offset = offset;
+    }
+
+    public int getOffset()
+    {
+        return this.offset;
+    }
+
+    public String getName()
+    {
         return this.fieldName;
     }
 
-    public String getType() {
+    public String getType()
+    {
         return this.fieldType;
     }
 
-    public Collection<Modifier> getModifiers() {
+    public Collection<Modifier> getModifiers()
+    {
         return this.fieldModifiers;
     }
 }

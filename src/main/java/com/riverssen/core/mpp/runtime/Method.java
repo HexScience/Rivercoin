@@ -27,6 +27,7 @@ public class Method
     private String      returnType;
     private Opcode      opcode[];
     private Opcode      method;
+    private int         offset;
 
     public Method(Token token, AST context)
     {
@@ -41,6 +42,26 @@ public class Method
     {
         this.name   = name;
         this.opcode = opcode;
+    }
+
+    protected   void    setOffset(int offset)
+    {
+        this.offset = offset;
+    }
+
+    public      int     getOffset()
+    {
+        return this.offset;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public String getReturnType()
+    {
+        return returnType;
     }
 
     protected void call(Object...args)

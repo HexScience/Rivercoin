@@ -33,17 +33,42 @@ public class Class_
     private Set<Class_>     parents;
     private Set<Field>      fields;
     private Set<Method>     methods;
+    private int             size;
 
     public Class_(Token token, AST context)
     {
-        this.name = token.getTokens().get(0).toString();
-        this.parents = new LinkedHashSet<>();
+        this.name       = token.getTokens().get(0).toString();
+        this.parents    = new LinkedHashSet<>();
+        this.fields     = new LinkedHashSet<>();
+        this.methods    = new LinkedHashSet<>();
 
         for(Token tok : token.getTokens().get(1).getTokens())
             if(tok.getType().equals(Token.Type.EMPTY_DECLARATION) || tok.getType().equals(Token.Type.FULL_DECLARATION))
                 fields.add(new Field(tok));
             else if(tok.getType().equals(Token.Type.METHOD_DECLARATION))
                 methods.add(new Method(tok, context));
+
+        for(Field field : fields)
+            field.setOffset(this.size ++);
+
+        for(Method method : methods)
+            method.setOffset(this.size ++);
+    }
+
+    public int getFieldByName(String name)
+    {
+        for(Field field : fields)
+            if (field.getName().equals(name)) return field.getOffset();
+
+        return 0;
+    }
+
+    public int getMethoddByName(String name)
+    {
+        for(Method method : methods)
+            if (method.getName().equals(name)) return method.getOffset();
+
+        return 0;
     }
 
     public Class_ addMethod(Method method)
@@ -53,6 +78,10 @@ public class Class_
     }
 
     public void newInstance(AST context)
+    {
+    }
+
+    protected void calculate(AST context)
     {
     }
 }
