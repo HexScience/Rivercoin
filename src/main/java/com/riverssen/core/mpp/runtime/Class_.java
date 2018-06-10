@@ -17,6 +17,7 @@ import com.riverssen.core.mpp.compiler.AST;
 import com.riverssen.core.mpp.compiler.OpcodeWriter;
 import com.riverssen.core.mpp.compiler.Token;
 
+import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -56,6 +57,15 @@ public class Class_
             method.setOffset(this.size ++);
     }
 
+    public void accessStaticField(String name, OpcodeWriter writer)
+    {
+        for(Field field : fields)
+            if (field.getName().equals(name))
+            {
+                writer.write(Opcode.);field.getOffset();
+            }
+    }
+
     public int getFieldByName(String name)
     {
         for(Field field : fields)
@@ -78,12 +88,9 @@ public class Class_
         return this;
     }
 
-    public void newInstance(OpcodeWriter context)
+    public void newInstance(OpcodeWriter context) throws IOException
     {
         context.write(Opcode.NEW);
-    }
-
-    protected void calculate(AST context)
-    {
+        context.getStream().writeInt(size);
     }
 }

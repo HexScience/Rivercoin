@@ -56,5 +56,9 @@ public class Opcode
     WHILE = 30,
     LOOP = 31,
 
-    FUN = 32;
+    FUN = 32,
+
+    LOAD = 33, //stack.push(stack.get(int))
+
+    EXT = 400;
 }
