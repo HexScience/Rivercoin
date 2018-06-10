@@ -12,7 +12,7 @@
 
 package com.riverssen.core.mpp.compiler;
 
-import com.riverssen.core.mpp.Opcode;
+import com.riverssen.core.rvm.Opcode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,11 @@ public class OpcodeWriter
     public OpcodeWriter()
     {
         opcodes = new ArrayList<>();
+    }
+
+    public void add(Opcode opcode)
+    {
+        this.opcodes.add(opcode);
     }
 
     @Override

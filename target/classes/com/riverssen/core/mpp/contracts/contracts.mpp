@@ -11,7 +11,6 @@
 //
 
 class HelloWorld {
-    /** creator of the contract **/
     private PublicAddress owner
     private String        message
 
@@ -24,7 +23,7 @@ class HelloWorld {
     public function setMessage(String text) : void
     {
         if(owner == msg.sender)
-            this.message = text;
+            this.message = text
     }
 
     public function getMessage() : String
