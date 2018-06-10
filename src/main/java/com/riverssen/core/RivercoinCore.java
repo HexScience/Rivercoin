@@ -17,6 +17,7 @@ import com.riverssen.core.mpp.compiler.LexedProgram;
 import com.riverssen.core.mpp.compiler.ParsedProgram;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.mpp.contracts.Contracts;
+import com.riverssen.core.mpp.runtime.RuntimeInterpreter;
 import com.riverssen.core.rvm.Opcode;
 import com.riverssen.core.system.MiningContext;
 import com.riverssen.core.headers.ContextI;
@@ -40,6 +41,9 @@ public class RivercoinCore
         /** Test Code For The Mocha++ Compiler **/
         ParsedProgram pp = new ParsedProgram(new LexedProgram(FileUtils.readUTF(Contracts.class.getResourceAsStream("contracts.mpp"))));
         Token list = pp.getTokens();
+
+        RuntimeInterpreter interpreter = new RuntimeInterpreter(pp.getTokens());
+        interpreter.getClass("HelloWorld").getMethoddByName("setMessage");
         AST ast = new AST(pp);
 
         List<Opcode> opcodes = ast.getOpcodes();

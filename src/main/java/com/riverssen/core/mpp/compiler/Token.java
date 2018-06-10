@@ -14,9 +14,10 @@ package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.mpp.runtime.Modifier;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Token
+public class Token implements Serializable
 {
     private StringBuilder       value;
     private int                 line;
@@ -55,7 +56,7 @@ public class Token
         return modifiers.contains(modifier);
     }
 
-    public static enum          Type {
+    public static enum          Type implements Serializable {
         NAMESPACE,
         KEYWORD,
         IDENTIFIER,

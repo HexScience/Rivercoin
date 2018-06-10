@@ -13,22 +13,19 @@
 package com.riverssen.core.mpp.runtime;
 
 import com.riverssen.core.mpp.Opcode;
-import com.riverssen.core.mpp.compiler.AST;
 import com.riverssen.core.mpp.compiler.OpcodeWriter;
 import com.riverssen.core.mpp.compiler.Token;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class Class
+public class Class implements Serializable
 {
     private static final Set<Class> const_parents = new LinkedHashSet<>();
     static {
         Method toString = new ToStringMethod();
-
-//        Class origin_class = new Class("class").addMethod(toString);
-//        const_parents.add(origin_class);
     }
 
     private String          name;
@@ -37,7 +34,7 @@ public class Class
     private Set<Method>     methods;
     private int             size;
 
-    public Class(Token token, AST context)
+    public Class(Token token)
     {
         this.name       = token.getTokens().get(0).toString();
         this.parents    = new LinkedHashSet<>();
@@ -48,7 +45,7 @@ public class Class
             if(tok.getType().equals(Token.Type.EMPTY_DECLARATION) || tok.getType().equals(Token.Type.FULL_DECLARATION))
                 fields.add(new Field(tok));
             else if(tok.getType().equals(Token.Type.METHOD_DECLARATION))
-                methods.add(new Method(tok, context));
+                methods.add(new Method(tok));
 
         for(Field field : fields)
             field.setOffset(this.size ++);
@@ -89,9 +86,9 @@ public class Class
         return this;
     }
 
-    public Object newInstance(OpcodeWriter context, Token new_t) throws IOException
+    public Object newInstance(OpcodeWriter context, Object...args) throws IOException
     {
-        return new Object(this, new_t);
+        return new Object(this, args);
     }
 
     public String getName()
@@ -102,10 +99,10 @@ public class Class
     @Override
     public String toString()
     {
-        String string = "";
+        String string = "---" + name + "---\n";
 
         for (Field field : fields)
-            string += field.getName() + " " + field.getType() + "\n";
+            string += "\t" + field.getName() + " " + field.getType() + "\n";
 
         return string;
     }

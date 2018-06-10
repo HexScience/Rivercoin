@@ -14,17 +14,18 @@ package com.riverssen.core.mpp.runtime;
 
 import com.riverssen.core.mpp.compiler.Token;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class Field
+public class Field implements Serializable
 {
-    private String fieldName;
-    private String fieldType;
-    private Set<Modifier> fieldModifiers;
-    private Token defaultValue;
-    private int offset;
+    private String          fieldName;
+    private String          fieldType;
+    private Set<Modifier>   fieldModifiers;
+    private Token           defaultValue;
+    private int             offset;
 
     public Field(String name, String type)
     {

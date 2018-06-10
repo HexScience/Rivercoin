@@ -10,27 +10,14 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.mpp.runtime;
+package com.riverssen.core.mpp.exceptions;
 
-import com.riverssen.core.mpp.compiler.OpcodeWriter;
+import com.riverssen.core.mpp.compiler.Token;
 
-import java.io.IOException;
-
-public class Object
+public class CompileException extends Exception
 {
-    private int myAddress = 0;
-    private Class type;
-    private boolean onStack;
-
-    public Object(Class type, Object ...args)
+    public CompileException(String msg, Token token)
     {
-        this.myAddress = 0;
-        this.type = type;
-    }
-
-    public void push_to_stack(OpcodeWriter writer) throws IOException
-    {
-        writer.write(com.riverssen.core.mpp.Opcode.LOAD);
-        writer.getStream().writeLong(myAddress);
+        super(msg + " at line: " + token.getLine() + " offset: " + token.getOffset());
     }
 }

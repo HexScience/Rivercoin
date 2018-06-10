@@ -1,5 +1,6 @@
 package com.riverssen.core.rvm.opcodes;
 
+import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
 import com.riverssen.core.rvm.Opcode;
 
@@ -10,7 +11,7 @@ public class FunctionOpcode implements Opcode
 {
     private List<Opcode> opcodeList;
 
-    public FunctionOpcode()
+    public FunctionOpcode(Token body)
     {
         opcodeList = new ArrayList<>();
     }

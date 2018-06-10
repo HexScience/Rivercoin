@@ -12,7 +12,6 @@
 
 package com.riverssen.core.mpp.runtime;
 
-import com.riverssen.core.mpp.compiler.AST;
 import com.riverssen.core.mpp.compiler.OpcodeWriter;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.rvm.Opcode;
@@ -30,13 +29,14 @@ public class Method
     private Opcode      method;
     private int         offset;
 
-    public Method(Token token, AST context)
+    public Method(Token token)
     {
         this.name       = token.getTokens().get(0).toString();
         this.arguments  = new LinkedHashSet<>();
         for(Token tok : token.getTokens().get(1).getTokens())
             this.arguments.add(new Field(tok));
-        this.method     = new FunctionOpcode();
+
+        this.method     = new FunctionOpcode(token.getTokens().get(2));
     }
 
     public Method(String name, Opcode opcode[])

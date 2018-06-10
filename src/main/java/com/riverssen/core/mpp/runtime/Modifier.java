@@ -12,6 +12,9 @@
 
 package com.riverssen.core.mpp.runtime;
 
-public enum Modifier {
+import java.io.Serializable;
+
+public enum Modifier implements Serializable
+{
     PUBLIC, STATIC, FINAL, CONST, UNSAFE, PRIVATE, PROTECTED, SAFE, INSYNC, UNSIGNED;
 }

@@ -12,25 +12,22 @@
 
 package com.riverssen.core.mpp.runtime;
 
-import com.riverssen.core.mpp.compiler.OpcodeWriter;
+import com.riverssen.core.mpp.compiler.Token;
 
-import java.io.IOException;
+import java.util.Map;
 
-public class Object
+public class RuntimeInterpreter
 {
-    private int myAddress = 0;
-    private Class type;
-    private boolean onStack;
+    private Map<String, Class>  classes;
+    private Map<String, Object> objects;
 
-    public Object(Class type, Object ...args)
+    public RuntimeInterpreter(Token root)
     {
-        this.myAddress = 0;
-        this.type = type;
+
     }
 
-    public void push_to_stack(OpcodeWriter writer) throws IOException
+    public Class getClass(String cla55)
     {
-        writer.write(com.riverssen.core.mpp.Opcode.LOAD);
-        writer.getStream().writeLong(myAddress);
+        return classes.get(cla55);
     }
 }
