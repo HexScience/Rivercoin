@@ -40,10 +40,10 @@ public class Class_
         this.parents = new LinkedHashSet<>();
 
         for(Token tok : token.getTokens().get(1).getTokens())
-        {
             if(tok.getType().equals(Token.Type.EMPTY_DECLARATION) || tok.getType().equals(Token.Type.FULL_DECLARATION))
                 fields.add(new Field(tok));
-        }
+            else if(tok.getType().equals(Token.Type.METHOD_DECLARATION))
+                methods.add(new Method(tok, context));
     }
 
     public Class_ addMethod(Method method)

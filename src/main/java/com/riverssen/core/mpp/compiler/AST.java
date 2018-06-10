@@ -1,18 +1,25 @@
 package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.mpp.runtime.Class_;
+import com.riverssen.core.mpp.runtime.Method;
 import com.riverssen.core.rvm.Opcode;
 import com.riverssen.core.rvm.opcodes.FunctionOpcode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Stack;
 
 public class AST
 {
     private List<Opcode> opcodes;
 
     private HashMap<String, Class_> classes = new HashMap<>();
+    private HashMap<String, Method> methods = new HashMap<>();
+
+    private Stack<String>           globalStack = new Stack<>();
+    private HashMap<Integer, String>globalMemry = new HashMap<>();
+    private int                     globalIndex = 0;
 
     public AST(ParsedProgram program)
     {
@@ -35,7 +42,23 @@ public class AST
     private void enterClass(Token clasz)
     {
 //        Opcode rootCode = new ClassOpcode(null);
-        Class_ clss = new Class_(clasz);
+        Class_ clss = new Class_(clasz, this);
         FunctionOpcode functionOpcode = new FunctionOpcode();
+    }
+
+    protected int push(String name)
+    {
+        globalStack.push(name);
+        return globalStack.size() - 1;
+    }
+
+    protected int stackSize()
+    {
+        return globalStack.size();
+    }
+
+    protected int newObject(String name)
+    {
+        return globalIndex++;
     }
 }

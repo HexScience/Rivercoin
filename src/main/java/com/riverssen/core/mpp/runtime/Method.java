@@ -12,12 +12,23 @@
 
 package com.riverssen.core.mpp.runtime;
 
+import com.riverssen.core.mpp.compiler.AST;
+import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.rvm.Opcode;
+
+import java.util.Set;
 
 public class Method
 {
-    private String name;
-    private Opcode opcode[];
+    private String      name;
+    private Set<Field>  arguments;
+    private String      returnType;
+    private Opcode      opcode[];
+
+    public Method(Token token, AST context)
+    {
+        this.name = token.getTokens().get(0).toString();
+    }
 
     public Method(String name, Opcode opcode[])
     {

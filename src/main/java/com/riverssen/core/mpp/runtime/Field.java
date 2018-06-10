@@ -22,6 +22,7 @@ public class Field {
     private String          fieldName;
     private String          fieldType;
     private Set<Modifier>   fieldModifiers;
+    private Token           defaultValue;
 
     public Field(String name, String type) {
         this(name, type, null);
@@ -40,8 +41,12 @@ public class Field {
     {
         this.fieldName = tok.getTokens().get(1).toString();
         this.fieldType = tok.getTokens().get(0).toString();
+
         this.fieldModifiers = new LinkedHashSet<>();
-        fieldModifiers.addAll(tok.getModifiers());
+        this.fieldModifiers.addAll(tok.getModifiers());
+
+        if(tok.getType().equals(Token.Type.FULL_DECLARATION))
+            this.defaultValue = tok.getTokens().get(2);
     }
 
     public Field addModifier(Modifier modifier) {
