@@ -12,46 +12,47 @@
 
 package com.riverssen.core.mpp;
 
-public enum Opcode
+public class Opcode
 {
-    HLT,
+    public static final int
+    HLT = 0,
 
     //MATH
-    ADD,
-    SUB,
-    MLT,
-    DIV,
-    MOD,
-    POW,
-    SIN,
-    COS,
+    ADD = 1,
+    SUB = 2,
+    MLT = 3,
+    DIV = 4,
+    MOD = 5,
+    POW = 6,
+    SIN = 7,
+    COS = 8,
 
     //BOOL
-    AND,
-    OR,
-    RSHFT,
-    LSHFT,
-    ASSERT,
+    AND = 9,
+    OR = 10,
+    RSHFT = 11,
+    LSHFT = 12,
+    ASSERT = 13,
 
     //OPERATIONAL
-    SET, //STACK.SET(INDEX, OBJECT)
-    PUT, //MEMORY.PUT(INDEX, OBJECT)
-    PRT,
+    SET = 14, //STACK.SET(INDEX, OBJECT)
+    PUT = 15, //MEMORY.PUT(INDEX, OBJECT)
+    PRT = 16,
 
-    POP,
-    PUSH,
-    PUSH_INT,
-    PUSH_UINT,
-    PUSH_UINT256,
-    PUSH_FLOAT,
-    PUSH_BIGDECIMAL,
+    POP = 17,
+    PUSH = 18,
+    PUSH_INT = 19,
+    PUSH_UINT = 20,
+    PUSH_UINT256 = 21,
+    PUSH_FLOAT = 22,
+    PUSH_BIGDECIMAL = 23,
 
-    NEW,
-    CALL,
-    IF,
-    ELSEIF,
-    ELSE,
-    FOR,
-    WHILE,
-    LOOP,
+    NEW = 24,
+    CALL = 25,
+    IF = 26,
+    ELSEIF = 27,
+    ELSE = 28,
+    FOR = 29,
+    WHILE = 30,
+    LOOP = 40;
 }
