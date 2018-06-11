@@ -57,11 +57,22 @@ public class RuntimeInterpreter
                 if(classes.containsKey(clss.getName())) throw new RuntimeException("Class '" + clss.getName() + "' already defined.");
 
                 classes.put(clss.getName(), clss);
+                objects.put(clss.getName(), clss.newInstanceBlank());
             }
     }
 
     public Class getClass(String cla55)
     {
         return classes.get(cla55);
+    }
+
+    public Object getObject(String name)
+    {
+        return objects.get(name);
+    }
+
+    public void instantiate(String clss, Object ...args)
+    {
+        objects.put(clss, getClass(clss).newInstance(args));
     }
 }

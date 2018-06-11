@@ -125,4 +125,9 @@ public class Class implements Serializable
     {
         return fields;
     }
+
+    public Object newInstanceBlank()
+    {
+        return new Object(this);
+    }
 }

@@ -16,6 +16,7 @@ import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.rvm.Opcode;
 import com.riverssen.core.rvm.opcodes.FunctionOpcode;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -27,6 +28,7 @@ public class Method
     private Opcode      opcode[];
     private Opcode      method;
     private int         offset;
+    private Token       body;
 
     public Method(Token token)
     {
@@ -35,7 +37,8 @@ public class Method
         for(Token tok : token.getTokens().get(1).getTokens())
             this.arguments.add(new Field(tok));
 
-        this.method     = new FunctionOpcode(token.getTokens().get(2));
+        this.method     = new FunctionOpcode(token.getTokens().get(3));
+        this.body       = token.getTokens().get(3);
     }
 
     public Method(String name)
@@ -69,8 +72,61 @@ public class Method
         return returnType;
     }
 
-    protected void call(Object self, Object ...args) throws RuntimeException
+    HashMap<String, Object> objectHashMap = new HashMap<>();
+
+    protected Object getObject(String name, Object self)
     {
+        if(objectHashMap.containsKey(name))
+            return objectHashMap.get(name);
+        else return self.getFieldByName(name);
+    }
+
+    protected Object proceduralAccess(Token token, Object self)
+    {
+        if(token.getTokens().get(0).getType().equals(Token.Type.METHOD_CALL))
+            self = self.callMethod(token.getTokens().get(0).toString());
+        else if(self != null && self.getFieldByName(token.getTokens().get(0).toString()) != null)
+            self = self.getFieldByName(token.getTokens().get(0).toString());
+        else self = objectHashMap.get(token.getTokens().get(0).toString());
+
+        if(token.getTokens().get(1).getType().equals(Token.Type.PROCEDURAL_ACCESS))
+            return proceduralAccess(token.getTokens().get(1), self);
+        else return self.getFieldByName(token.getTokens().get(1).toString());
+    }
+
+    protected Object call(Object self, Object ...args) throws RuntimeException
+    {
+        objectHashMap.clear();
+        objectHashMap.put("this", self);
+
+        int i = 0;
+
+        for (Field field : arguments)
+            objectHashMap.put(field.getName(), args[i++]);
+
         /** pass this as parameter **/
+        for(Token token : body.getTokens())
+        {
+            switch (token.getType())
+            {
+                case INITIALIZATION:
+                        Token obj = token.getTokens().get(0);
+                        Token val = token.getTokens().get(1).getTokens().get(0);
+
+                        Object value = null;
+                        if(val.getType().equals(Token.Type.INPUT))
+                            value = Object.fromInput(val);
+                        else if(val.getType().equals(Token.Type.PROCEDURAL_ACCESS))
+                        {
+                            value = proceduralAccess(val, self);
+                        }
+
+                        if(objectHashMap.containsKey(obj))
+                            objectHashMap.put(obj.toString(), value);
+                        else self.setField(obj.toString(), value);
+                    break;
+            }
+        }
+        return null;
     }
 }

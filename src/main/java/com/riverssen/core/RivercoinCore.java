@@ -12,25 +12,28 @@
 
 package com.riverssen.core;
 
-import com.riverssen.core.mpp.compiler.AST;
 import com.riverssen.core.mpp.compiler.LexedProgram;
 import com.riverssen.core.mpp.compiler.ParsedProgram;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.mpp.contracts.Contracts;
 import com.riverssen.core.mpp.runtime.RuntimeInterpreter;
-import com.riverssen.core.rvm.Opcode;
+import com.riverssen.core.mpp.runtime.StringObject;
+import com.riverssen.core.security.Wallet;
 import com.riverssen.core.system.MiningContext;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.utils.FileUtils;
 
 import java.io.File;
 import java.security.Security;
-import java.util.List;
 
 public class RivercoinCore
 {
     public static void main(String args[]) throws Exception
     {
+        /**
+         * Add the bouncy castle provider
+         */
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         if(args != null && args.length > 1)
         new RivercoinCore(args[0], args[1]);
         else throw new RuntimeException("Please specify a rivercoin.config file.");
@@ -38,15 +41,20 @@ public class RivercoinCore
 
     private RivercoinCore(String type, String file) throws Exception
     {
+        Wallet wallet = new Wallet("dawdaw", "dawddawdwa");
         /** Test Code For The Mocha++ Compiler **/
         ParsedProgram pp = new ParsedProgram(new LexedProgram(FileUtils.readUTF(Contracts.class.getResourceAsStream("contracts.mpp"))));
         Token list = pp.getTokens();
 
-        RuntimeInterpreter interpreter = new RuntimeInterpreter(pp.getTokens());
-        interpreter.getClass("HelloWorld").getMethoddByName("setMessage");
-        AST ast = new AST(pp);
+        System.out.println(pp.getTokens().humanReadable(0));
 
-        List<Opcode> opcodes = ast.getOpcodes();
+        RuntimeInterpreter interpreter = new RuntimeInterpreter(pp.getTokens(), wallet.getPublicKey().getCompressed());
+
+        interpreter.getObject("HelloWorld").callMethod("HelloWorld", new StringObject("hello..."));
+
+        System.out.println(interpreter.getObject("HelloWorld").getFieldByName("owner"));
+//        System.out.println(interpreter.getObject("msg").getFieldByName("sender").asJavaObject());
+//        interpreter.getClass("HelloWorld").getMethoddByName("setMessage");
 
 //        System.out.println(opcodes.size());
 //
@@ -65,10 +73,6 @@ public class RivercoinCore
             case "wallet": break;
         }
 
-        /**
-         * Add the bouncy castle provider
-         */
-        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         /** Generate directories if they don't exist **/
         FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainDirectory());
         FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainTransactionDirectory());

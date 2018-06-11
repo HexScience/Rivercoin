@@ -10,24 +10,20 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-header Contract{
-    function onRequest(Keychain requestee) : var
-    function onSend(Keychain sender) : bool
-    function kill() : void
-}
+package com.riverssen.core.mpp.runtime;
 
-header PublicAddress{
-    MemObject data
-    function getData() : MemObject
+public class StringObject extends Object
+{
+    private String string;
+
+    public StringObject(String string)
     {
-        return this.data
+        this.string = string;
     }
-}
 
-header Message{
-    public PublicAddress sender
-    function getSender() : PublicAddress
+    @Override
+    public java.lang.Object asJavaObject()
     {
-        return this.sender
+        return string;
     }
 }

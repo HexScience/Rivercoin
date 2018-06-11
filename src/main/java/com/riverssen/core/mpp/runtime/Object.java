@@ -13,6 +13,7 @@
 package com.riverssen.core.mpp.runtime;
 
 import com.riverssen.core.mpp.compiler.OpcodeWriter;
+import com.riverssen.core.mpp.compiler.Token;
 
 import java.io.IOException;
 
@@ -31,8 +32,26 @@ public class Object
         this.type.getMethoddByName(type.getName()).call(this, args);
     }
 
+    protected Object(Class type)
+    {
+        this.myAddress = 0;
+        this.type = type;
+        this.fields = new Object[this.type.getFields().size()];
+    }
+
     protected Object()
     {
+    }
+
+    public static Object fromInput(Token value)
+    {
+        switch (value.getTokens().get(0).getType())
+        {
+            case STRING:
+                return new StringObject(value.getTokens().get(0).toString().substring(0, value.getTokens().get(0).toString().length() - 1));
+        }
+
+        return null;
     }
 
     protected void setField(String name, Object object)
@@ -53,6 +72,11 @@ public class Object
     public Method getMethodByName(String name)
     {
         return null;
+    }
+
+    public Object callMethod(String name, Object ...args)
+    {
+        return type.getMethoddByName(name).call(this, args);
     }
 
     public void push_to_stack(OpcodeWriter writer) throws IOException
