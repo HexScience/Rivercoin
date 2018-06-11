@@ -83,4 +83,39 @@ public class Container
     {
         return this;
     }
+
+    public Container addition(Container b)
+    {
+        return new Container();
+    }
+
+    public Container submission(Container b)
+    {
+        return new Container();
+    }
+
+    public Container multiplication(Container b)
+    {
+        return new Container();
+    }
+
+    public Container subdivision(Container b)
+    {
+        return new Container();
+    }
+
+    public Container modulo(Container b)
+    {
+        return new Container();
+    }
+
+    public Container sin(Container b)
+    {
+        return new Container();
+    }
+
+    public Container cos(Container b)
+    {
+        return new Container();
+    }
 }

@@ -97,6 +97,12 @@ public class Method extends Container
                 case PUSH_FLOAT:
                     stack.push(new Float(opcodes.getDouble()));
                     break;
+
+                case ADD:
+                    Container b = stack.pop();
+                    Container a = stack.pop();
+                    stack.push(a.addition(b));
+                    break;
             }
         }
     }
