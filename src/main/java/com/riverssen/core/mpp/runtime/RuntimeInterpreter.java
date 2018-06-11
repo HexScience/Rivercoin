@@ -30,36 +30,6 @@ public class RuntimeInterpreter
     {
         classes = new HashMap<>();
         objects = new HashMap<>();
-
-        objects.put("msg", new Message().newInstance(new Object() {
-            @Override
-            public java.lang.Object asJavaObject()
-            {
-                return address;
-            }
-        }, new Object() {
-            @Override
-            public java.lang.Object asJavaObject()
-            {
-                return address.toPublicKey();
-            }
-        }, new Object() {
-            @Override
-            public java.lang.Object asJavaObject()
-            {
-                return address.toPublicKey().getAddress();
-            }
-        }));
-
-        for(Token token : root.getTokens())
-            if(token.getType().equals(Token.Type.CLASS_DECLARATION))
-            {
-                Class clss = new Class(token);
-                if(classes.containsKey(clss.getName())) throw new RuntimeException("Class '" + clss.getName() + "' already defined.");
-
-                classes.put(clss.getName(), clss);
-                objects.put(clss.getName(), clss.newInstanceBlank());
-            }
     }
 
     public Class getClass(String cla55)
@@ -70,10 +40,5 @@ public class RuntimeInterpreter
     public Object getObject(String name)
     {
         return objects.get(name);
-    }
-
-    public void instantiate(String clss, Object ...args)
-    {
-        objects.put(clss, getClass(clss).newInstance(args));
     }
 }

@@ -17,17 +17,17 @@ public class Message extends Class
     protected Message()
     {
         super("Message");
-        addMethod(new Method("Message") {
-            @Override
-            protected Object call(Object self, Object... args) throws RuntimeException
-            {
-//                self.setField("sender", args[0]);
-//                self.setField("sender", args[1]);
-                self.setField("sender", args[2]);
-                return null;
-            }
-        });
-
-        addField(new Field("sender", "PublicAddress"));
+//        addMethod(new Method("Message") {
+//            @Override
+//            protected Object call(Object self, Object... args) throws RuntimeException
+//            {
+////                self.setField("sender", args[0]);
+////                self.setField("sender", args[1]);
+//                self.setField("sender", args[2]);
+//                return null;
+//            }
+//        });
+//
+//        addField(new Field("sender", "PublicAddress"));
     }
 }

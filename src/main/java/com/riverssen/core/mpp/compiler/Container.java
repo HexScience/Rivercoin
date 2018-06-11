@@ -13,6 +13,7 @@
 package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.mpp.exceptions.CompileException;
+import com.riverssen.core.mpp.runtime.vm.memory.MemObject;
 
 import java.util.Map;
 
@@ -49,8 +50,9 @@ public class Container
         this.globalMap.put(ns.getName(), ns);
     }
 
-    public void setField(String name, Object value)
+    public void setField(String name, Container value)
     {
+        this.globalMap.put(name, value);
     }
 
     public String getName()
@@ -61,5 +63,14 @@ public class Container
     public Map<String, Container> getGlobalMap()
     {
         return globalMap;
+    }
+
+    public Container get(String name)
+    {
+        return globalMap.get(name);
+    }
+
+    public void call(Container self, Container...args)
+    {
     }
 }

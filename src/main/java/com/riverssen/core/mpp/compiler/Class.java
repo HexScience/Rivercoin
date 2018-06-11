@@ -35,15 +35,26 @@ public class Class extends Container implements Serializable
                 addMethod(tok);
     }
 
+    private Class(Class from)
+    {
+        this.name       = from.getName();
+        this.parents    = new LinkedHashSet<>();
+        this.parents    .addAll(from.parents);
+        this.getGlobalMap().putAll(from.getGlobalMap());
+    }
+
     protected Class(String name)
     {
         this.name = name;
         this.parents = new LinkedHashSet<>();
     }
 
-    public Object newInstance(Object...args) throws RuntimeException
+    public Container newInstance(Container...args) throws RuntimeException
     {
-        return new Object(this, args);
+        Class clss = new Class(this);
+        clss.get(clss.getName()).call(clss, args);
+
+        return clss;
     }
 
     @Override
@@ -52,10 +63,5 @@ public class Class extends Container implements Serializable
         String string = "---" + name + "---\n";
 
         return string;
-    }
-
-    public Object newInstanceBlank()
-    {
-        return new Object(this);
     }
 }
