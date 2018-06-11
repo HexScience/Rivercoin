@@ -12,43 +12,10 @@
 
 package com.riverssen.core.mpp.runtime;
 
-import com.riverssen.core.mpp.compiler.Token;
-import com.riverssen.core.mpp.exceptions.RuntimeException;
-import com.riverssen.core.security.PublicAddress;
-
-import java.util.HashMap;
-import java.util.Map;
-
-public class RuntimeInterpreter
+public class Message extends Class
 {
-    private Map<String, Class>  classes;
-    private Map<String, Object> objects;
-
-    public RuntimeInterpreter(Token root, PublicAddress address) throws RuntimeException
+    protected Message()
     {
-        classes = new HashMap<>();
-        objects = new HashMap<>();
-
-        objects.put("msg", new Message().newInstance(new Object() {
-            @Override
-            public java.lang.Object asJavaObject()
-            {
-                return address;
-            }
-        }));
-
-        for(Token token : root.getTokens())
-            if(token.getType().equals(Token.Type.CLASS_DECLARATION))
-            {
-                Class clss = new Class(token);
-                if(classes.containsKey(clss.getName())) throw new RuntimeException("Class '" + clss.getName() + "' already defined.");
-
-                classes.put(clss.getName(), clss);
-            }
-    }
-
-    public Class getClass(String cla55)
-    {
-        return classes.get(cla55);
+        super("name");
     }
 }

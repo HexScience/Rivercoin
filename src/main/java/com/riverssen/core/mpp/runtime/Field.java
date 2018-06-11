@@ -58,6 +58,12 @@ public class Field implements Serializable
         return this;
     }
 
+    @Override
+    public int hashCode()
+    {
+        return getName().hashCode();
+    }
+
     protected void setOffset(int offset)
     {
         this.offset = offset;

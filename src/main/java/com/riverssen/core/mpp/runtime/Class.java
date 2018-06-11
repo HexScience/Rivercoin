@@ -54,6 +54,14 @@ public class Class implements Serializable
             method.setOffset(this.size ++);
     }
 
+    protected Class(String name)
+    {
+        this.name       = name;
+        this.parents    = new LinkedHashSet<>();
+        this.fields     = new LinkedHashSet<>();
+        this.methods    = new LinkedHashSet<>();
+    }
+
     public void accessStaticField(String name, OpcodeWriter writer) throws IOException
     {
         for(Field field : fields)
@@ -86,7 +94,7 @@ public class Class implements Serializable
         return this;
     }
 
-    public Object newInstance(OpcodeWriter context, Object...args) throws IOException
+    public Object newInstance(Object...args) throws RuntimeException
     {
         return new Object(this, args);
     }
@@ -105,5 +113,10 @@ public class Class implements Serializable
             string += "\t" + field.getName() + " " + field.getType() + "\n";
 
         return string;
+    }
+
+    public Set<Field> getFields()
+    {
+        return fields;
     }
 }

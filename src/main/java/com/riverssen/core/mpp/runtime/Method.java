@@ -65,9 +65,8 @@ public class Method
         return returnType;
     }
 
-    protected void call(OpcodeWriter writer, Object self, Token token) throws Exception
+    protected void call(Object self, Object ...args) throws RuntimeException
     {
         /** pass this as parameter **/
-        self.push_to_stack(writer);
     }
 }

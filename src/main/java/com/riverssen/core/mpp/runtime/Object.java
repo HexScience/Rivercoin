@@ -20,12 +20,34 @@ public class Object
 {
     private int myAddress = 0;
     private Class type;
+    private Object fields[];
     private boolean onStack;
 
-    public Object(Class type, Object ...args)
+    public Object(Class type, Object ...args) throws RuntimeException
     {
         this.myAddress = 0;
         this.type = type;
+        this.fields = new Object[this.type.getFields().size()];
+        this.type.getMethoddByName(type.getName()).call(this, args);
+    }
+
+    protected Object()
+    {
+    }
+
+    public java.lang.Object asJavaObject()
+    {
+        return null;
+    }
+
+    public Object getFieldByName(String name)
+    {
+        return fields[type.getFieldByName(name)];
+    }
+
+    public Method getMethodByName(String name)
+    {
+        return null;
     }
 
     public void push_to_stack(OpcodeWriter writer) throws IOException
