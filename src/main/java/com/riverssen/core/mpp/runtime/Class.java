@@ -12,92 +12,34 @@
 
 package com.riverssen.core.mpp.runtime;
 
-import com.riverssen.core.mpp.Opcode;
-import com.riverssen.core.mpp.compiler.OpcodeWriter;
 import com.riverssen.core.mpp.compiler.Token;
+import com.riverssen.core.mpp.exceptions.CompileException;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class Class implements Serializable
+public class Class extends Container implements Serializable
 {
-    private static final Set<Class> const_parents = new LinkedHashSet<>();
-    static {
-        Method toString = new ToStringMethod();
-    }
-
     private String          name;
     private Set<Class>      parents;
-    private Set<Field>      fields;
-    private Set<Method>     methods;
-    private int             size;
 
-    public Class(Token token)
+    public Class(Token token) throws CompileException
     {
         this.name       = token.getTokens().get(0).toString();
         this.parents    = new LinkedHashSet<>();
-        this.fields     = new LinkedHashSet<>();
-        this.methods    = new LinkedHashSet<>();
 
         for(Token tok : token.getTokens().get(1).getTokens())
             if(tok.getType().equals(Token.Type.EMPTY_DECLARATION) || tok.getType().equals(Token.Type.FULL_DECLARATION))
-                fields.add(new Field(tok));
+                addDeclaration(tok);
             else if(tok.getType().equals(Token.Type.METHOD_DECLARATION))
-                methods.add(new Method(tok));
-
-        for(Field field : fields)
-            field.setOffset(this.size ++);
-
-        for(Method method : methods)
-            method.setOffset(this.size ++);
+                addMethod(tok);
     }
 
     protected Class(String name)
     {
-        this.name       = name;
-        this.parents    = new LinkedHashSet<>();
-        this.fields     = new LinkedHashSet<>();
-        this.methods    = new LinkedHashSet<>();
-    }
-
-    public void accessStaticField(String name, OpcodeWriter writer) throws IOException
-    {
-        for(Field field : fields)
-            if (field.getName().equals(name))
-            {
-                writer.write(Opcode.LOAD);
-                writer.getStream().writeInt(field.getOffset());
-            }
-    }
-
-    public int getFieldByName(String name)
-    {
-        for(Field field : fields)
-            if (field.getName().equals(name)) return field.getOffset();
-
-        return 0;
-    }
-
-    public Method getMethoddByName(String name)
-    {
-        for(Method method : methods)
-            if (method.getName().equals(name)) return method;
-
-        return null;
-    }
-
-    public Class addMethod(Method method)
-    {
-        this.methods.add(method);
-        return this;
-    }
-
-    public Class addField(Field field)
-    {
-        this.fields.add(field);
-        return this;
+        this.name = name;
+        this.parents = new LinkedHashSet<>();
     }
 
     public Object newInstance(Object...args) throws RuntimeException
@@ -105,25 +47,12 @@ public class Class implements Serializable
         return new Object(this, args);
     }
 
-    public String getName()
-    {
-        return name;
-    }
-
     @Override
     public String toString()
     {
         String string = "---" + name + "---\n";
 
-        for (Field field : fields)
-            string += "\t" + field.getName() + " " + field.getType() + "\n";
-
         return string;
-    }
-
-    public Set<Field> getFields()
-    {
-        return fields;
     }
 
     public Object newInstanceBlank()

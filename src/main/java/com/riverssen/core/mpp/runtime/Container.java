@@ -17,24 +17,44 @@ import com.riverssen.core.mpp.exceptions.CompileException;
 
 import java.util.Map;
 
-public class Namespace extends Container
+public class Container
 {
-    private String                  namespace;
+    private String                  identifier;
     private Map<String, Namespace>  namespaceMap;
     private Map<String, Class>      classMap;
     private Map<String, Method>     methodMap;
     private Map<String, Field>      fieldMap;
 
-    public Namespace(Token ns) throws CompileException
+    protected void addNameSpace(Token token) throws CompileException
     {
-        if (ns.getType().equals(Token.Type.ROOT)) namespace = "global";
-        else if (ns.getType().equals(Token.Type.NAMESPACE)) namespace = ns.toString();
+        Namespace ns = new Namespace(token);
+        if(this.namespaceMap.containsKey(ns.getName())) throw new CompileException("namespace '" + ns.getName() + "' already defined.", token);
+        this.namespaceMap.put(ns.getName(), ns);
+    }
 
-        for (Token token : ns.getTokens())
-            if (token.getType().equals(Token.Type.NAMESPACE)) addNameSpace(token);
-            else if (token.getType().equals(Token.Type.CLASS_DECLARATION)) addClass(token);
-            else if (token.getType().equals(Token.Type.METHOD_DECLARATION)) addMethod(token);
-            else if (token.getType().equals(Token.Type.EMPTY_DECLARATION)) addDeclaration(token);
-            else if (token.getType().equals(Token.Type.FULL_DECLARATION)) addDeclaration(token);
+    protected void addClass(Token token) throws CompileException
+    {
+        Class ns = new Class(token);
+        if(this.classMap.containsKey(ns.getName())) throw new CompileException("class '" + ns.getName() + "' already defined.", token);
+        this.classMap.put(ns.getName(), ns);
+    }
+
+    protected void addMethod(Token token) throws CompileException
+    {
+        Method ns = new Method(token);
+        if(this.methodMap.containsKey(ns.getName())) throw new CompileException("method '" + ns.getName() + "' already defined.", token);
+        this.methodMap.put(ns.getName(), ns);
+    }
+
+    protected void addDeclaration(Token token) throws CompileException
+    {
+        Field ns = new Field(token);
+        if(this.fieldMap.containsKey(ns.getName())) throw new CompileException("field '" + ns.getName() + "' already defined.", token);
+        this.fieldMap.put(ns.getName(), ns);
+    }
+
+    public String getName()
+    {
+        return identifier;
     }
 }
