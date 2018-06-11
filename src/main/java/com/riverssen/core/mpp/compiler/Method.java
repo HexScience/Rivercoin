@@ -12,6 +12,7 @@
 
 package com.riverssen.core.mpp.compiler;
 
+import com.riverssen.core.mpp.objects.Boolean;
 import com.riverssen.core.mpp.objects.Float;
 import com.riverssen.core.mpp.objects.Integer;
 import com.riverssen.core.mpp.objects.Uint;
@@ -125,6 +126,11 @@ public class Method extends Container
                     b = stack.pop();
                     a = stack.pop();
                     stack.push(a.power(b));
+                    break;
+                case ASSERT:
+                    b = stack.pop();
+                    a = stack.pop();
+                    stack.push(new Boolean(a.equals(b)));
                     break;
             }
         }

@@ -123,4 +123,10 @@ public class Container
     {
         return new Container();
     }
+
+    @Override
+    public boolean equals(java.lang.Object obj)
+    {
+        return super.equals(obj);
+    }
 }
