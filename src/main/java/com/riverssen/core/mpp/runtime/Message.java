@@ -17,5 +17,7 @@ public class Message extends Class
     protected Message()
     {
         super("name");
+
+        this.addMethod(new Method(""))
     }
 }

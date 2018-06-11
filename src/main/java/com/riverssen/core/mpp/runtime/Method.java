@@ -39,6 +39,8 @@ public class Method
         this.method     = new FunctionOpcode(token.getTokens().get(2));
     }
 
+    public Method
+
     public Method(String name, Opcode opcode[])
     {
         this.name   = name;
