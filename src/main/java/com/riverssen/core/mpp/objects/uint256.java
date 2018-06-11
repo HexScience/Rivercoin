@@ -10,55 +10,24 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.mpp;
+package com.riverssen.core.mpp.objects;
 
-public class Opcode
+import com.riverssen.core.mpp.compiler.Container;
+
+import java.math.BigInteger;
+
+public class uint256 extends Container
 {
-    public static final short
-    HLT = 0,
+    private BigInteger value;
 
-    //MATH
-    ADD = 1,
-    SUB = 2,
-    MLT = 3,
-    DIV = 4,
-    MOD = 5,
-    POW = 6,
-    SIN = 7,
-    COS = 8,
+    public uint256(BigInteger value)
+    {
+        this.value = value;
+    }
 
-    //BOOL
-    AND = 9,
-    OR = 10,
-    RSHFT = 11,
-    LSHFT = 12,
-    ASSERT = 13,
-
-    //OPERATIONAL
-    SET = 14, //STACK.SET(INDEX, OBJECT)
-    PUT = 15, //MEMORY.PUT(INDEX, OBJECT)
-    PRT = 16,
-
-    POP = 17,
-    PUSH = 18,
-    PUSH_INT = 19,
-    PUSH_UINT = 20,
-    PUSH_UINT256 = 21,
-    PUSH_FLOAT = 22,
-    PUSH_BIGDECIMAL = 23,
-
-    NEW = 24,
-    CALL = 25,
-    IF = 26,
-    ELSEIF = 27,
-    ELSE = 28,
-    FOR = 29,
-    WHILE = 30,
-    LOOP = 31,
-
-    FUN = 32,
-
-    LOAD = 33, //stack.push(stack.get(int))
-
-    EXT = 400;
+    @Override
+    public Object asJavaObject()
+    {
+        return value;
+    }
 }

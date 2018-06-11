@@ -21,7 +21,7 @@ public class Field extends Container implements Serializable
 {
     private String          fieldType;
     private Set<Modifier>   fieldModifiers;
-    private Token           defaultValue;
+    private Container       value;
     private int             offset;
 
     public Field(String name, String type)
@@ -40,13 +40,13 @@ public class Field extends Container implements Serializable
 
     public Field(Token tok)
     {
-        this.name = tok.getTokens().get(1).toString();
-        this.fieldType = tok.getTokens().get(0).toString();
+        this.name           = tok.getTokens().get(1).toString();
+        this.fieldType      = tok.getTokens().get(0).toString();
 
         this.fieldModifiers = new LinkedHashSet<>();
         this.fieldModifiers.addAll(tok.getModifiers());
 
-        if (tok.getType().equals(Token.Type.FULL_DECLARATION)) this.defaultValue = tok.getTokens().get(2);
+        if (tok.getType().equals(Token.Type.FULL_DECLARATION)) this.value = null;//tok.getTokens().get(2);
     }
 
     public Field addModifier(Modifier modifier)
@@ -74,6 +74,13 @@ public class Field extends Container implements Serializable
     public String getType()
     {
         return this.fieldType;
+    }
+
+    @Override
+    public String toString()
+    {
+        if(value == null) return "null";
+        return value.toString();
     }
 
     public Collection<Modifier> getModifiers()

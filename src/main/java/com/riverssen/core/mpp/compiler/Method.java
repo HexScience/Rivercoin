@@ -12,20 +12,28 @@
 
 package com.riverssen.core.mpp.compiler;
 
+import com.riverssen.core.mpp.objects.Float;
+import com.riverssen.core.mpp.objects.Integer;
+import com.riverssen.core.mpp.objects.Uint;
+import com.riverssen.core.mpp.objects.uint256;
 import com.riverssen.core.rvm.Opcode;
-import com.riverssen.core.rvm.opcodes.FunctionOpcode;
 
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.Stack;
+
+import static com.riverssen.core.mpp.compiler.Opcode.*;
 
 public class Method extends Container
 {
+    private static final Stack<Container> stack = new Stack<>();
     private Set<Field>  arguments;
     private String      returnType;
-    private Opcode      opcode[];
-    private Opcode      method;
     private int         offset;
     private Token       body;
+    private ByteBuffer  opcodes;
 
     public Method(Token token)
     {
@@ -33,8 +41,8 @@ public class Method extends Container
         this.arguments  = new LinkedHashSet<>();
         for(Token tok : token.getTokens().get(1).getTokens())
             this.arguments.add(new Field(tok));
+        this.returnType = token.getTokens().get(1).toString();
 
-        this.method     = new FunctionOpcode(token.getTokens().get(3));
         this.body       = token.getTokens().get(3);
     }
 
@@ -46,7 +54,6 @@ public class Method extends Container
     public Method(String name, Opcode opcode[])
     {
         this.name   = name;
-        this.opcode = opcode;
     }
 
     protected   void    setOffset(int offset)
@@ -62,5 +69,41 @@ public class Method extends Container
     public String getReturnType()
     {
         return returnType;
+    }
+
+    @Override
+    public void call(Container self, Container... args)
+    {
+        stack.clear();
+        stack.push(self);
+        for(Container arg : args)
+            stack.push(arg);
+
+        while (opcodes.remaining() > 0)
+        {
+            switch (opcodes.getShort())
+            {
+                case PUSH_INT:
+                    stack.push(new Integer(opcodes.getLong()));
+                    break;
+                case PUSH_UINT:
+                    stack.push(new Uint(opcodes.getLong()));
+                    break;
+                case PUSH_UINT256:
+                    byte bi[] = new byte[32];
+                    opcodes.get(bi);
+                    stack.push(new uint256(new BigInteger(bi)));
+                    break;
+                case PUSH_FLOAT:
+                    stack.push(new Float(opcodes.getDouble()));
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public String toString()
+    {
+        return "method: " + name + " " + returnType + " {}";
     }
 }
