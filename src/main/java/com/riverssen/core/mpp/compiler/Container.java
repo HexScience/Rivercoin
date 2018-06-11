@@ -118,4 +118,9 @@ public class Container
     {
         return new Container();
     }
+
+    public Container power(Container b)
+    {
+        return new Container();
+    }
 }
