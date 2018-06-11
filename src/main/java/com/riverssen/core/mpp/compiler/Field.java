@@ -19,7 +19,6 @@ import java.util.Set;
 
 public class Field extends Container implements Serializable
 {
-    private String          fieldName;
     private String          fieldType;
     private Set<Modifier>   fieldModifiers;
     private Token           defaultValue;
@@ -32,7 +31,7 @@ public class Field extends Container implements Serializable
 
     public Field(String name, String type, Collection<Modifier> modifiers)
     {
-        this.fieldName = name;
+        this.name = name;
         this.fieldType = type;
         this.fieldModifiers = new LinkedHashSet<>();
 
@@ -41,7 +40,7 @@ public class Field extends Container implements Serializable
 
     public Field(Token tok)
     {
-        this.fieldName = tok.getTokens().get(1).toString();
+        this.name = tok.getTokens().get(1).toString();
         this.fieldType = tok.getTokens().get(0).toString();
 
         this.fieldModifiers = new LinkedHashSet<>();
@@ -70,11 +69,6 @@ public class Field extends Container implements Serializable
     public int getOffset()
     {
         return this.offset;
-    }
-
-    public String getName()
-    {
-        return this.fieldName;
     }
 
     public String getType()

@@ -13,14 +13,19 @@
 package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.mpp.exceptions.CompileException;
-import com.riverssen.core.mpp.runtime.vm.memory.MemObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Container
 {
-    private String                  identifier;
+    protected String                name;
     private Map<String, Container>  globalMap;
+
+    public Container()
+    {
+        this.globalMap = new HashMap<>();
+    }
 
     protected void addNameSpace(Token token) throws CompileException
     {
@@ -57,7 +62,7 @@ public class Container
 
     public String getName()
     {
-        return identifier;
+        return name;
     }
 
     public Map<String, Container> getGlobalMap()
@@ -72,5 +77,10 @@ public class Container
 
     public void call(Container self, Container...args)
     {
+    }
+
+    public java.lang.Object asJavaObject()
+    {
+        return this;
     }
 }

@@ -20,7 +20,6 @@ import java.util.Set;
 
 public class Class extends Container implements Serializable
 {
-    private String          name;
     private Set<Class>      parents;
 
     public Class(Token token) throws CompileException

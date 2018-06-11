@@ -12,7 +12,9 @@
 
 package com.riverssen.core.mpp.runtime;
 
-public class StringObject extends Object
+import com.riverssen.core.mpp.compiler.Container;
+
+public class StringObject extends Container
 {
     private String string;
 

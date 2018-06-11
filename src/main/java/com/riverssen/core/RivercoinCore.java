@@ -13,6 +13,7 @@
 package com.riverssen.core;
 
 import com.riverssen.core.mpp.compiler.LexedProgram;
+import com.riverssen.core.mpp.compiler.Namespace;
 import com.riverssen.core.mpp.compiler.ParsedProgram;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.mpp.contracts.Contracts;
@@ -46,11 +47,15 @@ public class RivercoinCore
         ParsedProgram pp = new ParsedProgram(new LexedProgram(FileUtils.readUTF(Contracts.class.getResourceAsStream("contracts.mpp"))));
         Token list = pp.getTokens();
 
-        RuntimeInterpreter interpreter = new RuntimeInterpreter(pp.getTokens(), wallet.getPublicKey().getCompressed());
+        Namespace global = new Namespace(pp.getTokens());
+
+        System.out.println(global.get("HelloWorld"));
+
+//        RuntimeInterpreter interpreter = new RuntimeInterpreter(pp.getTokens(), wallet.getPublicKey().getCompressed());
 
 //        interpreter.getObject("HelloWorld").callMethod("HelloWorld", new StringObject("hello..."));
 
-        System.out.println(interpreter.getObject("HelloWorld").getFieldByName("owner"));
+//        System.out.println(interpreter.getObject("HelloWorld").getFieldByName("owner"));
 //        System.out.println(interpreter.getObject("msg").getFieldByName("sender").asJavaObject());
 //        interpreter.getClass("HelloWorld").getMethoddByName("setMessage");
 

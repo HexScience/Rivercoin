@@ -15,13 +15,11 @@ package com.riverssen.core.mpp.compiler;
 import com.riverssen.core.rvm.Opcode;
 import com.riverssen.core.rvm.opcodes.FunctionOpcode;
 
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Method extends Container
 {
-    private String      name;
     private Set<Field>  arguments;
     private String      returnType;
     private Opcode      opcode[];
@@ -59,11 +57,6 @@ public class Method extends Container
     public      int     getOffset()
     {
         return this.offset;
-    }
-
-    public String getName()
-    {
-        return name;
     }
 
     public String getReturnType()
