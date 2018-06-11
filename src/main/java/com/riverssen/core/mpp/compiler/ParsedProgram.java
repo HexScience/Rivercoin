@@ -12,7 +12,6 @@
 
 package com.riverssen.core.mpp.compiler;
 
-import com.riverssen.core.mpp.runtime.Modifier;
 import com.riverssen.core.mpp.exceptions.ParseException;
 
 import java.util.*;

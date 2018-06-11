@@ -1,8 +1,6 @@
 package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.mpp.exceptions.CompileException;
-import com.riverssen.core.mpp.runtime.Class;
-import com.riverssen.core.mpp.runtime.Method;
 import com.riverssen.core.rvm.Opcode;
 
 import java.util.ArrayList;

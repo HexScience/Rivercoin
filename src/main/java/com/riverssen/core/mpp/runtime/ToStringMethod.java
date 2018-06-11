@@ -12,6 +12,8 @@
 
 package com.riverssen.core.mpp.runtime;
 
+import com.riverssen.core.mpp.compiler.Method;
+
 public class ToStringMethod extends Method
 {
     public ToStringMethod()
