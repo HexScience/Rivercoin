@@ -79,6 +79,9 @@ public class Method extends Container
         for(Container arg : args)
             stack.push(arg);
 
+        Container a = null;
+        Container b = null;
+
         while (opcodes.remaining() > 0)
         {
             switch (opcodes.getShort())
@@ -99,9 +102,29 @@ public class Method extends Container
                     break;
 
                 case ADD:
-                    Container b = stack.pop();
-                    Container a = stack.pop();
+                    b = stack.pop();
+                    a = stack.pop();
                     stack.push(a.addition(b));
+                    break;
+                case SUB:
+                    b = stack.pop();
+                    a = stack.pop();
+                    stack.push(a.submission(b));
+                    break;
+                case MLT:
+                    b = stack.pop();
+                    a = stack.pop();
+                    stack.push(a.multiplication(b));
+                    break;
+                case DIV:
+                    b = stack.pop();
+                    a = stack.pop();
+                    stack.push(a.subdivision(b));
+                    break;
+                case POW:
+                    b = stack.pop();
+                    a = stack.pop();
+                    stack.push(a.power(b));
                     break;
             }
         }
