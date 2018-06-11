@@ -13,6 +13,7 @@
 package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.mpp.runtime.Modifier;
+import com.riverssen.core.rvm.Opcode;
 
 import java.io.Serializable;
 import java.util.*;
