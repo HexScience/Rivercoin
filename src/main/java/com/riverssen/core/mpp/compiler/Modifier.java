@@ -10,24 +10,11 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.mpp.runtime;
+package com.riverssen.core.mpp.compiler;
 
-public class Message extends Class
+import java.io.Serializable;
+
+public enum Modifier implements Serializable
 {
-    protected Message()
-    {
-        super("Message");
-        addMethod(new Method("Message") {
-            @Override
-            protected Object call(Object self, Object... args) throws RuntimeException
-            {
-//                self.setField("sender", args[0]);
-//                self.setField("sender", args[1]);
-                self.setField("sender", args[2]);
-                return null;
-            }
-        });
-
-        addField(new Field("sender", "PublicAddress"));
-    }
+    PUBLIC, STATIC, FINAL, CONST, UNSAFE, PRIVATE, PROTECTED, SAFE, INSYNC, UNSIGNED;
 }

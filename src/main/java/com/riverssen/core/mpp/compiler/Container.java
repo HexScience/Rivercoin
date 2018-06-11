@@ -10,9 +10,8 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.mpp.runtime;
+package com.riverssen.core.mpp.compiler;
 
-import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.mpp.exceptions.CompileException;
 
 import java.util.Map;
@@ -20,37 +19,38 @@ import java.util.Map;
 public class Container
 {
     private String                  identifier;
-    private Map<String, Namespace>  namespaceMap;
-    private Map<String, Class>      classMap;
-    private Map<String, Method>     methodMap;
-    private Map<String, Field>      fieldMap;
+    private Map<String, Container>  globalMap;
 
     protected void addNameSpace(Token token) throws CompileException
     {
         Namespace ns = new Namespace(token);
-        if(this.namespaceMap.containsKey(ns.getName())) throw new CompileException("namespace '" + ns.getName() + "' already defined.", token);
-        this.namespaceMap.put(ns.getName(), ns);
+        if(this.globalMap.containsKey(ns.getName())) throw new CompileException("namespace '" + ns.getName() + "' already defined.", token);
+        this.globalMap.put(ns.getName(), ns);
     }
 
     protected void addClass(Token token) throws CompileException
     {
         Class ns = new Class(token);
-        if(this.classMap.containsKey(ns.getName())) throw new CompileException("class '" + ns.getName() + "' already defined.", token);
-        this.classMap.put(ns.getName(), ns);
+        if(this.globalMap.containsKey(ns.getName())) throw new CompileException("class '" + ns.getName() + "' already defined.", token);
+        this.globalMap.put(ns.getName(), ns);
     }
 
     protected void addMethod(Token token) throws CompileException
     {
         Method ns = new Method(token);
-        if(this.methodMap.containsKey(ns.getName())) throw new CompileException("method '" + ns.getName() + "' already defined.", token);
-        this.methodMap.put(ns.getName(), ns);
+        if(this.globalMap.containsKey(ns.getName())) throw new CompileException("method '" + ns.getName() + "' already defined.", token);
+        this.globalMap.put(ns.getName(), ns);
     }
 
     protected void addDeclaration(Token token) throws CompileException
     {
         Field ns = new Field(token);
-        if(this.fieldMap.containsKey(ns.getName())) throw new CompileException("field '" + ns.getName() + "' already defined.", token);
-        this.fieldMap.put(ns.getName(), ns);
+        if(this.globalMap.containsKey(ns.getName())) throw new CompileException("field '" + ns.getName() + "' already defined.", token);
+        this.globalMap.put(ns.getName(), ns);
+    }
+
+    public void setField(String name, Object value)
+    {
     }
 
     public String getName()
