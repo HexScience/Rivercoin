@@ -19,7 +19,7 @@ public class AST
     private HashMap<String, Integer>sizes   = new HashMap<>();
 
     private Stack<String>           globalStack = new Stack<>();
-    private HashMap<Integer, String>globalMemry = new HashMap<>();
+    private HashMap<String, Integer>globalMemry = new HashMap<>();
     private int                     globalIndex = 0;
 
     public AST(ParsedProgram program) throws CompileException
@@ -43,13 +43,15 @@ public class AST
 
     private void enterClass(Token clasz) throws CompileException
     {
-//        Opcode rootCode = new ClassOpcode(null);
         Class clss = new Class(clasz);
         if(classes.containsKey(clss.getName())) throw new CompileException("Class already exists", clasz);
         classes.put(clss.getName(), clss);
+
+        //Because contracts cannot be initialized more than once, we create an object in their name
+        newObject(clss.getName());
     }
 
-    private List<Short> enterMethodBody(Token body)
+    private List<Short> enterMethodBody(Token body) throws CompileException
     {
         List<Short> opcodes = new ArrayList<>();
 
@@ -78,28 +80,30 @@ public class AST
         return opcodes;
     }
 
-    protected int push(String name)
+    protected int push(String name) throws CompileException
     {
         globalStack.push(name);
         return globalStack.size() - 1;
     }
 
-    protected int stackSize()
+    protected int stackSize() throws CompileException
     {
         return globalStack.size();
     }
 
-    protected int newObject(String name)
+    protected int newObject(String name) throws CompileException
     {
-        return globalIndex++;
+        globalMemry.put(name, globalIndex++);
+
+        return globalIndex - 1;
     }
 
-    public List<Opcode> getOpcodes()
+    public List<Opcode> getOpcodes() throws CompileException
     {
         return opcodes;
     }
 
-    public int sizeof(String type)
+    public int sizeof(String type) throws CompileException
     {
         return sizes.get(type);
     }

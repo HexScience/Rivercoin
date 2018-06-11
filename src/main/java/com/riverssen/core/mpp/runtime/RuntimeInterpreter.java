@@ -15,7 +15,6 @@ package com.riverssen.core.mpp.runtime;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.mpp.exceptions.RuntimeException;
 import com.riverssen.core.security.CompressedAddress;
-import com.riverssen.core.security.PublicAddress;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -46,11 +46,9 @@ public class RivercoinCore
         ParsedProgram pp = new ParsedProgram(new LexedProgram(FileUtils.readUTF(Contracts.class.getResourceAsStream("contracts.mpp"))));
         Token list = pp.getTokens();
 
-        System.out.println(pp.getTokens().humanReadable(0));
-
         RuntimeInterpreter interpreter = new RuntimeInterpreter(pp.getTokens(), wallet.getPublicKey().getCompressed());
 
-        interpreter.getObject("HelloWorld").callMethod("HelloWorld", new StringObject("hello..."));
+//        interpreter.getObject("HelloWorld").callMethod("HelloWorld", new StringObject("hello..."));
 
         System.out.println(interpreter.getObject("HelloWorld").getFieldByName("owner"));
 //        System.out.println(interpreter.getObject("msg").getFieldByName("sender").asJavaObject());
