@@ -1,5 +1,4 @@
-![alt text](http://rivercoin.net/common-content/logo-transparent-sml.png "Logo")
-# Rivercoin
+![alt text](http://rivercoin.net/common-content/logo-transparent-sml.png "Logo") # Rivercoin
 A Decentralized Cryptocurrency That Was Created On Stream
 
 Founder And Creator: Riverssen
