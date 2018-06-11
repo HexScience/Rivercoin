@@ -57,4 +57,9 @@ public class Container
     {
         return identifier;
     }
+
+    public Map<String, Container> getGlobalMap()
+    {
+        return globalMap;
+    }
 }

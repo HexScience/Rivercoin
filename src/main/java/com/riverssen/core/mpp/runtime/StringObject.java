@@ -12,8 +12,6 @@
 
 package com.riverssen.core.mpp.runtime;
 
-import com.riverssen.core.mpp.compiler.Object;
-
 public class StringObject extends Object
 {
     private String string;

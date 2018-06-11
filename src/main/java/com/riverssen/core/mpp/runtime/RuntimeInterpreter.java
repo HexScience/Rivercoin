@@ -14,7 +14,6 @@ package com.riverssen.core.mpp.runtime;
 
 import com.riverssen.core.mpp.compiler.Class;
 import com.riverssen.core.mpp.compiler.Message;
-import com.riverssen.core.mpp.compiler.Object;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.mpp.exceptions.RuntimeException;
 import com.riverssen.core.security.CompressedAddress;

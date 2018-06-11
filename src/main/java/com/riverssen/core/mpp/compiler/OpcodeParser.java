@@ -13,11 +13,9 @@
 package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.rvm.Opcode;
-import com.riverssen.core.rvm.opcodes.*;
 
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
-import static com.riverssen.core.mpp.compiler.Opcodes.*;
 
 public class OpcodeParser
 {
@@ -29,25 +27,25 @@ public class OpcodeParser
         opcodes.put(opcode);
         opcodes.flip();
 
-        while(opcodes.remaining() > 0)
-        {
-            int b = opcodes.get();
-
-            switch (b)
-            {
-                case push:  new Push(opcodes);
-                case pop:   new Pop(opcodes);
-                case print: new Print(opcodes);
-
-                /** math **/
-                case add:   new Add(opcodes);
-                case sub:   new Sub(opcodes);
-                case mul:   new Mul(opcodes);
-                case div:   new Div(opcodes);
-                case mod:   new Mod(opcodes);
-                case get:   new Get(opcodes);
-            }
-        }
+//        while(opcodes.remaining() > 0)
+//        {
+//            int b = opcodes.get();
+//
+//            switch (b)
+//            {
+//                case push:  new Push(opcodes);
+//                case pop:   new Pop(opcodes);
+//                case print: new Print(opcodes);
+//
+//                /** math **/
+//                case add:   new Add(opcodes);
+//                case sub:   new Sub(opcodes);
+//                case mul:   new Mul(opcodes);
+//                case div:   new Div(opcodes);
+//                case mod:   new Mod(opcodes);
+//                case get:   new Get(opcodes);
+//            }
+//        }
     }
 
     public Opcode[] getOpcode()
