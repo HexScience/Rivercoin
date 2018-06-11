@@ -12,7 +12,6 @@
 
 package com.riverssen.core.mpp.runtime;
 
-import com.riverssen.core.mpp.compiler.OpcodeWriter;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.rvm.Opcode;
 import com.riverssen.core.rvm.opcodes.FunctionOpcode;
@@ -39,7 +38,10 @@ public class Method
         this.method     = new FunctionOpcode(token.getTokens().get(2));
     }
 
-    public Method
+    public Method(String name)
+    {
+        this.name       = name;
+    }
 
     public Method(String name, Opcode opcode[])
     {

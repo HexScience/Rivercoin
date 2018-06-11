@@ -94,6 +94,12 @@ public class Class implements Serializable
         return this;
     }
 
+    public Class addField(Field field)
+    {
+        this.fields.add(field);
+        return this;
+    }
+
     public Object newInstance(Object...args) throws RuntimeException
     {
         return new Object(this, args);

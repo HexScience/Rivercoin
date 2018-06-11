@@ -14,6 +14,7 @@ package com.riverssen.core.mpp.runtime;
 
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.mpp.exceptions.RuntimeException;
+import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
 
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class RuntimeInterpreter
     private Map<String, Class>  classes;
     private Map<String, Object> objects;
 
-    public RuntimeInterpreter(Token root, PublicAddress address) throws RuntimeException
+    public RuntimeInterpreter(Token root, CompressedAddress address) throws RuntimeException
     {
         classes = new HashMap<>();
         objects = new HashMap<>();
@@ -34,6 +35,18 @@ public class RuntimeInterpreter
             public java.lang.Object asJavaObject()
             {
                 return address;
+            }
+        }, new Object() {
+            @Override
+            public java.lang.Object asJavaObject()
+            {
+                return address.toPublicKey();
+            }
+        }, new Object() {
+            @Override
+            public java.lang.Object asJavaObject()
+            {
+                return address.toPublicKey().getAddress();
             }
         }));
 

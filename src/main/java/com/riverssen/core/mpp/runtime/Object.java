@@ -35,6 +35,11 @@ public class Object
     {
     }
 
+    protected void setField(String name, Object object)
+    {
+        fields[type.getFieldByName(name)] = object;
+    }
+
     public java.lang.Object asJavaObject()
     {
         return null;

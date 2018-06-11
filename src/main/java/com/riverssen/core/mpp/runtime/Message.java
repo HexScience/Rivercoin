@@ -17,7 +17,15 @@ public class Message extends Class
     protected Message()
     {
         super("name");
-
-        this.addMethod(new Method(""))
+        addMethod(new Method("Message") {
+            @Override
+            protected void call(Object self, Object... args) throws RuntimeException
+            {
+//                self.setField("sender", args[0]);
+//                self.setField("sender", args[1]);
+                self.setField("sender", args[2]);
+            }
+        });
+        addField(new Field("sender", "PublicAddress"));
     }
 }
