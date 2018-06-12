@@ -279,7 +279,9 @@ public class ParsedProgram
 
         if (neW.getTokens().get(0).getType() != Token.Type.METHOD_CALL && neW.getTokens().get(0).getType() != Token.Type.IDENTIFIER) throw new ParseException("new must be followed by a function or typename " + neW, neW);
 
-        rootm.add(neW);
+        neW.getTokens().get(0).setType(NEW);
+
+        rootm.add(neW.getTokens().get(0));
     }
 
     private void parseKeyword(List<Token> tokens, Token root) throws ParseException
