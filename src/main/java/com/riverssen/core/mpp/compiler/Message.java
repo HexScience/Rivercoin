@@ -12,22 +12,30 @@
 
 package com.riverssen.core.mpp.compiler;
 
-public class Message extends Class
+import com.riverssen.core.security.PublicAddress;
+
+public class Message extends Container
 {
-    protected Message()
+    public Message(PublicAddress address)
     {
-        super("Message");
-//        addMethod(new Method("Message") {
-//            @Override
-//            protected Object call(Object self, Object... args) throws RuntimeException
-//            {
-////                self.setField("sender", args[0]);
-////                self.setField("sender", args[1]);
-//                self.setField("sender", args[2]);
-//                return null;
-//            }
-//        });
-//
-//        addField(new Field("sender", "PublicAddress"));
+        setField("sender", new Container(){
+            @Override
+            public java.lang.Object asJavaObject()
+            {
+                return address;
+            }
+
+            @Override
+            public String toString()
+            {
+                return "address{"+address+"}";
+            }
+        });
+    }
+
+    @Override
+    public String toString()
+    {
+        return "message{"+get("sender")+"}";
     }
 }

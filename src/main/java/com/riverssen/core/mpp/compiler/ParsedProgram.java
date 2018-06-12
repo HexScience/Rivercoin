@@ -532,7 +532,8 @@ public class ParsedProgram
             } else if (last.getType() == NUMBER && tokens.get(0).getType() == PROCEDURAL_ACCESS)
             {
                 last.append(tokens.get(0).toString());
-            } else if (last.getType() == NUMBER && tokens.get(0).getType() == NUMBER)
+                last.setType(DECIMAL);
+            } else if (last.getType() == DECIMAL && tokens.get(0).getType() == NUMBER)
             {
                 last.append(tokens.get(0).toString());
             } else if (last.getType().equals(SYMBOL) && last.toString().charAt(0) == '[' && tokens.get(0).getType() == SYMBOL && tokens.get(0).toString().charAt(0) == '~' && tokens.size() > 1 && tokens.get(1).getType() == SYMBOL && tokens.get(1).toString().charAt(0) == ']')

@@ -13,6 +13,10 @@
 package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.mpp.exceptions.CompileException;
+import com.riverssen.core.mpp.objects.Boolean;
+import com.riverssen.core.mpp.objects.Float;
+import com.riverssen.core.mpp.objects.Integer;
+import com.riverssen.core.mpp.runtime.StringObject;
 
 import java.io.Serializable;
 import java.util.*;
@@ -119,7 +123,8 @@ public class Token implements Serializable
         MINUSMINUS,
         LIST,
         ARRAY,
-        WHILE
+        WHILE,
+        DECIMAL
     };
 
     public Token(String value, int line, int offset, int whitespace)
@@ -174,18 +179,60 @@ public class Token implements Serializable
         switch (type)
         {
             case FULL_DECLARATION:
-                String name  = getTokens().get(0).toString();
-                String type  = getTokens().get(1).toString();
-                Token  value = getTokens().get(2);
+                String name = getTokens().get(0).toString();
+                String type = getTokens().get(1).toString();
+                Token value = getTokens().get(2);
 
-                if(context.get(name) != null) throw new CompileException("object '" + name + "' already defined", this);
+                if (context.get(name) != null) throw new CompileException("object '" + name + "' already defined.", this);
 
                 Container returnedValue = value.interpret(context, self, args);
 
                 context.setField(name, returnedValue);
                 break;
-        }
+            case INITIALIZATION:
+                System.out.println(humanReadable(0));
+                String name_ = getTokens().get(0).toString();
+                Token value_ = getTokens().get(1);
 
+                Container returnedValue_ = value_.interpret(context, self, args);
+                if(context.get(name_) != null)
+                    context.setField(name_, returnedValue_);
+                else self.setField(name_, returnedValue_);
+                break;
+            case PROCEDURAL_ACCESS:
+                Container returnee = self;
+                if(context.get(getTokens().get(0).toString()) != null) returnee = context.get(getTokens().get(0).toString());
+                else if(self.get(getTokens().get(0).toString()) != null) returnee = self.get(getTokens().get(0).toString());
+
+                else throw new CompileException("object '" + getTokens().get(0).toString() + "' not defined.", this);
+
+                return getTokens().get(1).interpret(returnee, self, args);
+            case VALUE:
+                    return getTokens().get(0).interpret(context, self, args);
+            case INPUT:
+                    return getTokens().get(0).interpret(context, self, args);
+            case NUMBER:
+                    return new Integer(Long.valueOf(toString()));
+            case DECIMAL:
+                    return new Float(Double.valueOf(toString()));
+            case IDENTIFIER:
+                    if(context.get(toString()) != null) return context.get(toString());
+                    else if(self.get(toString()) != null) return self.get(toString());
+                    else throw new CompileException("identifier doesn't exist.", this);
+            case METHOD_CALL:
+                    if(self.get(toString()) != null)
+                    {
+                        Container arguments[] = new Container[getTokens().get(2).getTokens().size()];
+                        for(int i = 0; i < arguments.length; i ++)
+                            arguments[i] = getTokens().get(2).getTokens().get(i).interpret(context, self, args);
+
+                        return self.callMethod(toString(), arguments);
+                    }
+                    else throw new CompileException("identifier doesn't exist.", this);
+            case ASSERT:
+                return new Boolean(getTokens().get(0).equals(getTokens().get(1)));
+            case STRING: return new StringObject(toString().substring(1, toString().length() - 1));
+        }
         return null;
     }
 

@@ -120,65 +120,76 @@ public class Method extends Container
     @Override
     public Container call(Container self, Container... args)
     {
-        stack.clear();
-        stack.push(self);
-        for(Container arg : args)
-            stack.push(arg);
-
-        Container a = null;
-        Container b = null;
-
-        while (opcodes.remaining() > 0)
-        {
-            switch (opcodes.getShort())
+            for(Token token : body.getTokens())
             {
-                case PUSH_INT:
-                    stack.push(new Integer(opcodes.getLong()));
-                    break;
-                case PUSH_UINT:
-                    stack.push(new Uint(opcodes.getLong()));
-                    break;
-                case PUSH_UINT256:
-                    byte bi[] = new byte[32];
-                    opcodes.get(bi);
-                    stack.push(new uint256(new BigInteger(bi)));
-                    break;
-                case PUSH_FLOAT:
-                    stack.push(new Float(opcodes.getDouble()));
-                    break;
-
-                case ADD:
-                    b = stack.pop();
-                    a = stack.pop();
-                    stack.push(a.addition(b));
-                    break;
-                case SUB:
-                    b = stack.pop();
-                    a = stack.pop();
-                    stack.push(a.submission(b));
-                    break;
-                case MLT:
-                    b = stack.pop();
-                    a = stack.pop();
-                    stack.push(a.multiplication(b));
-                    break;
-                case DIV:
-                    b = stack.pop();
-                    a = stack.pop();
-                    stack.push(a.subdivision(b));
-                    break;
-                case POW:
-                    b = stack.pop();
-                    a = stack.pop();
-                    stack.push(a.power(b));
-                    break;
-                case ASSERT:
-                    b = stack.pop();
-                    a = stack.pop();
-                    stack.push(new Boolean(a.equals(b)));
-                    break;
+                try
+                {
+                    token.interpret(this, self, args);
+                } catch (CompileException e)
+                {
+                    e.printStackTrace();
+                }
             }
-        }
+
+//        stack.clear();
+//        stack.push(self);
+//        for(Container arg : args)
+//            stack.push(arg);
+//
+//        Container a = null;
+//        Container b = null;
+//
+//        while (opcodes.remaining() > 0)
+//        {
+//            switch (opcodes.getShort())
+//            {
+//                case PUSH_INT:
+//                    stack.push(new Integer(opcodes.getLong()));
+//                    break;
+//                case PUSH_UINT:
+//                    stack.push(new Uint(opcodes.getLong()));
+//                    break;
+//                case PUSH_UINT256:
+//                    byte bi[] = new byte[32];
+//                    opcodes.get(bi);
+//                    stack.push(new uint256(new BigInteger(bi)));
+//                    break;
+//                case PUSH_FLOAT:
+//                    stack.push(new Float(opcodes.getDouble()));
+//                    break;
+//
+//                case ADD:
+//                    b = stack.pop();
+//                    a = stack.pop();
+//                    stack.push(a.addition(b));
+//                    break;
+//                case SUB:
+//                    b = stack.pop();
+//                    a = stack.pop();
+//                    stack.push(a.submission(b));
+//                    break;
+//                case MLT:
+//                    b = stack.pop();
+//                    a = stack.pop();
+//                    stack.push(a.multiplication(b));
+//                    break;
+//                case DIV:
+//                    b = stack.pop();
+//                    a = stack.pop();
+//                    stack.push(a.subdivision(b));
+//                    break;
+//                case POW:
+//                    b = stack.pop();
+//                    a = stack.pop();
+//                    stack.push(a.power(b));
+//                    break;
+//                case ASSERT:
+//                    b = stack.pop();
+//                    a = stack.pop();
+//                    stack.push(new Boolean(a.equals(b)));
+//                    break;
+//            }
+//        }
 
         return VOID;
     }

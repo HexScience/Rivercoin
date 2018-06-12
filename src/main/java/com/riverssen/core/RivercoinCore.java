@@ -12,10 +12,7 @@
 
 package com.riverssen.core;
 
-import com.riverssen.core.mpp.compiler.LexedProgram;
-import com.riverssen.core.mpp.compiler.Namespace;
-import com.riverssen.core.mpp.compiler.ParsedProgram;
-import com.riverssen.core.mpp.compiler.Token;
+import com.riverssen.core.mpp.compiler.*;
 import com.riverssen.core.mpp.contracts.Contracts;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.system.MiningContext;
@@ -47,7 +44,10 @@ public class RivercoinCore
 
         Namespace global = new Namespace(pp.getTokens());
 
+        global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
+
         System.out.println(global.get("HelloWorld").callMethod("HelloWorld"));
+        System.out.println(global.get("HelloWorld").get("owner"));
 
 //        RuntimeInterpreter interpreter = new RuntimeInterpreter(pp.getTokens(), wallet.getPublicKey().getCompressed());
 

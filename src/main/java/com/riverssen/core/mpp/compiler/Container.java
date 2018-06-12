@@ -19,7 +19,13 @@ import java.util.Map;
 
 public class Container
 {
-    protected static final Container VOID = new Container();
+    protected static final Container VOID = new Container() {
+        @Override
+        public String toString()
+        {
+            return "void";
+        }
+    };
     protected String                name;
     private Map<String, Container>  globalMap;
 
