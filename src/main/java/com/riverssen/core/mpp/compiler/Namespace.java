@@ -36,4 +36,9 @@ public class Namespace extends Container
             else if (token.getType().equals(Token.Type.EMPTY_DECLARATION)) addDeclaration(token);
             else if (token.getType().equals(Token.Type.FULL_DECLARATION)) addDeclaration(token);
     }
+
+    public void setGlobal()
+    {
+        setGlobal(this);
+    }
 }

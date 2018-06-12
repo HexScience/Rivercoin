@@ -14,14 +14,19 @@ package com.riverssen.core;
 
 import com.riverssen.core.mpp.compiler.*;
 import com.riverssen.core.mpp.contracts.Contracts;
+import com.riverssen.core.mpp.objects.RSAPK;
 import com.riverssen.core.mpp.runtime.StringObject;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.system.MiningContext;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.utils.FileUtils;
+import com.sun.crypto.provider.RSACipher;
+import org.bouncycastle.jcajce.provider.asymmetric.RSA;
 
 import java.io.File;
+import java.security.KeyPairGenerator;
 import java.security.Security;
+import java.security.interfaces.RSAPublicKey;
 
 public class RivercoinCore
 {
@@ -45,14 +50,25 @@ public class RivercoinCore
         Token list = pp.getTokens();
 
         Namespace global = new Namespace(pp.getTokens());
+        global.setGlobal();
 
         global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
+        global.get("Messenger").setField("msg", new Message(wallet.getPublicKey().getAddress()));
 
-        global.get("HelloWorld").callMethod("HelloWorld");
+//        global.callMethod("Messenger");
+
+        global.callMethod("HelloWorld");
         System.out.println(global.get("HelloWorld").get("owner"));
         global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
         global.get("HelloWorld").callMethod("setMessage", new StringObject("My name jeff."));
         System.out.println(global.get("HelloWorld").callMethod("getMessage"));
+
+//        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+//        keyPairGenerator.initialize(256);
+//        RSAPublicKey key = (RSAPublicKey) keyPairGenerator.generateKeyPair().getPublic();
+
+//        global.get("Messenger").callMethod("sendMessage", new RSAPK(key));
+
 
         System.exit(0);
 

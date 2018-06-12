@@ -180,6 +180,8 @@ public class Token implements Serializable
     {
         switch (type)
         {
+            case NEW:
+                return context.getGlobal().get(getTokens().get(0).toString());
             case FULL_DECLARATION:
                 String name = getTokens().get(0).toString();
                 String type = getTokens().get(1).toString();
@@ -201,12 +203,14 @@ public class Token implements Serializable
                 else self.setField(name_, returnedValue_);
                 break;
             case PROCEDURAL_ACCESS:
-                Container returnee = self;
+                Container returnee = getTokens().get(0).interpret(context, self, args);//self;
 
-                if(context.get(getTokens().get(0).toString()) != null) returnee = context.get(getTokens().get(0).toString());
-                else if(self.get(getTokens().get(0).toString()) != null) returnee = self.get(getTokens().get(0).toString());
+//                Container rvlue = getTokens().get(0).interpret(context, self, args);
 
-                else throw new CompileException("identifier '" + getTokens().get(0).toString() + "' not defined.", this);
+//                if(context.get(getTokens().get(0).toString()) != null) returnee = context.get(getTokens().get(0).toString());
+//                else if(self.get(getTokens().get(0).toString()) != null) returnee = self.get(getTokens().get(0).toString());
+
+//                else throw new CompileException("identifier '" + getTokens().get(0).toString() + "' not defined.", this);
 
                 if(getTokens().get(1).getType().equals(Type.INITIALIZATION))
                 {
@@ -214,11 +218,9 @@ public class Token implements Serializable
                     Token value__ = getTokens().get(1);
 
                     Container returnedValue__ = value__.interpret(context, self, args);
-                    if(returnee.get(name__) != null)
-                        returnee.setField(name__, returnedValue__);
+                    if (returnee.get(name__) != null) returnee.setField(name__, returnedValue__);
                     else self.setField(name__, returnedValue__);
                 } else
-
                 return getTokens().get(1).interpret(returnee, Container.EMPTY, args);
             case VALUE:
                     return getTokens().get(0).interpret(context, self, args);

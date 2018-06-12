@@ -63,4 +63,10 @@ public class Class extends Container implements Serializable
 
         return string;
     }
+
+    @Override
+    public Container call(Container self, Container... args)
+    {
+        return callMethod(name, args);
+    }
 }

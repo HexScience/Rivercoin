@@ -56,6 +56,12 @@ public class Field extends Container implements Serializable
     }
 
     @Override
+    public Container call(Container self, Container... args)
+    {
+        return super.call(self, args);
+    }
+
+    @Override
     public int hashCode()
     {
         return getName().hashCode();

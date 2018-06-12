@@ -27,6 +27,7 @@ public class Container
         }
     };
     public    static final Container EMPTY = new Container();
+    public Container                global;
     protected String                name;
     private Map<String, Container>  globalMap;
 
@@ -138,9 +139,22 @@ public class Container
         return new Container();
     }
 
+    protected void setGlobal(Container global)
+    {
+        this.global = this;
+
+        for(Container container : globalMap.values())
+            container.setGlobal(global);
+    }
+
     @Override
     public boolean equals(java.lang.Object obj)
     {
         return super.equals(obj);
+    }
+
+    public Container getGlobal()
+    {
+        return global;
     }
 }
