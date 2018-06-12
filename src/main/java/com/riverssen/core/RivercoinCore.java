@@ -51,7 +51,7 @@ public class RivercoinCore
         global.get("HelloWorld").callMethod("HelloWorld");
         System.out.println(global.get("HelloWorld").get("owner"));
         global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
-        global.get("HelloWorld").callMethod("setMessage", new StringObject("i"));
+        global.get("HelloWorld").callMethod("setMessage", new StringObject("My name jeff."));
         System.out.println(global.get("HelloWorld").callMethod("getMessage"));
 
         System.exit(0);

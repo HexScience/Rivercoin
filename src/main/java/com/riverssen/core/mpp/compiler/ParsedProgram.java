@@ -148,6 +148,8 @@ public class ParsedProgram
         if (extension.getTokens().size() > 0) clasz.add(extension);
 
         rootm.add(clasz);
+
+        modifiers.clear();
     }
 
     private void parseNamespace(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
@@ -186,6 +188,8 @@ public class ParsedProgram
         if (extension.getTokens().size() > 0) namespace.add(extension);
 
         rootm.add(namespace);
+
+        modifiers.clear();
     }
 
     private void parseFunction(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
@@ -219,6 +223,8 @@ public class ParsedProgram
             function.add(body);
             rootm.add(function);
         }
+
+        modifiers.clear();
     }
 
     private void parseIfKeyword(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
