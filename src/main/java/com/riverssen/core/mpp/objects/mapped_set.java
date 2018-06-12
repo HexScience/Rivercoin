@@ -16,23 +16,57 @@ import com.riverssen.core.mpp.compiler.Container;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 public class mapped_set extends Container
 {
-    HashMap value;
+    HashMap<Container, Container> value;
 
     public mapped_set()
     {
-        this.value = new LinkedHashSet();
+        this.value = new LinkedHashMap();
 
         setField("add", new Container(){
             @Override
             public Container call(Container self, Container... args)
             {
-                value.put(ar)
+                if(!value.containsKey(args[0]))
+                    value.put(args[0], new set());
+
+                value.get(args[0]).addition(args[1]);
 
                 return Boolean.TRUE;
+            }
+        });
+
+        setField("put", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                if(!value.containsKey(args[0]))
+                    value.put(args[0], new set());
+
+                value.get(args[0]).addition(args[1]);
+
+                return Boolean.TRUE;
+            }
+        });
+
+        setField("remove", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                value.remove(args[0]);
+                return Boolean.TRUE;
+            }
+        });
+
+        setField("get", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                return value.get(args[0]);
             }
         });
 
@@ -41,7 +75,7 @@ public class mapped_set extends Container
             public Container call(Container self, Container... args)
             {
                 for(Container container : args)
-                    if(!value.contains(container)) return Boolean.FALSE;
+                    if(!value.containsKey(container)) return Boolean.FALSE;
                 return Boolean.TRUE;
             }
         });

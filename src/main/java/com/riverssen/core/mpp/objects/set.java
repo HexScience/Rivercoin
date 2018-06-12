@@ -53,6 +53,15 @@ public class set extends Container
                 return Boolean.TRUE;
             }
         });
+
+
+        setField("remove", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                return set.this.submission(args[0]);
+            }
+        });
     }
 
     @Override
@@ -65,5 +74,17 @@ public class set extends Container
     public String toString()
     {
         return value.toString();
+    }
+
+    @Override
+    public Container addition(Container b)
+    {
+        return value.add(b) ? Boolean.TRUE : Boolean.FALSE;
+    }
+
+    @Override
+    public Container submission(Container b)
+    {
+        return value.remove(b) ? Boolean.TRUE : Boolean.FALSE;
     }
 }
