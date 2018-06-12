@@ -17,7 +17,7 @@ import com.riverssen.core.mpp.objects.Float;
 import com.riverssen.core.mpp.objects.Integer;
 import com.riverssen.core.mpp.objects.Uint;
 import com.riverssen.core.mpp.objects.uint256;
-import com.riverssen.core.rvm.Opcode;
+import com.riverssen.core.mpp.Opcode;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;

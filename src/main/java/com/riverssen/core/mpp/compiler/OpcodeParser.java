@@ -12,7 +12,7 @@
 
 package com.riverssen.core.mpp.compiler;
 
-import com.riverssen.core.rvm.Opcode;
+import com.riverssen.core.mpp.Opcode;
 
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;

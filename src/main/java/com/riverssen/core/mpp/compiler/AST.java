@@ -1,7 +1,7 @@
 package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.mpp.exceptions.CompileException;
-import com.riverssen.core.rvm.Opcode;
+import com.riverssen.core.mpp.Opcode;
 
 import java.util.ArrayList;
 import java.util.HashMap;

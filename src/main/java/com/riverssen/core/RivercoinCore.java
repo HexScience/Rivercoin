@@ -17,8 +17,6 @@ import com.riverssen.core.mpp.compiler.Namespace;
 import com.riverssen.core.mpp.compiler.ParsedProgram;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.mpp.contracts.Contracts;
-import com.riverssen.core.mpp.runtime.RuntimeInterpreter;
-import com.riverssen.core.mpp.runtime.StringObject;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.system.MiningContext;
 import com.riverssen.core.headers.ContextI;
