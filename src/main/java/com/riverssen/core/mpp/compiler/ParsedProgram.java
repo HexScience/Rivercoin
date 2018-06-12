@@ -613,6 +613,10 @@ public class ParsedProgram
 
             switch (currentToken.getType())
             {
+                case RETURN:
+                    tokens.remove(0);
+                    parse(tokens, currentToken, true);
+                    return;
                 case PROCEDURAL_ACCESS:
                     tokens.remove(0);
                     parse(tokens, currentToken, false, true, false, false, false, true);

@@ -125,7 +125,8 @@ public class Token implements Serializable
         LIST,
         ARRAY,
         WHILE,
-        DECIMAL
+        DECIMAL,
+        RETURN
     };
 
     public Token(String value, int line, int offset, int whitespace)
@@ -262,6 +263,8 @@ public class Token implements Serializable
                 break;
             case PARENTHESIS:
                 break;
+//            case RETURN:
+//                if(context.get(toString()))
         }
         return null;
     }
@@ -392,7 +395,7 @@ public class Token implements Serializable
 
     private boolean isKeyword()
     {
-        final String keywords[] = {"function", "fun", "new", "class", "static", "public", "private", "protected", "const", "final", "extend", "header", "if", "for", "while", "foreach", "then", "namespace"};
+        final String keywords[] = {"function", "fun", "new", "class", "static", "public", "private", "protected", "const", "final", "extend", "header", "if", "for", "while", "foreach", "then", "namespace", "return"};
         for(String string : keywords) if(toString().equals(string)) return true;
         return false;
     }
