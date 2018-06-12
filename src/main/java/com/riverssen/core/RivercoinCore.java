@@ -43,10 +43,10 @@ public class RivercoinCore
 
     private RivercoinCore(String type, String file) throws Exception
     {
-        Wallet wallet = new Wallet("dawdaw", "dawddawdwa");
-        Wallet wallet2 = new Wallet("ddawdaw", "dadwddawdwa");
+        Wallet wallet       = new Wallet("dawdaw", "dawddawdwa");
+        Wallet wallet2      = new Wallet("ddawdaw", "dadwddawdwa");
         /** Test Code For The Mocha++ Compiler **/
-        ParsedProgram pp = new ParsedProgram(new LexedProgram(FileUtils.readUTF(Contracts.class.getResourceAsStream("contracts.mpp"))));
+        ParsedProgram pp    = new ParsedProgram(new LexedProgram(FileUtils.readUTF(Contracts.class.getResourceAsStream("contracts.mpp"))));
         Token list = pp.getTokens();
 
         Namespace global = new Namespace(pp.getTokens());
@@ -62,6 +62,9 @@ public class RivercoinCore
         global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
         global.get("HelloWorld").callMethod("setMessage", new StringObject("My name jeff."));
         System.out.println(global.get("HelloWorld").callMethod("getMessage"));
+
+
+        global.callMethod("Messenger");
 
 //        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 //        keyPairGenerator.initialize(256);

@@ -45,7 +45,7 @@ class Messenger{
     
     public function Messenger() : void
     {
-        this.owner      = new set
+        this.owner      = new set()
         this.messages   = new mapped_set
 
         owner.add(msg.sender)

@@ -181,7 +181,7 @@ public class Token implements Serializable
         switch (type)
         {
             case NEW:
-                return context.getGlobal().get(getTokens().get(0).toString());
+                return getTokens().get(0).interpret(context, self, args);
             case FULL_DECLARATION:
                 String name = getTokens().get(0).toString();
                 String type = getTokens().get(1).toString();
@@ -235,15 +235,18 @@ public class Token implements Serializable
                     else if(self.get(toString()) != null) return self.get(toString());
                     else throw new CompileException("identifier '" + toString() + "' not defined.", this);
             case METHOD_CALL:
-                    if(self.get(toString()) != null)
-                    {
-                        Container arguments[] = new Container[getTokens().get(2).getTokens().size()];
+                        if(getTokens().size() == 0) throw new CompileException("method '" + this.toString() + "' not defined.", this);
+                        Container arguments[] = new Container[getTokens().get(1).getTokens().size()];
                         for(int i = 0; i < arguments.length; i ++)
-                            arguments[i] = getTokens().get(2).getTokens().get(i).interpret(context, self, args);
+                            arguments[i] = getTokens().get(1).getTokens().get(i).interpret(context, self, args);
 
-                        return self.callMethod(toString(), arguments);
-                    }
-                    else throw new CompileException("identifier '" + toString() + "' not defined.", this);
+                        String methodName = getTokens().get(0).toString();
+
+
+                        if(context.get(methodName) != null) return context.callMethod(toString(), arguments);
+                        else if(self.get(methodName) != null) return self.callMethod(toString(), arguments);
+                        else if(context.getGlobal().get(methodName) != null) return context.getGlobal().callMethod(methodName, arguments);
+                        else throw new CompileException("method '" + methodName + "' not defined.", this);
             case ASSERT:
                 Container a = getTokens().get(0).interpret(context, self, args);
                 Container b = getTokens().get(1).interpret(context, self, args);
