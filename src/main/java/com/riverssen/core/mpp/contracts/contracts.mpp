@@ -13,7 +13,7 @@
 //This class is instantiated once.
 class HelloWorld {
     private PublicAddress owner
-    private String        message
+    private string        message
 
     public function HelloWorld() : void
     {
@@ -21,13 +21,13 @@ class HelloWorld {
         owner   = msg.sender
     }
 
-    public function setMessage(String text) : void
+    public function setMessage(string text) : void
     {
         if(owner == msg.sender)
             this.message = text
     }
 
-    public function getMessage() : String
+    public function getMessage() : string
     {
         return message;
     }
@@ -35,6 +35,38 @@ class HelloWorld {
     public function kill() : void
     {
         if(owner == msg.sender)
+            destroy()
+    }
+}
+
+class Messenger{
+    private set         owner
+    private mapped_set  messages
+    
+    public function Messenger() : void
+    {
+        owner.add(msg.sender)
+    }
+
+    public function sendMessage(String message, RSAPublicKey receiver) : void
+    {
+        messages.add(receiver, receiver.encrypt(message))
+    }
+
+    public function getMessages() : set
+    {
+        return messages.get(msg.sender)
+    }
+
+    public function addOwner() : void
+    {
+        if(owner.contains(msg.sender))
+            owner.add(msg.sender)
+    }
+
+    public function kill() : void
+    {
+        if(owner.contains(msg.sender))
             destroy()
     }
 }

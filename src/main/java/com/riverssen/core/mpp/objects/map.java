@@ -14,13 +14,11 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
-public class Boolean extends Container
+public class map extends Container
 {
-    public static Boolean TRUE = new Boolean(true);
-    public static Boolean FALSE= new Boolean(false);
     boolean value;
 
-    public Boolean(boolean value)
+    public map(boolean value)
     {
         this.value = value;
     }

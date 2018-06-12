@@ -263,8 +263,8 @@ public class Token implements Serializable
                 break;
             case PARENTHESIS:
                 break;
-//            case RETURN:
-//                if(context.get(toString()))
+            case RETURN:
+                return getTokens().get(0).interpret(context, self, args);
         }
         return null;
     }

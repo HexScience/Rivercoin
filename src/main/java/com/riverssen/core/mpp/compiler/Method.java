@@ -121,16 +121,20 @@ public class Method extends Container
         for(String string : arguments)
             setField(string, args[i ++]);
 
+        Container value = VOID;
+
         for(Token token : body.getTokens())
         {
             try
             {
-                token.interpret(this, self, args);
+                value = token.interpret(this, self, args);
             } catch (CompileException e)
             {
                 e.printStackTrace();
             }
         }
+
+        return value;
 
 //        stack.clear();
 //        stack.push(self);
@@ -191,8 +195,6 @@ public class Method extends Container
 //                    break;
 //            }
 //        }
-
-        return VOID;
     }
 
     @Override

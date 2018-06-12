@@ -14,20 +14,56 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
-public class Boolean extends Container
-{
-    public static Boolean TRUE = new Boolean(true);
-    public static Boolean FALSE= new Boolean(false);
-    boolean value;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 
-    public Boolean(boolean value)
+public class set extends Container
+{
+    HashSet value;
+
+    public set()
     {
-        this.value = value;
+        this.value = new LinkedHashSet();
+
+        setField("add", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                for(Container container : args)
+                    if(!value.add(container)) return Boolean.FALSE;
+                return Boolean.TRUE;
+            }
+        });
+
+        setField("contains", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                for(Container container : args)
+                    if(!value.contains(container)) return Boolean.FALSE;
+                return Boolean.TRUE;
+            }
+        });
+
+        setField("clear", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                value.clear();
+                return Boolean.TRUE;
+            }
+        });
     }
 
     @Override
     public Object asJavaObject()
     {
         return value;
+    }
+
+    @Override
+    public String toString()
+    {
+        return value.toString();
     }
 }
