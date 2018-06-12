@@ -704,6 +704,8 @@ public class ParsedProgram
                         } else declaration = new Token(Token.Type.EMPTY_DECLARATION).add(type).add(name);
 
                         root.add(declaration);
+                        declaration.getModifiers().addAll(modifiers);
+                        modifiers.clear();
                         /** must be on same line to be valid, so nextValid isn't used here **/
                     } else if (tokens.size() > 0 && tokens.get(0).getType() == Token.Type.PARENTHESIS_OPEN)
                     {
