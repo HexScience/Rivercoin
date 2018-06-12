@@ -45,6 +45,7 @@ public class Method extends Container
         this.returnType = token.getTokens().get(1).toString();
 
         this.body       = token.getTokens().get(3);
+        this.opcodes    = createBufferFromTokens(token);
     }
 
     public Method(String name)
@@ -72,8 +73,13 @@ public class Method extends Container
         return returnType;
     }
 
+    private static ByteBuffer createBufferFromTokens(Token token)
+    {
+        return null;
+    }
+
     @Override
-    public void call(Container self, Container... args)
+    public Container call(Container self, Container... args)
     {
         stack.clear();
         stack.push(self);
@@ -134,6 +140,8 @@ public class Method extends Container
                     break;
             }
         }
+
+        return VOID;
     }
 
     @Override

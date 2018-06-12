@@ -19,6 +19,7 @@ import java.util.Map;
 
 public class Container
 {
+    protected static final Container VOID = new Container();
     protected String                name;
     private Map<String, Container>  globalMap;
 
@@ -75,8 +76,14 @@ public class Container
         return globalMap.get(name);
     }
 
-    public void call(Container self, Container...args)
+    public Container callMethod(String method, Container ...args)
     {
+        return get(method).call(this, args);
+    }
+
+    public Container call(Container self, Container...args)
+    {
+        return VOID;
     }
 
     public java.lang.Object asJavaObject()

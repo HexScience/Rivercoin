@@ -47,7 +47,7 @@ public class RivercoinCore
 
         Namespace global = new Namespace(pp.getTokens());
 
-        System.out.println(global.get("HelloWorld").get("HelloWorld"));
+        System.out.println(global.get("HelloWorld").callMethod("HelloWorld"));
 
 //        RuntimeInterpreter interpreter = new RuntimeInterpreter(pp.getTokens(), wallet.getPublicKey().getCompressed());
 
