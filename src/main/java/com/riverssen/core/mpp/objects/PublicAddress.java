@@ -10,20 +10,39 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.mpp.compiler;
+package com.riverssen.core.mpp.objects;
 
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.mpp.compiler.Container;
+import com.riverssen.core.mpp.runtime.StringObject;
 
-public class Message extends Container
+public class PublicAddress extends Container
 {
-    public Message(PublicAddress address)
+    com.riverssen.core.security.PublicAddress value;
+
+    public PublicAddress(com.riverssen.core.security.PublicAddress value)
     {
-        setField("sender", new com.riverssen.core.mpp.objects.PublicAddress(address));
+        this.value = value;
+    }
+
+    @Override
+    public Object asJavaObject()
+    {
+        return value;
     }
 
     @Override
     public String toString()
     {
-        return "message{"+get("sender")+"}";
+        return "address{"+value+"}";
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(obj instanceof PublicAddress)
+        return ((PublicAddress) obj).value.equals(value);
+        else if(obj instanceof StringObject)
+            return ((String)((StringObject) obj).asJavaObject()).equals(value.toString());
+        else return false;
     }
 }

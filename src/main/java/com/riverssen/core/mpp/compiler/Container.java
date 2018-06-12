@@ -26,6 +26,7 @@ public class Container
             return "void";
         }
     };
+    public    static final Container EMPTY = new Container();
     protected String                name;
     private Map<String, Container>  globalMap;
 

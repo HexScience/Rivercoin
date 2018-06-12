@@ -10,20 +10,41 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.mpp.compiler;
+package com.riverssen.core.mpp.objects;
 
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.mpp.compiler.Container;
 
-public class Message extends Container
+public class LoopContainer extends Container
 {
-    public Message(PublicAddress address)
+    Container value;
+//    Container self;
+
+    public LoopContainer(Container value)
     {
-        setField("sender", new com.riverssen.core.mpp.objects.PublicAddress(address));
+        this.value = value;
+//        this.self  = self;
     }
 
     @Override
-    public String toString()
+    public Container get(String name)
     {
-        return "message{"+get("sender")+"}";
+        if (super.get(name) != null) return super.get(name);
+        else if (value.get(name) != null) return value.get(name);
+        else return value.get(name);
+//        else return self.get(name);
+    }
+
+    @Override
+    public void setField(String name, Container value)
+    {
+        if (value.get(name) != null) value.setField(name, value);
+//        else if (self.get(name) != null) self.setField(name, value);
+        else super.setField(name, value);
+    }
+
+    @Override
+    public Object asJavaObject()
+    {
+        return value;
     }
 }

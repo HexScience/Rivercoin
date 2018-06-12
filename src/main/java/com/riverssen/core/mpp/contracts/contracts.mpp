@@ -32,7 +32,7 @@ class HelloWorld {
         return message;
     }
 
-    public function kill(Message msg) : void
+    public function kill() : void
     {
         if(owner == msg.sender)
             destroy()

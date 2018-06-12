@@ -16,6 +16,7 @@ import com.riverssen.core.mpp.exceptions.CompileException;
 import com.riverssen.core.mpp.objects.Boolean;
 import com.riverssen.core.mpp.objects.Float;
 import com.riverssen.core.mpp.objects.Integer;
+import com.riverssen.core.mpp.objects.LoopContainer;
 import com.riverssen.core.mpp.runtime.StringObject;
 
 import java.io.Serializable;
@@ -190,7 +191,6 @@ public class Token implements Serializable
                 context.setField(name, returnedValue);
                 break;
             case INITIALIZATION:
-                System.out.println(humanReadable(0));
                 String name_ = getTokens().get(0).toString();
                 Token value_ = getTokens().get(1);
 
@@ -201,12 +201,13 @@ public class Token implements Serializable
                 break;
             case PROCEDURAL_ACCESS:
                 Container returnee = self;
+
                 if(context.get(getTokens().get(0).toString()) != null) returnee = context.get(getTokens().get(0).toString());
                 else if(self.get(getTokens().get(0).toString()) != null) returnee = self.get(getTokens().get(0).toString());
 
-                else throw new CompileException("object '" + getTokens().get(0).toString() + "' not defined.", this);
+                else throw new CompileException("identifier '" + getTokens().get(0).toString() + "' not defined.", this);
 
-                return getTokens().get(1).interpret(returnee, self, args);
+                return getTokens().get(1).interpret(returnee, Container.EMPTY, args);
             case VALUE:
                     return getTokens().get(0).interpret(context, self, args);
             case INPUT:
@@ -218,7 +219,7 @@ public class Token implements Serializable
             case IDENTIFIER:
                     if(context.get(toString()) != null) return context.get(toString());
                     else if(self.get(toString()) != null) return self.get(toString());
-                    else throw new CompileException("identifier doesn't exist.", this);
+                    else throw new CompileException("identifier '" + toString() + "' not defined.", this);
             case METHOD_CALL:
                     if(self.get(toString()) != null)
                     {
@@ -228,10 +229,28 @@ public class Token implements Serializable
 
                         return self.callMethod(toString(), arguments);
                     }
-                    else throw new CompileException("identifier doesn't exist.", this);
+                    else throw new CompileException("identifier '" + toString() + "' not defined.", this);
             case ASSERT:
-                return new Boolean(getTokens().get(0).equals(getTokens().get(1)));
+                Container a = getTokens().get(0).interpret(context, self, args);
+                Container b = getTokens().get(1).interpret(context, self, args);
+                return new Boolean(a.equals(b));
             case STRING: return new StringObject(toString().substring(1, toString().length() - 1));
+            case IF:
+                Container conditions = getTokens().get(0).getTokens().get(0).interpret(context, self, args);
+                if((boolean)conditions.asJavaObject() == true)
+                {
+                    Token token = getTokens().get(1);
+                    LoopContainer container = new LoopContainer(context);
+
+                    if(token.getType().equals(Type.BRACES))
+                    {
+                        for (Token tkn : token.getTokens())
+                            tkn.interpret(container, self, args);
+                    } else token.interpret(container, self, args);
+                }
+                break;
+            case PARENTHESIS:
+                break;
         }
         return null;
     }

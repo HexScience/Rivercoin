@@ -28,4 +28,10 @@ public class StringObject extends Container
     {
         return string;
     }
+
+    @Override
+    public String toString()
+    {
+        return string;
+    }
 }

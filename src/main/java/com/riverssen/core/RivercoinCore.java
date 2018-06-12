@@ -14,6 +14,7 @@ package com.riverssen.core;
 
 import com.riverssen.core.mpp.compiler.*;
 import com.riverssen.core.mpp.contracts.Contracts;
+import com.riverssen.core.mpp.runtime.StringObject;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.system.MiningContext;
 import com.riverssen.core.headers.ContextI;
@@ -38,28 +39,22 @@ public class RivercoinCore
     private RivercoinCore(String type, String file) throws Exception
     {
         Wallet wallet = new Wallet("dawdaw", "dawddawdwa");
+        Wallet wallet2 = new Wallet("ddawdaw", "dadwddawdwa");
         /** Test Code For The Mocha++ Compiler **/
         ParsedProgram pp = new ParsedProgram(new LexedProgram(FileUtils.readUTF(Contracts.class.getResourceAsStream("contracts.mpp"))));
         Token list = pp.getTokens();
+
+        System.out.println(pp.getTokens().humanReadable(0));
 
         Namespace global = new Namespace(pp.getTokens());
 
         global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
 
-        System.out.println(global.get("HelloWorld").callMethod("HelloWorld"));
+        global.get("HelloWorld").callMethod("HelloWorld");
         System.out.println(global.get("HelloWorld").get("owner"));
-
-//        RuntimeInterpreter interpreter = new RuntimeInterpreter(pp.getTokens(), wallet.getPublicKey().getCompressed());
-
-//        interpreter.getObject("HelloWorld").callMethod("HelloWorld", new StringObject("hello..."));
-
-//        System.out.println(interpreter.getObject("HelloWorld").getFieldByName("owner"));
-//        System.out.println(interpreter.getObject("msg").getFieldByName("sender").asJavaObject());
-//        interpreter.getClass("HelloWorld").getMethoddByName("setMessage");
-
-//        System.out.println(opcodes.size());
-//
-//        System.out.println("---------------------------------\n" + list.humanReadable(0));
+        global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
+        global.get("HelloWorld").callMethod("setMessage", new StringObject("hi"));
+        System.out.println(global.get("HelloWorld").get("message"));
 
         System.exit(0);
 

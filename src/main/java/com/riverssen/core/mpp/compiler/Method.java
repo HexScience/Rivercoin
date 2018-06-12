@@ -13,16 +13,10 @@
 package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.mpp.exceptions.CompileException;
-import com.riverssen.core.mpp.objects.Boolean;
-import com.riverssen.core.mpp.objects.Float;
-import com.riverssen.core.mpp.objects.Integer;
-import com.riverssen.core.mpp.objects.Uint;
-import com.riverssen.core.mpp.objects.uint256;
 import com.riverssen.core.mpp.Opcode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.*;
 
@@ -31,7 +25,7 @@ import static com.riverssen.core.mpp.compiler.Opcode.*;
 public class Method extends Container
 {
     private static final Stack<Container> stack = new Stack<>();
-    private Set<Field>  arguments;
+    private Set<String> arguments;
     private String      returnType;
     private int         offset;
     private Token       body;
@@ -41,8 +35,8 @@ public class Method extends Container
     {
         this.name       = token.getTokens().get(0).toString();
         this.arguments  = new LinkedHashSet<>();
-        for(Token tok : token.getTokens().get(1).getTokens())
-            this.arguments.add(new Field(tok));
+        for(Token tok : token.getTokens().get(2).getTokens())
+            this.arguments.add(tok.getTokens().get(1).toString());
         this.returnType = token.getTokens().get(1).toString();
 
         this.body       = token.getTokens().get(3);
@@ -120,16 +114,23 @@ public class Method extends Container
     @Override
     public Container call(Container self, Container... args)
     {
-            for(Token token : body.getTokens())
+        setField("this", self);
+
+        int i = 0;
+
+        for(String string : arguments)
+            setField(string, args[i ++]);
+
+        for(Token token : body.getTokens())
+        {
+            try
             {
-                try
-                {
-                    token.interpret(this, self, args);
-                } catch (CompileException e)
-                {
-                    e.printStackTrace();
-                }
+                token.interpret(this, self, args);
+            } catch (CompileException e)
+            {
+                e.printStackTrace();
             }
+        }
 
 //        stack.clear();
 //        stack.push(self);
