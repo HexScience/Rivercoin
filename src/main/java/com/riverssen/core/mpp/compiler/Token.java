@@ -207,6 +207,17 @@ public class Token implements Serializable
 
                 else throw new CompileException("identifier '" + getTokens().get(0).toString() + "' not defined.", this);
 
+                if(getTokens().get(1).getType().equals(Type.INITIALIZATION))
+                {
+                    String name__ = getTokens().get(0).toString();
+                    Token value__ = getTokens().get(1);
+
+                    Container returnedValue__ = value__.interpret(context, self, args);
+                    if(returnee.get(name__) != null)
+                        returnee.setField(name__, returnedValue__);
+                    else self.setField(name__, returnedValue__);
+                } else
+
                 return getTokens().get(1).interpret(returnee, Container.EMPTY, args);
             case VALUE:
                     return getTokens().get(0).interpret(context, self, args);

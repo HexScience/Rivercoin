@@ -44,8 +44,6 @@ public class RivercoinCore
         ParsedProgram pp = new ParsedProgram(new LexedProgram(FileUtils.readUTF(Contracts.class.getResourceAsStream("contracts.mpp"))));
         Token list = pp.getTokens();
 
-        System.out.println(pp.getTokens().humanReadable(0));
-
         Namespace global = new Namespace(pp.getTokens());
 
         global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
@@ -54,7 +52,7 @@ public class RivercoinCore
         System.out.println(global.get("HelloWorld").get("owner"));
         global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
         global.get("HelloWorld").callMethod("setMessage", new StringObject("hi"));
-        System.out.println(global.get("HelloWorld").get("message"));
+        System.out.println(global.get("HelloWorld").callMethod("getMessage"));
 
         System.exit(0);
 
