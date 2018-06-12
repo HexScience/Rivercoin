@@ -12,6 +12,7 @@
 
 package com.riverssen.core.mpp.compiler;
 
+import com.riverssen.core.mpp.exceptions.CompileException;
 import com.riverssen.core.mpp.objects.Boolean;
 import com.riverssen.core.mpp.objects.Float;
 import com.riverssen.core.mpp.objects.Integer;
@@ -19,11 +20,11 @@ import com.riverssen.core.mpp.objects.Uint;
 import com.riverssen.core.mpp.objects.uint256;
 import com.riverssen.core.mpp.Opcode;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 import static com.riverssen.core.mpp.compiler.Opcode.*;
 
@@ -36,7 +37,7 @@ public class Method extends Container
     private Token       body;
     private ByteBuffer  opcodes;
 
-    public Method(Token token)
+    public Method(Token token) throws CompileException
     {
         this.name       = token.getTokens().get(0).toString();
         this.arguments  = new LinkedHashSet<>();
@@ -73,9 +74,47 @@ public class Method extends Container
         return returnType;
     }
 
-    private static ByteBuffer createBufferFromTokens(Token token)
+    private static ByteBuffer createBufferFromTokens(Token token) throws CompileException
     {
-        return null;
+        HashMap<String, java.lang.Integer> stack = new HashMap<>();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream      stream1= new DataOutputStream(stream);
+
+        try{
+            for(Token tok : token.getTokens())
+            {
+                switch (tok.getType())
+                {
+                    case FULL_DECLARATION:
+                            String name  = tok.getTokens().get(0).toString();
+                            String type  = tok.getTokens().get(1).toString();
+                            Token  value = tok.getTokens().get(2);
+
+                            if(stack.containsKey(name)) throw new CompileException("object '" + name + "' already defined", tok);
+                            stack.put(name, stack.size());
+
+                            stream1.writeShort(PUSH_FLOAT);
+                            if(type.equals("int"))
+                            {
+                                if(value.getTokens().get(0).getType().equals(Token.Type.INPUT))
+                                {
+//                                    if(!value.getTokens().get(0).getTokens().get(0).getType().equals(Token.Type.NUMBER)) throw new CompileException("initialization exception: cannot cast from ")
+                                    stream1.writeShort(PUSH_INT);
+                                    stream1.writeLong(Long.parseLong(value.getTokens().get(0).getTokens().get(0)
+                                            .toString()));
+                                }
+                            }
+                        break;
+                }
+            }
+
+            stream1.flush();
+            stream1.close();
+        } catch (Exception e)
+        {
+            throw new CompileException("failed to compile function", token);
+        }
+        return ByteBuffer.wrap(stream.toByteArray());
     }
 
     @Override

@@ -12,8 +12,13 @@
 
 package com.riverssen.core.mpp.compiler;
 
+import com.riverssen.core.mpp.exceptions.CompileException;
+
 import java.io.Serializable;
 import java.util.*;
+
+import static com.riverssen.core.mpp.compiler.Opcode.PUSH_FLOAT;
+import static com.riverssen.core.mpp.compiler.Opcode.PUSH_INT;
 
 public class Token implements Serializable
 {
@@ -162,6 +167,26 @@ public class Token implements Serializable
     {
         this.children.add(token);
         return this;
+    }
+
+    public Container interpret(Container context, Container self, Container ...args) throws CompileException
+    {
+        switch (type)
+        {
+            case FULL_DECLARATION:
+                String name  = getTokens().get(0).toString();
+                String type  = getTokens().get(1).toString();
+                Token  value = getTokens().get(2);
+
+                if(context.get(name) != null) throw new CompileException("object '" + name + "' already defined", this);
+
+                Container returnedValue = value.interpret(context, self, args);
+
+                context.setField(name, returnedValue);
+                break;
+        }
+
+        return null;
     }
 
     public Token clone()
