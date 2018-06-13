@@ -14,6 +14,9 @@ package com.riverssen.core.mpp.runtime;
 
 import com.riverssen.core.mpp.compiler.Container;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+
 public class StringObject extends Container
 {
     private String string;
@@ -27,6 +30,18 @@ public class StringObject extends Container
     public java.lang.Object asJavaObject()
     {
         return string;
+    }
+
+    @Override
+    public void write(DataOutputStream stream)
+    {
+
+    }
+
+    @Override
+    public void read(DataInputStream stream)
+    {
+
     }
 
     @Override

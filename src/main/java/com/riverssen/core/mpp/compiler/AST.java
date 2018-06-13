@@ -59,7 +59,7 @@ public class AST
             {
                 case IF:
                         Token condition = token.getTokens().get(0);
-                        opcodes.add(com.riverssen.core.mpp.compiler.Opcode.IF);
+//                        opcodes.add(com.riverssen.core.mpp.compiler.Opcode.IF);
                         opcodes.addAll(enterMethodBody(condition));
                     break;
                 case WHILE:

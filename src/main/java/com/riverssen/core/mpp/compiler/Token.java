@@ -12,6 +12,7 @@
 
 package com.riverssen.core.mpp.compiler;
 
+import com.riverssen.core.RiverCoin;
 import com.riverssen.core.mpp.exceptions.CompileException;
 import com.riverssen.core.mpp.objects.Boolean;
 import com.riverssen.core.mpp.objects.Float;
@@ -20,6 +21,7 @@ import com.riverssen.core.mpp.objects.LoopContainer;
 import com.riverssen.core.mpp.runtime.StringObject;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.*;
 
 import static com.riverssen.core.mpp.compiler.Opcode.PUSH_FLOAT;
@@ -468,6 +470,45 @@ public class Token implements Serializable
     public boolean isInteger()
     {
         return toString().contains(".");
+    }
+
+    public BigInteger calculateCost()
+    {
+        BigInteger cost = BigInteger.ZERO;
+
+        for(Token token : getTokens())
+            cost = cost.add(token.calculateCost());
+
+        switch (type)
+        {
+            case IF:
+                cost = cost.add(new RiverCoin("0.001").toBigInteger());
+                break;
+            case FOR:
+                cost = cost.add(new RiverCoin("0.0025").toBigInteger());
+                break;
+            case CLASS_DECLARATION:
+                cost = cost.add(new RiverCoin("0.0035").toBigInteger());
+                break;
+            case METHOD_CALL:
+                cost = cost.add(new RiverCoin("0.05").toBigInteger());
+                break;
+            case EMPTY_DECLARATION:
+                cost = cost.add(new RiverCoin("0.025").toBigInteger());
+                break;
+            case FULL_DECLARATION:
+                cost = cost.add(new RiverCoin("0.035").toBigInteger());
+                break;
+            case WHILE:
+                cost = cost.add(new RiverCoin("0.05").toBigInteger());
+                break;
+
+            default:
+                cost = cost.add(new RiverCoin("0.0025").toBigInteger());
+                break;
+        }
+
+        return cost;
     }
 
     @Override

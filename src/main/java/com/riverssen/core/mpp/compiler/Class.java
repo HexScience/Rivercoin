@@ -14,6 +14,8 @@ package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.mpp.exceptions.CompileException;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -68,5 +70,17 @@ public class Class extends Container implements Serializable
     public Container call(Container self, Container... args)
     {
         return callMethod(name, args);
+    }
+
+    @Override
+    public void write(DataOutputStream stream)
+    {
+
+    }
+
+    @Override
+    public void read(DataInputStream stream)
+    {
+
     }
 }

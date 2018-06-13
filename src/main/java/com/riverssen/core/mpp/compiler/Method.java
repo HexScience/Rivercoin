@@ -16,6 +16,7 @@ import com.riverssen.core.mpp.exceptions.CompileException;
 import com.riverssen.core.mpp.Opcode;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -86,13 +87,13 @@ public class Method extends Container implements Serializable
                             if(stack.containsKey(name)) throw new CompileException("object '" + name + "' already defined", tok);
                             stack.put(name, stack.size());
 
-                            stream1.writeShort(PUSH_FLOAT);
+//                            stream1.writeShort(PUSH_FLOAT);
                             if(type.equals("int"))
                             {
                                 if(value.getTokens().get(0).getType().equals(Token.Type.INPUT))
                                 {
 //                                    if(!value.getTokens().get(0).getTokens().get(0).getType().equals(Token.Type.NUMBER)) throw new CompileException("initialization exception: cannot cast from ")
-                                    stream1.writeShort(PUSH_INT);
+//                                    stream1.writeShort(PUSH_INT);
                                     stream1.writeLong(Long.parseLong(value.getTokens().get(0).getTokens().get(0)
                                             .toString()));
                                 }
@@ -194,6 +195,18 @@ public class Method extends Container implements Serializable
 //                    break;
 //            }
 //        }
+    }
+
+    @Override
+    public void write(DataOutputStream stream)
+    {
+
+    }
+
+    @Override
+    public void read(DataInputStream stream)
+    {
+
     }
 
     @Override
