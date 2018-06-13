@@ -482,29 +482,28 @@ public class Token implements Serializable
         switch (type)
         {
             case IF:
-                cost = cost.add(new RiverCoin("0.001").toBigInteger());
+                cost = cost.add(new RiverCoin("0.00035").toBigInteger());
                 break;
             case FOR:
-                cost = cost.add(new RiverCoin("0.0025").toBigInteger());
+                cost = cost.add(new RiverCoin("0.00025").toBigInteger());
                 break;
             case CLASS_DECLARATION:
-                cost = cost.add(new RiverCoin("0.0035").toBigInteger());
+                cost = cost.add(new RiverCoin("0.05").toBigInteger());
                 break;
             case METHOD_CALL:
-                cost = cost.add(new RiverCoin("0.05").toBigInteger());
+                cost = cost.add(new RiverCoin("0.00025").toBigInteger());
                 break;
             case EMPTY_DECLARATION:
-                cost = cost.add(new RiverCoin("0.025").toBigInteger());
+                cost = cost.add(new RiverCoin("0.00025").toBigInteger());
                 break;
             case FULL_DECLARATION:
-                cost = cost.add(new RiverCoin("0.035").toBigInteger());
+                cost = cost.add(new RiverCoin("0.000175").toBigInteger());
                 break;
             case WHILE:
-                cost = cost.add(new RiverCoin("0.05").toBigInteger());
+                cost = cost.add(new RiverCoin("0.00825").toBigInteger());
                 break;
-
             default:
-                cost = cost.add(new RiverCoin("0.0025").toBigInteger());
+                cost = cost.add(new RiverCoin("0.0002563").toBigInteger());
                 break;
         }
 
