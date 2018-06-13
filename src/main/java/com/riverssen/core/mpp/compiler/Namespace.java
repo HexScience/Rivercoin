@@ -13,6 +13,8 @@
 package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.mpp.exceptions.CompileException;
+import com.riverssen.core.mpp.objects.mapped_set;
+import com.riverssen.core.mpp.objects.set;
 
 import java.util.Map;
 
@@ -40,5 +42,20 @@ public class Namespace extends Container
     public void setGlobal()
     {
         setGlobal(this);
+
+        setField("set", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                return new set();
+            }
+        });
+        setField("mapped_set", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                return new mapped_set();
+            }
+        });
     }
 }

@@ -176,12 +176,35 @@ public class Token implements Serializable
         return this;
     }
 
-    public Container interpret(Container context, Container self, Container ...args) throws CompileException
+    public Container interpret(Container context, Container self, Container fcontext, Container fself, boolean proc, Container ...args) throws CompileException
+    {
+        return this.interpret(context, self, fcontext, fself, proc, false, args);
+    }
+
+    public Container interpret(Container context, Container self, Container fcontext, Container fself, boolean proc, boolean mproc, Container ...args) throws CompileException
     {
         switch (type)
         {
             case NEW:
-                return getTokens().get(0).interpret(context, self, args);
+
+                if(getTokens().size() > 0)
+                {
+                    Container arguments[] = new Container[getTokens().get(1).getTokens().size()];
+                    for(int i = 0; i < arguments.length; i ++)
+                        arguments[i] = getTokens().get(1).getTokens().get(i).interpret(context, self, fcontext, fself, proc, args);
+
+                    String methodName = getTokens().get(0).toString();
+
+                    if(context.get(methodName) != null) return context.callMethod(toString(), arguments);
+                    else if(self.get(methodName) != null) return self.callMethod(toString(), arguments);
+                    else if(context.getGlobal().get(methodName) != null) return context.getGlobal().callMethod(methodName, arguments);
+                    else throw new CompileException("method '" + methodName + "' not defined.", this);
+                }
+
+                if(context.get(toString()) != null) return context.callMethod(toString());
+                else if(self.get(toString()) != null) return self.callMethod(toString());
+                else if(context.getGlobal().get(toString()) != null) return context.getGlobal().callMethod(toString());
+                else throw new CompileException("identifier 'new " + toString() + "' not defined.", this);
             case FULL_DECLARATION:
                 String name = getTokens().get(0).toString();
                 String type = getTokens().get(1).toString();
@@ -189,7 +212,7 @@ public class Token implements Serializable
 
                 if (context.get(name) != null) throw new CompileException("object '" + name + "' already defined.", this);
 
-                Container returnedValue = value.interpret(context, self, args);
+                Container returnedValue = value.interpret(context, self, fcontext, fself, proc, args);
 
                 context.setField(name, returnedValue);
                 break;
@@ -197,13 +220,13 @@ public class Token implements Serializable
                 String name_ = getTokens().get(0).toString();
                 Token value_ = getTokens().get(1);
 
-                Container returnedValue_ = value_.interpret(context, self, args);
+                Container returnedValue_ = value_.interpret(context, self, fcontext, fself, proc, args);
                 if(context.get(name_) != null)
                     context.setField(name_, returnedValue_);
                 else self.setField(name_, returnedValue_);
                 break;
             case PROCEDURAL_ACCESS:
-                Container returnee = getTokens().get(0).interpret(context, self, args);//self;
+                Container returnee = getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);//self;
 
 //                Container rvlue = getTokens().get(0).interpret(context, self, args);
 
@@ -217,15 +240,15 @@ public class Token implements Serializable
                     String name__ = getTokens().get(0).toString();
                     Token value__ = getTokens().get(1);
 
-                    Container returnedValue__ = value__.interpret(context, self, args);
+                    Container returnedValue__ = value__.interpret(context, self, fcontext, fself, true, args);
                     if (returnee.get(name__) != null) returnee.setField(name__, returnedValue__);
                     else self.setField(name__, returnedValue__);
                 } else
-                return getTokens().get(1).interpret(returnee, Container.EMPTY, args);
+                return getTokens().get(1).interpret(returnee, Container.EMPTY, fcontext, fself, true, args);
             case VALUE:
-                    return getTokens().get(0).interpret(context, self, args);
+                    return getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
             case INPUT:
-                    return getTokens().get(0).interpret(context, self, args);
+                    return getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
             case NUMBER:
                     return new Integer(Long.valueOf(toString()));
             case DECIMAL:
@@ -235,25 +258,38 @@ public class Token implements Serializable
                     else if(self.get(toString()) != null) return self.get(toString());
                     else throw new CompileException("identifier '" + toString() + "' not defined.", this);
             case METHOD_CALL:
-                        if(getTokens().size() == 0) throw new CompileException("method '" + this.toString() + "' not defined.", this);
-                        Container arguments[] = new Container[getTokens().get(1).getTokens().size()];
-                        for(int i = 0; i < arguments.length; i ++)
-                            arguments[i] = getTokens().get(1).getTokens().get(i).interpret(context, self, args);
+                        if(proc)
+                        {
+                            if(getTokens().size() == 0) throw new CompileException("method '" + this.toString() + "' not defined.", this);
+                            Container arguments[] = new Container[getTokens().get(1).getTokens().size()];
+                            for(int i = 0; i < arguments.length; i ++)
+                                arguments[i] = getTokens().get(1).getTokens().get(i).interpret(fcontext, fself, fcontext, fself, proc, mproc, args);
 
-                        String methodName = getTokens().get(0).toString();
+                            String methodName = getTokens().get(0).toString();
 
+                            if(context.get(methodName) != null) return context.callMethod(methodName, arguments);
+                            else throw new CompileException("method '" + methodName + "' not defined in '" + context + "'.", this);
+                        }
+                        else {
+                            if(getTokens().size() == 0) throw new CompileException("method '" + this.toString() + "' not defined.", this);
+                            Container arguments[] = new Container[getTokens().get(1).getTokens().size()];
+                            for(int i = 0; i < arguments.length; i ++)
+                                arguments[i] = getTokens().get(1).getTokens().get(i).interpret(fcontext, fself, fcontext, fself, proc, mproc, args);
 
-                        if(context.get(methodName) != null) return context.callMethod(toString(), arguments);
-                        else if(self.get(methodName) != null) return self.callMethod(toString(), arguments);
-                        else if(context.getGlobal().get(methodName) != null) return context.getGlobal().callMethod(methodName, arguments);
-                        else throw new CompileException("method '" + methodName + "' not defined.", this);
+                            String methodName = getTokens().get(0).toString();
+
+                            if(fcontext.get(methodName) != null) return fcontext.callMethod(methodName, arguments);
+                            else if(fself.get(methodName) != null) return fself.callMethod(methodName, arguments);
+                            else if(fcontext.getGlobal().get(methodName) != null) return fcontext.getGlobal().callMethod(methodName, arguments);
+                            else throw new CompileException("method '" + methodName + "' not defined.", this);
+                        }
             case ASSERT:
-                Container a = getTokens().get(0).interpret(context, self, args);
-                Container b = getTokens().get(1).interpret(context, self, args);
+                Container a = getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
+                Container b = getTokens().get(1).interpret(context, self, fcontext, fself, proc, args);
                 return new Boolean(a.equals(b));
             case STRING: return new StringObject(toString().substring(1, toString().length() - 1));
             case IF:
-                Container conditions = getTokens().get(0).getTokens().get(0).interpret(context, self, args);
+                Container conditions = getTokens().get(0).getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
                 if((boolean)conditions.asJavaObject() == true)
                 {
                     Token token = getTokens().get(1);
@@ -262,14 +298,14 @@ public class Token implements Serializable
                     if(token.getType().equals(Type.BRACES))
                     {
                         for (Token tkn : token.getTokens())
-                            tkn.interpret(container, self, args);
-                    } else token.interpret(container, self, args);
+                            tkn.interpret(container, self, fcontext, fself, proc, args);
+                    } else token.interpret(container, self, fcontext, fself, proc, args);
                 }
                 break;
             case PARENTHESIS:
                 break;
             case RETURN:
-                return getTokens().get(0).interpret(context, self, args);
+                return getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
         }
         return null;
     }

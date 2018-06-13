@@ -52,19 +52,21 @@ public class RivercoinCore
         Namespace global = new Namespace(pp.getTokens());
         global.setGlobal();
 
-        global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
-        global.get("Messenger").setField("msg", new Message(wallet.getPublicKey().getAddress()));
+        System.out.println(global.callMethod("set"));
 
-//        global.callMethod("Messenger");
+        global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
+        global.get("Messenger") .setField("msg", new Message(wallet.getPublicKey().getAddress()));
 
         global.callMethod("HelloWorld");
-        System.out.println(global.get("HelloWorld").get("owner"));
         global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
         global.get("HelloWorld").callMethod("setMessage", new StringObject("My name jeff."));
+
         System.out.println(global.get("HelloWorld").callMethod("getMessage"));
+        global.get("Messenger").callMethod("Messenger");
+        System.out.println(global.get("Messenger").get("owner"));
+        System.out.println(global.get("Messenger").get("messages"));
 
-
-        global.callMethod("Messenger");
+//        global.callMethod("Messenger");
 
 //        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 //        keyPairGenerator.initialize(256);

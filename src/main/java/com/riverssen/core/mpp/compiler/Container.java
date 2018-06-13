@@ -19,17 +19,17 @@ import java.util.Map;
 
 public class Container
 {
-    protected static final Container VOID = new Container() {
+    protected static final Container    VOID = new Container() {
         @Override
         public String toString()
         {
             return "void";
         }
     };
-    public    static final Container EMPTY = new Container();
-    public Container                global;
-    protected String                name;
-    private Map<String, Container>  globalMap;
+    public    static final Container    EMPTY = new Container();
+    public Container                    global;
+    protected String                    name;
+    private Map<String, Container>      globalMap;
 
     public Container()
     {
@@ -141,7 +141,7 @@ public class Container
 
     protected void setGlobal(Container global)
     {
-        this.global = this;
+        this.global = global;
 
         for(Container container : globalMap.values())
             container.setGlobal(global);

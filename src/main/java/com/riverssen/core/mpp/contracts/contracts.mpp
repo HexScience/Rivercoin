@@ -42,10 +42,10 @@ class HelloWorld {
 class Messenger{
     private set         owner
     private mapped_set  messages
-    
+
     public function Messenger() : void
     {
-        this.owner      = new set()
+        this.owner      = new set
         this.messages   = new mapped_set
 
         owner.add(msg.sender)

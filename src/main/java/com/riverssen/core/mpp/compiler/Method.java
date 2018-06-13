@@ -127,7 +127,7 @@ public class Method extends Container
         {
             try
             {
-                value = token.interpret(this, self, args);
+                value = token.interpret(this, self, this, self, false, args);
             } catch (CompileException e)
             {
                 e.printStackTrace();
