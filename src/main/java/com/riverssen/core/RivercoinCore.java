@@ -24,6 +24,7 @@ import com.sun.crypto.provider.RSACipher;
 import org.bouncycastle.jcajce.provider.asymmetric.RSA;
 
 import java.io.File;
+import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.Security;
 import java.security.interfaces.RSAPublicKey;
@@ -61,8 +62,13 @@ public class RivercoinCore
         global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
         global.get("HelloWorld").callMethod("setMessage", new StringObject("My name jeff."));
 
+        KeyPair keyPair = com.riverssen.core.mpp.objects.RSA.buildKeyPair();
+
         System.out.println(global.get("HelloWorld").callMethod("getMessage"));
         global.get("Messenger").callMethod("Messenger");
+        RSAPK k = new RSAPK(keyPair.getPublic());
+        global.get("Messenger").callMethod("sendMessage", new StringObject("hello world"), k);
+        global.get("Messenger").callMethod("sendMessage", new StringObject("helldo world"), k);
         System.out.println(global.get("Messenger").get("owner"));
         System.out.println(global.get("Messenger").get("messages"));
 

@@ -14,27 +14,27 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
-import java.security.PublicKey;
-
-public class RSAPK extends Container
+public class ByteArray extends Container
 {
-    private PublicKey value;
+    private byte bytes[];
 
-    public RSAPK(PublicKey value)
+    public ByteArray(byte bytes[])
     {
-        this.value = value;
-        setField("encrypt", new Container(){
+        this.bytes = bytes;
+
+        setField("get", new Container(){
             @Override
             public Container call(Container self, Container... args)
             {
-                try
-                {
-                    return new ByteArray(RSA.encryptp(value, args[0].toString()));
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
-                    return new ByteArray(e.getMessage().getBytes());
-                }
+                return new Integer(bytes[(int)args[0].asJavaObject()]);
+            }
+        });
+
+        setField("set", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                return new Integer(bytes[(int)args[0].asJavaObject()] = (byte)args[1].asJavaObject());
             }
         });
     }
@@ -42,12 +42,16 @@ public class RSAPK extends Container
     @Override
     public Object asJavaObject()
     {
-        return value;
+        return bytes;
     }
 
-    @Override
-    public int hashCode()
+    public String toString()
     {
-        return value.hashCode();
+//        String string = "[";
+//
+//        for(int i = 0; i < bytes.length; i ++)
+//            string += bytes[i] + (i == bytes.length - 1 ? "" : ",");
+
+        return bytes.toString();//string + "]";
     }
 }
