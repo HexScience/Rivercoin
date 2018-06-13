@@ -10,52 +10,24 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.utils;
+package com.riverssen.core.utils;
 
-public class Truple<I, J, C>
+import java.net.InetAddress;
+
+public class NetworkUtil
 {
-    private I i;
-    private J j;
-    private C c;
+    public static boolean sameNetwork(String ip1, String ip2, String mask)
+            throws Exception {
 
-    public Truple(I i, J j, C c)
-    {
-        this.i = i;
-        this.j = j;
-        this.c = c;
-    }
+        byte[] a1 = InetAddress.getByName(ip1).getAddress();
+        byte[] a2 = InetAddress.getByName(ip2).getAddress();
+        byte[] m = InetAddress.getByName(mask).getAddress();
 
-    public synchronized I getI()
-    {
-        return i;
-    }
+        for (int i = 0; i < a1.length; i++)
+            if ((a1[i] & m[i]) != (a2[i] & m[i]))
+                return false;
 
-    public synchronized void setI(I i)
-    {
-        this.i = i;
-    }
+        return true;
 
-    public synchronized J getJ()
-    {
-        return j;
-    }
-
-    public synchronized void setJ(J j)
-    {
-        this.j = j;
-    }
-
-    @Override
-    public String toString()
-    {
-        return i + " " + j + " " + c;
-    }
-
-    public C getC() {
-        return c;
-    }
-
-    public void setC(C c) {
-        this.c = c;
     }
 }

@@ -16,8 +16,8 @@ import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.transactions.TransactionOutput;
-import com.riverssen.utils.Base58;
-import com.riverssen.utils.ByteUtil;
+import com.riverssen.core.utils.Base58;
+import com.riverssen.core.utils.ByteUtil;
 
 import java.math.BigInteger;
 import java.util.*;

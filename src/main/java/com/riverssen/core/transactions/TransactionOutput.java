@@ -18,7 +18,7 @@ import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.JSONFormattable;
 import com.riverssen.core.security.PublicAddress;
-import com.riverssen.utils.*;
+import com.riverssen.core.utils.*;
 
 import java.io.DataOutputStream;
 

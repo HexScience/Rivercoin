@@ -23,8 +23,8 @@ import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
-import com.riverssen.utils.ByteUtil;
-import com.riverssen.utils.TimeUtil;
+import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.core.utils.TimeUtil;
 
 import java.io.File;
 import java.math.BigInteger;

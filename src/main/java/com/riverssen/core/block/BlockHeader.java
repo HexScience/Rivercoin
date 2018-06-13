@@ -15,9 +15,9 @@ package com.riverssen.core.block;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.security.PublicAddress;
-import com.riverssen.utils.ByteUtil;
+import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.headers.Encodeable;
-import com.riverssen.utils.MerkleTree;
+import com.riverssen.core.utils.MerkleTree;
 
 import java.io.*;
 import java.math.BigInteger;

@@ -14,8 +14,8 @@ package com.riverssen.core.transactions;
 
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
-import com.riverssen.utils.ByteUtil;
-import com.riverssen.utils.SmartDataTransferer;
+import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.core.utils.SmartDataTransferer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

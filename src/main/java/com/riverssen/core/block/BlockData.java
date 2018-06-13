@@ -18,10 +18,10 @@ import com.riverssen.core.headers.Write;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.transactions.TransactionOutput;
-import com.riverssen.utils.Serializer;
+import com.riverssen.core.utils.Serializer;
 import com.riverssen.core.headers.Encodeable;
-import com.riverssen.utils.MerkleTree;
-import com.riverssen.utils.SmartDataTransferer;
+import com.riverssen.core.utils.MerkleTree;
+import com.riverssen.core.utils.SmartDataTransferer;
 
 import java.io.*;
 import java.util.ArrayList;

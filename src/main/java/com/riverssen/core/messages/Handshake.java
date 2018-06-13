@@ -17,7 +17,7 @@ import com.riverssen.core.headers.Message;
 import com.riverssen.core.networking.Peer;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.headers.ContextI;
-import com.riverssen.utils.Base58;
+import com.riverssen.core.utils.Base58;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

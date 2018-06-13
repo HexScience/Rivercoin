@@ -20,9 +20,9 @@ import com.riverssen.core.security.PrivKey;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
 import com.riverssen.core.headers.ContextI;
-import com.riverssen.utils.Base58;
-import com.riverssen.utils.ByteUtil;
-import com.riverssen.utils.SmartDataTransferer;
+import com.riverssen.core.utils.Base58;
+import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.core.utils.SmartDataTransferer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

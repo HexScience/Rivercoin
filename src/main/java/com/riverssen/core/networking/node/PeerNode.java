@@ -15,7 +15,7 @@ package com.riverssen.core.networking.node;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.NodeOutputCommunicator;
-import com.riverssen.utils.EncodeableString;
+import com.riverssen.core.utils.EncodeableString;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;

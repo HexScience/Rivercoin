@@ -15,10 +15,8 @@ package com.riverssen.core;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.JSONFormattable;
-import com.riverssen.utils.ByteUtil;
-import com.riverssen.utils.SmartDataTransferer;
+import com.riverssen.core.utils.SmartDataTransferer;
 
-import java.awt.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

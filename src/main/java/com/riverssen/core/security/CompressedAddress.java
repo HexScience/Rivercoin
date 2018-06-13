@@ -13,14 +13,13 @@
 package com.riverssen.core.security;
 
 import com.riverssen.core.headers.Exportable;
-import com.riverssen.utils.Base58;
+import com.riverssen.core.utils.Base58;
 import com.riverssen.core.headers.Encodeable;
-import com.riverssen.utils.SmartDataTransferer;
+import com.riverssen.core.utils.SmartDataTransferer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class CompressedAddress implements Encodeable, Exportable
 {

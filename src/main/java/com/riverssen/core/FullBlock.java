@@ -17,7 +17,7 @@ import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.*;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.transactions.RewardTransaction;
-import com.riverssen.utils.*;
+import com.riverssen.core.utils.*;
 
 import java.io.*;
 import java.math.BigInteger;

@@ -18,8 +18,8 @@ import com.riverssen.core.compression.Base58Hash;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.system.LatestBlockInfo;
-import com.riverssen.utils.Base58;
-import com.riverssen.utils.MerkleTree;
+import com.riverssen.core.utils.Base58;
+import com.riverssen.core.utils.MerkleTree;
 
 import java.util.HashMap;
 import java.util.Map;

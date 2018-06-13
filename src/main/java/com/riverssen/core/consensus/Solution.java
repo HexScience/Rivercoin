@@ -16,7 +16,7 @@ import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.ContextI;
-import com.riverssen.utils.SmartDataTransferer;
+import com.riverssen.core.utils.SmartDataTransferer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

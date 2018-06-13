@@ -14,9 +14,8 @@ package com.riverssen.core.RSQL;
 
 import com.riverssen.core.Logger;
 import com.riverssen.core.headers.SQLCommand;
-import com.riverssen.utils.ByteUtil;
+import com.riverssen.core.utils.ByteUtil;
 
-import javax.print.DocFlavor;
 import java.util.HashMap;
 import java.util.List;
 

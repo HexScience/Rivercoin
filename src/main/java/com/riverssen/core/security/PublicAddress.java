@@ -13,7 +13,7 @@
 package com.riverssen.core.security;
 
 import com.riverssen.core.RiverCoin;
-import com.riverssen.utils.Base58;
+import com.riverssen.core.utils.Base58;
 import com.riverssen.core.headers.Encodeable;
 
 import java.io.Serializable;

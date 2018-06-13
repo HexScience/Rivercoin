@@ -12,9 +12,9 @@
 
 package com.riverssen.core.algorithms;
 
-import com.riverssen.utils.Base58;
+import com.riverssen.core.utils.Base58;
 import com.riverssen.core.headers.HashAlgorithm;
-import com.riverssen.utils.HashUtil;
+import com.riverssen.core.utils.HashUtil;
 
 public class RipeMD256 implements HashAlgorithm
 {

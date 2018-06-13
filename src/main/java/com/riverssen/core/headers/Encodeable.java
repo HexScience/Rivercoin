@@ -12,8 +12,8 @@
 
 package com.riverssen.core.headers;
 
-import com.riverssen.utils.Base58;
-import com.riverssen.utils.HashUtil;
+import com.riverssen.core.utils.Base58;
+import com.riverssen.core.utils.HashUtil;
 
 /** this interface represents an object that can be converted to a byte array for hashing **/
 public interface Encodeable

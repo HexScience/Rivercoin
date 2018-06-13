@@ -14,9 +14,9 @@ package com.riverssen.core.networking;
 
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
-import com.riverssen.utils.ByteUtil;
-import com.riverssen.utils.SmartDataTransferer;
-import com.riverssen.utils.Tuple;
+import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.core.utils.SmartDataTransferer;
+import com.riverssen.core.utils.Tuple;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

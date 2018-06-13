@@ -12,8 +12,8 @@
 
 package com.riverssen.core.headers;
 
-import com.riverssen.utils.ByteUtil;
-import com.riverssen.utils.SmartDataTransferer;
+import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.core.utils.SmartDataTransferer;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

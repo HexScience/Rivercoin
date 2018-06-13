@@ -1,6 +1,6 @@
 package com.riverssen.core.system;
 
-import com.riverssen.utils.HashUtil;
+import com.riverssen.core.utils.HashUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;

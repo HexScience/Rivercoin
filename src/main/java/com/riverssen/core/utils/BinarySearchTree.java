@@ -10,24 +10,32 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.utils;
+package com.riverssen.core.utils;
+import com.riverssen.core.headers.Encodeable;
 
-import java.net.InetAddress;
-
-public class NetworkUtil
+public class BinarySearchTree<T extends Encodeable>
 {
-    public static boolean sameNetwork(String ip1, String ip2, String mask)
-            throws Exception {
+    BinaryElement<T> root;
 
-        byte[] a1 = InetAddress.getByName(ip1).getAddress();
-        byte[] a2 = InetAddress.getByName(ip2).getAddress();
-        byte[] m = InetAddress.getByName(mask).getAddress();
+    public void add(T t)
+    {
+    }
 
-        for (int i = 0; i < a1.length; i++)
-            if ((a1[i] & m[i]) != (a2[i] & m[i]))
-                return false;
+    public boolean contains(T t)
+    {
+        return false;
+    }
 
-        return true;
+    private class BinaryElement<T extends Encodeable> implements Encodeable
+    {
+        BinaryElement left;
+        BinaryElement right;
+        T             value;
 
+        @Override
+        public byte[] getBytes()
+        {
+            return new byte[0];
+        }
     }
 }

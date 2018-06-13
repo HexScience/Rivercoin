@@ -13,10 +13,9 @@
 package com.riverssen.core.security;
 
 import com.riverssen.core.Logger;
-import com.riverssen.utils.Base58;
-import com.riverssen.utils.HashUtil;
+import com.riverssen.core.utils.Base58;
+import com.riverssen.core.utils.HashUtil;
 
-import javax.crypto.Cipher;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.Key;

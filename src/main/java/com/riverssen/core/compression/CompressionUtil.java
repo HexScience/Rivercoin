@@ -13,7 +13,7 @@
 package com.riverssen.core.compression;
 
 import com.riverssen.core.algorithms.Sha3;
-import com.riverssen.utils.Base58;
+import com.riverssen.core.utils.Base58;
 
 import java.security.Security;
 

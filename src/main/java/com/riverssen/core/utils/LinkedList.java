@@ -10,42 +10,63 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.utils;
+package com.riverssen.core.utils;
 
-public class Tuple<I, J>
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+public class LinkedList<T>
 {
-    private I i;
-    private J j;
+    private Set<T>      set;
+    private Element<T>  root;
 
-    public Tuple(I i, J j)
+    public int size()
     {
-        this.i = i;
-        this.j = j;
+        return set.size();
     }
 
-    public synchronized I getI()
+    private class Element<T>
     {
-        return i;
+        private T           t;
+        private Element<T>  next;
+
+        private Element(T t)
+        {
+            this.t = t;
+        }
+
+        private void add(Element<T> element)
+        {
+            if(next == null) next = element;
+            else next.add(element);
+        }
     }
 
-    public synchronized void setI(I i)
+    public LinkedList()
     {
-        this.i = i;
+        set = Collections.synchronizedSet(new HashSet<>());
     }
 
-    public synchronized J getJ()
+    public void add(T element)
     {
-        return j;
+        if(set.contains(element)) return;
+
+        if(root == null)
+            root = new Element<>(element);
+        else root.add(new Element<>(element));
+
+        set.add(element);
     }
 
-    public synchronized void setJ(J j)
+    public boolean contains(T element)
     {
-        this.j = j;
+        return set.contains(element);
     }
 
-    @Override
-    public String toString()
+    public void removeEldestEntry()
     {
-        return i + " " + j;
+        set.remove(root.t);
+        root = root.next;
     }
 }

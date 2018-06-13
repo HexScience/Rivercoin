@@ -16,7 +16,7 @@ import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.BlockChainI;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.system.LatestBlockInfo;
-import com.riverssen.utils.Tuple;
+import com.riverssen.core.utils.Tuple;
 
 import java.io.File;
 import java.util.List;
