@@ -12,15 +12,16 @@
 
 package com.riverssen.core.mpp.compiler;
 
-import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.mpp.exceptions.CompileException;
 import com.riverssen.core.mpp.objects.Void;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Container implements Serializable
+public abstract class Container implements Serializable
 {
     protected static final Container    VOID = new Void();
     public    static final Container    EMPTY = new Void();
@@ -98,42 +99,42 @@ public class Container implements Serializable
 
     public Container addition(Container b)
     {
-        return new Container();
+        return EMPTY;
     }
 
     public Container submission(Container b)
     {
-        return new Container();
+        return EMPTY;
     }
 
     public Container multiplication(Container b)
     {
-        return new Container();
+        return EMPTY;
     }
 
     public Container subdivision(Container b)
     {
-        return new Container();
+        return EMPTY;
     }
 
     public Container modulo(Container b)
     {
-        return new Container();
+        return EMPTY;
     }
 
     public Container sin(Container b)
     {
-        return new Container();
+        return EMPTY;
     }
 
     public Container cos(Container b)
     {
-        return new Container();
+        return EMPTY;
     }
 
     public Container power(Container b)
     {
-        return new Container();
+        return EMPTY;
     }
 
     protected void setGlobal(Container global)
@@ -149,6 +150,10 @@ public class Container implements Serializable
     {
         return super.equals(obj);
     }
+
+    public abstract void write(DataOutputStream stream);
+
+    public abstract void read(DataInputStream stream);
 
     public Container getGlobal()
     {

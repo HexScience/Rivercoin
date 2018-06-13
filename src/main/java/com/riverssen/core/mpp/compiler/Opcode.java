@@ -12,53 +12,107 @@
 
 package com.riverssen.core.mpp.compiler;
 
-public class Opcode
+public enum Opcode
 {
-    public static final short
-    HLT = 0,
+    HLT,
 
-    //MATH
-    ADD = 1,
-    SUB = 2,
-    MLT = 3,
-    DIV = 4,
-    MOD = 5,
-    POW = 6,
-    SIN = 7,
-    COS = 8,
+    ADD,
+    SUB,
+    MUL,
+    DIV,
+    MOD,
+    POW,
+    SIN,
+    COS,
+    TAN,
 
-    //BOOL
-    AND = 9,
-    OR = 10,
-    RSHFT = 11,
-    LSHFT = 12,
-    ASSERT = 13,
+    AND,
+    OR,
+    RSHIFT,
+    LSHIFT,
+    ASSERT,
+    LESSTHAN,
+    MORETHAN,
+    LESSTHANE,
+    MORETHANE,
 
-    //OPERATIONAL
-    SET = 14, //STACK.SET(INDEX, OBJECT)
-    PUT = 15, //MEMORY.PUT(INDEX, OBJECT)
-    PRT = 16,
+    PUSH,
+    POP,
 
-    POP = 17,
-    PUSH = 18,
-    PUSH_INT = 19,
-    PUSH_UINT = 20,
-    PUSH_UINT256 = 21,
-    PUSH_FLOAT = 22,
-    PUSH_BIGDECIMAL = 23,
+    PUSH_INT,
+    PUSH_UINT,
+    PUSH_UINT256,
+    PUSH_FLOAT,
+    PUSH_DECIMAL,
 
-    NEW = 24,
-    CALL = 25,
-    IF = 26,
-    ELSEIF = 27,
-    ELSE = 28,
-    FOR = 29,
-    WHILE = 30,
-    LOOP = 31,
+    MOV, //move from stack to memory
+    LOD, //load from memory to stack
+    NEW, //create a new element in memory
+    NEW_INT,
+    NEW_UINT,
+    NEW_UINT256,
+    NEW_FLOAT,
+    NEW_DECIMAL,
 
-    FUN = 32,
+    IF,
+    ELSEIF,
+    ELSE,
+    LOOP,
+    FOR,
+    FOREACH,
+    WHILE,
 
-    LOAD = 33, //stack.push(stack.get(int))
+    FUN,
+    CALL,
 
-    EXT = 400;
+    ENCRYPT,
+    ;
+
+//    public static final short
+//    HLT = 0,
+//
+//    //MATH
+//    ADD = 1,
+//    SUB = 2,
+//    MLT = 3,
+//    DIV = 4,
+//    MOD = 5,
+//    POW = 6,
+//    SIN = 7,
+//    COS = 8,
+//
+//    //BOOL
+//    AND = 9,
+//    OR = 10,
+//    RSHFT = 11,
+//    LSHFT = 12,
+//    ASSERT = 13,
+//
+//    //OPERATIONAL
+//    SET = 14, //STACK.SET(INDEX, OBJECT)
+//    PUT = 15, //MEMORY.PUT(INDEX, OBJECT)
+//    PRT = 16,
+//
+//    POP = 17,
+//    PUSH = 18,
+//    PUSH_INT = 19,
+//    PUSH_UINT = 20,
+//    PUSH_UINT256 = 21,
+//    PUSH_FLOAT = 22,
+//    PUSH_BIGDECIMAL = 23,
+//
+//    NEW = 24,
+//    CALL = 25,
+//    IF = 26,
+//    ELSEIF = 27,
+//    ELSE = 28,
+//    FOR = 29,
+//    WHILE = 30,
+//    LOOP = 31,
+//
+//    FUN = 32,
+//
+//    LOAD = 33, //stack.push(stack.get(int))
+//
+//    EXT = 400;
 }
