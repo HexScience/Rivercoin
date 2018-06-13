@@ -15,7 +15,9 @@ package com.riverssen.core.mpp.objects;
 import com.riverssen.core.mpp.compiler.Container;
 import com.riverssen.core.mpp.runtime.StringObject;
 
-public class PublicAddress extends Container
+import java.io.Serializable;
+
+public class PublicAddress extends Container implements Serializable
 {
     com.riverssen.core.security.PublicAddress value;
 

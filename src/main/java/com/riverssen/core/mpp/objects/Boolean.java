@@ -14,7 +14,9 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
-public class Boolean extends Container
+import java.io.Serializable;
+
+public class Boolean extends Container implements Serializable
 {
     public static Boolean TRUE = new Boolean(true);
     public static Boolean FALSE= new Boolean(false);

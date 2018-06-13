@@ -12,13 +12,9 @@
 
 package com.riverssen.core.mpp.runtime.vm.startupdisk;
 
-import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
 import com.riverssen.core.mpp.runtime.vm.memory.MemObject;
-import com.riverssen.core.rvm.MathContext;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Stack;
+import java.io.*;
 
 public class VirtualStorageSpace
 {
@@ -32,12 +28,52 @@ public class VirtualStorageSpace
         this.root = location;
     }
 
-    public void accessFile(String hash, MemObject out)
+    public void readFile(String hash, MemObject out)
     {
         File file = new File(root + File.separator + hash);
         if(file.exists())
         {
+            byte bytes[] = new byte[(int) file.length()];
+
+            try
+            {
+                FileInputStream stream = new FileInputStream(file);
+
+                stream.read(bytes);
+
+                stream.close();
+            } catch (FileNotFoundException e)
+            {
+                e.printStackTrace();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        } else out.setNull();
+    }
+
+    public boolean writeFile(String hash, MemObject out)
+    {
+        File file = new File(root + File.separator + hash);
+        if(file.exists()) return false;
+
+        try
+        {
+            FileOutputStream stream = new FileOutputStream(file);
+
+            stream.write(out.get());
+
+            stream.flush();
+            stream.close();
+        } catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
         }
+
+        return false;
     }
 
     public long getRemaining()

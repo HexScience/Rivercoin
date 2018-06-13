@@ -16,8 +16,10 @@ import com.riverssen.core.algorithms.Sha3;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.headers.Serialisable;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
@@ -159,5 +161,15 @@ public class ByteUtil
         }
 
         return new byte[1];
+    }
+
+    public static void writeObject(ByteArrayOutputStream stream, Object object) throws Exception
+    {
+        ObjectOutputStream stream1 = new ObjectOutputStream(stream);
+
+        stream1.writeObject(object);
+
+        stream1.flush();
+        stream1.close();
     }
 }

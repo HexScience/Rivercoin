@@ -12,24 +12,28 @@
 
 package com.riverssen.core.mpp.runtime.vm;
 
-import com.riverssen.core.mpp.runtime.OpcodeParser;
+import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.mpp.compiler.OpcodeParser;
 import com.riverssen.core.mpp.runtime.vm.memory.VirtualMemory;
-import com.riverssen.core.rvm.Opcode;
+import com.riverssen.core.mpp.runtime.vm.startupdisk.VirtualStorageSpace;
+import com.riverssen.core.mpp.Opcode;
 
 public class VirtualMachine
 {
-    private VirtualMemory memory;
-    private Opcode program[];
+    private VirtualMemory           memory;
+    private Opcode                  program[];
+    private VirtualStorageSpace     vss;
 
-    public VirtualMachine(byte program[])
+    public VirtualMachine(byte program[], ContextI contextI)
     {
-        this(new OpcodeParser(program).getOpcode());
+        this(new OpcodeParser(program).getOpcode(), contextI);
     }
 
-    public VirtualMachine(Opcode program[])
+    public VirtualMachine(Opcode program[], ContextI contextI)
     {
         this.program    = program;
         this.memory     = new VirtualMemory();
+        this.vss        = new VirtualStorageSpace(contextI.getConfig().getVSSSize(), contextI.getConfig().getVSSDirectory());
     }
 
     public VirtualMemory getMemory()
@@ -41,5 +45,10 @@ public class VirtualMachine
     {
         for(Opcode opcode : program)
             opcode.execute(this);
+    }
+
+    public VirtualStorageSpace getStorage()
+    {
+        return vss;
     }
 }

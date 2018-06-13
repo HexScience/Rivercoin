@@ -14,10 +14,11 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
-public class set extends Container
+public class set extends Container implements Serializable
 {
     HashSet value;
 

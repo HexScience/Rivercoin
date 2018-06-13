@@ -10,26 +10,17 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.mpp.compiler.opcodes;
+package com.riverssen.core.mpp.objects;
 
-import com.riverssen.core.mpp.Opcode;
-import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
+import com.riverssen.core.mpp.compiler.Container;
 
-import java.nio.ByteBuffer;
+import java.io.Serializable;
 
-public class Push implements Opcode
+public class Void extends Container implements Serializable
 {
-    private byte data[];
-
-    public Push(ByteBuffer opcodes)
-    {
-        data = new byte[opcodes.getInt()];
-        opcodes.get(data);
-    }
-
     @Override
-    public void execute(VirtualMachine context)
+    public String toString()
     {
-//        context.getMemory().push(new ByteArrayMemObject(data));
+        return "void";
     }
 }

@@ -14,18 +14,19 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
-public class mapped_set extends Container
+public class mapped_set extends Container implements Serializable
 {
     HashMap<Container, Container> value;
 
     public mapped_set()
     {
-        this.value = new LinkedHashMap();
+        this.value = new HashMap<>();
 
         setField("add", new Container(){
             @Override

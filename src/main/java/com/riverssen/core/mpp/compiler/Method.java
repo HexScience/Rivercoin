@@ -17,19 +17,19 @@ import com.riverssen.core.mpp.Opcode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.*;
 
 import static com.riverssen.core.mpp.compiler.Opcode.*;
 
-public class Method extends Container
+public class Method extends Container implements Serializable
 {
     private static final Stack<Container> stack = new Stack<>();
     private Set<String> arguments;
     private String      returnType;
     private int         offset;
     private Token       body;
-    private ByteBuffer  opcodes;
 
     public Method(Token token) throws CompileException
     {
@@ -40,7 +40,6 @@ public class Method extends Container
         this.returnType = token.getTokens().get(1).toString();
 
         this.body       = token.getTokens().get(3);
-        this.opcodes    = createBufferFromTokens(token);
     }
 
     public Method(String name)

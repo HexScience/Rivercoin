@@ -14,7 +14,9 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
-public class Integer extends Container
+import java.io.Serializable;
+
+public class Integer extends Container implements Serializable
 {
     long value;
 

@@ -14,9 +14,10 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
-public class uint256 extends Container
+public class uint256 extends Container implements Serializable
 {
     private BigInteger value;
 

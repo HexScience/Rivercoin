@@ -14,7 +14,9 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
-public class Float extends Container
+import java.io.Serializable;
+
+public class Float extends Container implements Serializable
 {
     double value;
 

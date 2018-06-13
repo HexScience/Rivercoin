@@ -12,9 +12,6 @@
 
 package com.riverssen.core.mpp.runtime.vm.memory;
 
-import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
-import com.riverssen.core.rvm.MathContext;
-
 import java.util.HashMap;
 import java.util.Stack;
 

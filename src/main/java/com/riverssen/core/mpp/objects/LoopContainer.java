@@ -14,7 +14,9 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
-public class LoopContainer extends Container
+import java.io.Serializable;
+
+public class LoopContainer extends Container implements Serializable
 {
     Container value;
 //    Container self;

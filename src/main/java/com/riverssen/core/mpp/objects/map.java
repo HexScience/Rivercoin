@@ -14,7 +14,9 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
-public class map extends Container
+import java.io.Serializable;
+
+public class map extends Container implements Serializable
 {
     boolean value;
 

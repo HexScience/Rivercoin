@@ -14,9 +14,10 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
+import java.io.Serializable;
 import java.security.PublicKey;
 
-public class RSAPK extends Container
+public class RSAPK extends Container implements Serializable
 {
     private PublicKey value;
 

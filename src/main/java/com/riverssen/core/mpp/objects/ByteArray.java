@@ -14,7 +14,9 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
-public class ByteArray extends Container
+import java.io.Serializable;
+
+public class ByteArray extends Container implements Serializable
 {
     private byte bytes[];
 

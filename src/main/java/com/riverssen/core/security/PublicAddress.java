@@ -16,7 +16,9 @@ import com.riverssen.core.RiverCoin;
 import com.riverssen.utils.Base58;
 import com.riverssen.core.headers.Encodeable;
 
-public class PublicAddress implements Encodeable
+import java.io.Serializable;
+
+public class PublicAddress implements Encodeable, Serializable
 {
     private String address;
 

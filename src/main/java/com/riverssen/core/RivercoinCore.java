@@ -19,15 +19,14 @@ import com.riverssen.core.mpp.runtime.StringObject;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.system.MiningContext;
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.utils.Base58;
+import com.riverssen.utils.ByteUtil;
 import com.riverssen.utils.FileUtils;
-import com.sun.crypto.provider.RSACipher;
-import org.bouncycastle.jcajce.provider.asymmetric.RSA;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.Security;
-import java.security.interfaces.RSAPublicKey;
 
 public class RivercoinCore
 {
@@ -50,8 +49,13 @@ public class RivercoinCore
         ParsedProgram pp    = new ParsedProgram(new LexedProgram(FileUtils.readUTF(Contracts.class.getResourceAsStream("contracts.mpp"))));
         Token list = pp.getTokens();
 
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
         Namespace global = new Namespace(pp.getTokens());
         global.setGlobal();
+
+        String firstStateHash = Base58.encode(global.getStateChange(ByteUtil.defaultEncoder()));
+        ByteUtil.writeObject(stream, global);
 
         System.out.println(global.callMethod("set"));
 
@@ -71,6 +75,11 @@ public class RivercoinCore
         global.get("Messenger").callMethod("sendMessage", new StringObject("helldo world"), k);
         System.out.println(global.get("Messenger").get("owner"));
         System.out.println(global.get("Messenger").get("messages"));
+
+        String secondStateHash = Base58.encode(global.getStateChange(ByteUtil.defaultEncoder()));
+
+        System.out.println(firstStateHash);
+        System.out.println(secondStateHash);
 
 //        global.callMethod("Messenger");
 

@@ -12,21 +12,18 @@
 
 package com.riverssen.core.mpp.compiler;
 
+import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.mpp.exceptions.CompileException;
+import com.riverssen.core.mpp.objects.Void;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Container
+public class Container implements Serializable
 {
-    protected static final Container    VOID = new Container() {
-        @Override
-        public String toString()
-        {
-            return "void";
-        }
-    };
-    public    static final Container    EMPTY = new Container();
+    protected static final Container    VOID = new Void();
+    public    static final Container    EMPTY = new Void();
     public Container                    global;
     protected String                    name;
     private Map<String, Container>      globalMap;

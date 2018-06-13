@@ -14,7 +14,9 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
-public class Uint extends Container
+import java.io.Serializable;
+
+public class Uint extends Container implements Serializable
 {
     long value;
 

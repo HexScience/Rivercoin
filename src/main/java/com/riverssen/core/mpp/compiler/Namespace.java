@@ -12,24 +12,21 @@
 
 package com.riverssen.core.mpp.compiler;
 
+import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.mpp.exceptions.CompileException;
 import com.riverssen.core.mpp.objects.mapped_set;
 import com.riverssen.core.mpp.objects.set;
 
-import java.util.Map;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
-public class Namespace extends Container
+public class Namespace extends Container implements Serializable
 {
-    private String                  namespace;
-    private Map<String, Namespace>  namespaceMap;
-    private Map<String, Class>      classMap;
-    private Map<String, Method>     methodMap;
-    private Map<String, Field>      fieldMap;
-
     public Namespace(Token ns) throws CompileException
     {
-        if (ns.getType().equals(Token.Type.ROOT)) namespace = "global";
-        else if (ns.getType().equals(Token.Type.NAMESPACE)) namespace = ns.toString();
+        if (ns.getType().equals(Token.Type.ROOT)) name = "global";
+        else if (ns.getType().equals(Token.Type.NAMESPACE)) name = ns.toString();
 
         for (Token token : ns.getTokens())
             if (token.getType().equals(Token.Type.NAMESPACE)) addNameSpace(token);
@@ -57,5 +54,19 @@ public class Namespace extends Container
                 return new mapped_set();
             }
         });
+    }
+
+    public byte[] getStateChange(HashAlgorithm algorithm) throws Exception
+    {
+        if(getGlobal() != this) throw new Exception("Namespace '" + name + "' is not root");
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(stream);
+
+        objectOutputStream.writeObject(this);
+
+        objectOutputStream.flush();
+        objectOutputStream.close();
+
+        return algorithm.encode(stream.toByteArray());
     }
 }
