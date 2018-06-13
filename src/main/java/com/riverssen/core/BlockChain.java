@@ -24,7 +24,7 @@ import java.util.List;
 public class BlockChain implements BlockChainI
 {
     private FullBlock       block;
-    private ContextI context;
+    private ContextI        context;
     private long            lastvalidated;
 
     public BlockChain(ContextI context)
