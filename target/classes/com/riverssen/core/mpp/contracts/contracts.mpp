@@ -79,21 +79,3 @@ class Messenger{
             destroy()
     }
 }
-
-//expected outputs
-//class -> contract
-//new [2]
-//
-//fun HelloWorld
-//push ["hello world"]
-//set [0+1]     (this.message)
-//load [1+1]    (msg.sender)
-//set [0+0]     (this.owner)
-
-//fun setMessage
-//load [0+0]
-//load [1+1]
-//assert
-//if
-//load [2]
-//set [0+1]

@@ -535,6 +535,12 @@ public class ParsedProgram
                 else if (last.getType().equals(OR) && last.toString().charAt(0) == '|') last.setType(BOOL_OP);
                 else if (last.getType().equals(SYMBOL) && last.toString().charAt(0) == ':') last.setType(STATIC_ACCESS);
                 else newList.add(tokens.get(0));
+            } else if(last.getType() == LESS_THAN && tokens.get(0).getType() == EQUALS)
+            {
+                last.setType(LESSTHAN_EQUAL);
+            } else if(last.getType() == MORE_THAN && tokens.get(0).getType() == EQUALS)
+            {
+                last.setType(MORETHAN_EQUAL);
             } else if (last.getType() == NUMBER && tokens.get(0).getType() == PROCEDURAL_ACCESS)
             {
                 last.append(tokens.get(0).toString());
