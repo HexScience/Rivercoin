@@ -14,6 +14,8 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,6 +41,18 @@ public class mapped_set extends Container implements Serializable
 
                 return Boolean.TRUE;
             }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
         });
 
         setField("put", new Container(){
@@ -52,6 +66,18 @@ public class mapped_set extends Container implements Serializable
 
                 return Boolean.TRUE;
             }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
         });
 
         setField("remove", new Container(){
@@ -61,6 +87,18 @@ public class mapped_set extends Container implements Serializable
                 value.remove(args[0]);
                 return Boolean.TRUE;
             }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
         });
 
         setField("get", new Container(){
@@ -68,6 +106,18 @@ public class mapped_set extends Container implements Serializable
             public Container call(Container self, Container... args)
             {
                 return value.get(args[0]);
+            }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
             }
         });
 
@@ -79,6 +129,18 @@ public class mapped_set extends Container implements Serializable
                     if(!value.containsKey(container)) return Boolean.FALSE;
                 return Boolean.TRUE;
             }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
         });
 
         setField("clear", new Container(){
@@ -88,6 +150,18 @@ public class mapped_set extends Container implements Serializable
                 value.clear();
                 return Boolean.TRUE;
             }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
         });
     }
 
@@ -95,6 +169,18 @@ public class mapped_set extends Container implements Serializable
     public Object asJavaObject()
     {
         return value;
+    }
+
+    @Override
+    public void write(DataOutputStream stream)
+    {
+
+    }
+
+    @Override
+    public void read(DataInputStream stream)
+    {
+
     }
 
     @Override

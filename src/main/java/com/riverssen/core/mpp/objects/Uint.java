@@ -14,6 +14,8 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.Serializable;
 
 public class Uint extends Container implements Serializable
@@ -29,5 +31,17 @@ public class Uint extends Container implements Serializable
     public Object asJavaObject()
     {
         return value;
+    }
+
+    @Override
+    public void write(DataOutputStream stream)
+    {
+
+    }
+
+    @Override
+    public void read(DataInputStream stream)
+    {
+
     }
 }

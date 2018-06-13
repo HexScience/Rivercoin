@@ -17,9 +17,7 @@ import com.riverssen.core.mpp.exceptions.CompileException;
 import com.riverssen.core.mpp.objects.mapped_set;
 import com.riverssen.core.mpp.objects.set;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 
 public class Namespace extends Container implements Serializable
 {
@@ -46,12 +44,36 @@ public class Namespace extends Container implements Serializable
             {
                 return new set();
             }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
         });
         setField("mapped_set", new Container(){
             @Override
             public Container call(Container self, Container... args)
             {
                 return new mapped_set();
+            }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
             }
         });
     }
@@ -68,5 +90,17 @@ public class Namespace extends Container implements Serializable
         objectOutputStream.close();
 
         return algorithm.encode(stream.toByteArray());
+    }
+
+    @Override
+    public void write(DataOutputStream stream)
+    {
+
+    }
+
+    @Override
+    public void read(DataInputStream stream)
+    {
+
     }
 }

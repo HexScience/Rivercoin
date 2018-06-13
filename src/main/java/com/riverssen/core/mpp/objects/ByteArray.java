@@ -32,6 +32,18 @@ public class ByteArray extends Container implements Serializable
             {
                 return new Integer(bytes[(int)args[0].asJavaObject()]);
             }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
         });
 
         setField("set", new Container(){
@@ -39,6 +51,18 @@ public class ByteArray extends Container implements Serializable
             public Container call(Container self, Container... args)
             {
                 return new Integer(bytes[(int)args[0].asJavaObject()] = (byte)args[1].asJavaObject());
+            }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
             }
         });
     }

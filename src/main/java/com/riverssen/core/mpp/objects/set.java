@@ -14,6 +14,8 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -34,6 +36,18 @@ public class set extends Container implements Serializable
                     if(!value.add(container)) return Boolean.FALSE;
                 return Boolean.TRUE;
             }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
         });
 
         setField("contains", new Container(){
@@ -44,6 +58,18 @@ public class set extends Container implements Serializable
                     if(!value.contains(container)) return Boolean.FALSE;
                 return Boolean.TRUE;
             }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
         });
 
         setField("clear", new Container(){
@@ -53,6 +79,18 @@ public class set extends Container implements Serializable
                 value.clear();
                 return Boolean.TRUE;
             }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
         });
 
 
@@ -61,6 +99,18 @@ public class set extends Container implements Serializable
             public Container call(Container self, Container... args)
             {
                 return set.this.submission(args[0]);
+            }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
             }
         });
     }
@@ -87,5 +137,17 @@ public class set extends Container implements Serializable
     public Container submission(Container b)
     {
         return value.remove(b) ? Boolean.TRUE : Boolean.FALSE;
+    }
+
+    @Override
+    public void write(DataOutputStream stream)
+    {
+
+    }
+
+    @Override
+    public void read(DataInputStream stream)
+    {
+
     }
 }

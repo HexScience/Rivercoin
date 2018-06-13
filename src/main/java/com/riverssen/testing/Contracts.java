@@ -39,7 +39,7 @@ public class Contracts
         Namespace global = new Namespace(pp.getTokens());
         global.setGlobal();
 
-        System.out.println(new RiverCoin(list.calculateCost()));
+        System.out.println(new RiverCoin(list.calculateCost()).toRiverCoinString());
 
         String firstStateHash = Base58.encode(global.getStateChange(ByteUtil.defaultEncoder()));
         ByteUtil.writeObject(stream, global);

@@ -14,6 +14,8 @@ package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.Serializable;
 
 public class Void extends Container implements Serializable
@@ -22,5 +24,17 @@ public class Void extends Container implements Serializable
     public String toString()
     {
         return "void";
+    }
+
+    @Override
+    public void write(DataOutputStream stream)
+    {
+
+    }
+
+    @Override
+    public void read(DataInputStream stream)
+    {
+
     }
 }

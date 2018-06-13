@@ -15,6 +15,8 @@ package com.riverssen.core.mpp.objects;
 import com.riverssen.core.mpp.compiler.Container;
 import com.riverssen.core.mpp.runtime.StringObject;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.Serializable;
 
 public class PublicAddress extends Container implements Serializable
@@ -46,5 +48,17 @@ public class PublicAddress extends Container implements Serializable
         else if(obj instanceof StringObject)
             return ((String)((StringObject) obj).asJavaObject()).equals(value.toString());
         else return false;
+    }
+
+    @Override
+    public void write(DataOutputStream stream)
+    {
+
+    }
+
+    @Override
+    public void read(DataInputStream stream)
+    {
+
     }
 }

@@ -14,6 +14,9 @@ package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.security.PublicAddress;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+
 public class Message extends Container
 {
     public Message(PublicAddress address)
@@ -25,5 +28,17 @@ public class Message extends Container
     public String toString()
     {
         return "message{"+get("sender")+"}";
+    }
+
+    @Override
+    public void write(DataOutputStream stream)
+    {
+
+    }
+
+    @Override
+    public void read(DataInputStream stream)
+    {
+
     }
 }
