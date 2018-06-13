@@ -61,10 +61,16 @@ class Messenger{
         return messages.get(msg.sender)
     }
 
-    public function addOwner() : void
+    public function addOwner(PublicAddress newOwner) : void
     {
         if(owner.contains(msg.sender))
-            owner.add(msg.sender)
+            owner.add(newOwner)
+    }
+
+    public function removeOwner(PublicAddress oldOwner) : void
+    {
+        if(owner.contains(msg.sender))
+            owner.remove(oldOwner)
     }
 
     public function kill() : void
