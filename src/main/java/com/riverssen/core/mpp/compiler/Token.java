@@ -193,8 +193,9 @@ public class Token implements Serializable
     {
         switch (type)
         {
+            case BRACKETS:
+                return getTokens().get(0).interpret(context, self, fcontext, fself, proc, args).bracketGet(getTokens().get(1).interpret(context, self, fcontext, fself, proc, args));
             case NEW:
-
                 if(getTokens().size() > 0)
                 {
                     Container arguments[] = new Container[getTokens().get(1).getTokens().size()];
@@ -515,7 +516,8 @@ public class Token implements Serializable
                 cost = cost.add(new RiverCoin("0.00825").toBigInteger());
                 break;
             default:
-                cost = cost.add(new RiverCoin("0.000002563").toBigInteger());
+                /** price per byte **/
+                cost = cost.add(new RiverCoin("0.000000267028809").toBigInteger());
                 break;
         }
 
