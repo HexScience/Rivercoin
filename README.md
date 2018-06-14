@@ -15,7 +15,8 @@ Twitch:   https://www.twitch.tv/TheGermanBurrito
 Contact: Riverssen@gmail.com
 
 ------------------------------------------------------
+
 # Getting Started
 
-The system is not ready yet. To start mining, stay tuned
-with the discord for updates.
+The system is not ready yet. To start mining,
+stay tuned with the discord for updates.
