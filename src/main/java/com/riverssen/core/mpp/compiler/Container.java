@@ -23,11 +23,11 @@ import java.util.Map;
 
 public abstract class Container implements Serializable
 {
-    protected static final Container    VOID = new Void();
-    public    static final Container    EMPTY = new Void();
-    public Container                    global;
-    protected String                    name;
-    private Map<String, Container>      globalMap;
+    protected static final Container                    VOID = new Void();
+    public    static final Container                    EMPTY = new Void();
+    public                 Container                    global;
+    protected              String                       name;
+    private                Map<String, Container>       globalMap;
 
     public Container()
     {
@@ -143,6 +143,16 @@ public abstract class Container implements Serializable
 
         for(Container container : globalMap.values())
             container.setGlobal(global);
+    }
+
+    public Container bracketGet(Container container)
+    {
+        return VOID;
+    }
+
+    public Container bracketSet(Container container)
+    {
+        return VOID;
     }
 
     @Override
