@@ -13,7 +13,6 @@
 package com.riverssen.core.mpp.objects;
 
 import com.riverssen.core.mpp.compiler.Container;
-import com.riverssen.core.mpp.runtime.StringObject;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

@@ -18,14 +18,11 @@ import com.riverssen.core.mpp.objects.Boolean;
 import com.riverssen.core.mpp.objects.Float;
 import com.riverssen.core.mpp.objects.Integer;
 import com.riverssen.core.mpp.objects.LoopContainer;
-import com.riverssen.core.mpp.runtime.StringObject;
+import com.riverssen.core.mpp.objects.StringObject;
 
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.*;
-
-import static com.riverssen.core.mpp.compiler.Opcode.PUSH_FLOAT;
-import static com.riverssen.core.mpp.compiler.Opcode.PUSH_INT;
 
 public class Token implements Serializable
 {

@@ -12,9 +12,9 @@
 
 package com.riverssen.core.mpp;
 
-import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
+import com.riverssen.core.mpp.compiler.Container;
 
 public interface Opcode
 {
-    public void execute(VirtualMachine context);
+    public void execute(Container context);
 }

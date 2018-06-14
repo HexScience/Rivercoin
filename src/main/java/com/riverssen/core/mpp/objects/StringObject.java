@@ -10,26 +10,43 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.mpp.compiler.opcodes;
+package com.riverssen.core.mpp.objects;
 
-import com.riverssen.core.mpp.Opcode;
-import com.riverssen.core.mpp.runtime.vm.VirtualMachine;
+import com.riverssen.core.mpp.compiler.Container;
 
-import java.nio.ByteBuffer;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 
-public class Push implements Opcode
+public class StringObject extends Container
 {
-    private byte data[];
+    private String string;
 
-    public Push(ByteBuffer opcodes)
+    public StringObject(String string)
     {
-        data = new byte[opcodes.getInt()];
-        opcodes.get(data);
+        this.string = string;
     }
 
     @Override
-    public void execute(VirtualMachine context)
+    public java.lang.Object asJavaObject()
     {
-//        context.getMemory().push(new ByteArrayMemObject(data));
+        return string;
+    }
+
+    @Override
+    public void write(DataOutputStream stream)
+    {
+
+    }
+
+    @Override
+    public void read(DataInputStream stream)
+    {
+
+    }
+
+    @Override
+    public String toString()
+    {
+        return string;
     }
 }

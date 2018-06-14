@@ -15,7 +15,7 @@ package com.riverssen.testing;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.mpp.compiler.*;
 import com.riverssen.core.mpp.objects.RSAPK;
-import com.riverssen.core.mpp.runtime.StringObject;
+import com.riverssen.core.mpp.objects.StringObject;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
@@ -34,7 +34,7 @@ public class Contracts
         ParsedProgram pp    = new ParsedProgram(new LexedProgram(FileUtils.readUTF(com.riverssen.core.mpp.contracts.Contracts.class.getResourceAsStream("contracts.mpp"))));
         Token list = pp.getTokens();
 
-        System.out.println(list.getToken("test").humanReadable(0));
+//        System.out.println(list.getToken("test").humanReadable(0));
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
