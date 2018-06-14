@@ -115,4 +115,10 @@ public class Integer extends Container implements Serializable
             return new Number(new BigDecimal(this.value).divide(((Number) b).value));
         else return EMPTY;
     }
+
+    @Override
+    public String toString()
+    {
+        return value + "";
+    }
 }

@@ -15,7 +15,7 @@ class NumTests{
 
         public function NumTests() : void
         {
-            total = 5 * 5
+            total = 5 +5 / 9 *2 + 1 + 3 *3
         }
 }
 

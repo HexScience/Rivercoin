@@ -557,6 +557,8 @@ public class ParsedProgram
             {
                 last.append(tokens.get(0).toString());
                 last.setType(DECIMAL);
+                tokens.remove(0);
+                continue;
             } else if (last.getType() == DECIMAL && tokens.get(0).getType() == NUMBER)
             {
                 last.append(tokens.get(0).toString());
@@ -694,6 +696,13 @@ public class ParsedProgram
                     {
                         parseMath(tokens, root, A);
                     } else root.add(A);
+                    break;
+                case DECIMAL:
+                    Token A_ = getNext(tokens, currentToken, "");
+                    if (tokens.size() > 0 && tokens.get(0).isMathOp() && parseMath)
+                    {
+                        parseMath(tokens, root, A_);
+                    } else root.add(A_);
                     break;
                 case STRING:
                     root.add(new Token(Token.Type.INPUT).add(getNext(tokens, currentToken, "")));

@@ -225,8 +225,8 @@ public class Token implements Serializable
         switch (type)
         {
             case MATH_OP:
-                    Container a = getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
-                    Container b = getTokens().get(1).interpret(context, self, fcontext, fself, proc, args);
+                    Container b = getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
+                    Container a = getTokens().get(1).interpret(context, self, fcontext, fself, proc, args);
 
                     switch (toString().charAt(0))
                     {
@@ -240,6 +240,8 @@ public class Token implements Serializable
                             return a.subdivision(b);
                         case '%':
                             return a.modulo(b);
+                        case '^':
+                            return a.power(b);
                     }
 
                     return Container.EMPTY;
@@ -362,7 +364,10 @@ public class Token implements Serializable
                 }
                 break;
             case PARENTHESIS:
-                break;
+                    Container retval = Container.EMPTY;
+                    for(Token token : getTokens()) retval = token.interpret(context, self, fcontext, fself, proc, args);
+
+                    return retval;
             case RETURN:
                 return getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
         }
