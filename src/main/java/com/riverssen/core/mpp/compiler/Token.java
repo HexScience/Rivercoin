@@ -83,6 +83,9 @@ public class Token implements Serializable
         } else if(name.equals("method"))
         {
             return Type.METHOD_DECLARATION;
+        } else if(name.equals("field"))
+        {
+            return Type.EMPTY_DECLARATION;
         }
         else return this.getType();
     }
