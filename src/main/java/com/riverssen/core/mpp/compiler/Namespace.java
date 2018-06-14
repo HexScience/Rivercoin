@@ -12,6 +12,7 @@
 
 package com.riverssen.core.mpp.compiler;
 
+import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.mpp.exceptions.CompileException;
 import com.riverssen.core.mpp.objects.mapped_set;
@@ -32,6 +33,30 @@ public class Namespace extends Container implements Serializable
             else if (token.getType().equals(Token.Type.METHOD_DECLARATION)) addMethod(token);
             else if (token.getType().equals(Token.Type.EMPTY_DECLARATION)) addDeclaration(token);
             else if (token.getType().equals(Token.Type.FULL_DECLARATION)) addDeclaration(token);
+    }
+
+    public static void check(Token methodCall)
+    {
+        if(methodCall.getTokens().get(0).toString().equals("encrypt"))
+            methodCall.setCost(new RiverCoin("0.0015").toBigInteger());
+
+        if(methodCall.getTokens().get(0).toString().equals("sha256"))
+            methodCall.setCost(new RiverCoin("0.001").toBigInteger());
+
+        if(methodCall.getTokens().get(0).toString().equals("sha3"))
+            methodCall.setCost(new RiverCoin("0.001").toBigInteger());
+
+        if(methodCall.getTokens().get(0).toString().equals("keccak"))
+            methodCall.setCost(new RiverCoin("0.001").toBigInteger());
+
+        if(methodCall.getTokens().get(0).toString().equals("sha512"))
+            methodCall.setCost(new RiverCoin("0.005").toBigInteger());
+
+        if(methodCall.getTokens().get(0).toString().equals("sha3"))
+            methodCall.setCost(new RiverCoin("0.001").toBigInteger());
+
+        if(methodCall.getTokens().get(0).toString().equals("keccak"))
+            methodCall.setCost(new RiverCoin("0.001").toBigInteger());
     }
 
     public void setGlobal()

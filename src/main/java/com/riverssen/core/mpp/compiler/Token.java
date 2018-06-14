@@ -33,6 +33,7 @@ public class Token implements Serializable
     private Type                type;
     private List<Token>         children;
     private Set<Modifier>       modifiers = new LinkedHashSet<>();
+    private BigInteger          cost = BigInteger.ZERO;
 
     public boolean isMathOp()
     {
@@ -63,13 +64,39 @@ public class Token implements Serializable
         return modifiers.contains(modifier);
     }
 
-    public Token getToken(String tokenNameOrValue)
+    private Token getTokenByTypeName(Type type, String name)
     {
         for(Token token : getTokens())
-            if(token.toString().equals(tokenNameOrValue))
+            if(token.type.equals(type) && token.getTokens().get(0).toString().equals(name))
                 return token;
+            else if(token.type.equals(Type.BRACES))
+                return token.getTokenByTypeName(type, name);
 
         return this;
+    }
+
+    private Type nameToType(String name)
+    {
+        if(name.equals("class"))
+        {
+            return Type.CLASS_DECLARATION;
+        } else if(name.equals("method"))
+        {
+            return Type.METHOD_DECLARATION;
+        }
+        else return this.getType();
+    }
+
+    public Token getToken(String tokenNameOrValue)
+    {
+        String heierarchy[] = tokenNameOrValue.split(" ");
+
+        Token token = getTokenByTypeName(nameToType(heierarchy[0].split("::")[0]), heierarchy[0].split("::")[1]);
+
+        for(int i = 1; i < heierarchy.length; i ++)
+            token = token.getTokenByTypeName(nameToType(heierarchy[i].split("::")[0]), heierarchy[i].split("::")[1]);
+
+        return token;
     }
 
     public static enum          Type implements Serializable {
@@ -443,6 +470,11 @@ public class Token implements Serializable
         return this.type;
     }
 
+    public void setCost(BigInteger cost)
+    {
+        this.cost = cost;
+    }
+
     private boolean isKeyword()
     {
         final String keywords[] = {"function", "fun", "new", "class", "static", "public", "private", "protected", "const", "final", "extend", "header", "if", "for", "while", "foreach", "then", "namespace", "return"};
@@ -521,7 +553,7 @@ public class Token implements Serializable
                 break;
         }
 
-        return cost;
+        return cost.add(cost);
     }
 
     @Override
