@@ -17,14 +17,149 @@ import com.riverssen.core.mpp.compiler.Container;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.Serializable;
+import java.util.HashMap;
 
 public class map extends Container implements Serializable
 {
-    boolean value;
+    HashMap<Container, Container> value;
 
-    public map(boolean value)
+    public map()
     {
-        this.value = value;
+        this.value = new HashMap<>();
+
+        setField("put", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                if(!value.containsKey(args[0]))
+                    value.put(args[0], new set());
+
+                value.get(args[0]).addition(args[1]);
+
+                return Boolean.TRUE;
+            }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
+        });
+
+        setField("put", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                if(!value.containsKey(args[0]))
+                    value.put(args[0], new set());
+
+                value.get(args[0]).addition(args[1]);
+
+                return Boolean.TRUE;
+            }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
+        });
+
+        setField("remove", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                value.remove(args[0]);
+                return Boolean.TRUE;
+            }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
+        });
+
+        setField("get", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                return value.get(args[0]);
+            }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
+        });
+
+        setField("contains", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                for(Container container : args)
+                    if(!value.containsKey(container)) return Boolean.FALSE;
+                return Boolean.TRUE;
+            }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
+        });
+
+        setField("clear", new Container(){
+            @Override
+            public Container call(Container self, Container... args)
+            {
+                value.clear();
+                return Boolean.TRUE;
+            }
+
+            @Override
+            public void write(DataOutputStream stream)
+            {
+
+            }
+
+            @Override
+            public void read(DataInputStream stream)
+            {
+
+            }
+        });
     }
 
     @Override
@@ -43,5 +178,11 @@ public class map extends Container implements Serializable
     public void read(DataInputStream stream)
     {
 
+    }
+
+    @Override
+    public String toString()
+    {
+        return value.toString();
     }
 }

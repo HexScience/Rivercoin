@@ -34,6 +34,8 @@ public class Contracts
         ParsedProgram pp    = new ParsedProgram(new LexedProgram(FileUtils.readUTF(com.riverssen.core.mpp.contracts.Contracts.class.getResourceAsStream("contracts.mpp"))));
         Token list = pp.getTokens();
 
+        System.out.println(list.getToken("test").humanReadable(0));
+
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
         Namespace global = new Namespace(pp.getTokens());

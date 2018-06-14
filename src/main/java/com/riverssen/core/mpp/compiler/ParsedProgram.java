@@ -108,6 +108,18 @@ public class ParsedProgram
         } else throw new ParseException(errmsg, offset);
     }
 
+    private Token getNextInBrackets(List<Token> tokens, Token offset, String errmsg) throws ParseException
+    {
+        if (tokens.size() >= 2 && nextOfType(tokens, Token.Type.BRACKETS_OPEN))
+        {
+            skipToValid(tokens);
+            Token parenthesis = new Token(Token.Type.BRACKETS);
+            parse(tokens, parenthesis, true);
+
+            return parenthesis.getTokens().get(0);
+        } else throw new ParseException(errmsg, offset);
+    }
+
     private void parseClass(List<Token> tokens, Token rootm, Token currentToken) throws ParseException
     {
         if(modifiers.size() > 0)
@@ -625,6 +637,20 @@ public class ParsedProgram
 
             switch (currentToken.getType())
             {
+                case BRACKETS_OPEN:
+//                    Token brackets = new Token(Token.Type.BRACKETS);
+                    getNext(tokens, currentToken, "");
+                    parse(tokens, root, false, true, false, false, true);
+//                    if (nextOfType(tokens, Token.Type.MATH_OP)) parseMath(tokens, root, parenthesis);
+//                    else
+//                        root.add(brackets);
+                    break;
+                case BRACKETS_CLOSED:
+                    if (inBrackets)
+                    {
+                        tokens.remove(0);
+                        return;
+                    } else throw new ParseException("Redundant ']'", currentToken);
                 case RETURN:
                     tokens.remove(0);
                     parse(tokens, currentToken, true);
@@ -733,6 +759,15 @@ public class ParsedProgram
 
                             root.add(initialization);
                         } else root.add(methodCall);
+                    } else if (nextOfType(tokens, Token.Type.BRACKETS_OPEN))
+                    {
+                        skipToValid(tokens);
+                        Token initialization = new Token(Token.Type.BRACKETS);
+                        initialization.add(type);
+                        skipToValid(tokens);
+                        parse(tokens, initialization, true, true, false, false, true, true);
+
+                        root.add(initialization);
                     } else if (nextOfType(tokens, Token.Type.PROCEDURAL_ACCESS))
                     {
                         skipToValid(tokens);

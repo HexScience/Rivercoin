@@ -66,6 +66,15 @@ public class Token implements Serializable
         return modifiers.contains(modifier);
     }
 
+    public Token getToken(String tokenNameOrValue)
+    {
+        for(Token token : getTokens())
+            if(token.toString().equals(tokenNameOrValue))
+                return token;
+
+        return this;
+    }
+
     public static enum          Type implements Serializable {
         NAMESPACE,
         KEYWORD,
