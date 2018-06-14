@@ -489,35 +489,35 @@ public class Token implements Serializable
         switch (type)
         {
             case IF:
-                cost = cost.add(new RiverCoin("0.00035").toBigInteger());
-                break;
-            case NEW:
                 cost = cost.add(new RiverCoin("0.000035").toBigInteger());
                 break;
+            case NEW:
+                cost = cost.add(new RiverCoin("0.0000035").toBigInteger());
+                break;
             case INITIALIZATION:
-                cost = cost.add(new RiverCoin("0.0000135").toBigInteger());
+                cost = cost.add(new RiverCoin("0.00000135").toBigInteger());
                 break;
             case FOR:
-                cost = cost.add(new RiverCoin("0.00025").toBigInteger());
+                cost = cost.add(new RiverCoin("0.000025").toBigInteger());
                 break;
             case CLASS_DECLARATION:
-                cost = cost.add(new RiverCoin("0.0025").toBigInteger());
+                cost = cost.add(new RiverCoin("0.025").toBigInteger());
                 break;
             case METHOD_CALL:
                 cost = cost.add(new RiverCoin("0.00025").toBigInteger());
                 break;
             case EMPTY_DECLARATION:
-                cost = cost.add(new RiverCoin("0.000025").toBigInteger());
+                cost = cost.add(new RiverCoin("0.0000025").toBigInteger());
                 break;
             case FULL_DECLARATION:
-                cost = cost.add(new RiverCoin("0.000075").toBigInteger());
+                cost = cost.add(new RiverCoin("0.0000075").toBigInteger());
                 break;
             case WHILE:
-                cost = cost.add(new RiverCoin("0.00825").toBigInteger());
+                cost = cost.add(new RiverCoin("0.000825").toBigInteger());
                 break;
             default:
                 /** price per byte **/
-                cost = cost.add(new RiverCoin("0.000000267028809").toBigInteger());
+                cost = cost.add(new RiverCoin("0.0000000267028809").toBigInteger());
                 break;
         }
 
