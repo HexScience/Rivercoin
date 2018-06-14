@@ -169,4 +169,9 @@ public abstract class Container implements Serializable
     {
         return global;
     }
+
+    protected Container newInstance(Object ...args)
+    {
+        return null;
+    }
 }

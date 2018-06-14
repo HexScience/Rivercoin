@@ -33,11 +33,8 @@ public class Contracts
         /** Test Code For The Mocha++ Compiler **/
         ParsedProgram pp    = new ParsedProgram(new LexedProgram(FileUtils.readUTF(com.riverssen.core.mpp.contracts.Contracts.class.getResourceAsStream("contracts.mpp"))));
         Token list = pp.getTokens();
-        Token token = list.getToken("class::HelloWorld field::PublicAddress");
 
-        System.out.println(token.humanReadable(0));
-
-        System.out.println(new RiverCoin(token.calculateCost()).toRiverCoinString());
+        System.out.println(new RiverCoin(list.calculateCost()).toRiverCoinString());
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
@@ -50,6 +47,9 @@ public class Contracts
         ByteUtil.writeObject(stream, global);
 
         System.out.println(global.callMethod("set"));
+
+        global.get("NumTests").callMethod("NumTests");
+        System.out.println(global.get("NumTests").get("total"));
 
         global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
         global.get("Messenger") .setField("msg", new Message(wallet.getPublicKey().getAddress()));

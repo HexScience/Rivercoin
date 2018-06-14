@@ -21,7 +21,7 @@ import java.math.BigInteger;
 
 public class uint256 extends Container implements Serializable
 {
-    private BigInteger value;
+    protected BigInteger value;
 
     public uint256(BigInteger value)
     {

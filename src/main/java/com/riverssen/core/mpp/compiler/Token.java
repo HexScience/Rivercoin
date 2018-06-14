@@ -92,6 +92,7 @@ public class Token implements Serializable
 
     public Token getToken(String tokenNameOrValue)
     {
+        if(tokenNameOrValue.equals("*")) return this;
         String heierarchy[] = tokenNameOrValue.split(" ");
 
         Token token = getTokenByTypeName(nameToType(heierarchy[0].split("::")[0]), heierarchy[0].split("::")[1]);
@@ -223,6 +224,25 @@ public class Token implements Serializable
     {
         switch (type)
         {
+            case MATH_OP:
+                    Container a = getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
+                    Container b = getTokens().get(1).interpret(context, self, fcontext, fself, proc, args);
+
+                    switch (toString().charAt(0))
+                    {
+                        case '*':
+                            return a.multiplication(b);
+                        case '+':
+                            return a.addition(b);
+                        case '-':
+                            return a.submission(b);
+                        case '/':
+                            return a.subdivision(b);
+                        case '%':
+                            return a.modulo(b);
+                    }
+
+                    return Container.EMPTY;
             case BRACKETS:
                 return getTokens().get(0).interpret(context, self, fcontext, fself, proc, args).bracketGet(getTokens().get(1).interpret(context, self, fcontext, fself, proc, args));
             case NEW:
@@ -323,9 +343,9 @@ public class Token implements Serializable
                             else throw new CompileException("method '" + methodName + "' not defined.", this);
                         }
             case ASSERT:
-                Container a = getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
-                Container b = getTokens().get(1).interpret(context, self, fcontext, fself, proc, args);
-                return new Boolean(a.equals(b));
+                Container a_ = getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
+                Container b_ = getTokens().get(1).interpret(context, self, fcontext, fself, proc, args);
+                return new Boolean(a_.equals(b_));
             case STRING: return new StringObject(toString().substring(1, toString().length() - 1));
             case IF:
                 Container conditions = getTokens().get(0).getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
