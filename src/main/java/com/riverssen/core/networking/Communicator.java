@@ -16,7 +16,6 @@ import com.riverssen.core.FullBlock;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.networking.messages.Msg;
 
 import java.io.IOException;
 import java.util.Set;
@@ -32,7 +31,7 @@ public interface Communicator
     void requestTransaction(ContextI context);
     void requestBlock(ContextI context);
     void requestBlockHeader(ContextI context);
-    void requestListOfCommunicators(NetworkI network);
+    void requestListOfCommunicators(NetworkManager network);
     void requestLatestBlockInfo(ContextI context);
 
     void sendHandShake(int type);

@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class Network implements NetworkI
+public class Network implements NetworkManager
 {
     public static final String  seedNodeUrl = "http://www.rivercoin.net/developers/api/seednodes.php";
     private Set<String>         ipAddresses;

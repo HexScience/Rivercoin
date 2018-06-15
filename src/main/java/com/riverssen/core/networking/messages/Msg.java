@@ -14,7 +14,7 @@ package com.riverssen.core.networking.messages;
 
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.networking.Communicator;
-import com.riverssen.core.networking.NetworkI;
+import com.riverssen.core.networking.NetworkManager;
 
 import java.io.DataOutputStream;
 
@@ -25,7 +25,7 @@ public interface Msg
     int getType();
     byte[] data();
 
-    default void onReceive(ContextI contextI, NetworkI networkI, Communicator receiver)
+    default void onReceive(ContextI contextI, NetworkManager networkI, Communicator receiver)
     {
     }
 

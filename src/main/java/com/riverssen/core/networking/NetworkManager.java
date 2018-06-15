@@ -14,8 +14,8 @@ package com.riverssen.core.networking;
 
 import java.util.Set;
 
-public interface NetworkI
+public interface NetworkManager
 {
-    public Set<String> getList();
-    public void terminate();
+    Set<String> getList();
+    void terminate();
 }

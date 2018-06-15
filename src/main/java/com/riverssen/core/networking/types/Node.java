@@ -17,7 +17,7 @@ import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.Communicator;
-import com.riverssen.core.networking.NetworkI;
+import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.networking.SocketConnection;
 
 import java.io.IOException;
@@ -71,7 +71,7 @@ public class Node implements Communicator
     }
 
     @Override
-    public void requestListOfCommunicators(NetworkI network)
+    public void requestListOfCommunicators(NetworkManager network)
     {
     }
 
