@@ -62,7 +62,7 @@ public class Network implements NetworkI
             SocketConnection connection = new SocketConnection(ip, context.getConfig().getPort());
             if(connection.isConnected())
             {
-                connection.getOutputStream().write(new GreetingMessage(GreetingMessage.NODE).data());
+                connection.getOutputStream().write(new GreetingMessage(SocketConnection.NODE).data());
                 connection.getOutputStream().flush();
 
                 int type = connection.getInputStream().readInt();
@@ -73,11 +73,11 @@ public class Network implements NetworkI
 
                     switch (type)
                     {
-                        case GreetingMessage.CLIENT:
+                        case SocketConnection.CLIENT:
                             break;
-                        case GreetingMessage.MINER:
+                        case SocketConnection.MINER:
                             break;
-                        case GreetingMessage.NODE:
+                        case SocketConnection.NODE:
                                 communications.add(new Node(connection));
                             break;
                     }

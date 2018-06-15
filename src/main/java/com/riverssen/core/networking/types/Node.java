@@ -19,7 +19,6 @@ import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.Communicator;
 import com.riverssen.core.networking.NetworkI;
 import com.riverssen.core.networking.SocketConnection;
-import com.riverssen.core.networking.messages.Msg;
 
 import java.io.IOException;
 import java.util.Set;
@@ -37,6 +36,18 @@ public class Node implements Communicator
     public void closeConnection() throws IOException
     {
         connection.closeConnection();
+    }
+
+    @Override
+    public String getIP()
+    {
+        return connection.getIP();
+    }
+
+    @Override
+    public int getType()
+    {
+        return connection.getType();
     }
 
     @Override
@@ -77,6 +88,12 @@ public class Node implements Communicator
     @Override
     public void sendTransaction(TransactionI transaction)
     {
+        try{
+            transaction.export(connection.getOutputStream());
+            connection.getOutputStream().flush();
+        } catch (Exception e)
+        {
+        }
     }
 
     @Override
@@ -87,11 +104,17 @@ public class Node implements Communicator
     @Override
     public void sendBlockHeader(BlockHeader header)
     {
+        try{
+            connection.getOutputStream().flush();
+        } catch (Exception e)
+        {
+        }
     }
 
     @Override
     public void sendListOfCommunicators(Set<Communicator> list)
     {
+
     }
 
     @Override

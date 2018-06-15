@@ -21,12 +21,18 @@ import java.net.Socket;
 
 public class SocketConnection
 {
+    public static final int NODE = 0, MINER = 1, CLIENT = 2;
+    private String                  ip;
+    private int                     port;
     private Socket                  socket;
     private DataInputStream         inputStream;
     private DataOutputStream        outputStream;
+    private int                     type;
 
     public SocketConnection(String ip, int port) throws IOException
     {
+        this.ip             = ip;
+        this.port           = port;
         this.socket         = new Socket(ip, port);
         this.inputStream    = new DataInputStream(socket.getInputStream());
         this.outputStream   = new DataOutputStream(socket.getOutputStream());
@@ -55,5 +61,26 @@ public class SocketConnection
     public void closeConnection() throws IOException
     {
         socket.close();
+    }
+
+    public String getIP()
+    {
+        return ip;
+    }
+
+    public int    getType()
+    {
+        return type;
+    }
+
+    public void   setType(int type)
+    {
+        this.type = type;
+    }
+
+    @Override
+    public String toString()
+    {
+        return ip + port;
     }
 }

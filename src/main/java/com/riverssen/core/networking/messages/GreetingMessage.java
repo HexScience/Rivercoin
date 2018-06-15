@@ -17,7 +17,6 @@ import com.riverssen.core.utils.ByteUtil;
 public class GreetingMessage implements Msg
 {
     private int type;
-    public static final int NODE = 0, MINER = 1, CLIENT = 2;
 
     public GreetingMessage(int type)
     {

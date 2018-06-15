@@ -24,6 +24,8 @@ import java.util.Set;
 public interface Communicator
 {
     void closeConnection() throws IOException;
+    String getIP();
+    int    getType();
 
     void readInbox();
 
