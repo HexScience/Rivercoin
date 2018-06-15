@@ -49,6 +49,7 @@ public class Contracts
         System.out.println(global.callMethod("set"));
 
         global.get("NumTests").callMethod("NumTests");
+
         System.out.println(global.get("NumTests").get("total"));
 
         global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));

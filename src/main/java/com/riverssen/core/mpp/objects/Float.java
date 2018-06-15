@@ -47,6 +47,12 @@ public class Float extends Container implements Serializable
     }
 
     @Override
+    protected Container newInstance(Object... args)
+    {
+        return new Float(Double.parseDouble(args[0].toString().replaceAll("\\_", "")));
+    }
+
+    @Override
     public Container addition(Container b)
     {
         if (b instanceof Integer)

@@ -47,6 +47,12 @@ public class Integer extends Container implements Serializable
     }
 
     @Override
+    protected Container newInstance(Object... args)
+    {
+        return new Integer(Long.parseLong(args[0].toString().replaceAll("\\_", "")));
+    }
+
+    @Override
     public Container addition(Container b)
     {
         if (b instanceof Integer)

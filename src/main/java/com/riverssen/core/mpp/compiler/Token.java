@@ -14,11 +14,10 @@ package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.mpp.exceptions.CompileException;
+import com.riverssen.core.mpp.objects.*;
 import com.riverssen.core.mpp.objects.Boolean;
 import com.riverssen.core.mpp.objects.Float;
 import com.riverssen.core.mpp.objects.Integer;
-import com.riverssen.core.mpp.objects.LoopContainer;
-import com.riverssen.core.mpp.objects.StringObject;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -217,16 +216,22 @@ public class Token implements Serializable
 
     public Container interpret(Container context, Container self, Container fcontext, Container fself, boolean proc, Container ...args) throws CompileException
     {
-        return this.interpret(context, self, fcontext, fself, proc, false, args);
+        return this.interpret(context, self, fcontext, fself, Container.EMPTY, proc, false, args);
     }
 
     public Container interpret(Container context, Container self, Container fcontext, Container fself, boolean proc, boolean mproc, Container ...args) throws CompileException
     {
+        return this.interpret(context, self, fcontext, fself, Container.EMPTY, proc, mproc, args);
+
+    }
+
+    public Container interpret(Container context, Container self, Container fcontext, Container fself, Container initType, boolean proc, boolean mproc, Container ...args) throws CompileException
+    {
         switch (type)
         {
             case MATH_OP:
-                    Container b = getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
-                    Container a = getTokens().get(1).interpret(context, self, fcontext, fself, proc, args);
+                    Container b = getTokens().get(0).interpret(context, self, fcontext, fself, initType, proc, mproc, args);
+                    Container a = getTokens().get(1).interpret(context, self, fcontext, fself, initType, proc, mproc, args);
 
                     switch (toString().charAt(0))
                     {
@@ -271,9 +276,11 @@ public class Token implements Serializable
                 String type = getTokens().get(1).toString();
                 Token value = getTokens().get(2);
 
+                Container initType0 = fself.getGlobal().get(type.toString());
+
                 if (context.get(name) != null) throw new CompileException("object '" + name + "' already defined.", this);
 
-                Container returnedValue = value.interpret(context, self, fcontext, fself, proc, args);
+                Container returnedValue = value.interpret(context, self, fcontext, fself, initType0, proc, mproc, args);
 
                 context.setField(name, returnedValue);
                 break;
@@ -281,10 +288,27 @@ public class Token implements Serializable
                 String name_ = getTokens().get(0).toString();
                 Token value_ = getTokens().get(1);
 
-                Container returnedValue_ = value_.interpret(context, self, fcontext, fself, proc, args);
                 if(context.get(name_) != null)
+                {
+                    Container initType0_ = null;
+                    try{fself.getGlobal().get(context.get(name_).getType());} catch (Exception e)
+                    {
+                        initType0_ = Container.VOID;
+                    }
+                    Container returnedValue_ = value_.interpret(context, self, fcontext, fself, initType0_, proc, mproc, args);
+
                     context.setField(name_, returnedValue_);
-                else self.setField(name_, returnedValue_);
+                }
+                else {
+                    Container initType0_ = null;
+                    try{fself.getGlobal().get(self.get(name_).getType());} catch (Exception e)
+                    {
+                        initType0_ = Container.VOID;
+                    }
+                    Container returnedValue_ = value_.interpret(context, self, fcontext, fself, initType0_, proc, mproc, args);
+
+                    self.setField(name_, returnedValue_);
+                }
                 break;
             case PROCEDURAL_ACCESS:
                 Container returnee = getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);//self;
@@ -301,17 +325,35 @@ public class Token implements Serializable
                     String name__ = getTokens().get(0).toString();
                     Token value__ = getTokens().get(1);
 
-                    Container returnedValue__ = value__.interpret(context, self, fcontext, fself, true, args);
-                    if (returnee.get(name__) != null) returnee.setField(name__, returnedValue__);
-                    else self.setField(name__, returnedValue__);
+                    if (returnee.get(name__) != null){
+                        Container initType0_ = null;
+                        try{initType0_ = fself.getGlobal().get(returnee.get(name__).getType());} catch (Exception e)
+                        {
+                            initType0_ = Container.VOID;
+                        }
+                        Container returnedValue__ = value__.interpret(context, self, fcontext, fself, initType0_, true, false, args);
+
+                        returnee.setField(name__, returnedValue__);
+                    }
+                    else {
+                        Container initType0_ = null;
+                        try{fself.getGlobal().get(self.get(name__).getType());} catch (Exception e)
+                        {
+                            initType0_ = Container.VOID;
+                        }
+                        Container returnedValue__ = value__.interpret(context, self, fcontext, fself, initType0_, true, false, args);
+
+                        self.setField(name__, returnedValue__);
+                    }
                 } else
                 return getTokens().get(1).interpret(returnee, Container.EMPTY, fcontext, fself, true, args);
             case VALUE:
-                    return getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
+                    return getTokens().get(0).interpret(context, self, fcontext, fself, initType, proc, mproc, args);
             case INPUT:
                     return getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);
             case NUMBER:
-                    return new Integer(Long.valueOf(toString()));
+                if(initType == null) return new uint256(toString());
+                    return initType.newInstance(Long.valueOf(toString()));
             case DECIMAL:
                     return new Float(Double.valueOf(toString()));
             case IDENTIFIER:

@@ -15,8 +15,11 @@ package com.riverssen.core.mpp.compiler;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.mpp.exceptions.CompileException;
+import com.riverssen.core.mpp.objects.Float;
+import com.riverssen.core.mpp.objects.Integer;
 import com.riverssen.core.mpp.objects.mapped_set;
 import com.riverssen.core.mpp.objects.set;
+import com.riverssen.core.mpp.objects.uint256;
 
 import java.io.*;
 
@@ -62,6 +65,13 @@ public class Namespace extends Container implements Serializable
     public void setGlobal()
     {
         setGlobal(this);
+
+        setField("int", new Integer(0));
+        setField("uint", new Integer(0));
+        setField("uint256", new uint256("0"));
+        setField("float", new Float(0));
+        setField("double", new Float(0));
+        setField("float256", new Float(0));
 
         setField("set", new Container(){
             @Override

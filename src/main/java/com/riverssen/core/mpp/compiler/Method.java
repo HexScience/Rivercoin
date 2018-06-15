@@ -115,6 +115,7 @@ public class Method extends Container implements Serializable
     public Container call(Container self, Container... args)
     {
         setField("this", self);
+        setField("self", self);
 
         int i = 0;
 

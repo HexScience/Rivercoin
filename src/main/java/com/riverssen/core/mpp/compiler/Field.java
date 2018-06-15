@@ -107,4 +107,9 @@ public class Field extends Container implements Serializable
     {
         return this.fieldModifiers;
     }
+
+    public String getFieldType()
+    {
+        return fieldType;
+    }
 }

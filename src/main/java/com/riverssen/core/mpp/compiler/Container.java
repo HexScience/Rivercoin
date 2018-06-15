@@ -174,4 +174,9 @@ public abstract class Container implements Serializable
     {
         return null;
     }
+
+    public String getType()
+    {
+        return "object";
+    }
 }

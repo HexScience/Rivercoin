@@ -17,11 +17,18 @@ import com.riverssen.core.mpp.compiler.Container;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 
 public class uint256 extends Container implements Serializable
 {
     protected BigInteger value;
+
+    public uint256(String value)
+    {
+        this(new BigInteger(value));
+    }
 
     public uint256(BigInteger value)
     {
@@ -35,6 +42,12 @@ public class uint256 extends Container implements Serializable
     }
 
     @Override
+    protected Container newInstance(Object... args)
+    {
+        return new uint256(args[0].toString().replaceAll("\\_", ""));
+    }
+
+    @Override
     public void write(DataOutputStream stream)
     {
 
@@ -44,5 +57,87 @@ public class uint256 extends Container implements Serializable
     public void read(DataInputStream stream)
     {
 
+    }
+
+    @Override
+    public Container addition(Container b)
+    {
+        if (b instanceof Integer)
+            return new Integer(this.value.longValue() + ((Integer) b).value);
+        else if(b instanceof Float)
+            return new Float(this.value.longValue() + ((Float) b).value);
+        else if(b instanceof uint256)
+            return new uint256(new BigInteger("" + value).add(((uint256) b).value));
+        else if(b instanceof Number)
+            return new Number(new BigDecimal(this.value).add(((Number) b).value));
+        else return EMPTY;
+    }
+
+    @Override
+    public Container submission(Container b)
+    {
+        if (b instanceof Integer)
+            return new Integer(this.value.longValue() - ((Integer) b).value);
+        else if(b instanceof Float)
+            return new Float(this.value.longValue() - ((Float) b).value);
+        else if(b instanceof uint256)
+            return new uint256(new BigInteger("" + value).subtract(((uint256) b).value));
+        else if(b instanceof Number)
+            return new Number(new BigDecimal(this.value).subtract(((Number) b).value));
+        else return EMPTY;
+    }
+
+    @Override
+    public Container multiplication(Container b)
+    {
+        if (b instanceof Integer)
+            return new Integer(this.value.longValue() * ((Integer) b).value);
+        else if(b instanceof Float)
+            return new Float(this.value.longValue() * ((Float) b).value);
+        else if(b instanceof uint256)
+            return new uint256(new BigInteger("" + value).multiply(((uint256) b).value));
+        else if(b instanceof Number)
+            return new Number(new BigDecimal(this.value).multiply(((Number) b).value));
+        else return EMPTY;
+    }
+
+    @Override
+    public Container subdivision(Container b)
+    {
+        if (b instanceof Integer)
+            return new Integer(this.value.longValue() / ((Integer) b).value);
+        else if(b instanceof Float)
+            return new Float(this.value.longValue() / ((Float) b).value);
+        else if(b instanceof uint256)
+            return new uint256(new BigInteger("" + value).divide(((uint256) b).value));
+        else if(b instanceof Number)
+            return new Number(new BigDecimal(this.value).divide(((Number) b).value, 200, RoundingMode.HALF_DOWN));
+        else return EMPTY;
+    }
+
+    @Override
+    public Container modulo(Container b)
+    {
+        if (b instanceof Integer)
+            return new Integer(this.value.longValue() % ((Integer) b).value);
+        else if(b instanceof Float)
+            return new Float(this.value.longValue() % ((Float) b).value);
+        else if(b instanceof uint256)
+            return new uint256(new BigInteger("" + value).mod(((uint256) b).value));
+        else if(b instanceof Number)
+            return new Number(new BigDecimal(this.value).divide(((Number) b).value));
+        else return EMPTY;
+    }
+
+    @Override
+    public String toString()
+    {
+        return value + "";
+    }
+
+    @Override
+    public String getType()
+    {
+        return "uint256";
     }
 }
