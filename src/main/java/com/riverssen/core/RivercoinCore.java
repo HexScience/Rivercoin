@@ -13,8 +13,11 @@
 package com.riverssen.core;
 
 import com.riverssen.core.networking.Network;
+import com.riverssen.core.system.ClientContext;
+import com.riverssen.core.system.Config;
 import com.riverssen.core.system.MiningContext;
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.system.NodeContext;
 import com.riverssen.core.utils.FileUtils;
 
 import java.io.File;
@@ -38,25 +41,29 @@ public class RivercoinCore
 //        com.riverssen.testing.Contracts.test();
         Network network = new Network(null);
         network.establishConnection();
+
         /** This Code Starts The Rivercoin Client **/
 
         /** create a context **/
         ContextI context = null;
-        switch (type)
-        {
-            case "node": break;
-            case "miner": context = new MiningContext(new File(file));
-            case "wallet": break;
-        }
+        Config   config  = new Config(new File(file));
 
         /** Generate directories if they don't exist **/
-        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainDirectory());
-        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainTransactionDirectory());
-        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainWalletDirectory());
-        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainDirectory() + File.separator + "temp");
-        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainTransactionDirectory() + File.separator + "temp");
-        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainWalletDirectory() + File.separator + "temp");
-        Logger.alert("usable cpu threads: " + context.getConfig().getMaxMiningThreads());
+        FileUtils.createDirectoryIfDoesntExist(config.getBlockChainDirectory());
+        FileUtils.createDirectoryIfDoesntExist(config.getBlockChainTransactionDirectory());
+        FileUtils.createDirectoryIfDoesntExist(config.getBlockChainWalletDirectory());
+        FileUtils.createDirectoryIfDoesntExist(config.getVSSDirectory());
+//        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainDirectory() + File.separator + "temp");
+//        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainTransactionDirectory() + File.separator + "temp");
+//        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainWalletDirectory() + File.separator + "temp");
+        Logger.alert("usable cpu threads: " + config.getMaxMiningThreads());
+
+        switch (type)
+        {
+            case "node":    context = new NodeContext(config);          break;
+            case "miner":   context = new MiningContext(config);        break;
+            case "wallet":  context = new ClientContext(config);        break;
+        }
         context.run();
     }
 }

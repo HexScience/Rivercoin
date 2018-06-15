@@ -26,12 +26,11 @@ import com.riverssen.core.security.Wallet;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.TimeUtil;
 
-import java.io.File;
 import java.math.BigInteger;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class NodeContext implements ContextI
+public class ClientContext implements ContextI
 {
     private ExecutorService executorService;
     private NetworkManager networkManager;
@@ -46,7 +45,7 @@ public class NodeContext implements ContextI
     private boolean running;
     private final long versionBytes;
 
-    public NodeContext(Config config)
+    public ClientContext(Config config)
     {
         this.config = config;
         this.running = true;

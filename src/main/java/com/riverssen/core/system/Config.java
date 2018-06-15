@@ -39,7 +39,7 @@ public class Config
     private String      BLOCK_CHAIN_DB;
     private BigInteger  CURRENT_TARGET = MINIMUM_TARGET_DIFFICULTY;
     private long        VSSSIZE;
-    private File        VSSFILE;
+    private String      VSSFILE;
     private static Config self;
 
     public static String getMiningFee()
@@ -117,10 +117,8 @@ public class Config
                 else if(string.startsWith("DBKEY:"))                    this.PUBLIC_ADDRESS = string.substring("PUBLIC_KEY:".length());
                 else if(string.startsWith("BOOL_PRUNING:"))              this.PRUNE = Boolean.parseBoolean(string.substring("BOOL_PRUNING".length()));
                 else if(string.startsWith("VIRTUAL_SPACE_SIZE:"))        this.VSSSIZE = Long.parseLong(string.substring("VIRTUAL_SPACE_SIZE:".length()));
-                else if(string.startsWith("VIRTUAL_SPACE_FILE:"))        this.VSSFILE = new File(string.substring("VIRTUAL_SPACE_FILE:".length()).replace(".", root));
+                else if(string.startsWith("VIRTUAL_SPACE_FILE:"))        this.VSSFILE = (string.substring("VIRTUAL_SPACE_FILE:".length()).replace(".", root));
             }
-
-            if(!VSSFILE.exists()) VSSFILE.mkdir();
 
             this.BLOCKCHAIN_DIRECTORY += File.separator;
             this.BLOCKCHAIN_TRX_DB += File.separator;
@@ -201,11 +199,11 @@ public class Config
 
     public long getVSSSize()
     {
-        return 0;
+        return VSSSIZE;
     }
 
-    public File getVSSDirectory()
+    public String getVSSDirectory()
     {
-        return null;
+        return VSSFILE;
     }
 }

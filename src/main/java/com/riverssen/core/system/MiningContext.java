@@ -46,9 +46,9 @@ public class MiningContext implements ContextI
     private boolean running;
     private final long versionBytes;
 
-    public MiningContext(File config)
+    public MiningContext(Config config)
     {
-        this.config = new Config(config);
+        this.config = config;
         this.running = true;
         this.executorService = Executors.newCachedThreadPool();
         this.networkManager = new NetworkManager(this);

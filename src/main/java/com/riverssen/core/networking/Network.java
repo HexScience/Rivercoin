@@ -118,7 +118,6 @@ public class Network implements NetworkI
             while((line = reader.readLine()) != null) ips.add(line);
         } catch (Exception e)
         {
-            e.printStackTrace();
         }
 
         return ips;

@@ -181,7 +181,6 @@ public class NetworkManager implements Listener
             while((line = reader.readLine()) != null) ips.add(line);
         } catch (Exception e)
         {
-            e.printStackTrace();
         }
 
         return ips;

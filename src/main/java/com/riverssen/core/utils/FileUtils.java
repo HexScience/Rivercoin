@@ -44,6 +44,7 @@ public class FileUtils
         File dir = new File(directory);
         if(!dir.exists()) Logger.prt(Logger.COLOUR_BLUE, "directory '" + directory + "' doesn't exist, creating it.");
         dir.mkdirs();
+        dir.mkdir();
     }
 
     public static void moveFromTemp(String directory)
