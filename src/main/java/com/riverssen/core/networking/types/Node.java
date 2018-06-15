@@ -12,5 +12,90 @@
 
 package com.riverssen.core.networking.types;
 
-public class Node
-{}
+import com.riverssen.core.FullBlock;
+import com.riverssen.core.block.BlockHeader;
+import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.networking.Communicator;
+import com.riverssen.core.networking.NetworkI;
+import com.riverssen.core.networking.SocketConnection;
+import com.riverssen.core.networking.messages.Msg;
+
+import java.io.IOException;
+import java.util.Set;
+
+public class Node implements Communicator
+{
+    private SocketConnection connection;
+
+    public Node(SocketConnection connection)
+    {
+        this.connection = connection;
+    }
+
+    @Override
+    public void closeConnection() throws IOException
+    {
+        connection.closeConnection();
+    }
+
+    @Override
+    public void readInbox()
+    {
+    }
+
+    @Override
+    public void requestTransaction(ContextI context)
+    {
+    }
+
+    @Override
+    public void requestBlock(ContextI context)
+    {
+    }
+
+    @Override
+    public void requestBlockHeader(ContextI context)
+    {
+    }
+
+    @Override
+    public void requestListOfCommunicators(NetworkI network)
+    {
+    }
+
+    @Override
+    public void requestLatestBlockInfo(ContextI context)
+    {
+    }
+
+    @Override
+    public void sendHandShake(int type)
+    {
+    }
+
+    @Override
+    public void sendTransaction(TransactionI transaction)
+    {
+    }
+
+    @Override
+    public void sendBlock(FullBlock block)
+    {
+    }
+
+    @Override
+    public void sendBlockHeader(BlockHeader header)
+    {
+    }
+
+    @Override
+    public void sendListOfCommunicators(Set<Communicator> list)
+    {
+    }
+
+    @Override
+    public void sendLatestBlockInfo(long block)
+    {
+    }
+}

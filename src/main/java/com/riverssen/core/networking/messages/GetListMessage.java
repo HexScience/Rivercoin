@@ -10,33 +10,28 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.networking;
+package com.riverssen.core.networking.messages;
 
-import com.riverssen.core.FullBlock;
-import com.riverssen.core.block.BlockHeader;
-import com.riverssen.core.headers.ContextI;
-import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.networking.messages.Msg;
+import com.riverssen.core.utils.ByteUtil;
 
-import java.io.IOException;
-import java.util.Set;
-
-public interface Communicator
+public class GetListMessage implements Msg
 {
-    void closeConnection() throws IOException;
+    private int type;
 
-    void readInbox();
+    public GetListMessage(int type)
+    {
+        this.type = type;
+    }
 
-    void requestTransaction(ContextI context);
-    void requestBlock(ContextI context);
-    void requestBlockHeader(ContextI context);
-    void requestListOfCommunicators(NetworkI network);
-    void requestLatestBlockInfo(ContextI context);
+    @Override
+    public int getType()
+    {
+        return listpeers;
+    }
 
-    void sendHandShake(int type);
-    void sendTransaction(TransactionI transaction);
-    void sendBlock(FullBlock block);
-    void sendBlockHeader(BlockHeader header);
-    void sendListOfCommunicators(Set<Communicator> list);
-    void sendLatestBlockInfo(long block);
+    @Override
+    public byte[] data()
+    {
+        return ByteUtil.concatenate(ByteUtil.encodei(getType()), ByteUtil.encodei(type));
+    }
 }

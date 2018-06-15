@@ -12,31 +12,9 @@
 
 package com.riverssen.core.networking;
 
-import com.riverssen.core.FullBlock;
-import com.riverssen.core.block.BlockHeader;
-import com.riverssen.core.headers.ContextI;
-import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.networking.messages.Msg;
+import java.util.HashMap;
 
-import java.io.IOException;
-import java.util.Set;
-
-public interface Communicator
+public interface CommunicationInterpreter extends Communicator
 {
-    void closeConnection() throws IOException;
-
-    void readInbox();
-
-    void requestTransaction(ContextI context);
-    void requestBlock(ContextI context);
-    void requestBlockHeader(ContextI context);
-    void requestListOfCommunicators(NetworkI network);
-    void requestLatestBlockInfo(ContextI context);
-
-    void sendHandShake(int type);
-    void sendTransaction(TransactionI transaction);
-    void sendBlock(FullBlock block);
-    void sendBlockHeader(BlockHeader header);
-    void sendListOfCommunicators(Set<Communicator> list);
-    void sendLatestBlockInfo(long block);
+    public static final HashMap<Long, CommunicationInterpreter> interpreters = new HashMap<>();
 }

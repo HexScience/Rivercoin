@@ -12,6 +12,8 @@
 
 package com.riverssen.core.networking;
 
+import com.riverssen.core.networking.messages.Msg;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -25,6 +27,33 @@ public class SocketConnection
 
     public SocketConnection(String ip, int port) throws IOException
     {
-        this.socket = new Socket(ip, port);
+        this.socket         = new Socket(ip, port);
+        this.inputStream    = new DataInputStream(socket.getInputStream());
+        this.outputStream   = new DataOutputStream(socket.getOutputStream());
+    }
+
+    public void sendMessage(Msg msg)
+    {
+        msg.send(outputStream);
+    }
+
+    public DataInputStream getInputStream()
+    {
+        return inputStream;
+    }
+
+    public DataOutputStream getOutputStream()
+    {
+        return outputStream;
+    }
+
+    public boolean isConnected()
+    {
+        return socket.isConnected();
+    }
+
+    public void closeConnection() throws IOException
+    {
+        socket.close();
     }
 }

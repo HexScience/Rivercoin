@@ -15,12 +15,12 @@ package com.riverssen.core.networking;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.networking.messages.GreetingMessage;
 import com.riverssen.core.networking.messages.Msg;
+import com.riverssen.core.networking.types.Node;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.*;
-import java.net.Socket;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -59,20 +59,28 @@ public class Network implements NetworkI
     private void connectToIp(String ip)
     {
         try{
-            Socket socket = new Socket(ip, context.getConfig().getPort());
-            if(socket.isConnected())
+            SocketConnection connection = new SocketConnection(ip, context.getConfig().getPort());
+            if(connection.isConnected())
             {
-                OutputStream stream = socket.getOutputStream();
-                stream.write(new GreetingMessage(GreetingMessage.NODE).data());
-                stream.flush();
+                connection.getOutputStream().write(new GreetingMessage(GreetingMessage.NODE).data());
+                connection.getOutputStream().flush();
 
-                InputStream  istram = socket.getInputStream();
-                DataInputStream d = new DataInputStream(istram);
-
-                int type = d.readInt();
+                int type = connection.getInputStream().readInt();
 
                 if(type == Msg.greeting)
                 {
+                    type = connection.getInputStream().readInt();
+
+                    switch (type)
+                    {
+                        case GreetingMessage.CLIENT:
+                            break;
+                        case GreetingMessage.MINER:
+                            break;
+                        case GreetingMessage.NODE:
+                                communications.add(new Node(connection));
+                            break;
+                    }
                 }
             }
         } catch (Exception e)
@@ -118,7 +126,7 @@ public class Network implements NetworkI
 
     public void terminate()
     {
-        for(Communicator peer : communications) peer.closeConnection();
+        for(Communicator peer : communications) try{peer.closeConnection();} catch (Exception e) {}
 
         String ipAddresses = "";
 

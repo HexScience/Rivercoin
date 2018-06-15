@@ -16,14 +16,21 @@ import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.networking.Communicator;
 import com.riverssen.core.networking.NetworkI;
 
+import java.io.DataOutputStream;
+
 public interface Msg
 {
-    public static final int relay_transaction = 0, greeting = 1;
+    public static final int relay_transaction = 0, greeting = 1, listpeers = 2;
 
     int getType();
     byte[] data();
 
     default void onReceive(ContextI contextI, NetworkI networkI, Communicator receiver)
     {
+    }
+
+    default boolean send(DataOutputStream stream)
+    {
+        return false;
     }
 }
