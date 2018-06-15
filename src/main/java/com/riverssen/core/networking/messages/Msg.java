@@ -18,7 +18,7 @@ import com.riverssen.core.networking.NetworkI;
 
 public interface Msg
 {
-    public static final int relay_transaction = 0;
+    public static final int relay_transaction = 0, greeting = 1;
 
     int getType();
     byte[] data();

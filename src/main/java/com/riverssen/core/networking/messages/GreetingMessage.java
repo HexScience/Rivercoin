@@ -10,7 +10,29 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.networking;
+package com.riverssen.core.networking.messages;
 
-public class Node
-{}
+import com.riverssen.core.utils.ByteUtil;
+
+public class GreetingMessage implements Msg
+{
+    private int type;
+    public static final int NODE = 0, MINER = 1, CLIENT = 2;
+
+    public GreetingMessage(int type)
+    {
+        this.type = type;
+    }
+
+    @Override
+    public int getType()
+    {
+        return greeting;
+    }
+
+    @Override
+    public byte[] data()
+    {
+        return ByteUtil.concatenate(ByteUtil.encodei(getType()), ByteUtil.encodei(type));
+    }
+}

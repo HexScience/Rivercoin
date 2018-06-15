@@ -12,6 +12,7 @@
 
 package com.riverssen.core;
 
+import com.riverssen.core.networking.Network;
 import com.riverssen.core.system.MiningContext;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.utils.FileUtils;
@@ -34,7 +35,9 @@ public class RivercoinCore
 
     private RivercoinCore(String type, String file) throws Exception
     {
-        com.riverssen.testing.Contracts.test();
+//        com.riverssen.testing.Contracts.test();
+        Network network = new Network(null);
+        network.establishConnection();
         /** This Code Starts The Rivercoin Client **/
 
         /** create a context **/

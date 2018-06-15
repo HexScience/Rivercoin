@@ -12,5 +12,19 @@
 
 package com.riverssen.core.networking;
 
-public class Peer
-{}
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+
+public class SocketConnection
+{
+    private Socket                  socket;
+    private DataInputStream         inputStream;
+    private DataOutputStream        outputStream;
+
+    public SocketConnection(String ip, int port) throws IOException
+    {
+        this.socket = new Socket(ip, port);
+    }
+}

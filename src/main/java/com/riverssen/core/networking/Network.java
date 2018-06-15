@@ -13,11 +13,14 @@
 package com.riverssen.core.networking;
 
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.networking.messages.GreetingMessage;
+import com.riverssen.core.networking.messages.Msg;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
+import java.net.Socket;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -34,6 +37,64 @@ public class Network implements NetworkI
         this.ipAddresses    = new LinkedHashSet<>();
         this.communications = new LinkedHashSet<>();
         this.context        = contextI;
+    }
+
+    public void establishConnection() throws Exception
+    {
+        addSavedIps();
+        addSeedIPs();
+
+        if(ipAddresses.size() == 0)
+            throw new Exception("no seed ip address found.");
+
+        establishConnections();
+    }
+
+    private void establishConnections()
+    {
+        for(String ipAddress : ipAddresses)
+            connectToIp(ipAddress);
+    }
+
+    private void connectToIp(String ip)
+    {
+        try{
+            Socket socket = new Socket(ip, context.getConfig().getPort());
+            if(socket.isConnected())
+            {
+                OutputStream stream = socket.getOutputStream();
+                stream.write(new GreetingMessage(GreetingMessage.NODE).data());
+                stream.flush();
+
+                InputStream  istram = socket.getInputStream();
+                DataInputStream d = new DataInputStream(istram);
+
+                int type = d.readInt();
+
+                if(type == Msg.greeting)
+                {
+                }
+            }
+        } catch (Exception e)
+        {
+        }
+    }
+
+    private void addSavedIps()
+    {
+        ipAddresses.addAll(getList());
+    }
+
+    private void addSeedIPs() throws Exception
+    {
+        Connection connection = Jsoup.connect(seedNodeUrl);
+        Document doc = connection.get();
+        String text = doc.body().text();
+
+        String ips[] = text.split("\n");
+
+        for(String string : ips)
+            ipAddresses.add(string);
     }
 
     public Set<String> getList()
