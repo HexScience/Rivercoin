@@ -13,13 +13,11 @@
 package com.riverssen.core.utils;
 
 import com.riverssen.core.algorithms.Sha3;
+import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.headers.Serialisable;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
@@ -171,5 +169,23 @@ public class ByteUtil
 
         stream1.flush();
         stream1.close();
+    }
+
+    public static byte[] getBytes(Exportable exportable)
+    {
+        try{
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            DataOutputStream s = new DataOutputStream(stream);
+
+            exportable.export(s);
+
+            s.flush();
+            s.close();
+
+            return stream.toByteArray();
+        } catch (Exception e)
+        {
+            return new byte[0];
+        }
     }
 }
