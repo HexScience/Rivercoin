@@ -16,7 +16,7 @@ import com.riverssen.core.BlockChain;
 import com.riverssen.core.BlockPool;
 import com.riverssen.core.TransactionPool;
 import com.riverssen.core.chainedmap.RiverFlowMap;
-import com.riverssen.core.networking.NetworkManager;
+import com.riverssen.core.old_networking.NetworkManager;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.system.Config;

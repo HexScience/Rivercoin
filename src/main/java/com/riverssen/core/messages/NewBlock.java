@@ -16,7 +16,7 @@ import com.riverssen.core.FullBlock;
 import com.riverssen.core.block.BlockData;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.Message;
-import com.riverssen.core.networking.Peer;
+import com.riverssen.core.old_networking.Peer;
 import com.riverssen.core.headers.ContextI;
 
 import java.io.DataInputStream;

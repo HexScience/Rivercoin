@@ -10,18 +10,19 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.networking;
+package com.riverssen.core.old_networking;
 
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.TransactionI;
 
 import java.util.Collection;
 
-public interface NodeInputCommunicator
+public interface NodeOutputCommunicator extends CommunicationStream
 {
-    void receiveTransactionPool(Collection<TransactionI> transactions);
-    void receiveBlockPool(Collection<FullBlock> blocks);
-    void receiveTransaction(TransactionI transactionI[]);
-    void receiveBlock(FullBlock block[]);
-    void receive();
+    void sendTransactionPool(Collection<TransactionI> transactions);
+    void sendBlockPool(Collection<FullBlock> blocks);
+    void sendTransaction(TransactionI transactionI);
+    void sendBlock(FullBlock block);
+
+    void send();
 }

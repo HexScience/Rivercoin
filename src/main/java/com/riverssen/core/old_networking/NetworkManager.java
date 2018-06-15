@@ -1,4 +1,4 @@
-package com.riverssen.core.networking;
+package com.riverssen.core.old_networking;
 
 import com.riverssen.core.*;
 import com.riverssen.core.events.TerminateEvent;

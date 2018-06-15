@@ -14,7 +14,7 @@ package com.riverssen.core.messages;
 
 import com.riverssen.core.Logger;
 import com.riverssen.core.headers.Message;
-import com.riverssen.core.networking.Peer;
+import com.riverssen.core.old_networking.Peer;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.utils.Base58;

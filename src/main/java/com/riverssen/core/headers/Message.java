@@ -12,7 +12,7 @@
 
 package com.riverssen.core.headers;
 
-import com.riverssen.core.networking.Peer;
+import com.riverssen.core.old_networking.Peer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

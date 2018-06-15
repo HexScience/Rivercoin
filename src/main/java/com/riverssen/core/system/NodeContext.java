@@ -20,7 +20,7 @@ import com.riverssen.core.algorithms.Provider;
 import com.riverssen.core.chainedmap.RiverFlowMap;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
-import com.riverssen.core.networking.NetworkManager;
+import com.riverssen.core.old_networking.NetworkManager;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.utils.ByteUtil;

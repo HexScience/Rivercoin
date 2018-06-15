@@ -10,11 +10,11 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.networking.node;
+package com.riverssen.core.old_networking.node;
 
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.networking.NodeOutputCommunicator;
+import com.riverssen.core.old_networking.NodeOutputCommunicator;
 import com.riverssen.core.utils.EncodeableString;
 
 import java.io.ByteArrayOutputStream;

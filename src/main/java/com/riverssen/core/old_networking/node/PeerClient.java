@@ -10,25 +10,57 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.networking;
+package com.riverssen.core.old_networking.node;
 
-public interface CommunicationStream
+import com.riverssen.core.FullBlock;
+import com.riverssen.core.headers.Message;
+import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.old_networking.NodeOutputCommunicator;
+
+import java.net.Socket;
+import java.util.Collection;
+
+public class PeerClient implements NodeOutputCommunicator
 {
-    /** TYPES **/
-    public static final int
-            TRANSACTION = 0,
-            TRANSACTION_LIST = 1,
-            BLOCK = 2,
-            BLOCK_LIST = 3,
-            HELLO = 4,
-            GOODBYE = 5,
-            CHAIN_SIZE = 6,
-            CHAIN = 7,
-            LIST_CLIENTS = 7,
-            LIST_NODES = 8;
+    private Socket socket;
 
-    /** COMMANDS **/
-    public static final byte
-    GET = 0, /** To Receive **/
-    TCP = 1; /** Network Communication **/
+    public PeerClient(Socket socket) {
+        this.socket = socket;
+    }
+
+    public boolean performHandshake()
+    {
+        return false;
+    }
+
+    public void fetch(MasterNode masterNode)
+    {
+    }
+
+    public void send(Message message) {
+    }
+
+    @Override
+    public void sendTransactionPool(Collection<TransactionI> transactions) {
+
+    }
+
+    @Override
+    public void sendBlockPool(Collection<FullBlock> blocks) {
+
+    }
+
+    @Override
+    public void sendTransaction(TransactionI transactionI) {
+
+    }
+
+    @Override
+    public void sendBlock(FullBlock block) {
+
+    }
+
+    @Override
+    public void send() {
+    }
 }

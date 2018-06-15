@@ -10,57 +10,18 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core.networking.node;
+package com.riverssen.core.old_networking;
 
 import com.riverssen.core.FullBlock;
-import com.riverssen.core.headers.Message;
 import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.networking.NodeOutputCommunicator;
 
-import java.net.Socket;
 import java.util.Collection;
 
-public class PeerClient implements NodeOutputCommunicator
+public interface NodeInputCommunicator
 {
-    private Socket socket;
-
-    public PeerClient(Socket socket) {
-        this.socket = socket;
-    }
-
-    public boolean performHandshake()
-    {
-        return false;
-    }
-
-    public void fetch(MasterNode masterNode)
-    {
-    }
-
-    public void send(Message message) {
-    }
-
-    @Override
-    public void sendTransactionPool(Collection<TransactionI> transactions) {
-
-    }
-
-    @Override
-    public void sendBlockPool(Collection<FullBlock> blocks) {
-
-    }
-
-    @Override
-    public void sendTransaction(TransactionI transactionI) {
-
-    }
-
-    @Override
-    public void sendBlock(FullBlock block) {
-
-    }
-
-    @Override
-    public void send() {
-    }
+    void receiveTransactionPool(Collection<TransactionI> transactions);
+    void receiveBlockPool(Collection<FullBlock> blocks);
+    void receiveTransaction(TransactionI transactionI[]);
+    void receiveBlock(FullBlock block[]);
+    void receive();
 }
