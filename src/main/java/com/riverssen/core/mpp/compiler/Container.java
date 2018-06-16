@@ -18,8 +18,12 @@ import com.riverssen.core.mpp.objects.Void;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.Serializable;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
+
+import static com.riverssen.core.mpp.compiler.Opcode.*;
 
 public abstract class Container implements Serializable
 {
@@ -28,6 +32,7 @@ public abstract class Container implements Serializable
     public                 Container                    global;
     protected              String                       name;
     private                Map<String, Container>       globalMap;
+    private                ByteBuffer                   opcodes;
 
     public Container()
     {
@@ -60,6 +65,66 @@ public abstract class Container implements Serializable
         Field ns = new Field(token);
         if(this.globalMap.containsKey(ns.getName())) throw new CompileException("field '" + ns.getName() + "' already defined.", token);
         this.globalMap.put(ns.getName(), ns);
+    }
+
+    protected static Container execute(ByteBuffer opcodes, Stack<Container> stack, Container context, Container self, Container ...args)
+    {
+        stack.push(self);
+        stack.push(context);
+
+        while(opcodes.remaining() > 0)
+        {
+            short opcode = opcodes.getShort();
+
+            switch (opcode)
+            {
+                case POP:
+                    stack.pop();
+                    break;
+                case PUSH:
+                    break;
+
+                case ADD:
+                    stack.push(stack.pop().addition(stack.pop()));
+                    break;
+                case SUB:
+                    stack.push(stack.pop().submission(stack.pop()));
+                    break;
+                case MUL:
+                    stack.push(stack.pop().multiplication(stack.pop()));
+                    break;
+                case DIV:
+                    stack.push(stack.pop().subdivision(stack.pop()));
+                    break;
+                case MOD:
+                    stack.push(stack.pop().modulo(stack.pop()));
+                    break;
+                case POW:
+                    stack.push(stack.pop().power(stack.pop()));
+                    break;
+
+                case MOV:
+                    stack.get(opcodes.get()).setField(getString(opcodes), stack.pop());
+                    break;
+                case LOD:
+                    stack.push(stack.get(opcodes.getInt()).get(getString(opcodes)));
+                    break;
+
+                case CALL:
+                    stack.get(opcodes.getInt()).callMethod(getString(opcodes));
+                    break;
+            }
+        }
+
+        return null;
+    }
+
+    private static String getString(ByteBuffer buffer)
+    {
+        byte b[] = new byte[buffer.get()];
+        buffer.get(b);
+
+        return new String(b);
     }
 
     public void setField(String name, Container value)
@@ -173,6 +238,16 @@ public abstract class Container implements Serializable
     protected Container newInstance(Object ...args)
     {
         return null;
+    }
+
+    protected void setOpcodes(ByteBuffer byteBuffer)
+    {
+        this.opcodes = byteBuffer;
+    }
+
+    public ByteBuffer getOpcodes()
+    {
+        return opcodes;
     }
 
     public String getType()

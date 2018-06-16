@@ -12,61 +12,62 @@
 
 package com.riverssen.core.mpp.compiler;
 
-public enum Opcode
+public class Opcode
 {
-    HLT,
+    private static short i = 0;
+    public static final short
+    HLT = 0,
 
-    ADD,
-    SUB,
-    MUL,
-    DIV,
-    MOD,
-    POW,
-    SIN,
-    COS,
-    TAN,
+    ADD = 0,
+    SUB = 1,
+    MUL = 2,
+    DIV = 3,
+    MOD = 4,
+    POW = 5,
+    SIN = 6,
+    COS = 7,
+    TAN = 8,
 
-    AND,
-    OR,
-    RSHIFT,
-    LSHIFT,
-    ASSERT,
-    LESSTHAN,
-    MORETHAN,
-    LESSTHANE,
-    MORETHANE,
+    AND = 9,
+    OR = 10,
+    RSHIFT = 11,
+    LSHIFT = 12,
+    ASSERT = 13,
+    LESSTHAN = 14,
+    MORETHAN = 15,
+    LESSTHANE = 16,
+    MORETHANE = 17,
 
-    PUSH,
-    POP,
+    PUSH = 18,
+    POP = 19,
 
-    PUSH_INT,
-    PUSH_UINT,
-    PUSH_UINT256,
-    PUSH_FLOAT,
-    PUSH_DECIMAL,
+    PUSH_INT = 20,
+    PUSH_UINT = 21,
+    PUSH_UINT256 = 22,
+    PUSH_FLOAT = 23,
+    PUSH_DECIMAL = 24,
 
-    MOV, //move from stack to memory
-    LOD, //load from memory to stack
-    NEW, //create a new element in memory
-    NEW_INT,
-    NEW_UINT,
-    NEW_UINT256,
-    NEW_FLOAT,
-    NEW_DECIMAL,
+    MOV = 25, //move from stack to memory (object is popped)
+    LOD = 26, //load from memory to stack (object is duplicated)
+    NEW = 27, //create a new element in memory
+    NEW_INT = 28,
+    NEW_UINT = 29,
+    NEW_UINT256 = 30,
+    NEW_FLOAT = 31,
+    NEW_DECIMAL = 32,
 
-    IF,
-    ELSEIF,
-    ELSE,
-    LOOP,
-    FOR,
-    FOREACH,
-    WHILE,
+    IF = 33,
+    ELSEIF = 34,
+    ELSE = 35,
+    LOOP = 36,
+    FOR = 37,
+    FOREACH = 38,
+    WHILE = 39,
 
-    FUN,
-    CALL,
+    FUN = 40,
+    CALL = 41,
 
-    ENCRYPT,
-    ;
+    ENCRYPT = 42;
 
 //    public static final short
 //    HLT = 0,

@@ -66,13 +66,11 @@ public class Field extends Container implements Serializable
     @Override
     public void write(DataOutputStream stream)
     {
-
     }
 
     @Override
     public void read(DataInputStream stream)
     {
-
     }
 
     @Override

@@ -75,12 +75,10 @@ public class Class extends Container implements Serializable
     @Override
     public void write(DataOutputStream stream)
     {
-
     }
 
     @Override
     public void read(DataInputStream stream)
     {
-
     }
 }
