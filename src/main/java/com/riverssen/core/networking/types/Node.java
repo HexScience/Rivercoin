@@ -114,7 +114,6 @@ public class Node implements Communicator
     @Override
     public void sendListOfCommunicators(Set<Communicator> list)
     {
-
     }
 
     @Override
