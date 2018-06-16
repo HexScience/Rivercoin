@@ -13,7 +13,6 @@
 package com.riverssen.core;
 
 import com.riverssen.core.block.BlockHeader;
-import com.riverssen.core.old_networking.Peer;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.system.LatestBlockInfo;
 
@@ -21,7 +20,6 @@ import java.util.*;
 
 public class BlockPool
 {
-    private List<Peer>          peers;
     private boolean             loading;
     private ContextI context;
     private List<FullBlock>     blocks;
@@ -44,48 +42,48 @@ public class BlockPool
 
     private void load()
     {
-        long chainsize = context.getNetworkManager().GetChainSize();
-
-        if(chainsize > lbi.getLatestBlock())
-        {
-            loading = true;
-
-            context.getExecutorService().execute(()->{
-                while(chainsize > lbi.getLatestBlock() + blocks.size())
-                {}
-
-                loading = false;
-            });
-
-            List<FullBlock> pool = new ArrayList<>();
-            context.getNetworkManager().fetchAllBlocks(pool, lbi.getLatestBlock());
-
-            Set<String> blocks = new HashSet<>();
-            FullBlock header = lbi.getLatestFullBlock(context);
-
-            if(header != null)
-                blocks.add(header.getHashAsString());
-
-            for(FullBlock unverified : pool)
-            {
-                String hash = unverified.getHashAsString();
-
-                if(blocks.contains(hash)) continue;
-
-                long headerID = header == null ? - 1 : header.getBlockID();
-
-                if(headerID >= unverified.getBlockID()) continue;
-
-                int err = unverified.validate(header.getHeader(), context);
-
-                if(err > 0) continue;
-
-                blocks.add(hash);
-                this.blocks.add(unverified);
-
-                header = unverified;
-            }
-        }
+//        long chainsize = context.getNetworkManager().GetChainSize();
+//
+//        if(chainsize > lbi.getLatestBlock())
+//        {
+//            loading = true;
+//
+//            context.getExecutorService().execute(()->{
+//                while(chainsize > lbi.getLatestBlock() + blocks.size())
+//                {}
+//
+//                loading = false;
+//            });
+//
+//            List<FullBlock> pool = new ArrayList<>();
+//            context.getNetworkManager().fetchAllBlocks(pool, lbi.getLatestBlock());
+//
+//            Set<String> blocks = new HashSet<>();
+//            FullBlock header = lbi.getLatestFullBlock(context);
+//
+//            if(header != null)
+//                blocks.add(header.getHashAsString());
+//
+//            for(FullBlock unverified : pool)
+//            {
+//                String hash = unverified.getHashAsString();
+//
+//                if(blocks.contains(hash)) continue;
+//
+//                long headerID = header == null ? - 1 : header.getBlockID();
+//
+//                if(headerID >= unverified.getBlockID()) continue;
+//
+//                int err = unverified.validate(header.getHeader(), context);
+//
+//                if(err > 0) continue;
+//
+//                blocks.add(hash);
+//                this.blocks.add(unverified);
+//
+//                header = unverified;
+//            }
+//        }
 
         loading        = false;
     }
@@ -108,7 +106,7 @@ public class BlockPool
 
     public void Send(FullBlock fullBlock)
     {
-        context.getNetworkManager().SendMined(fullBlock);
+//        context.getNetworkManager().SendMined(fullBlock);
     }
 
     public void add(List<FullBlock> blocks)

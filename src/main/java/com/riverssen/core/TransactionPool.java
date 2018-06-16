@@ -38,7 +38,7 @@ public class TransactionPool
 
         pool.add(token);
 
-        context.getNetworkManager().BroadCastNewTransaction(token);
+//        context.getNetworkManager().BroadCastNewTransaction(token);
     }
 
     public boolean available()

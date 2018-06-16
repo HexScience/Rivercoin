@@ -95,15 +95,15 @@ public class BlockChain implements BlockChainI
 
         lastvalidated = System.currentTimeMillis();
 
-        Tuple<String, Long> forkInfo = context.getNetworkManager().getForkInfo();
-        long latestFork = forkInfo.getJ();
+//        Tuple<String, Long> forkInfo = context.getNetworkManager().getForkInfo();
+//        long latestFork = forkInfo.getJ();
 
         /** check that our block is the longest block, if it is, then return **/
-        if(latestFork < block.getBlockID()) return;
+//        if(latestFork < block.getBlockID()) return;
 
         /** if our block is short then update it with the longest block **/
-        if(block.getBlockID() < forkInfo.getJ())
-            FetchBlockChainFromPeers();
+//        if(block.getBlockID() < forkInfo.getJ())
+//            FetchBlockChainFromPeers();
     }
 
     @Override

@@ -32,4 +32,9 @@ public class NodeNetworkManager implements NetworkManager
     public void terminate()
     {
     }
+
+    @Override
+    public void establishConnection() throws Exception
+    {
+    }
 }
