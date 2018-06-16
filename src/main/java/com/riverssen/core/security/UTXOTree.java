@@ -13,7 +13,7 @@
 package com.riverssen.core.security;
 
 import com.riverssen.core.RiverCoin;
-import com.riverssen.core.UnspentTransaction;
+import com.riverssen.core.transactions.UnspentTransaction;
 
 import java.util.*;
 
