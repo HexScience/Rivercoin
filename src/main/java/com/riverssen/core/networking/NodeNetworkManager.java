@@ -13,6 +13,7 @@
 package com.riverssen.core.networking;
 
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.headers.TransactionI;
 
 import java.util.Set;
 
@@ -35,6 +36,11 @@ public class NodeNetworkManager implements NetworkManager
 
     @Override
     public void establishConnection() throws Exception
+    {
+    }
+
+    @Override
+    public void broadCastNewTransaction(TransactionI transaction)
     {
     }
 }

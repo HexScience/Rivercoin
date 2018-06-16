@@ -13,6 +13,7 @@
 package com.riverssen.core.networking;
 
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.messages.GreetingMessage;
 import com.riverssen.core.networking.messages.Msg;
 import com.riverssen.core.networking.types.Node;
@@ -48,6 +49,11 @@ public class Network implements NetworkManager
             throw new Exception("no seed ip address found.");
 
         establishConnections();
+    }
+
+    @Override
+    public void broadCastNewTransaction(TransactionI transaction)
+    {
     }
 
     private void establishConnections()

@@ -22,8 +22,6 @@ import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.*;
 
-import static com.riverssen.core.mpp.compiler.Opcode.*;
-
 public class Method extends Container implements Serializable
 {
     private static final Stack<Container> stack = new Stack<>();

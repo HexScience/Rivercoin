@@ -12,6 +12,8 @@
 
 package com.riverssen.core.networking;
 
+import com.riverssen.core.headers.TransactionI;
+
 import java.util.Set;
 
 public interface NetworkManager
@@ -19,4 +21,6 @@ public interface NetworkManager
     Set<String> getList();
     void terminate();
     void establishConnection() throws Exception;
+
+    void broadCastNewTransaction(TransactionI transaction);
 }

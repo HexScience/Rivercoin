@@ -15,21 +15,23 @@ package com.riverssen.core;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.ContextI;
 
+import java.util.LinkedHashSet;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 public class TransactionPool
 {
-    private PriorityQueue<TransactionI> pool;
-    private ContextI context;
-    private long                        lastTransactionTime;
+    private Set<TransactionI>   pool;
+    private ContextI            context;
+    private long                lastTransactionTime;
 
     public TransactionPool(ContextI network)
     {
-        pool = new PriorityQueue<>();
+        pool = new LinkedHashSet<>();
         context = network;
     }
 
-    public void add(TransactionI token)
+    public void addInternal(TransactionI token)
     {
         /** check tokens timestamp isn't older than a block **/
         if(System.currentTimeMillis() - token.getTimeStamp() > (context.getConfig().getAverageBlockTime() * 1.5)) return;
@@ -38,7 +40,17 @@ public class TransactionPool
 
         pool.add(token);
 
-//        context.getNetworkManager().BroadCastNewTransaction(token);
+        context.getNetworkManager().broadCastNewTransaction(token);
+    }
+
+    public void addRelayed(TransactionI transaction)
+    {
+        /** check tokens timestamp isn't older than a block **/
+        if(System.currentTimeMillis() - transaction.getTimeStamp() > (context.getConfig().getAverageBlockTime() * 1.5)) return;
+
+        lastTransactionTime = System.currentTimeMillis();
+
+        pool.add(transaction);
     }
 
     public boolean available()
@@ -46,9 +58,11 @@ public class TransactionPool
         return pool.size() > 0;
     }
 
-    public TransactionI pull()
+    public TransactionI next()
     {
-        return pool.poll();
+        TransactionI txi = pool.iterator().next();
+        pool.remove(txi);
+        return txi;
     }
 
     public boolean getLastTransactionWas(long time) {

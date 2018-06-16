@@ -53,6 +53,9 @@ public class RivercoinCore
         FileUtils.createDirectoryIfDoesntExist(config.getBlockChainTransactionDirectory());
         FileUtils.createDirectoryIfDoesntExist(config.getBlockChainWalletDirectory());
         FileUtils.createDirectoryIfDoesntExist(config.getVSSDirectory());
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("--------------------Welcome To Rivercoin Core-------------------");
+        System.out.println("----------------------------------------------------------------");
 //        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainDirectory() + File.separator + "temp");
 //        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainTransactionDirectory() + File.separator + "temp");
 //        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainWalletDirectory() + File.separator + "temp");

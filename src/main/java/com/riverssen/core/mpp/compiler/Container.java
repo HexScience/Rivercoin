@@ -32,7 +32,7 @@ public abstract class Container implements Serializable
     public                 Container                    global;
     protected              String                       name;
     private                Map<String, Container>       globalMap;
-    private                ByteBuffer                   opcodes;
+//    private                ByteBuffer                   opcodes;
 
     public Container()
     {
@@ -242,12 +242,12 @@ public abstract class Container implements Serializable
 
     protected void setOpcodes(ByteBuffer byteBuffer)
     {
-        this.opcodes = byteBuffer;
+//        this.opcodes = byteBuffer;
     }
 
     public ByteBuffer getOpcodes()
     {
-        return opcodes;
+        return null;//opcodes;
     }
 
     public String getType()
