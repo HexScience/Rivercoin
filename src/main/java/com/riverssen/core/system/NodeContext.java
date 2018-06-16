@@ -59,7 +59,7 @@ public class NodeContext implements ContextI
         this.wallet = this.config.getWallet();
         this.provider = new Provider();
         this.blockChain = new BlockChain(this);
-        this.versionBytes = ByteUtil.decode(new byte[]{'a', 0, 0, 0, 0, 0, 0, 1});
+        this.versionBytes = ByteUtil.decode(new byte[]{'a', 0, 0, 0, 0, 0, 0, (byte)228});
 
         try
         {

@@ -22,21 +22,98 @@ import java.util.Random;
 public class Provider
 {
     private final List<HashAlgorithm> algorithms;
+    private final Combined            combined;
 
     public Provider()
     {
         algorithms = new ArrayList<>();
-        algorithms.add(new Sha1());
+        algorithms.add(new Sha4());
         algorithms.add(new Sha3());
         algorithms.add(new Sha256());
         algorithms.add(new Keccak());
         algorithms.add(new RipeMD256());
+        algorithms.add(new Gost());
+
+        combined = new Combined();
+    }
+
+    private class Combined implements HashAlgorithm {
+
+        private HashAlgorithm algorithms_[];
+
+        public Combined()
+        {
+            set(algorithms.get(0), algorithms.get(1), algorithms.get(2), algorithms.get(3), algorithms.get(4));
+        }
+
+        public void set(HashAlgorithm ... algorithms)
+        {
+            this.algorithms_ = algorithms;
+        }
+
+        @Override
+        public byte[] encode(byte[] data)
+        {
+            byte[] hash = algorithms_[0].encode(data);
+
+            for(int i = 1; i < algorithms_.length; i ++)
+                hash = algorithms_[i].encode(hash);
+            return hash;
+        }
+
+        @Override
+        public String encode16(byte[] data)
+        {
+            String hash = algorithms_[0].encode16(data);
+
+            for(int i = 1; i < algorithms_.length; i ++)
+                hash = algorithms_[i].encode16(hash.getBytes());
+            return hash;
+        }
+
+        @Override
+        public String encode32(byte[] data)
+        {
+            String hash = algorithms_[0].encode32(data);
+
+            for(int i = 1; i < algorithms_.length; i ++)
+                hash = algorithms_[i].encode32(hash.getBytes());
+            return hash;
+        }
+
+        @Override
+        public String encode58(byte[] data)
+        {
+            String hash = algorithms_[0].encode58(data);
+
+            for(int i = 1; i < algorithms_.length; i ++)
+                hash = algorithms_[i].encode58(hash.getBytes());
+            return hash;
+        }
+
+        @Override
+        public String encode64(byte[] data)
+        {
+            String hash = algorithms_[0].encode64(data);
+
+            for(int i = 1; i < algorithms_.length; i ++)
+                hash = algorithms_[i].encode64(hash.getBytes());
+            return hash;
+        }
     }
 
     public HashAlgorithm getRandomFromHash(byte hash[])
     {
-        int algorithm = new Random(new BigInteger(hash).longValue()).nextInt(algorithms.size());
+        Random r = new Random(new BigInteger(hash).longValue());
+        int algorithm0 = r.nextInt(algorithms.size());
+        int algorithm1 = r.nextInt(algorithms.size());
+        int algorithm2 = r.nextInt(algorithms.size());
+        int algorithm3 = r.nextInt(algorithms.size());
+        int algorithm4 = r.nextInt(algorithms.size());
+        int algorithm5 = r.nextInt(algorithms.size());
 
-        return algorithms.get(algorithm);
+        combined.set(algorithms.get(algorithm0), algorithms.get(algorithm1), algorithms.get(algorithm2), algorithms.get(algorithm3), algorithms.get(algorithm4), algorithms.get(algorithm5));
+
+        return combined;
     }
 }

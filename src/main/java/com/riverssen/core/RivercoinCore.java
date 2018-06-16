@@ -56,9 +56,6 @@ public class RivercoinCore
         System.out.println("----------------------------------------------------------------");
         System.out.println("--------------------Welcome To Rivercoin Core-------------------");
         System.out.println("----------------------------------------------------------------");
-//        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainDirectory() + File.separator + "temp");
-//        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainTransactionDirectory() + File.separator + "temp");
-//        FileUtils.createDirectoryIfDoesntExist(context.getConfig().getBlockChainWalletDirectory() + File.separator + "temp");
         Logger.alert("usable cpu threads: " + config.getMaxMiningThreads());
 
         switch (type)
