@@ -20,13 +20,13 @@ import com.riverssen.core.algorithms.Provider;
 import com.riverssen.core.chainedmap.RiverFlowMap;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
-import com.riverssen.core.old_networking.NetworkManager;
+import com.riverssen.core.networking.NetworkManager;
+import com.riverssen.core.networking.NodeNetworkManager;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.TimeUtil;
 
-import java.io.File;
 import java.math.BigInteger;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,7 +51,7 @@ public class MiningContext implements ContextI
         this.config = config;
         this.running = true;
         this.executorService = Executors.newCachedThreadPool();
-        this.networkManager = new NetworkManager(this);
+        this.networkManager = new NodeNetworkManager(this);
         this.blockPool = new BlockPool(this);
         this.transactionPool = new TransactionPool(this);
         this.utxoManager = new RiverFlowMap();
@@ -63,7 +63,7 @@ public class MiningContext implements ContextI
 
         try
         {
-            this.getNetworkManager().connect(executorService);
+            this.getNetworkManager().establishConnection();
             this.executorService.execute(blockChain);
         } catch (Exception e)
         {

@@ -12,11 +12,24 @@
 
 package com.riverssen.core.networking;
 
+import com.riverssen.core.headers.ContextI;
+
 import java.util.Set;
 
-public interface NetworkManager
+public class NodeNetworkManager implements NetworkManager
 {
-    Set<String> getList();
-    void terminate();
-    void establishConnection() throws Exception;
+    public NodeNetworkManager(ContextI context)
+    {
+    }
+
+    @Override
+    public Set<String> getList()
+    {
+        return null;
+    }
+
+    @Override
+    public void terminate()
+    {
+    }
 }
