@@ -12,7 +12,7 @@
 
 package com.riverssen.core.utils;
 
-public class Handler<I, J>
+public class Handler<I>
 {
     private I i;
 
