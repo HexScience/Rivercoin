@@ -15,6 +15,7 @@ package com.riverssen.core.networking;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.types.Client;
+import com.riverssen.core.utils.Tuple;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -81,8 +82,15 @@ public class Server implements NetworkManager
     @Override
     public void requestLongestForkAndDownload()
     {
+        Tuple<Long, Communicator> tuple = new Tuple(-1, null);
+
         for (Communicator communicator : communications) communicator.requestLatestBlockInfo(context, (chainSize)->{
 
+            if(tuple.getI().longValue() < chainSize)
+            {
+                tuple.setI(chainSize);
+                tuple.setJ(communicator);
+            }
         });
     }
 
