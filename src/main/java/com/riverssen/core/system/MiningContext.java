@@ -21,6 +21,7 @@ import com.riverssen.core.chainedmap.RiverFlowMap;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.networking.NetworkManager;
+import com.riverssen.core.networking.Server;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.utils.ByteUtil;
@@ -45,12 +46,12 @@ public class MiningContext implements ContextI
     private boolean running;
     private final long versionBytes;
 
-    public MiningContext(Config config)
+    public MiningContext(Config config) throws Exception
     {
         this.config = config;
         this.running = true;
         this.executorService = Executors.newCachedThreadPool();
-        this.networkManager = new NodeNetworkManager(this);
+        this.networkManager = new Server(this);
         this.blockPool = new BlockPool(this);
         this.transactionPool = new TransactionPool(this);
         this.utxoManager = new RiverFlowMap();

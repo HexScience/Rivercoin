@@ -46,7 +46,7 @@ public class ClientContext implements ContextI
     private boolean running;
     private final long versionBytes;
 
-    public ClientContext(Config config)
+    public ClientContext(Config config) throws Exception
     {
         this.config = config;
         this.running = true;
