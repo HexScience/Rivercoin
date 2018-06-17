@@ -15,6 +15,7 @@ package com.riverssen.core.networking;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.headers.Event;
 import com.riverssen.core.headers.TransactionI;
 
 import java.io.IOException;
@@ -48,12 +49,12 @@ public interface Communicator
     void requestBlock(long block, ContextI context);
     void requestBlockHeader(long block, ContextI context);
     void requestListOfCommunicators(NetworkManager network);
-    void requestLatestBlockInfo(ContextI context);
+    void requestLatestBlockInfo(ContextI context, Event<Long> event);
 
     void sendHandShake(long version);
     void sendTransaction(TransactionI transaction);
     void sendBlock(FullBlock block);
     void sendBlockHeader(BlockHeader header);
     void sendListOfCommunicators(Set<Communicator> list);
-    void sendLatestBlockInfo(long block);
+    void sendLatestBlockInfo(long block, long hashCode);
 }

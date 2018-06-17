@@ -80,7 +80,9 @@ public class Server implements NetworkManager
     @Override
     public void requestLongestForkAndDownload()
     {
-        for (Communicator communicator : communications) communicator.requestLatestBlockInfo(context);
+        for (Communicator communicator : communications) communicator.requestLatestBlockInfo(context, (chainSize)->{
+
+        });
     }
 
     @Override

@@ -15,6 +15,7 @@ package com.riverssen.core.networking.types;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.headers.Event;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.Communicator;
 import com.riverssen.core.networking.NetworkManager;
@@ -31,6 +32,8 @@ public class Client implements Communicator
 {
     private SocketConnection        connection;
     private Map<Integer, Packet>    unfulfilled;
+    private Map<Integer, Event>     requests;
+
     private long                    version;
     private class Packet
     {
@@ -50,6 +53,7 @@ public class Client implements Communicator
     {
         this.connection = connection;
         this.unfulfilled= new LinkedHashMap<>();
+        this.requests   = new LinkedHashMap<>();
     }
 
     @Override
@@ -145,6 +149,11 @@ public class Client implements Communicator
                     case OP_REQUEST:
                         switch (connection.getInputStream().readInt())
                         {
+                            case OP_BKI:
+                                connection.getOutputStream().writeInt(ByteUtil.encode(System.currentTimeMillis()).hashCode());
+
+                                break;
+
                             case OP_BLK:
                                 long blockID = connection.getInputStream().readLong();
 
@@ -261,12 +270,13 @@ public class Client implements Communicator
     }
 
     @Override
-    public void requestLatestBlockInfo(ContextI context)
+    public void requestLatestBlockInfo(ContextI context, Event<Long> event)
     {
         try
         {
             connection.getOutputStream().writeInt(OP_REQUEST);
             connection.getOutputStream().writeInt(OP_BKI);
+            connection.getOutputStream().writeInt(ByteUtil.encode(System.currentTimeMillis()).hashCode());
 
             connection.getOutputStream().flush();
         } catch (IOException e)
@@ -374,14 +384,15 @@ public class Client implements Communicator
     }
 
     @Override
-    public void sendLatestBlockInfo(long block)
+    public void sendLatestBlockInfo(long block, long hashCode)
     {
         byte data[] = ByteUtil.encode(block);
+        if(hashCode == Long.MIN_VALUE) hashCode = data.hashCode();
 
         try
         {
             connection.getOutputStream().writeInt(OP_BKH);
-            connection.getOutputStream().writeInt(data.hashCode());
+            connection.getOutputStream().writeInt((int)hashCode);
             connection.getOutputStream().write(data);
 
             connection.getOutputStream().flush();

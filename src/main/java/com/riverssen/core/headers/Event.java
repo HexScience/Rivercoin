@@ -14,5 +14,5 @@ package com.riverssen.core.headers;
 
 public interface Event<T>
 {
-    T getEventData();
+    void fireEvent(T data);
 }
