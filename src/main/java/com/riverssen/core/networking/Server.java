@@ -15,6 +15,7 @@ package com.riverssen.core.networking;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.types.Client;
+import com.riverssen.core.utils.Handler;
 import com.riverssen.core.utils.Tuple;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -25,7 +26,6 @@ import java.net.ServerSocket;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.SortedMap;
 
 public class Server implements NetworkManager
 {
@@ -82,7 +82,9 @@ public class Server implements NetworkManager
     @Override
     public void requestLongestForkAndDownload()
     {
-        Tuple<Long, Communicator> tuple = new Tuple(-1, null);
+        Tuple<Long, Communicator>   tuple = new Tuple(-1, null);
+        Handler<Integer>            numfired = new Handler<>(0);
+        int maxCommunicators = communications.size();
 
         for (Communicator communicator : communications) communicator.requestLatestBlockInfo(context, (chainSize)->{
 
@@ -91,7 +93,15 @@ public class Server implements NetworkManager
                 tuple.setI(chainSize);
                 tuple.setJ(communicator);
             }
+
+            numfired.setI(numfired.getI().intValue() + 1);
         });
+
+        long now = System.currentTimeMillis();
+
+        while(numfired.getI() < maxCommunicators && (System.currentTimeMillis() - now < 2_000))
+        {
+        }
     }
 
     @Override
