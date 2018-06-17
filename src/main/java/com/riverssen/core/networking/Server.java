@@ -74,12 +74,13 @@ public class Server implements NetworkManager
     @Override
     public void broadCastNewTransaction(TransactionI transaction)
     {
+        for (Communicator communicator : communications) communicator.sendTransaction(transaction);
     }
 
     @Override
     public Set<Communicator> getCommunicators()
     {
-        return null;
+        return communications;
     }
 
     private void establishConnections()
@@ -97,26 +98,6 @@ public class Server implements NetworkManager
                 Client client = new Client(connection);
                 client.sendHandShake(context.getVersionBytes());
                 communications.add(client);
-
-//                int type = connection.getInputStream().readInt();
-
-//                if(type == Msg.greeting)
-//                {
-////                    type = connection.getInputStream().readInt();
-//
-////                    switch (type)
-////                    {
-////                        case SocketConnection.CLIENT:
-////                                communications.add(new Client(connection));
-////                            break;
-////                        case SocketConnection.MINER:
-////                                communications.add(new Peer(connection));
-////                            break;
-////                        case SocketConnection.NODE:
-////                                communications.add(new Node(connection));
-////                            break;
-////                    }
-//                }
             }
         } catch (Exception e)
         {
