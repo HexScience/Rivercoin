@@ -30,8 +30,20 @@ import java.util.Set;
 public class Client implements Communicator
 {
     private SocketConnection        connection;
-    private Map<Integer, byte[]>    unfulfilled;
+    private Map<Integer, Packet>    unfulfilled;
     private long                    version;
+    private class Packet{
+        private byte data[];
+        private byte header[];
+        private long time;
+
+        public Packet(byte data[], byte header[])
+        {
+            this.data = data;
+            this.header = header;
+            this.time = System.currentTimeMillis();
+        }
+    }
 
     public Client(SocketConnection connection)
     {
@@ -94,6 +106,16 @@ public class Client implements Communicator
                         }
                         break;
                     case OP_FAILED:
+                        hashCode = connection.getInputStream().readInt();
+                        if(unfulfilled.containsKey(hashCode))
+                        {
+                            try{
+                                connection.getOutputStream().write(unfulfilled.get(hashCode).header);
+                                connection.getOutputStream().write(unfulfilled.get(hashCode).data);
+                            } catch (Exception e)
+                            {
+                            }
+                        }
                         break;
                     case OP_SUCCESS:
                         unfulfilled.remove(connection.getInputStream().readInt());
@@ -103,6 +125,14 @@ public class Client implements Communicator
         } catch (Exception e)
         {
         }
+
+        Set<Integer> set = new LinkedHashSet<>();
+
+        for(int hc : unfulfilled.keySet())
+            if(System.currentTimeMillis() - unfulfilled.get(hc).time >= 120_000L) set.add(hc);
+
+        for(int hc : set)
+            unfulfilled.remove(hc);
     }
 
     private void success(int hashcode)
@@ -228,7 +258,7 @@ public class Client implements Communicator
 
             connection.getOutputStream().flush();
 
-            unfulfilled.put(data.hashCode(), data);
+            unfulfilled.put(data.hashCode(), new Packet(data, ByteUtil.encodei(OP_TXN)));
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -248,7 +278,7 @@ public class Client implements Communicator
 
             connection.getOutputStream().flush();
 
-            unfulfilled.put(data.hashCode(), data);
+            unfulfilled.put(data.hashCode(), new Packet(data, ByteUtil.encodei(OP_BLK)));
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -268,7 +298,7 @@ public class Client implements Communicator
 
             connection.getOutputStream().flush();
 
-            unfulfilled.put(data.hashCode(), data);
+            unfulfilled.put(data.hashCode(), new Packet(data, ByteUtil.encodei(OP_BKH)));
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -291,7 +321,7 @@ public class Client implements Communicator
 
             connection.getOutputStream().flush();
 
-            unfulfilled.put(data.hashCode(), data);
+            unfulfilled.put(data.hashCode(), new Packet(data, ByteUtil.encodei(OP_PRS)));
         } catch (IOException e)
         {
             e.printStackTrace();
