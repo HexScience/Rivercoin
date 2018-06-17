@@ -12,9 +12,8 @@
 
 package com.riverssen.core.headers;
 
-import com.riverssen.core.RSQL.Commands;
-import com.riverssen.core.RSQL.Row;
-import com.riverssen.core.RSQL.Table;
+import com.riverssen.core.rsql.Commands;
+import com.riverssen.core.rsql.Table;
 
 public interface SQLCommand
 {

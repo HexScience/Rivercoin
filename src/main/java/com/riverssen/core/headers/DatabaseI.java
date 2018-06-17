@@ -12,7 +12,7 @@
 
 package com.riverssen.core.headers;
 
-import com.riverssen.core.RSQL.Row;
+import com.riverssen.core.rsql.Row;
 import com.riverssen.core.security.PublicAddress;
 
 public interface DatabaseI<T> {

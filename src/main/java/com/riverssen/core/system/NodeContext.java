@@ -36,7 +36,6 @@ public class NodeContext implements ContextI
     private ExecutorService executorService;
     private NetworkManager networkManager;
     private BlockPool blockPool;
-    private TransactionPool transactionPool;
     private RiverFlowMap utxoManager;
     private PublicAddress miner;
     private Wallet wallet;
@@ -53,7 +52,6 @@ public class NodeContext implements ContextI
         this.executorService = Executors.newCachedThreadPool();
         this.networkManager = new NodeNetworkManager(this);
         this.blockPool = new BlockPool(this);
-        this.transactionPool = new TransactionPool(this);
         this.utxoManager = new RiverFlowMap();
         this.miner = this.config.getMinerAddress();
         this.wallet = this.config.getWallet();
@@ -84,7 +82,7 @@ public class NodeContext implements ContextI
 
     public boolean shouldMine()
     {
-        return transactionPool.getLastTransactionWas(config.getAverageBlockTime() / 2L);
+        return false;
     }
 
     public ExecutorService getExecutorService()
@@ -114,12 +112,11 @@ public class NodeContext implements ContextI
 
     public TransactionPool getTransactionPool()
     {
-        return transactionPool;
+        return null;
     }
 
     public void setTransactionPool(TransactionPool transactionPool)
     {
-        this.transactionPool = transactionPool;
     }
 
     public RiverFlowMap getUtxoManager()
@@ -165,6 +162,7 @@ public class NodeContext implements ContextI
     public void run()
     {
         long timer = System.currentTimeMillis();
+        long lastBlockTime = System.currentTimeMillis();
 
         while (isRunning())
         {
@@ -172,6 +170,18 @@ public class NodeContext implements ContextI
             {
                 Logger.prt(Logger.COLOUR_BLUE, TimeUtil.getPretty("[H:M:S]: " + "info"));
                 timer = System.currentTimeMillis();
+            }
+
+            //Chose A Block And Orphan The Rest
+            if(System.currentTimeMillis() - lastBlockTime >= (config.getAverageBlockTime() - 30_000))
+            {
+            }
+
+            try{
+                Thread.sleep(10);
+            } catch (InterruptedException e)
+            {
+                e.printStackTrace();
             }
         }
     }
