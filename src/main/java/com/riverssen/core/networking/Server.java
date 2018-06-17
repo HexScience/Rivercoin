@@ -15,8 +15,7 @@ package com.riverssen.core.networking;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.messages.GreetingMessage;
-import com.riverssen.core.networking.messages.Msg;
-import com.riverssen.core.networking.types.Node;
+import com.riverssen.core.networking.types.Client;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,18 +25,21 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class Network implements NetworkManager
+public class Server implements NetworkManager
 {
     public static final String  seedNodeUrl = "http://www.rivercoin.net/developers/api/seednodes.php";
+    public static final String  magicHeader = "msg{greet}";
+
     private Set<String>         ipAddresses;
     private Set<Communicator>   communications;
     private ContextI            context;
 
-    public Network(ContextI contextI)
+    public Server(ContextI context)
     {
         this.ipAddresses    = new LinkedHashSet<>();
         this.communications = new LinkedHashSet<>();
-        this.context        = contextI;
+        this.context        = context;
+        System.out.println(context);
     }
 
     public void establishConnection() throws Exception
@@ -68,26 +70,30 @@ public class Network implements NetworkManager
             SocketConnection connection = new SocketConnection(ip, context.getConfig().getPort());
             if(connection.isConnected())
             {
-                connection.getOutputStream().write(new GreetingMessage(SocketConnection.NODE).data());
+                connection.getOutputStream().writeUTF(magicHeader);
                 connection.getOutputStream().flush();
 
-                int type = connection.getInputStream().readInt();
+                Client client = new Client(connection);
 
-                if(type == Msg.greeting)
-                {
-                    type = connection.getInputStream().readInt();
+//                int type = connection.getInputStream().readInt();
 
-                    switch (type)
-                    {
-                        case SocketConnection.CLIENT:
-                            break;
-                        case SocketConnection.MINER:
-                            break;
-                        case SocketConnection.NODE:
-                                communications.add(new Node(connection));
-                            break;
-                    }
-                }
+//                if(type == Msg.greeting)
+//                {
+////                    type = connection.getInputStream().readInt();
+//
+////                    switch (type)
+////                    {
+////                        case SocketConnection.CLIENT:
+////                                communications.add(new Client(connection));
+////                            break;
+////                        case SocketConnection.MINER:
+////                                communications.add(new Peer(connection));
+////                            break;
+////                        case SocketConnection.NODE:
+////                                communications.add(new Node(connection));
+////                            break;
+////                    }
+//                }
             }
         } catch (Exception e)
         {

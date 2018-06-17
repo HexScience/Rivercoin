@@ -20,8 +20,8 @@ import com.riverssen.core.algorithms.Provider;
 import com.riverssen.core.chainedmap.RiverFlowMap;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
+import com.riverssen.core.networking.Server;
 import com.riverssen.core.networking.NetworkManager;
-import com.riverssen.core.networking.NodeNetworkManager;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.utils.ByteUtil;
@@ -50,7 +50,7 @@ public class NodeContext implements ContextI
         this.config = config;
         this.running = true;
         this.executorService = Executors.newCachedThreadPool();
-        this.networkManager = new NodeNetworkManager(this);
+        this.networkManager = new Server(this);
         this.blockPool = new BlockPool(this);
         this.utxoManager = new RiverFlowMap();
         this.miner = this.config.getMinerAddress();

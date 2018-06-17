@@ -12,34 +12,32 @@
 
 package com.riverssen.core.networking;
 
-import com.riverssen.core.FullBlock;
-import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.ContextI;
-import com.riverssen.core.headers.TransactionI;
 
-import java.io.IOException;
-import java.util.Set;
-
-public interface Communicator
+public class CommunicationStream
 {
-    void closeConnection() throws IOException;
-    String getIP();
-    int    getType();
+    protected class Ticket{
+        private long   value;
+        private Ticket next;
 
-    void readInbox();
+        public Ticket find(long value)
+        {
+            if(this.value == value) return this;
 
-    void requestTransaction(ContextI context);
-    void requestBlock(ContextI context);
-    void requestBlockHeader(ContextI context);
-    void requestListOfCommunicators(NetworkManager network);
-    void requestLatestBlockInfo(ContextI context);
-    void requestPeers(Set<String> ipAddresses);
+            if(next != null) return next.find(value);
 
-    void sendHandShake(int type);
-    void sendTransaction(TransactionI transaction);
-    void sendBlock(FullBlock block);
-    void sendBlockHeader(BlockHeader header);
-    void sendListOfCommunicators(Set<Communicator> list);
-    void sendLatestBlockInfo(long block);
-    void sendPeers();
+            return null;
+        }
+
+        public void add(Ticket next)
+        {
+            if(this.next != null) this.next.add(next);
+            else this.next.add(next);
+        }
+
+//        public abstract void send(ContextI context);
+//        public abstract void receive(ContextI context);
+    }
+
+    private Ticket root = new Ticket();
 }

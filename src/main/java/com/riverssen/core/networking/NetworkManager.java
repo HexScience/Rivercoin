@@ -21,6 +21,5 @@ public interface NetworkManager
     Set<String> getList();
     void terminate();
     void establishConnection() throws Exception;
-
     void broadCastNewTransaction(TransactionI transaction);
 }

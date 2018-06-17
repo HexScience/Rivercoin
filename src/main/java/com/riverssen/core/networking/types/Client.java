@@ -12,6 +12,113 @@
 
 package com.riverssen.core.networking.types;
 
-public class Client
+import com.riverssen.core.FullBlock;
+import com.riverssen.core.block.BlockHeader;
+import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.networking.Communicator;
+import com.riverssen.core.networking.NetworkManager;
+import com.riverssen.core.networking.SocketConnection;
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
+public class Client implements Communicator
 {
+    private SocketConnection        connection;
+    private Map<Integer, byte[]>    unfulfilled;
+
+    public Client(SocketConnection connection)
+    {
+        this.connection = connection;
+    }
+
+    @Override
+    public void closeConnection() throws IOException
+    {
+
+    }
+
+    @Override
+    public String getIP()
+    {
+        return connection.getIP();
+    }
+
+    @Override
+    public int getType()
+    {
+        return 0;
+    }
+
+    @Override
+    public void readInbox()
+    {
+    }
+
+    @Override
+    public void requestTransaction(ContextI context)
+    {
+    }
+
+    @Override
+    public void requestBlock(ContextI context)
+    {
+    }
+
+    @Override
+    public void requestBlockHeader(ContextI context)
+    {
+    }
+
+    @Override
+    public void requestListOfCommunicators(NetworkManager network)
+    {
+    }
+
+    @Override
+    public void requestLatestBlockInfo(ContextI context)
+    {
+    }
+
+    @Override
+    public void requestPeers(Set<String> ipAddresses)
+    {
+    }
+
+    @Override
+    public void sendHandShake(int type)
+    {
+    }
+
+    @Override
+    public void sendTransaction(TransactionI transaction)
+    {
+    }
+
+    @Override
+    public void sendBlock(FullBlock block)
+    {
+    }
+
+    @Override
+    public void sendBlockHeader(BlockHeader header)
+    {
+    }
+
+    @Override
+    public void sendListOfCommunicators(Set<Communicator> list)
+    {
+    }
+
+    @Override
+    public void sendLatestBlockInfo(long block)
+    {
+    }
+
+    @Override
+    public void sendPeers()
+    {
+    }
 }

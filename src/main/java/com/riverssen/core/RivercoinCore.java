@@ -12,7 +12,6 @@
 
 package com.riverssen.core;
 
-import com.riverssen.core.networking.Network;
 import com.riverssen.core.system.ClientContext;
 import com.riverssen.core.system.Config;
 import com.riverssen.core.system.MiningContext;
@@ -39,8 +38,6 @@ public class RivercoinCore
     private RivercoinCore(String type, String file) throws Exception
     {
 //        com.riverssen.testing.Contracts.test();
-        Network network = new Network(null);
-        network.establishConnection();
 
         /** This Code Starts The Rivercoin Client **/
 
@@ -57,7 +54,7 @@ public class RivercoinCore
         System.out.println("--------------------Welcome To Rivercoin Core-------------------");
         System.out.println("----------------------------------------------------------------");
         Logger.alert("usable cpu threads: " + config.getMaxMiningThreads());
-
+    type = "node";
         switch (type)
         {
             case "node":    context = new NodeContext(config);          break;
