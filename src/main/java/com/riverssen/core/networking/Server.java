@@ -62,6 +62,9 @@ public class Server implements NetworkManager
             {
                 try{
                     SocketConnection connection = new SocketConnection(socket);
+                    communications.add(new Client(connection));
+
+                    Thread.sleep(12L);
                 } catch (Exception e)
                 {
                 }
