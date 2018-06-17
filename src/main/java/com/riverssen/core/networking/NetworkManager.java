@@ -12,6 +12,7 @@
 
 package com.riverssen.core.networking;
 
+import com.riverssen.core.headers.Event;
 import com.riverssen.core.headers.TransactionI;
 
 import java.util.Set;
@@ -23,6 +24,8 @@ public interface NetworkManager
     void establishConnection() throws Exception;
     void broadCastNewTransaction(TransactionI transaction);
 
+    @Deprecated
     void requestLongestForkAndDownload();
+    void requestNetworkChainSizes(Event event);
     Set<Communicator> getCommunicators();
 }

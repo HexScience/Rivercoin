@@ -13,6 +13,7 @@
 package com.riverssen.core.networking;
 
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.headers.Event;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.types.Client;
 import com.riverssen.core.utils.Handler;
@@ -80,6 +81,13 @@ public class Server implements NetworkManager
     }
 
     @Override
+    public void requestNetworkChainSizes(Event event)
+    {
+        for (Communicator communicator : communications) communicator.requestLatestBlockInfo(context, event);
+    }
+
+    @Override
+    @Deprecated
     public void requestLongestForkAndDownload()
     {
         Tuple<Long, Communicator>   tuple = new Tuple(-1, null);
