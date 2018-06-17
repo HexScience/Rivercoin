@@ -85,6 +85,9 @@ public class Client implements Communicator
 
                 switch (OP)
                 {
+                    case OP_BKI:
+                        requests.get(connection.getInputStream().readInt()).fireEvent(connection.getInputStream().readLong());
+                        break;
                     case OP_GREET:
                             this.version = connection.getInputStream().readLong();
                             greet(context);
@@ -150,8 +153,8 @@ public class Client implements Communicator
                         switch (connection.getInputStream().readInt())
                         {
                             case OP_BKI:
-                                connection.getOutputStream().writeInt(ByteUtil.encode(System.currentTimeMillis()).hashCode());
-
+                                    sendLatestBlockInfo(context.getBlockChain().currentBlock() - 1, connection.getInputStream().readInt());
+//                                    connection.getOutputStream().writeInt(ByteUtil.encode(System.currentTimeMillis()).hashCode());
                                 break;
 
                             case OP_BLK:
@@ -274,9 +277,12 @@ public class Client implements Communicator
     {
         try
         {
+            int hashCode = ByteUtil.encode(System.currentTimeMillis()).hashCode();
             connection.getOutputStream().writeInt(OP_REQUEST);
             connection.getOutputStream().writeInt(OP_BKI);
-            connection.getOutputStream().writeInt(ByteUtil.encode(System.currentTimeMillis()).hashCode());
+            connection.getOutputStream().writeInt(hashCode);
+
+            requests.put(hashCode, event);
 
             connection.getOutputStream().flush();
         } catch (IOException e)
@@ -391,7 +397,7 @@ public class Client implements Communicator
 
         try
         {
-            connection.getOutputStream().writeInt(OP_BKH);
+            connection.getOutputStream().writeInt(OP_BKI);
             connection.getOutputStream().writeInt((int)hashCode);
             connection.getOutputStream().write(data);
 
