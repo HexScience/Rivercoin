@@ -32,7 +32,8 @@ public class Client implements Communicator
     private SocketConnection        connection;
     private Map<Integer, Packet>    unfulfilled;
     private long                    version;
-    private class Packet{
+    private class Packet
+    {
         private byte data[];
         private byte header[];
         private long time;

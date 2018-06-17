@@ -45,7 +45,7 @@ public class NodeContext implements ContextI
     private boolean running;
     private final long versionBytes;
 
-    public NodeContext(Config config)
+    public NodeContext(Config config) throws Exception
     {
         this.config = config;
         this.running = true;

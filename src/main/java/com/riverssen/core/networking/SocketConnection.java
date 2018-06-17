@@ -21,7 +21,6 @@ import java.net.Socket;
 
 public class SocketConnection
 {
-    public static final int NODE = 0, MINER = 1, CLIENT = 2;
     private String                  ip;
     private int                     port;
     private Socket                  socket;

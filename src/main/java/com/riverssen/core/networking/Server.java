@@ -14,13 +14,13 @@ package com.riverssen.core.networking;
 
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.networking.messages.GreetingMessage;
 import com.riverssen.core.networking.types.Client;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -33,19 +33,21 @@ public class Server implements NetworkManager
     private Set<String>         ipAddresses;
     private Set<Communicator>   communications;
     private ContextI            context;
+    private ServerSocket        socket;
 
-    public Server(ContextI context)
+    public Server(ContextI context) throws Exception
     {
         this.ipAddresses    = new LinkedHashSet<>();
         this.communications = new LinkedHashSet<>();
         this.context        = context;
-        System.out.println(context);
+        this.socket         = new ServerSocket(context.getConfig().getPort());
     }
 
     public void establishConnection() throws Exception
     {
         addSavedIps();
         addSeedIPs();
+        createListener();
 
         if(ipAddresses.size() == 0)
             throw new Exception("no seed ip address found.");
@@ -53,9 +55,28 @@ public class Server implements NetworkManager
         establishConnections();
     }
 
+    private void createListener()
+    {
+        context.getExecutorService().execute(()->{
+            while(context.isRunning())
+            {
+                try{
+                } catch (Exception e)
+                {
+                }
+            }
+        });
+    }
+
     @Override
     public void broadCastNewTransaction(TransactionI transaction)
     {
+    }
+
+    @Override
+    public Set<Communicator> getCommunicators()
+    {
+        return null;
     }
 
     private void establishConnections()
