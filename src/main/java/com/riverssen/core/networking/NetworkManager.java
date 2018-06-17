@@ -22,4 +22,6 @@ public interface NetworkManager
     void terminate();
     void establishConnection() throws Exception;
     void broadCastNewTransaction(TransactionI transaction);
+
+    Set<Communicator> getCommunicators();
 }

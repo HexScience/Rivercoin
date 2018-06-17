@@ -22,24 +22,33 @@ import java.util.Set;
 
 public interface Communicator
 {
+    public static final int OP_GREET    = 0;
+    public static final int OP_HALT     = 1;
+    public static final int OP_TXN      = 2;
+    public static final int OP_BLK      = 3;
+    public static final int OP_BKH      = 4;
+    public static final int OP_PRS      = 5;
+    public static final int OP_GREET1   = 6;
+    public static final int OP_FAILED   = 7;
+    public static final int OP_SUCCESS  = 8;
+
+    public static final int OP_MSG      = 2;
+
     void closeConnection() throws IOException;
     String getIP();
     int    getType();
 
-    void readInbox();
+    void readInbox(ContextI context);
 
-    void requestTransaction(ContextI context);
-    void requestBlock(ContextI context);
-    void requestBlockHeader(ContextI context);
+    void requestBlock(long block, ContextI context);
+    void requestBlockHeader(long block, ContextI context);
     void requestListOfCommunicators(NetworkManager network);
     void requestLatestBlockInfo(ContextI context);
-    void requestPeers(Set<String> ipAddresses);
 
-    void sendHandShake(int type);
+    void sendHandShake(long version);
     void sendTransaction(TransactionI transaction);
     void sendBlock(FullBlock block);
     void sendBlockHeader(BlockHeader header);
     void sendListOfCommunicators(Set<Communicator> list);
     void sendLatestBlockInfo(long block);
-    void sendPeers();
 }

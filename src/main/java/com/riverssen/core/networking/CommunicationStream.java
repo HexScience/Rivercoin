@@ -12,13 +12,20 @@
 
 package com.riverssen.core.networking;
 
-import com.riverssen.core.headers.ContextI;
-
 public class CommunicationStream
 {
     protected class Ticket{
         private long   value;
+        private byte   data[];
         private Ticket next;
+
+        public Ticket(){}
+
+        public Ticket(byte data[])
+        {
+            this.data = data;
+            this.value= System.currentTimeMillis();
+        }
 
         public Ticket find(long value)
         {
@@ -35,9 +42,25 @@ public class CommunicationStream
             else this.next.add(next);
         }
 
+        public Ticket getNext()
+        {
+            return next;
+        }
+
+        public Ticket getLast()
+        {
+            if(next == null) return this;
+            return next.getNext();
+        }
+
 //        public abstract void send(ContextI context);
 //        public abstract void receive(ContextI context);
     }
 
     private Ticket root = new Ticket();
+
+    public void add(byte data[])
+    {
+        root.add(new Ticket());
+    }
 }

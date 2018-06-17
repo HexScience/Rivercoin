@@ -19,8 +19,10 @@ import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.Communicator;
 import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.networking.SocketConnection;
+import com.riverssen.core.utils.ByteUtil;
 
 import java.io.IOException;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,6 +30,7 @@ public class Client implements Communicator
 {
     private SocketConnection        connection;
     private Map<Integer, byte[]>    unfulfilled;
+    private long                    version;
 
     public Client(SocketConnection connection)
     {
@@ -37,7 +40,7 @@ public class Client implements Communicator
     @Override
     public void closeConnection() throws IOException
     {
-
+        connection.getOutputStream().writeInt(OP_HALT);
     }
 
     @Override
@@ -53,22 +56,87 @@ public class Client implements Communicator
     }
 
     @Override
-    public void readInbox()
+    public void readInbox(ContextI context)
+    {
+        try{
+            while(connection.getInputStream().available() > 0)
+            {
+                int OP = connection.getInputStream().readInt();
+                int hashCode = -1;
+
+                switch (OP)
+                {
+                    case OP_GREET:
+                            this.version = connection.getInputStream().readLong();
+                            greet(context);
+                        break;
+                    case OP_TXN:
+                        hashCode = connection.getInputStream().readInt();
+                        try{
+                            TransactionI transaction = TransactionI.read(connection.getInputStream());
+                            success(hashCode);
+                            context.getTransactionPool().addRelayed(transaction);
+
+                            if(transaction.valid())
+                            {
+                                Set<Communicator> peers = new LinkedHashSet<>(context.getNetworkManager().getCommunicators());
+                                peers.remove(this);
+
+                                for(Communicator communicator : peers)
+                                    communicator.sendTransaction(transaction);
+                            }
+                        } catch (Exception e)
+                        {
+                            failed(hashCode);
+                        }
+                        break;
+                }
+            }
+        } catch (Exception e)
+        {
+        }
+    }
+
+    private void success(int hashcode)
+    {
+        try{
+            connection.getOutputStream().writeInt(OP_SUCCESS);
+            connection.getOutputStream().writeInt(hashcode);
+            connection.getOutputStream().flush();
+        } catch (Exception e)
+        {
+        }
+    }
+
+    private void failed(int hashcode)
+    {
+        try{
+            connection.getOutputStream().writeInt(OP_FAILED);
+            connection.getOutputStream().writeInt(hashcode);
+            connection.getOutputStream().flush();
+        } catch (Exception e)
+        {
+        }
+    }
+
+    private void greet(ContextI context)
+    {
+        try{
+            connection.getOutputStream().writeInt(OP_GREET1);
+            connection.getOutputStream().writeLong(context.getVersionBytes());
+            connection.getOutputStream().flush();
+        } catch (Exception e)
+        {
+        }
+    }
+
+    @Override
+    public void requestBlock(long block, ContextI context)
     {
     }
 
     @Override
-    public void requestTransaction(ContextI context)
-    {
-    }
-
-    @Override
-    public void requestBlock(ContextI context)
-    {
-    }
-
-    @Override
-    public void requestBlockHeader(ContextI context)
+    public void requestBlockHeader(long block, ContextI context)
     {
     }
 
@@ -83,42 +151,97 @@ public class Client implements Communicator
     }
 
     @Override
-    public void requestPeers(Set<String> ipAddresses)
+    public void sendHandShake(long version)
     {
-    }
+        try
+        {
+            connection.getOutputStream().writeInt(OP_GREET);
+            connection.getOutputStream().writeLong(version);
 
-    @Override
-    public void sendHandShake(int type)
-    {
+            connection.getOutputStream().flush();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void sendTransaction(TransactionI transaction)
     {
+        byte data[] = ByteUtil.getBytes(transaction);
+
+        try
+        {
+            connection.getOutputStream().writeInt(OP_TXN);
+            connection.getOutputStream().writeInt(data.hashCode());
+            connection.getOutputStream().write(data);
+
+            connection.getOutputStream().flush();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void sendBlock(FullBlock block)
     {
+        byte data[] = ByteUtil.getBytes(block);
+
+        try
+        {
+            connection.getOutputStream().writeInt(OP_BLK);
+            connection.getOutputStream().writeInt(data.hashCode());
+            connection.getOutputStream().write(data);
+
+            connection.getOutputStream().flush();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void sendBlockHeader(BlockHeader header)
     {
+        byte data[] = ByteUtil.getBytes(header);
+
+        try
+        {
+            connection.getOutputStream().writeInt(OP_BKH);
+            connection.getOutputStream().writeInt(data.hashCode());
+            connection.getOutputStream().write(data);
+
+            connection.getOutputStream().flush();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void sendListOfCommunicators(Set<Communicator> list)
     {
+        StringBuilder builder = new StringBuilder();
+
+        for (Communicator communicator : list) builder.append(communicator.getIP() + ",");
+        byte data[] = builder.toString().getBytes();
+
+        try
+        {
+            connection.getOutputStream().writeInt(OP_PRS);
+            connection.getOutputStream().writeInt(data.hashCode());
+            connection.getOutputStream().write(data);
+
+            connection.getOutputStream().flush();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void sendLatestBlockInfo(long block)
-    {
-    }
-
-    @Override
-    public void sendPeers()
     {
     }
 }

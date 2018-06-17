@@ -14,16 +14,18 @@ package com.riverssen.core.block;
 
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.utils.MerkleTree;
+import com.riverssen.core.utils.SmartDataTransferer;
 
 import java.io.*;
 import java.math.BigInteger;
 import java.util.zip.InflaterInputStream;
 
-public class BlockHeader implements Encodeable
+public class BlockHeader implements Encodeable, Exportable
 {
     public static long SIZE = 32 + 32 + 32 + 8 + 32 + 20 + 8 + 8;
     /** 2 byte version information **/
@@ -279,5 +281,27 @@ public class BlockHeader implements Encodeable
         }
 
         return null;
+    }
+
+    @Override
+    public byte[] header()
+    {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] content()
+    {
+        return new byte[0];
+    }
+
+    @Override
+    public void export(SmartDataTransferer smdt)
+    {
+    }
+
+    @Override
+    public void export(DataOutputStream dost) throws IOException
+    {
     }
 }

@@ -101,7 +101,6 @@ public class Transaction implements TransactionI, Encodeable
         /** check utxo amount is contains a transaction fee **/
         if (amount.toBigInteger().add(getFee()).compareTo(getInputAmount()) >= 0) return false;
 
-
         return sender.toPublicKey().verifySignature(generateSignatureData(), Base58.encode(signature));
     }
 
