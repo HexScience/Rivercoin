@@ -22,6 +22,7 @@ import com.riverssen.core.networking.SocketConnection;
 import com.riverssen.core.utils.ByteUtil;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +36,7 @@ public class Client implements Communicator
     public Client(SocketConnection connection)
     {
         this.connection = connection;
+        this.unfulfilled= new LinkedHashMap<>();
     }
 
     @Override
@@ -75,10 +77,11 @@ public class Client implements Communicator
                         try{
                             TransactionI transaction = TransactionI.read(connection.getInputStream());
                             success(hashCode);
-                            context.getTransactionPool().addRelayed(transaction);
 
-                            if(transaction.valid())
+                            if(transaction.valid(context))
                             {
+                                context.getTransactionPool().addRelayed(transaction);
+
                                 Set<Communicator> peers = new LinkedHashSet<>(context.getNetworkManager().getCommunicators());
                                 peers.remove(this);
 
@@ -89,6 +92,11 @@ public class Client implements Communicator
                         {
                             failed(hashCode);
                         }
+                        break;
+                    case OP_FAILED:
+                        break;
+                    case OP_SUCCESS:
+                        unfulfilled.remove(connection.getInputStream().readInt());
                         break;
                 }
             }
@@ -133,21 +141,63 @@ public class Client implements Communicator
     @Override
     public void requestBlock(long block, ContextI context)
     {
+        try
+        {
+            connection.getOutputStream().writeInt(OP_REQUEST);
+            connection.getOutputStream().writeInt(OP_BLK);
+            connection.getOutputStream().writeLong(block);
+
+            connection.getOutputStream().flush();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void requestBlockHeader(long block, ContextI context)
     {
+        try
+        {
+            connection.getOutputStream().writeInt(OP_REQUEST);
+            connection.getOutputStream().writeInt(OP_BKH);
+            connection.getOutputStream().writeLong(block);
+
+            connection.getOutputStream().flush();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void requestListOfCommunicators(NetworkManager network)
     {
+        try
+        {
+            connection.getOutputStream().writeInt(OP_REQUEST);
+            connection.getOutputStream().writeInt(OP_PRS);
+
+            connection.getOutputStream().flush();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void requestLatestBlockInfo(ContextI context)
     {
+        try
+        {
+            connection.getOutputStream().writeInt(OP_REQUEST);
+            connection.getOutputStream().writeInt(OP_BKI);
+
+            connection.getOutputStream().flush();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -177,6 +227,8 @@ public class Client implements Communicator
             connection.getOutputStream().write(data);
 
             connection.getOutputStream().flush();
+
+            unfulfilled.put(data.hashCode(), data);
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -195,6 +247,8 @@ public class Client implements Communicator
             connection.getOutputStream().write(data);
 
             connection.getOutputStream().flush();
+
+            unfulfilled.put(data.hashCode(), data);
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -213,6 +267,8 @@ public class Client implements Communicator
             connection.getOutputStream().write(data);
 
             connection.getOutputStream().flush();
+
+            unfulfilled.put(data.hashCode(), data);
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -234,6 +290,8 @@ public class Client implements Communicator
             connection.getOutputStream().write(data);
 
             connection.getOutputStream().flush();
+
+            unfulfilled.put(data.hashCode(), data);
         } catch (IOException e)
         {
             e.printStackTrace();

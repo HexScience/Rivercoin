@@ -24,7 +24,7 @@ import java.util.List;
 
 public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSONFormattable, Exportable
 {
-    boolean                         valid();
+    boolean                         valid(ContextI context);
     long                            getTimeStamp();
     CompressedAddress               getSender();
     PublicAddress                   getReceiver();

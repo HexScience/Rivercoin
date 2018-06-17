@@ -303,5 +303,6 @@ public class BlockHeader implements Encodeable, Exportable
     @Override
     public void export(DataOutputStream dost) throws IOException
     {
+        dost.write(getBytes());
     }
 }

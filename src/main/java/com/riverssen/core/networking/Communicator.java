@@ -32,6 +32,9 @@ public interface Communicator
     public static final int OP_FAILED   = 7;
     public static final int OP_SUCCESS  = 8;
 
+    public static final int OP_REQUEST  = 9;
+    public static final int OP_BKI      = 10;
+
     public static final int OP_MSG      = 2;
 
     void closeConnection() throws IOException;

@@ -20,6 +20,7 @@ import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
 
 import java.math.BigInteger;
+import java.security.PublicKey;
 import java.util.*;
 
 public class RiverFlowMap implements Encodeable
@@ -81,6 +82,11 @@ public class RiverFlowMap implements Encodeable
         {
             this.roothash = calculateHash();
         }
+    }
+
+    public Set<byte[]> getAllUTXOs(PublicAddress address)
+    {
+        return elements.get(address);
     }
 
     public boolean get(byte value[])

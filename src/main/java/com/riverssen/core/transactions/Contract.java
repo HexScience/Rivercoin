@@ -124,7 +124,7 @@ public class Contract implements TransactionI
     }
 
     @Override
-    public boolean valid()
+    public boolean valid(ContextI context)
     {
         return false;
     }

@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Transaction implements TransactionI, Encodeable
 {
@@ -85,13 +86,17 @@ public class Transaction implements TransactionI, Encodeable
         this.signature = key.signEncoded(bytes);
     }
 
-    public boolean valid()
+    public boolean valid(ContextI context)
     {
         if (sender.toPublicKey() == null) return false;
 
         if (!sender.toPublicKey().isValid()) return false;
 
-        for(TransactionInput input : txids) if(!input.getUTXO().getOwner().equals(sender)) return false;
+        Set<byte[]> utxos = context.getUtxoManager().getAllUTXOs(sender.toPublicKey().getAddress());
+
+        for(TransactionInput input : txids) if(!utxos.contains(input.getUTXO().getHash())) return false;
+
+//        for(TransactionInput input : txids) if(!input.getUTXO().getOwner().equals(sender)) return false;
 
         /** check amount is more than or equal to the minimum transaction amount **/
         if(amount.toBigInteger().compareTo(new BigInteger(Config.getMinimumTransactionAmount())) < 0) return false;
