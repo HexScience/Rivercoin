@@ -28,7 +28,6 @@ import java.util.Set;
 public class Server implements NetworkManager
 {
     public static final String  seedNodeUrl = "http://www.rivercoin.net/developers/api/seednodes.php";
-    public static final String  magicHeader = "msg{greet}";
 
     private Set<String>         ipAddresses;
     private Set<Communicator>   communications;
@@ -95,10 +94,9 @@ public class Server implements NetworkManager
             SocketConnection connection = new SocketConnection(ip, context.getConfig().getPort());
             if(connection.isConnected())
             {
-                connection.getOutputStream().writeUTF(magicHeader);
-                connection.getOutputStream().flush();
-
                 Client client = new Client(connection);
+                client.sendHandShake(context.getVersionBytes());
+                communications.add(client);
 
 //                int type = connection.getInputStream().readInt();
 
