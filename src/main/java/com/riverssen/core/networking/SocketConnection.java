@@ -17,6 +17,7 @@ import com.riverssen.core.networking.messages.Msg;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 public class SocketConnection
@@ -35,6 +36,15 @@ public class SocketConnection
         this.socket         = new Socket(ip, port);
         this.inputStream    = new DataInputStream(socket.getInputStream());
         this.outputStream   = new DataOutputStream(socket.getOutputStream());
+    }
+
+    public SocketConnection(ServerSocket socket) throws IOException
+    {
+        this.socket         = socket.accept();
+        this.ip             = this.socket.getRemoteSocketAddress().toString();
+        this.port           = this.socket.getPort();
+        this.inputStream    = new DataInputStream(this.socket.getInputStream());
+        this.outputStream   = new DataOutputStream(this.socket.getOutputStream());
     }
 
     public void sendMessage(Msg msg)

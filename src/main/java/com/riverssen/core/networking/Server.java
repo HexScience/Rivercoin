@@ -61,6 +61,7 @@ public class Server implements NetworkManager
             while(context.isRunning())
             {
                 try{
+                    SocketConnection connection = new SocketConnection(socket);
                 } catch (Exception e)
                 {
                 }
