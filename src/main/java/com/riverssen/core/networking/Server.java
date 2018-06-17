@@ -78,6 +78,12 @@ public class Server implements NetworkManager
     }
 
     @Override
+    public void requestLongestForkAndDownload()
+    {
+        for (Communicator communicator : communications) communicator.requestLatestBlockInfo(context);
+    }
+
+    @Override
     public Set<Communicator> getCommunicators()
     {
         return communications;

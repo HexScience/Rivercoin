@@ -20,9 +20,11 @@ import com.riverssen.core.utils.Tuple;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 public class BlockChain implements BlockChainI
 {
+    private Set<FullBlock>  orphanedBlocks;
     private FullBlock       block;
     private ContextI        context;
     private long            lastvalidated;
@@ -66,8 +68,6 @@ public class BlockChain implements BlockChainI
     {
         Logger.alert("attempting to load the blockchain from disk");
 
-        File blockChainDirectory = new File(context.getConfig().getBlockChainDirectory());
-
         LatestBlockInfo info = new LatestBlockInfo(context.getConfig());
         try
         {
@@ -110,6 +110,12 @@ public class BlockChain implements BlockChainI
     public long currentBlock()
     {
         return block.getHeader().getBlockID();
+    }
+
+    @Override
+    public void queueBlock(FullBlock block)
+    {
+        orphanedBlocks.add(block);
     }
 
     @Override

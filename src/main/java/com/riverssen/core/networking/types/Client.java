@@ -85,6 +85,27 @@ public class Client implements Communicator
                             this.version = connection.getInputStream().readLong();
                             greet(context);
                         break;
+                    case OP_BLK:
+                        hashCode = connection.getInputStream().readInt();
+                        try{
+                            FullBlock block = new FullBlock(connection.getInputStream());
+                            success(hashCode);
+
+//                            if(block.validate(context) == 0)
+//                            {
+                                context.getBlockChain().queueBlock(block);
+
+                                Set<Communicator> peers = new LinkedHashSet<>(context.getNetworkManager().getCommunicators());
+                                peers.remove(this);
+
+                                for(Communicator communicator : peers)
+                                    communicator.sendBlock(block);
+//                            }
+                        } catch (Exception e)
+                        {
+                            failed(hashCode);
+                        }
+                        break;
                     case OP_TXN:
                         hashCode = connection.getInputStream().readInt();
                         try{
@@ -120,6 +141,29 @@ public class Client implements Communicator
                         break;
                     case OP_SUCCESS:
                         unfulfilled.remove(connection.getInputStream().readInt());
+                        break;
+                    case OP_REQUEST:
+                        switch (connection.getInputStream().readInt())
+                        {
+                            case OP_BLK:
+                                long blockID = connection.getInputStream().readLong();
+
+                                FullBlock block = BlockHeader.FullBlock(blockID, context);
+                                if(block != null)
+                                    sendBlock(block);
+                                break;
+
+                            case OP_ALL:
+                                long peersLatestBlock = connection.getInputStream().readLong();
+
+                                FullBlock chain = BlockHeader.FullBlock(peersLatestBlock++, context);
+                                while(chain != null)
+                                {
+                                    sendBlock(chain);
+                                    chain = BlockHeader.FullBlock(peersLatestBlock++, context);
+                                }
+                                break;
+                        }
                         break;
                 }
             }
@@ -332,5 +376,20 @@ public class Client implements Communicator
     @Override
     public void sendLatestBlockInfo(long block)
     {
+        byte data[] = ByteUtil.encode(block);
+
+        try
+        {
+            connection.getOutputStream().writeInt(OP_BKH);
+            connection.getOutputStream().writeInt(data.hashCode());
+            connection.getOutputStream().write(data);
+
+            connection.getOutputStream().flush();
+
+            unfulfilled.put(data.hashCode(), new Packet(data, ByteUtil.encodei(OP_BKI)));
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

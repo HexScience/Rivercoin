@@ -172,7 +172,7 @@ public class NodeContext implements ContextI
                 timer = System.currentTimeMillis();
             }
 
-            //Chose A Block And Orphan The Rest
+            //Choose A Block And Orphan The Rest
             if(System.currentTimeMillis() - lastBlockTime >= (config.getAverageBlockTime() - 30_000))
             {
             }

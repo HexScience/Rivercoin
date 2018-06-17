@@ -34,6 +34,8 @@ public interface Communicator
 
     public static final int OP_REQUEST  = 9;
     public static final int OP_BKI      = 10;
+    public static final int OP_FAILED0  = 11;
+    public static final int OP_ALL      = 12;
 
     public static final int OP_MSG      = 2;
 

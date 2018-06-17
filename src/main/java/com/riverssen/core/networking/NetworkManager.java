@@ -23,5 +23,6 @@ public interface NetworkManager
     void establishConnection() throws Exception;
     void broadCastNewTransaction(TransactionI transaction);
 
+    void requestLongestForkAndDownload();
     Set<Communicator> getCommunicators();
 }

@@ -1,5 +1,7 @@
 package com.riverssen.core.headers;
 
+import com.riverssen.core.FullBlock;
+
 public interface BlockChainI extends Runnable
 {
     public
@@ -11,4 +13,6 @@ public interface BlockChainI extends Runnable
     void FetchBlockChainFromDisk();
     void Validate();
     long currentBlock();
+
+    void queueBlock(FullBlock block);
 }
