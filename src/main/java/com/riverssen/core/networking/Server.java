@@ -12,6 +12,7 @@
 
 package com.riverssen.core.networking;
 
+import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.Event;
 import com.riverssen.core.headers.TransactionI;
@@ -139,7 +140,35 @@ public class Server implements NetworkManager
                                 else return -1;
         });
 
-        
+        context.getExecutorService().execute(()->{
+            while(nodes.size() > 0)
+            {
+                Communicator node = nodes.get(nodes.size() - 1);
+
+                long desiredChainSize = node.getType();
+
+                synchronized (node)
+                {
+                    node.requestBlock(context.getBlockChain().currentBlock() + 1, context);
+                    FullBlock block = node.receiveBlock();
+                }
+
+                while (context.getBlockChain().currentBlock() < desiredChainSize)
+                {
+                    long size = context.getBlockChain().currentBlock() + 1;
+                    node.requestBlock(size, context);
+
+                    Event<FullBlock> blockEvent = (block)->{
+                        if(block.validate(context) == 0)
+                        {
+                        }
+                    };
+
+                    /** a very primitive wait() function, waiting for the download to finish **/
+                    while (context.getBlockChain().currentBlock() != size) {}
+                }
+            }
+        });
     }
 
     private void establishConnections()
