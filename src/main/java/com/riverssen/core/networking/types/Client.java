@@ -30,7 +30,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class Client implements Communicator, Runnable
+public class Client implements Communicator
 {
     private SocketConnection        connection;
     private Map<Integer, Packet>    unfulfilled;
@@ -41,11 +41,6 @@ public class Client implements Communicator, Runnable
     private ByteArrayOutputStream   shouldSend;
 
     private long                    version;
-
-    @Override
-    public void run()
-    {
-    }
 
     private class Packet
     {
@@ -514,7 +509,7 @@ public class Client implements Communicator, Runnable
     {
         if(isLocked() && lock.equals(key))
             lock = null;
-        
+
         return lock == null;
     }
 }
