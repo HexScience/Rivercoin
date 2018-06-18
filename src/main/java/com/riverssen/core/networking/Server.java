@@ -154,7 +154,7 @@ public class Server implements NetworkManager
 
                     while(!node.lock(lock)) {}
 
-                    node.requestBlock(context.getBlockChain().currentBlock() + 1, context);
+                    node.requestBlock(context.getBlockChain().currentBlock() + 1, context, lock);
                     FullBlock block = null;
 
                     try
