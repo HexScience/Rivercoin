@@ -155,18 +155,17 @@ public class Server implements NetworkManager
                     try
                     {
                         block = node.receiveBlock();
-                    }
-                    catch (Exception e)
+                    } catch (Exception e)
                     {
                     }
 
-                    if(block == null)
+                    if (block == null)
                     {
                         nodes.remove(nodes.size() - 1);
                         continue;
                     }
 
-                    if(block.validate(context) != 0)
+                    if (block.validate(context) != 0)
                     {
                         nodes.remove(nodes.size() - 1);
                         continue;
@@ -174,23 +173,7 @@ public class Server implements NetworkManager
 
                     context.getBlockChain().insertBlock(block);
 
-                    if(context.getBlockChain().currentBlock() >= desiredChainSize)
-                        nodes.clear();
-                }
-
-                while (context.getBlockChain().currentBlock() < desiredChainSize)
-                {
-                    long size = context.getBlockChain().currentBlock() + 1;
-                    node.requestBlock(size, context);
-
-                    Event<FullBlock> blockEvent = (block)->{
-                        if(block.validate(context) == 0)
-                        {
-                        }
-                    };
-
-                    /** a very primitive wait() function, waiting for the download to finish **/
-                    while (context.getBlockChain().currentBlock() != size) {}
+                    if (context.getBlockChain().currentBlock() >= desiredChainSize) nodes.clear();
                 }
             }
         });
