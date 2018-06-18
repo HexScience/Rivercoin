@@ -128,6 +128,12 @@ public class Server implements NetworkManager
         return amt;
     }
 
+    @Override
+    public void downloadLongestChain()
+    {
+        
+    }
+
     private void establishConnections()
     {
         for(String ipAddress : ipAddresses)

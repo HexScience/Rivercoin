@@ -63,8 +63,8 @@ public class BlockChain implements BlockChainI
         final long totalNodes = context.getNetworkManager().amountNodesConnected();
 //        List<FullBlock> blocks = context.getBlockPool().Fetch();
 
-        Event<Tuple<Communicator, Long>> forkSizeEvent = (chainSize)->{
-        };
+//        Event<Tuple<Communicator, Long>> forkSizeEvent = (chainSize)->{
+//        };
 
 //        for(FullBlock block : blocks) block.serialize(context);
     }
