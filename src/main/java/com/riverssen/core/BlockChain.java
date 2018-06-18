@@ -115,6 +115,8 @@ public class BlockChain implements BlockChainI
     @Override
     public long currentBlock()
     {
+        if(block == null) return -1;
+
         return block.getHeader().getBlockID();
     }
 
