@@ -23,6 +23,7 @@ import com.riverssen.core.networking.SocketConnection;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.Tuple;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -36,6 +37,8 @@ public class Client implements Communicator, Runnable
     private Map<Integer, Event>     requests;
     private boolean                 actsAsRelay;
     private long                    chainSizeOnHandshake;
+    private String                  lock;
+    private ByteArrayOutputStream   shouldSend;
 
     private long                    version;
 

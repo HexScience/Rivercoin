@@ -63,5 +63,9 @@ public interface Communicator
     public boolean isNode();
     public long    chainSizeAtHandshake();
 
+    public boolean lock(String key);
+    public boolean isLocked();
+    public boolean unlock(String key);
+
     FullBlock receiveBlock() throws Exception;
 }
