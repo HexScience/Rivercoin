@@ -60,6 +60,11 @@ public interface Communicator
     void sendListOfCommunicators(Set<Communicator> list);
     void sendLatestBlockInfo(long block, long hashCode);
 
+    void requestBlock(long block, ContextI context, String lock);
+    void requestBlockHeader(long block, ContextI context, String lock);
+    void requestListOfCommunicators(NetworkManager network, String lock);
+    void requestLatestBlockInfo(ContextI context, Event<Long> event, String lock);
+
     public boolean isNode();
     public long    chainSizeAtHandshake();
 
