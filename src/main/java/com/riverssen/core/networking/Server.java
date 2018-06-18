@@ -150,7 +150,32 @@ public class Server implements NetworkManager
                 synchronized (node)
                 {
                     node.requestBlock(context.getBlockChain().currentBlock() + 1, context);
-                    FullBlock block = node.receiveBlock();
+                    FullBlock block = null;
+
+                    try
+                    {
+                        block = node.receiveBlock();
+                    }
+                    catch (Exception e)
+                    {
+                    }
+
+                    if(block == null)
+                    {
+                        nodes.remove(nodes.size() - 1);
+                        continue;
+                    }
+
+                    if(block.validate(context) != 0)
+                    {
+                        nodes.remove(nodes.size() - 1);
+                        continue;
+                    }
+
+                    context.getBlockChain().insertBlock(block);
+
+                    if(context.getBlockChain().currentBlock() >= desiredChainSize)
+                        nodes.clear();
                 }
 
                 while (context.getBlockChain().currentBlock() < desiredChainSize)

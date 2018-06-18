@@ -108,7 +108,7 @@ public class Client implements Communicator
 
                         if(hashCode == 0) return receiveBlock(numTries + 1);
                     } else {
-                        
+
                     }
                 }
             } catch (Exception e)

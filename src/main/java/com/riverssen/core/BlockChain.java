@@ -152,4 +152,8 @@ public class BlockChain implements BlockChainI
                 block.mine(context);
         }
     }
+
+    public void insertBlock(FullBlock block)
+    {
+    }
 }
