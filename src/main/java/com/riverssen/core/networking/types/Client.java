@@ -476,6 +476,30 @@ public class Client implements Communicator
     }
 
     @Override
+    public void requestBlock(long block, ContextI context, String lock)
+    {
+        
+    }
+
+    @Override
+    public void requestBlockHeader(long block, ContextI context, String lock)
+    {
+
+    }
+
+    @Override
+    public void requestListOfCommunicators(NetworkManager network, String lock)
+    {
+
+    }
+
+    @Override
+    public void requestLatestBlockInfo(ContextI context, Event<Long> event, String lock)
+    {
+
+    }
+
+    @Override
     public boolean isNode()
     {
         return actsAsRelay;
