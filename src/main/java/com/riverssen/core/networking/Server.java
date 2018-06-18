@@ -150,7 +150,9 @@ public class Server implements NetworkManager
 
                 synchronized (node)
                 {
-                    while(!node.lock(ByteUtil.defaultEncoder().encode58((this.getClass().getName() + System.currentTimeMillis()).getBytes()))) {}
+                    String lock = ByteUtil.defaultEncoder().encode58((this.getClass().getName() + System.currentTimeMillis()).getBytes());
+
+                    while(!node.lock(lock)) {}
 
                     node.requestBlock(context.getBlockChain().currentBlock() + 1, context);
                     FullBlock block = null;
@@ -158,8 +160,11 @@ public class Server implements NetworkManager
                     try
                     {
                         block = node.receiveBlock();
+
+                        node.unlock(lock);
                     } catch (Exception e)
                     {
+                        node.unlock(lock);
                     }
 
                     if (block == null)
