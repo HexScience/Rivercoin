@@ -24,9 +24,7 @@ import org.jsoup.nodes.Document;
 
 import java.io.*;
 import java.net.ServerSocket;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Server implements NetworkManager
 {
@@ -131,7 +129,12 @@ public class Server implements NetworkManager
     @Override
     public void downloadLongestChain()
     {
-        
+        List<Communicator> nodes = new ArrayList<>();
+
+        for(Communicator communicator : communications)
+            if(communicator.isNode()) nodes.add(communicator);
+
+        nodes.sort((a, b)->{ return 0; });
     }
 
     private void establishConnections()
