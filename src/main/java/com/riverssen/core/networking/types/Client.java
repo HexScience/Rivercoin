@@ -77,6 +77,52 @@ public class Client implements Communicator
         return 0;
     }
 
+    public FullBlock receiveBlock(int numTries) throws Exception
+    {
+        if(numTries >= 6)
+            return null;
+            try{
+                /** wait **/
+                while(connection.getInputStream().available() <= 0)
+                {
+                }
+
+                while (connection.getInputStream().available() > 0)
+                {
+                    int op_code = connection.getInputStream().readInt();
+
+                    if(op_code == OP_BLK)
+                    {
+                        int hashCode = connection.getInputStream().readInt();
+
+                        try{
+                            FullBlock block = new FullBlock(connection.getInputStream());
+                            success(hashCode);
+
+                            return block;
+                        } catch (Exception e)
+                        {
+                            failed(hashCode);
+                            hashCode = 0;
+                        }
+
+                        if(hashCode == 0) return receiveBlock(numTries + 1);
+                    } else {
+                        
+                    }
+                }
+            } catch (Exception e)
+            {
+            }
+
+        return null;
+    }
+
+    public FullBlock receiveBlock() throws Exception
+    {
+        return receiveBlock(0);
+    }
+
     @Override
     public void readInbox(ContextI context)
     {
