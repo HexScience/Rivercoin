@@ -291,33 +291,13 @@ public class Client implements Communicator
     @Override
     public void requestBlock(long block, ContextI context)
     {
-        try
-        {
-            connection.getOutputStream().writeInt(OP_REQUEST);
-            connection.getOutputStream().writeInt(OP_BLK);
-            connection.getOutputStream().writeLong(block);
-
-            connection.getOutputStream().flush();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        this.requestBlock(block, context, "");
     }
 
     @Override
     public void requestBlockHeader(long block, ContextI context)
     {
-        try
-        {
-            connection.getOutputStream().writeInt(OP_REQUEST);
-            connection.getOutputStream().writeInt(OP_BKH);
-            connection.getOutputStream().writeLong(block);
-
-            connection.getOutputStream().flush();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        this.requestBlockHeader(block, context, "");
     }
 
     @Override
@@ -475,28 +455,64 @@ public class Client implements Communicator
         }
     }
 
+    public boolean unlockable(String lock)
+    {
+        if(this.lock == null) return true;
+
+        if(this.lock.equals(lock)) return true;
+
+        return false;
+    }
+
     @Override
     public void requestBlock(long block, ContextI context, String lock)
     {
-        
+        if(unlockable(lock))
+        {
+            try
+            {
+                connection.getOutputStream().writeInt(OP_REQUEST);
+                connection.getOutputStream().writeInt(OP_BLK);
+                connection.getOutputStream().writeLong(block);
+
+                connection.getOutputStream().flush();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        } else {
+            //TODO: Add Do Later Code
+            //bytes should be appended into a list and then outputted to the socket after unlock()
+        }
     }
 
     @Override
     public void requestBlockHeader(long block, ContextI context, String lock)
     {
+        if(unlockable(lock))
+        {
+            try
+            {
+                connection.getOutputStream().writeInt(OP_REQUEST);
+                connection.getOutputStream().writeInt(OP_BKH);
+                connection.getOutputStream().writeLong(block);
 
+                connection.getOutputStream().flush();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public void requestListOfCommunicators(NetworkManager network, String lock)
     {
-
     }
 
     @Override
     public void requestLatestBlockInfo(ContextI context, Event<Long> event, String lock)
     {
-
     }
 
     @Override
