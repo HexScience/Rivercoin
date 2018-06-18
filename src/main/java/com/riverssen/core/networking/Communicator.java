@@ -61,4 +61,5 @@ public interface Communicator
     void sendLatestBlockInfo(long block, long hashCode);
 
     public boolean isNode();
+    public long    chainSizeAtHandshake();
 }

@@ -430,4 +430,10 @@ public class Client implements Communicator
     {
         return actsAsRelay;
     }
+
+    @Override
+    public long chainSizeAtHandshake()
+    {
+        return chainSizeOnHandshake;
+    }
 }
