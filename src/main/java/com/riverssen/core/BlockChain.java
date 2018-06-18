@@ -16,6 +16,7 @@ import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.BlockChainI;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.Event;
+import com.riverssen.core.networking.Communicator;
 import com.riverssen.core.system.LatestBlockInfo;
 import com.riverssen.core.utils.Tuple;
 
@@ -61,7 +62,8 @@ public class BlockChain implements BlockChainI
         Logger.alert("attempting to download block from peers");
 //        List<FullBlock> blocks = context.getBlockPool().Fetch();
 
-        Event<Long> forkSizeEvent = (chainSize)->{};
+        Event<Tuple<Communicator, Long>> forkSizeEvent = (chainSize)->{
+        };
 
 //        for(FullBlock block : blocks) block.serialize(context);
     }
