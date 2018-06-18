@@ -57,4 +57,6 @@ public interface ContextI
     public boolean isRunning();
 
     public BlockChain getBlockChain();
+
+    boolean actAsRelay();
 }

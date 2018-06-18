@@ -59,4 +59,6 @@ public interface Communicator
     void sendBlockHeader(BlockHeader header);
     void sendListOfCommunicators(Set<Communicator> list);
     void sendLatestBlockInfo(long block, long hashCode);
+
+    public boolean isNode();
 }

@@ -33,6 +33,7 @@ public class Client implements Communicator
     private SocketConnection        connection;
     private Map<Integer, Packet>    unfulfilled;
     private Map<Integer, Event>     requests;
+    private boolean                 actsAsRelay;
 
     private long                    version;
     private class Packet
@@ -90,7 +91,12 @@ public class Client implements Communicator
                         break;
                     case OP_GREET:
                             this.version = connection.getInputStream().readLong();
+                            this.actsAsRelay = connection.getInputStream().readInt() == OP_NODE;
                             greet(context);
+                        break;
+                    case OP_GREET1:
+                        this.version = connection.getInputStream().readLong();
+                        this.actsAsRelay = connection.getInputStream().readInt() == OP_NODE;
                         break;
                     case OP_BLK:
                         hashCode = connection.getInputStream().readInt();
@@ -219,6 +225,7 @@ public class Client implements Communicator
         try{
             connection.getOutputStream().writeInt(OP_GREET1);
             connection.getOutputStream().writeLong(context.getVersionBytes());
+            connection.getOutputStream().writeInt(context.actAsRelay() ? OP_NODE : OP_OTHER);
             connection.getOutputStream().flush();
         } catch (Exception e)
         {
@@ -408,5 +415,11 @@ public class Client implements Communicator
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean isNode()
+    {
+        return actsAsRelay;
     }
 }
