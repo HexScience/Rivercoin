@@ -53,7 +53,7 @@ public interface Communicator
     void requestListOfCommunicators(NetworkManager network);
     void requestLatestBlockInfo(ContextI context, Event<Long> event);
 
-    void sendHandShake(long version);
+    void sendHandShake(long version, ContextI context);
     void sendTransaction(TransactionI transaction);
     void sendBlock(FullBlock block);
     void sendBlockHeader(BlockHeader header);

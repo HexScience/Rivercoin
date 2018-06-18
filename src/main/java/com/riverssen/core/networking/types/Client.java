@@ -226,6 +226,7 @@ public class Client implements Communicator
             connection.getOutputStream().writeInt(OP_GREET1);
             connection.getOutputStream().writeLong(context.getVersionBytes());
             connection.getOutputStream().writeInt(context.actAsRelay() ? OP_NODE : OP_OTHER);
+            connection.getOutputStream().writeLong(context.getBlockChain().currentBlock() - 1);
             connection.getOutputStream().flush();
         } catch (Exception e)
         {
@@ -299,12 +300,14 @@ public class Client implements Communicator
     }
 
     @Override
-    public void sendHandShake(long version)
+    public void sendHandShake(long version, ContextI context)
     {
         try
         {
             connection.getOutputStream().writeInt(OP_GREET);
             connection.getOutputStream().writeLong(version);
+            connection.getOutputStream().writeInt(context.actAsRelay() ? OP_NODE : OP_OTHER);
+            connection.getOutputStream().writeLong(context.getBlockChain().currentBlock() - 1);
 
             connection.getOutputStream().flush();
         } catch (IOException e)
