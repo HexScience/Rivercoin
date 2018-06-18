@@ -28,4 +28,5 @@ public interface NetworkManager
     void requestLongestForkAndDownload();
     void requestNetworkChainSizes(Event event);
     Set<Communicator> getCommunicators();
+    int  amountNodesConnected();
 }

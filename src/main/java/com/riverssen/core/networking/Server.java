@@ -118,6 +118,16 @@ public class Server implements NetworkManager
         return communications;
     }
 
+    @Override
+    public int amountNodesConnected()
+    {
+        int amt = 0;
+
+        for(Communicator communicator : communications)
+            if(communicator.isNode()) amt ++;
+        return amt;
+    }
+
     private void establishConnections()
     {
         for(String ipAddress : ipAddresses)
