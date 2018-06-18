@@ -131,7 +131,7 @@ public class Server implements NetworkManager
             if(connection.isConnected())
             {
                 Client client = new Client(connection);
-                client.sendHandShake(context.getVersionBytes());
+                client.sendHandShake(context.getVersionBytes(), context);
                 communications.add(client);
             }
         } catch (Exception e)
