@@ -155,5 +155,11 @@ public class BlockChain implements BlockChainI
 
     public void insertBlock(FullBlock block)
     {
+        if(currentBlock() + 1 == block.getBlockID())
+        {
+            if(this.block != null)
+                this.block.serialize(context);
+                this.block = block;
+        }
     }
 }
