@@ -138,13 +138,12 @@ public class BlockChain implements BlockChainI
 
 //        Validate();
 
+        if(block == null)
+            block = new FullBlock(-1, null);
+        else block = block.getHeader().continueChain();
+
         while(context.isRunning())
         {
-            FetchTransactions();
-            ValidateTransactions();
-            RemoveDoubleSpends();
-            Validate();
-
             if(block.getBody().mine())
                 block.mine(context);
         }

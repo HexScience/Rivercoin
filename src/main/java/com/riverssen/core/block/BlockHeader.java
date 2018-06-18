@@ -255,7 +255,7 @@ public class BlockHeader implements Encodeable, Exportable
 
     public FullBlock continueChain()
     {
-        return new FullBlock(getBlockID() + 1, this);
+        return new FullBlock(getBlockID(), this);
     }
 
     public static FullBlock FullBlock(long block, ContextI context)
