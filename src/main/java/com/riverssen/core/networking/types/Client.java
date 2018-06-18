@@ -29,7 +29,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class Client implements Communicator
+public class Client implements Communicator, Runnable
 {
     private SocketConnection        connection;
     private Map<Integer, Packet>    unfulfilled;
@@ -38,6 +38,12 @@ public class Client implements Communicator
     private long                    chainSizeOnHandshake;
 
     private long                    version;
+
+    @Override
+    public void run()
+    {
+    }
+
     private class Packet
     {
         private byte data[];

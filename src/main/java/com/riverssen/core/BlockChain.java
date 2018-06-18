@@ -136,12 +136,7 @@ public class BlockChain implements BlockChainI
 
         FetchBlockChainFromPeers();
 
-        while(context.isRunning())
-        {
-
-        }
-
-        Validate();
+//        Validate();
 
         while(context.isRunning())
         {
