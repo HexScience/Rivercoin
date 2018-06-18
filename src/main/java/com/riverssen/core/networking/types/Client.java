@@ -495,18 +495,26 @@ public class Client implements Communicator, Runnable
     @Override
     public boolean lock(String key)
     {
+        if(!isLocked())
+        {
+            lock = key;
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean isLocked()
     {
-        return false;
+        return lock != null;
     }
 
     @Override
     public boolean unlock(String key)
     {
-        return false;
+        if(isLocked() && lock.equals(key))
+            lock = null;
+        
+        return lock == null;
     }
 }
