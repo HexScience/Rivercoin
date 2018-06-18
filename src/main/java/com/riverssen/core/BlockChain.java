@@ -144,7 +144,7 @@ public class BlockChain implements BlockChainI
 
         while(context.isRunning())
         {
-            if(block.getBody().mine())
+            if(block.getBody().mine(context))
                 block.mine(context);
         }
     }

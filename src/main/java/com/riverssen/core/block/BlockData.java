@@ -81,7 +81,7 @@ public class BlockData implements Encodeable, Exportable
         }
     }
 
-    public boolean mine()
+    public boolean mine(ContextI context)
     {
         return dataSize >= MAX_BLOCK_SIZE || context.getTransactionPool().getLastTransactionWas(34_000);
     }
