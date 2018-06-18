@@ -17,6 +17,7 @@ import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.Event;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.types.Client;
+import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.Handler;
 import com.riverssen.core.utils.Tuple;
 import org.jsoup.Connection;
@@ -149,6 +150,8 @@ public class Server implements NetworkManager
 
                 synchronized (node)
                 {
+                    while(!node.lock(ByteUtil.defaultEncoder().encode58((this.getClass().getName() + System.currentTimeMillis()).getBytes()))) {}
+
                     node.requestBlock(context.getBlockChain().currentBlock() + 1, context);
                     FullBlock block = null;
 
