@@ -111,6 +111,12 @@ public class ContractInvoke implements TransactionI, Encodeable
     }
 
     @Override
+    public boolean valid(ContextI context)
+    {
+        return false;
+    }
+
+    @Override
     public long getTimeStamp() {
         return ByteUtil.decode(timestamp);
     }

@@ -24,7 +24,8 @@ public class TerminateEvent implements Event<String>
     }
 
     @Override
-    public String getEventData() {
-        return data;
+    public void fireEvent(String data)
+    {
+
     }
 }

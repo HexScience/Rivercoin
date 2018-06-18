@@ -95,7 +95,7 @@ public class BlockData implements Encodeable, Exportable
     {
         List<TransactionI> flat = merkleTree.flatten();
         for (TransactionI token : flat)
-            if (!token.valid()) return false;
+            if (!token.valid(context)) return false;
         return true;
     }
 
@@ -135,7 +135,7 @@ public class BlockData implements Encodeable, Exportable
 
     public void add(TransactionI token)
     {
-        if (!token.valid()) return;
+        if (!token.valid(context)) return;
 
         merkleTree.add(token);
         dataSize += token.toJSON().getBytes().length;

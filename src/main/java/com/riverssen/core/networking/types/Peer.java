@@ -15,6 +15,7 @@ package com.riverssen.core.networking.types;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.headers.Event;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.Communicator;
 import com.riverssen.core.networking.NetworkManager;
@@ -35,6 +36,7 @@ public class Peer implements Communicator
     @Override
     public void closeConnection() throws IOException
     {
+
     }
 
     @Override
@@ -50,62 +52,74 @@ public class Peer implements Communicator
     }
 
     @Override
-    public void readInbox()
+    public void readInbox(ContextI context)
     {
+
     }
 
     @Override
-    public void requestTransaction(ContextI context)
+    public void requestBlock(long block, ContextI context)
     {
+
     }
 
     @Override
-    public void requestBlock(ContextI context)
+    public void requestBlockHeader(long block, ContextI context)
     {
-    }
 
-    @Override
-    public void requestBlockHeader(ContextI context)
-    {
     }
 
     @Override
     public void requestListOfCommunicators(NetworkManager network)
     {
+
     }
 
     @Override
-    public void requestLatestBlockInfo(ContextI context)
+    public void requestLatestBlockInfo(ContextI context, Event<Long> event)
     {
+
     }
 
     @Override
-    public void sendHandShake(int type)
+    public void sendHandShake(long version)
     {
+
     }
 
     @Override
     public void sendTransaction(TransactionI transaction)
     {
+
     }
 
     @Override
     public void sendBlock(FullBlock block)
     {
+
     }
 
     @Override
     public void sendBlockHeader(BlockHeader header)
     {
+
     }
 
     @Override
     public void sendListOfCommunicators(Set<Communicator> list)
     {
+
     }
 
     @Override
-    public void sendLatestBlockInfo(long block)
+    public void sendLatestBlockInfo(long block, long hashCode)
     {
+
+    }
+
+    @Override
+    public boolean isNode()
+    {
+        return false;
     }
 }

@@ -195,4 +195,10 @@ public class ClientContext implements ContextI
     {
         return blockChain;
     }
+
+    @Override
+    public boolean actAsRelay()
+    {
+        return false;
+    }
 }

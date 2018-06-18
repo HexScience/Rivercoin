@@ -205,4 +205,10 @@ public class NodeContext implements ContextI
     {
         return blockChain;
     }
+
+    @Override
+    public boolean actAsRelay()
+    {
+        return true;
+    }
 }

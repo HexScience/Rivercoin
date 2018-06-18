@@ -52,7 +52,7 @@ public class RewardTransaction implements TransactionI
     }
 
     @Override
-    public boolean valid()
+    public boolean valid(ContextI context)
     {
         return txids.getInputAmount().equals(new BigInteger(Config.getReward()));
     }
