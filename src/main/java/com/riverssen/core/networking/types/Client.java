@@ -35,6 +35,7 @@ public class Client implements Communicator
     private Map<Integer, Packet>    unfulfilled;
     private Map<Integer, Event>     requests;
     private boolean                 actsAsRelay;
+    private long                    chainSizeOnHandshake;
 
     private long                    version;
     private class Packet
@@ -93,11 +94,15 @@ public class Client implements Communicator
                     case OP_GREET:
                             this.version = connection.getInputStream().readLong();
                             this.actsAsRelay = connection.getInputStream().readInt() == OP_NODE;
+                            this.chainSizeOnHandshake = connection.getInputStream().readLong();
+
                             greet(context);
                         break;
                     case OP_GREET1:
                         this.version = connection.getInputStream().readLong();
                         this.actsAsRelay = connection.getInputStream().readInt() == OP_NODE;
+                        this.chainSizeOnHandshake = connection.getInputStream().readLong();
+
                         break;
                     case OP_BLK:
                         hashCode = connection.getInputStream().readInt();
