@@ -491,4 +491,22 @@ public class Client implements Communicator, Runnable
     {
         return chainSizeOnHandshake;
     }
+
+    @Override
+    public boolean lock(String key)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean isLocked()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean unlock(String key)
+    {
+        return false;
+    }
 }
