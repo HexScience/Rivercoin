@@ -134,7 +134,12 @@ public class Server implements NetworkManager
         for(Communicator communicator : communications)
             if(communicator.isNode()) nodes.add(communicator);
 
-        nodes.sort((a, b)->{ return 0; });
+        nodes.sort((a, b)->{ if(a.chainSizeAtHandshake() == b.chainSizeAtHandshake()) return 0;
+                                else if(a.chainSizeAtHandshake() > b.chainSizeAtHandshake()) return 1;
+                                else return -1;
+        });
+
+        
     }
 
     private void establishConnections()
