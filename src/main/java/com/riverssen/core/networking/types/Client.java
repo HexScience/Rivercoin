@@ -21,6 +21,7 @@ import com.riverssen.core.networking.Communicator;
 import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.networking.SocketConnection;
 import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.core.utils.Tuple;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -87,7 +88,7 @@ public class Client implements Communicator
                 switch (OP)
                 {
                     case OP_BKI:
-                        requests.get(connection.getInputStream().readInt()).fireEvent(connection.getInputStream().readLong());
+                            requests.get(connection.getInputStream().readInt()).fireEvent(new Tuple<Communicator, Long>(this, connection.getInputStream().readLong()));
                         break;
                     case OP_GREET:
                             this.version = connection.getInputStream().readLong();
@@ -162,7 +163,6 @@ public class Client implements Communicator
                                     sendLatestBlockInfo(context.getBlockChain().currentBlock() - 1, connection.getInputStream().readInt());
 //                                    connection.getOutputStream().writeInt(ByteUtil.encode(System.currentTimeMillis()).hashCode());
                                 break;
-
                             case OP_BLK:
                                 long blockID = connection.getInputStream().readLong();
 
