@@ -31,10 +31,17 @@ public interface JSONFormattable
         static final String colon     = ":";
         StringBuilder json;
         boolean       added;
+        boolean       array;
 
         public JSON(String name)
         {
             this.json = new StringBuilder().append(quote).append(name).append(quote).append(colon).append("{");
+        }
+
+        public JSON(String name, boolean array)
+        {
+            this.array  = true;
+            this.json   = new StringBuilder().append(quote).append(name).append(quote).append(colon).append("[");
         }
 
         public JSON()
@@ -74,7 +81,7 @@ public interface JSONFormattable
 
         @Override
         public String toString() {
-            return json.toString() + "}";
+            return json.toString() + (array ? "]" : "}");
         }
     }
 }
