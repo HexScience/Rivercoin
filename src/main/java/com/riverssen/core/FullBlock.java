@@ -136,20 +136,21 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         Logger.alert("--------------------------------");
         Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: new job {"+ algorithm.getClass().getSimpleName() + ":" + (difficultyHash) + "}");
 
-        /** add the reward BEFORE mining the block **/
-        body.add(new RewardTransaction(miner, this));
+        this.body.setTime(System.currentTimeMillis());
+        body.getMerkleTree().buildTree();
 
         //System.out.println(new RewardTransaction(miner).toJSON());
 
-        this.body.setTime(System.currentTimeMillis());
         ByteBuffer data = getBodyAsByteBuffer();
+
+        /** add the reward BEFORE mining the block **/
+        body.add(new RewardTransaction(miner, algorithm.encode(data.array())));
 
         long nonce = 0;
         this.hash = algorithm.encode16(data.array());
 
         while (new BigInteger(hash, 16).compareTo(difficulty) > 0) { data.putLong(data.capacity() - 8, ++nonce); this.hash = algorithm.encode16(data.array()); }
 
-        body.getMerkleTree().buildTree();
         header.setHash(algorithm.encode(data.array()));
         header.setParentHash(parent.getHash());
         header.setMerkleRoot(body.getMerkleTree().encode(algorithm));

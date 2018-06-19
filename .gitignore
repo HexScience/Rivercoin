@@ -50,3 +50,4 @@ target/classes/com/riverssen/core/mpp/contracts/currency_contract.mpp
 target/classes/com/riverssen/core/mpp/contracts/test.mpp
 target/classes/com/riverssen/core/mpp/contracts/token.mpp
 target/classes/com/riverssen/core/transactions/contract.rvc
+target/classes/com/riverssen/core/mpp/contracts/mocha.mpp

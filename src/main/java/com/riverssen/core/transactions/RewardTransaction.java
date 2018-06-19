@@ -42,13 +42,13 @@ public class RewardTransaction implements TransactionI
         txids    = new TXIList(stream);
     }
 
-    public RewardTransaction(PublicAddress receiver, FullBlock block)
+    public RewardTransaction(PublicAddress receiver, byte blockHash[])
     {
         this.receiver = receiver;
         this.time     = System.currentTimeMillis();
         this.txids    = new TXIList();
 
-        this.txids.add(new TransactionInput(new TransactionOutput(receiver, new RiverCoin(Config.getReward()), block.getHeader().getMerkleRoot())));
+        this.txids.add(new TransactionInput(new TransactionOutput(receiver, new RiverCoin(Config.getReward()), blockHash)));
     }
 
     @Override
