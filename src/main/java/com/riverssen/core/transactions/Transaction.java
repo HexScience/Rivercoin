@@ -256,6 +256,19 @@ public class Transaction implements TransactionI, Encodeable
 
     @Override
     public String toJSON() {
-        return new JSON().add("sender", getSender().toString()).add("receiver", getReceiver().toString()).toString();
+        JSON json = new JSON().add("type", "transaction").add("sender", getSender().toPublicKey().getAddress().toString()).add("receiver", getReceiver().toString()).add("input", new RiverCoin(getInputAmount().toString()).toRiverCoinString()).add("amount", amount.toRiverCoinString()).add("timestamp", getTimeStamp() + "");
+
+        String inputs = new String("\"inputs\":[");
+
+        for(TransactionInput input : txids)
+            inputs += ("\"" + Base58.encode(input.getTransactionOutputID()) + "\"") + ", ";
+
+        if(inputs.length() > 0)
+            inputs = inputs.substring(0, inputs.length() - 2) + "]";
+        else inputs = "[]";
+
+        json.add(inputs);
+
+        return json.toString();
     }
 }
