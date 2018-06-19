@@ -90,7 +90,7 @@ public class Method extends Container implements Serializable
                             {
                                 if(value.getTokens().get(0).getType().equals(Token.Type.INPUT))
                                 {
-//                                    if(!value.getTokens().get(0).getTokens().get(0).getType().equals(Token.Type.NUMBER)) throw new CompileException("initialization exception: cannot cast from ")
+//                                    if(!value.getRoot().get(0).getRoot().get(0).getType().equals(Token.Type.NUMBER)) throw new CompileException("initialization exception: cannot cast from ")
 //                                    stream1.writeShort(PUSH_INT);
                                     stream1.writeLong(Long.parseLong(value.getTokens().get(0).getTokens().get(0)
                                             .toString()));

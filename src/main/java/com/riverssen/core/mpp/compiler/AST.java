@@ -22,7 +22,7 @@ public class AST
 
     public AST(ParsedProgram program) throws CompileException
     {
-        Token root = program.getTokens();
+        Token root = program.getRoot();
         this.opcodes = new ArrayList<>();
         enterRoot(root);
     }

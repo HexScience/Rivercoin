@@ -313,12 +313,12 @@ public class Token implements Serializable
             case PROCEDURAL_ACCESS:
                 Container returnee = getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);//self;
 
-//                Container rvlue = getTokens().get(0).interpret(context, self, args);
+//                Container rvlue = getRoot().get(0).interpret(context, self, args);
 
-//                if(context.get(getTokens().get(0).toString()) != null) returnee = context.get(getTokens().get(0).toString());
-//                else if(self.get(getTokens().get(0).toString()) != null) returnee = self.get(getTokens().get(0).toString());
+//                if(context.get(getRoot().get(0).toString()) != null) returnee = context.get(getRoot().get(0).toString());
+//                else if(self.get(getRoot().get(0).toString()) != null) returnee = self.get(getRoot().get(0).toString());
 
-//                else throw new CompileException("identifier '" + getTokens().get(0).toString() + "' not defined.", this);
+//                else throw new CompileException("identifier '" + getRoot().get(0).toString() + "' not defined.", this);
 
                 if(getTokens().get(1).getType().equals(Type.INITIALIZATION))
                 {

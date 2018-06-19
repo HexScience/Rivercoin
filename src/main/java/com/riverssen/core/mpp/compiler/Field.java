@@ -48,7 +48,7 @@ public class Field extends Container implements Serializable
         this.fieldModifiers = new LinkedHashSet<>();
         this.fieldModifiers.addAll(tok.getModifiers());
 
-        if (tok.getType().equals(Token.Type.FULL_DECLARATION)) this.value = null;//tok.getTokens().get(2);
+        if (tok.getType().equals(Token.Type.FULL_DECLARATION)) this.value = null;//tok.getRoot().get(2);
     }
 
     public Field addModifier(Modifier modifier)

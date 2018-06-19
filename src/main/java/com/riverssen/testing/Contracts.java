@@ -31,14 +31,26 @@ public class Contracts
         Wallet wallet       = new Wallet("dawdaw", "dawddawdwa");
         Wallet wallet2      = new Wallet("ddawdaw", "dadwddawdwa");
         /** Test Code For The Mocha++ Compiler **/
-        ParsedProgram pp    = new ParsedProgram(new LexedProgram(FileUtils.readUTF(com.riverssen.core.mpp.contracts.Contracts.class.getResourceAsStream("contracts.mpp"))));
-        Token list = pp.getTokens();
+
+        /** Import The Human Readable Program **/
+        String contract_text = FileUtils.readUTF(com.riverssen.core.mpp.contracts.Contracts.class.getResourceAsStream("contracts.mpp"));
+
+        /** Lex The Human Readable Text **/
+        LexedProgram lexedProgram = new LexedProgram(contract_text);
+
+        /** Parse The Program **/
+        ParsedProgram pp    = new ParsedProgram(lexedProgram);
+
+        Token list = pp.getRoot();
 
         System.out.println(new RiverCoin(list.calculateCost()).toRiverCoinString());
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-        Namespace global = new Namespace(pp.getTokens());
+
+        /** To start using the program we create a namespace with the root token **/
+        Namespace global = new Namespace(pp.getRoot());
+        /** We set the namespace to global for the interpreter to recognize it as the global entry point **/
         global.setGlobal();
 
         System.out.println(new RiverCoin(list.calculateCost()).toRiverCoinString());

@@ -875,7 +875,7 @@ public class ParsedProgram
         }
     }
 
-    public Token getTokens()
+    public Token getRoot()
     {
         return tokens;
     }
