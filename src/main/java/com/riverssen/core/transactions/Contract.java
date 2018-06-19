@@ -14,7 +14,12 @@ package com.riverssen.core.transactions;
 
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.mpp.compiler.LexedProgram;
 import com.riverssen.core.mpp.compiler.Namespace;
+import com.riverssen.core.mpp.compiler.ParsedProgram;
+import com.riverssen.core.mpp.compiler.Token;
+import com.riverssen.core.mpp.exceptions.CompileException;
+import com.riverssen.core.mpp.exceptions.ParseException;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
@@ -31,14 +36,20 @@ public class Contract implements TransactionI
 {
     private CompressedAddress sender;
     private Namespace         global;
+    private TXIList           fees;
     private long              timestamp;
+
+    private Token             root;
 
     public Contract(DataInputStream stream)
     {
     }
 
-    public Contract(String text)
+    public Contract(CompressedAddress sender, TXIList fees, String contract) throws ParseException, CompileException
     {
+        this.sender = sender;
+        this.fees   = fees;
+        this.root   = new ParsedProgram(new LexedProgram(contract)).getRoot();
     }
 
     @Override
@@ -80,7 +91,7 @@ public class Contract implements TransactionI
     @Override
     public RiverCoin cost()
     {
-        return null;
+        return new RiverCoin(new RiverCoin(Config.getMiningFee()).toBigInteger().add(root.calculateCost()));
     }
 
     @Override
