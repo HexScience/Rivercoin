@@ -35,6 +35,7 @@ public class TransactionOutput/**<T extends Encodeable & JSONFormattable & Expor
         this.owner = receiver;
         this.value = value;
         this.ptxid = parentTXID;
+
         /** generate a custom hash id for this particular transactionoutput **/
         this.txoid = ByteUtil.defaultEncoder().encode(ByteUtil.concatenate(receiver.getBytes(), value.getBytes(), parentTXID));
     }

@@ -186,7 +186,7 @@ public class Config
     private static final BigInteger MINIMUM_TARGET_DIFFICULTY = new BigDecimal("225269536353234632640832032722171634457188848844000484574312395358531977087").toBigInteger();
 
     public PublicAddress getMinerAddress() {
-        return null;
+        return new PublicAddress(PUBLIC_ADDRESS);
     }
 
     public Wallet getWallet() {
