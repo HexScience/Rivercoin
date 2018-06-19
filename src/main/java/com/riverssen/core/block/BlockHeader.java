@@ -13,13 +13,13 @@
 package com.riverssen.core.block;
 
 import com.riverssen.core.FullBlock;
+import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.Exportable;
+import com.riverssen.core.headers.JSONFormattable;
 import com.riverssen.core.security.PublicAddress;
-import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.core.utils.*;
 import com.riverssen.core.headers.Encodeable;
-import com.riverssen.core.utils.MerkleTree;
-import com.riverssen.core.utils.SmartDataTransferer;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -27,7 +27,7 @@ import java.util.zip.InflaterInputStream;
 
 public class BlockHeader implements Encodeable, Exportable
 {
-    public static long SIZE = 8 + 32 + 32 + 32 + 32 + 8 + 32 + 20 + 8 + 8;
+    public static long SIZE = 8 + 32 + 32 + 32 + 32 + 8 + 32 + 20 + 8 + 8 + 13;
     /** 2 byte version information **/
     private long version;
     /** 32 byte hash of **/
@@ -48,6 +48,7 @@ public class BlockHeader implements Encodeable, Exportable
     private long nonce;
     /** 8 byte integer referencing the block id **/
     private long blockID;
+    private byte reward[] = new byte[RiverCoin.MAX_BYTES];
 
     public BlockHeader(String hash, String parentHash, String merkleRoot, MerkleTree tree, long timeStamp, BigInteger difficulty, PublicAddress minerAddress, long nonce)
     {
@@ -74,6 +75,7 @@ public class BlockHeader implements Encodeable, Exportable
         stream.read(minerAddress);
         nonce = stream.readLong();
         blockID = stream.readLong();
+        stream.read(reward);
     }
 
     @Override
@@ -89,6 +91,7 @@ public class BlockHeader implements Encodeable, Exportable
         dost.write(minerAddress);
         dost.writeLong(nonce);
         dost.writeLong(blockID);
+        dost.write(reward);
     }
 
     public BlockHeader(long block, ContextI context)
@@ -240,7 +243,8 @@ public class BlockHeader implements Encodeable, Exportable
 
     public void setNonce(long nonce)
     {
-        System.arraycopy(this.nonce, 0, ByteUtil.encode(nonce), 0, 8);
+//        System.arraycopy(this.nonce, 0, ByteUtil.encode(nonce), 0, 8);
+        this.nonce = nonce;
     }
 
     public void setMinerAddress(byte[] minerAddress)
@@ -270,6 +274,8 @@ public class BlockHeader implements Encodeable, Exportable
         {
             stream = new DataInputStream(new InflaterInputStream(new FileInputStream(file)));
             BlockHeader header = new BlockHeader(stream);
+            System.out.println(header);
+            System.exit(0);
             BlockHeader parent = new BlockHeader(header.getBlockID(), context);
             FullBlock fBlock = new FullBlock(header, new BlockData(stream), parent);
 
@@ -285,6 +291,13 @@ public class BlockHeader implements Encodeable, Exportable
         }
 
         return null;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new JSONFormattable.JSON("header").add("version", version + "").add("hash", HashUtil.hashToStringBase16(hash)).add("merkleRoot", HashUtil.hashToStringBase16(merkleRoot))
+                .add("riverRoot", Base58.encode(riverMerkleRoot)).add("timestamp", timeStamp + "").add("difficulty", new BigInteger(difficulty).toString()).add("miner", Base58.encode(minerAddress)).add("nonce", nonce + "").add("block", blockID + "").add("reward", new RiverCoin(new BigInteger(reward)).toRiverCoinString()).toString();
     }
 
     @Override
@@ -312,5 +325,20 @@ public class BlockHeader implements Encodeable, Exportable
     public void setVersion(long versionBytes)
     {
         this.version = versionBytes;
+    }
+
+    public long getVersion()
+    {
+        return version;
+    }
+
+    public byte[] getrvcRoot()
+    {
+        return riverMerkleRoot;
+    }
+
+    public void setReward(RiverCoin riverCoin)
+    {
+        this.reward = riverCoin.getBytes();
     }
 }

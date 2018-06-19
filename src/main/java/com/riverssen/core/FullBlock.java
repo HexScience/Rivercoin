@@ -16,6 +16,7 @@ import com.riverssen.core.block.BlockData;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.*;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.system.Config;
 import com.riverssen.core.system.LatestBlockInfo;
 import com.riverssen.core.transactions.RewardTransaction;
 import com.riverssen.core.utils.*;
@@ -144,17 +145,6 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         /** rebuild tree to include reward **/
         body.getMerkleTree().buildTree();
 
-//        dost.writeLong(version);
-//        dost.write(hash);
-//        dost.write(parentHash);
-//        dost.write(merkleRoot);
-//        dost.write(riverMerkleRoot);
-//        dost.writeLong(timeStamp);
-//        dost.write(difficulty);
-//        dost.write(minerAddress);
-//        dost.writeLong(nonce);
-//        dost.writeLong(blockID);
-
         header.setVersion(context.getVersionBytes());
         header.setParentHash(parentHash);
         header.setMerkleRoot(body.getMerkleTree().encode(ByteUtil.defaultEncoder()));
@@ -162,6 +152,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         header.setTimeStamp(body.getTimeStamp());
         header.setDifficulty(difficulty);
         header.setMiner(context.getMiner());
+        header.setReward(new RiverCoin(Config.getReward()));
 
         ByteBuffer data = getBodyAsByteBuffer();
 
@@ -201,7 +192,14 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     private synchronized ByteBuffer getBodyAsByteBuffer()
     {
         byte bodydata[] = getBytes();
-        ByteBuffer data = ByteBuffer.allocate(bodydata.length + 8);
+        ByteBuffer data = ByteBuffer.allocate(32 + 32 + 20 + 32 + 8 + 8 + 32 + bodydata.length + 8);
+        data.put(header.getParentHash());
+        data.put(header.getDifficulty());
+        data.put(header.getMinerAddress());
+        data.put(header.getMerkleRoot());
+        data.putLong(header.getBlockID());
+        data.putLong(header.getVersion());
+        data.put(header.getrvcRoot());
         data.put(bodydata);
         data.putLong(0);
         data.flip();
