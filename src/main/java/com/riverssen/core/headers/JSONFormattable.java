@@ -24,7 +24,7 @@ public interface JSONFormattable
         return "\""+name+"\":\""+data+"\"";
     }
 
-    JSON toJSON();
+    String toJSON();
 
     class JSON{
         static final String quote     = "\"";
