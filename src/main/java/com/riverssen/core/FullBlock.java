@@ -145,6 +145,8 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
 
         /** add the reward BEFORE mining the block **/
         body.add(new RewardTransaction(miner, algorithm.encode(data.array())));
+        /** rebuild tree to include reward **/
+        body.getMerkleTree().buildTree();
 
         long nonce = 0;
         this.hash = algorithm.encode16(data.array());
@@ -195,7 +197,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     @Override
     public byte[] getBytes()
     {
-        return ByteUtil.concatenate(parent.getHash(), body.getBytes());
+        return ByteUtil.concatenate(this.parent != null ? this.parent.getHash() : new byte[32], body.getBytes());
     }
 
     public synchronized BlockData getBody()

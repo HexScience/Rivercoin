@@ -22,7 +22,7 @@ public class Sha4 implements HashAlgorithm
     @Override
     public byte[] encode(byte[] data)
     {
-        return HashUtil.applySha256(ByteUtil.concatenate(HashUtil.applySha512(data), HashUtil.applySha1(data), HashUtil.applySha3(data), HashUtil.applyKeccak(data)));
+        return HashUtil.applySha256(ByteUtil.concatenate(HashUtil.applySha512(data), HashUtil.applySha256(data), HashUtil.applySha3(data), HashUtil.applyKeccak(data)));
     }
 
     @Override
