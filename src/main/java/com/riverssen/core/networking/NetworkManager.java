@@ -12,6 +12,7 @@
 
 package com.riverssen.core.networking;
 
+import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.Event;
 import com.riverssen.core.headers.TransactionI;
 
@@ -31,4 +32,6 @@ public interface NetworkManager
     int  amountNodesConnected();
 
     void downloadLongestChain();
+
+    void sendBlock(FullBlock block);
 }

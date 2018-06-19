@@ -187,6 +187,13 @@ public class Server implements NetworkManager
         });
     }
 
+    @Override
+    public void sendBlock(FullBlock block)
+    {
+        for(Communicator communicator : communications)
+            communicator.sendBlock(block);
+    }
+
     private void establishConnections()
     {
         for(String ipAddress : ipAddresses)

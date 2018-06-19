@@ -16,6 +16,7 @@ import com.riverssen.core.block.BlockData;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.*;
 import com.riverssen.core.security.PublicAddress;
+import com.riverssen.core.system.LatestBlockInfo;
 import com.riverssen.core.transactions.RewardTransaction;
 import com.riverssen.core.utils.*;
 
@@ -165,28 +166,9 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         double time = (System.currentTimeMillis() - this.body.getTimeStamp()) / 1000.0;
         Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: hashing took '" + time + "s' '" + this.hash + "'");
 
-        /** send solution **/
-        context.getBlockPool().Send(this);
+        /** Send Solution To Nodes **/
 
-        /** check solutions **/
-        List<FullBlock> solutions = context.getBlockPool().Fetch();
-
-        for (FullBlock block : solutions)
-        {
-            if (block.getBlockID() < getBlockID()) continue;
-            if(!block.getHeader().getParentHash().equals(getHeader().getParentHash())) continue;
-            if (block.validate(parent, context) == 0)
-            {
-                if (!(block.getHeader().getTimeStampAsLong() > getHeader().getTimeStampAsLong() - (150000 + new Random(System.currentTimeMillis()).nextInt(150000))
-                        && block.getHeader().getTimeStampAsLong() < getHeader().getTimeStampAsLong())) continue;
-
-                this.header.set(block.getHeader());
-                this.body.set(block.getBody());
-                this.hash = block.getHashAsString();
-
-                Logger.err("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: share orphaned to '" + this.hash + "'");
-            }
-        }
+        context.getNetworkManager().sendBlock(this);
     }
 
     public synchronized BlockHeader getHeader()
@@ -228,10 +210,12 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
 
             stream.flush();
             stream.close();
-        } catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        } catch (IOException e)
+
+            LatestBlockInfo info = new LatestBlockInfo(context.getConfig());
+            info.read();
+
+            info.write(getBlockID(), info.getLastBlockCheck(), info.getLastBlockCheckTimestamp(), info.getDifficulty(), info.getTotalHashes());
+        } catch (Exception e)
         {
             e.printStackTrace();
         }

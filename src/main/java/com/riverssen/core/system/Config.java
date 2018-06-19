@@ -173,7 +173,9 @@ public class Config
         long latestBlock =  info.getLatestBlock();
         long halfEvery   =  20000;
 
-        BigDecimal decimal = new BigDecimal("50").divide(new BigDecimal(latestBlock).divide(new BigDecimal(halfEvery), 20, RoundingMode.HALF_DOWN).round(MathContext.DECIMAL128).multiply(new BigDecimal(2)), 20, RoundingMode.HALF_DOWN);
+        if(latestBlock <= 0) return new RiverCoin("50.0").toRiverCoinString();
+
+        BigDecimal decimal = new BigDecimal("50").divide(new BigDecimal(latestBlock + 1).divide(new BigDecimal(halfEvery), 20, RoundingMode.HALF_DOWN).round(MathContext.DECIMAL128).multiply(new BigDecimal(2)), 20, RoundingMode.HALF_DOWN);
 
         return new RiverCoin(decimal).toRiverCoinString();
     }

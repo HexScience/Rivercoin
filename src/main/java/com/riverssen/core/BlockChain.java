@@ -87,7 +87,7 @@ public class BlockChain implements BlockChainI
 
         if(latestblock < 0) return;
 
-        this.block = new BlockHeader(latestblock, context).continueChain();
+        this.block = BlockHeader.FullBlock(latestblock, context);
 
         Logger.alert("block loaded successfully");
     }
@@ -142,10 +142,19 @@ public class BlockChain implements BlockChainI
             block = new FullBlock(-1, null);
         else block = block.getHeader().continueChain();
 
+        System.out.println(block.getBlockID());
+
+        System.exit(0);
+
         while(context.isRunning())
         {
             if(block.getBody().mine(context))
+            {
                 block.mine(context);
+                block.serialize(context);
+
+                block = block.getHeader().continueChain();
+            }
         }
     }
 

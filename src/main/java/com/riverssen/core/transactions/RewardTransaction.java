@@ -143,6 +143,8 @@ public class RewardTransaction implements TransactionI
     public void export(DataOutputStream dost)
     {
         try{
+            dost.writeInt(REWARD);
+
             receiver.export(dost);
             dost.writeLong(time);
             txids.export(dost);
