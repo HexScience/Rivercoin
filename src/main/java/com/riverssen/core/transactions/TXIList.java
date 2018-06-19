@@ -12,6 +12,7 @@
 
 package com.riverssen.core.transactions;
 
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.utils.ByteUtil;
@@ -41,7 +42,7 @@ public class TXIList extends ArrayList<TransactionInput> implements Encodeable, 
     }
     /** read all transaction inputs and return a rivercoin value **/
     /** this only works with Transactions & Rewards and not contracts **/
-    BigInteger getInputAmount()
+    BigInteger getInputAmount(ContextI context)
     {
         BigInteger amount = BigInteger.ZERO;
 

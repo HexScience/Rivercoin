@@ -134,7 +134,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         while (difficultyHash.length() < 64) difficultyHash = "0" + difficultyHash;
 
         Logger.alert("--------------------------------");
-        Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: new job {"+ algorithm.getClass().getSimpleName() + ":" + (difficultyHash) + "}");
+        Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: new job {"+ algorithm.getClass().getSimpleName() + "{" + algorithm.toString() + "}:" + (difficultyHash) + "}");
 
         this.body.setTime(System.currentTimeMillis());
         body.getMerkleTree().buildTree();
@@ -144,7 +144,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         ByteBuffer data = getBodyAsByteBuffer();
 
         /** add the reward BEFORE mining the block **/
-        body.add(new RewardTransaction(miner, algorithm.encode(data.array())));
+        body.addNoValidation(new RewardTransaction(miner, algorithm.encode(data.array())));
         /** rebuild tree to include reward **/
         body.getMerkleTree().buildTree();
 
@@ -154,7 +154,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         while (new BigInteger(hash, 16).compareTo(difficulty) > 0) { data.putLong(data.capacity() - 8, ++nonce); this.hash = algorithm.encode16(data.array()); }
 
         header.setHash(algorithm.encode(data.array()));
-        header.setParentHash(parent.getHash());
+        header.setParentHash(parentHash);
         header.setMerkleRoot(body.getMerkleTree().encode(algorithm));
         header.setTimeStamp(System.currentTimeMillis());
         header.setDifficulty(difficulty);

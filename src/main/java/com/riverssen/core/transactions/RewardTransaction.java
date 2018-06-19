@@ -12,7 +12,6 @@
 
 package com.riverssen.core.transactions;
 
-import com.riverssen.core.FullBlock;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.CompressedAddress;
@@ -54,7 +53,7 @@ public class RewardTransaction implements TransactionI
     @Override
     public boolean valid(ContextI context)
     {
-        return txids.getInputAmount().equals(new BigInteger(Config.getReward()));
+        return txids.getInputAmount(context).equals(new BigInteger(Config.getReward()));
     }
 
     @Override
@@ -144,8 +143,7 @@ public class RewardTransaction implements TransactionI
     public void export(DataOutputStream dost)
     {
         try{
-            dost.write(REWARD);
-            getSender().export(dost);
+            receiver.export(dost);
             dost.writeLong(time);
             txids.export(dost);
         } catch (Exception e)

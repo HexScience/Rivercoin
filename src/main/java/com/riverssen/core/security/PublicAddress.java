@@ -13,12 +13,16 @@
 package com.riverssen.core.security;
 
 import com.riverssen.core.RiverCoin;
+import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.headers.Encodeable;
+import com.riverssen.core.utils.SmartDataTransferer;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 
-public class PublicAddress implements Encodeable, Serializable
+public class PublicAddress implements Encodeable, Exportable, Serializable
 {
     private String address;
 
@@ -61,5 +65,28 @@ public class PublicAddress implements Encodeable, Serializable
     public boolean equals(CompressedAddress address)
     {
         return address.toPublicKey().getAddress().address.equals(this.address);
+    }
+
+    @Override
+    public byte[] header()
+    {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] content()
+    {
+        return new byte[0];
+    }
+
+    @Override
+    public void export(SmartDataTransferer smdt)
+    {
+    }
+
+    @Override
+    public void export(DataOutputStream dost) throws IOException
+    {
+        dost.write(Base58.decode(address));
     }
 }

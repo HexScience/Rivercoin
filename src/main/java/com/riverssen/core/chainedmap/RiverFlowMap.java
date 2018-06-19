@@ -25,6 +25,11 @@ import java.util.*;
 
 public class RiverFlowMap implements Encodeable
 {
+    public TransactionOutput getUTXO(byte[] transactionOutputID)
+    {
+        return null;
+    }
+
     static interface CallBack<K, V>{
         void onEvent(K k, V v);
     }

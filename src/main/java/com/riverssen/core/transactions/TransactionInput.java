@@ -12,6 +12,7 @@
 
 package com.riverssen.core.transactions;
 
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.utils.SmartDataTransferer;
@@ -22,10 +23,12 @@ import java.io.IOException;
 public class TransactionInput/**<T extends Encodeable & JSONFormattable & Exportable>**/ implements Encodeable, Exportable
 {
     private byte transactionOutputID[];
+    private TransactionOutput utxo;
 
     public TransactionInput(TransactionOutput utxo)
     {
         this.transactionOutputID    = utxo.getHash();
+        this.utxo                   = utxo;
     }
 
     public TransactionInput(byte transactionInputID[])
@@ -35,7 +38,7 @@ public class TransactionInput/**<T extends Encodeable & JSONFormattable & Export
 
     public TransactionOutput getUTXO()
     {
-        return UTXOManager.get(transactionOutputID);
+        return utxo;//context.getUtxoManager().getUTXO(transactionOutputID);
     }
 
     public byte[] getTransactionOutputID()

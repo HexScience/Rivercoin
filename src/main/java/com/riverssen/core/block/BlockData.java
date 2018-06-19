@@ -83,7 +83,7 @@ public class BlockData implements Encodeable, Exportable
 
     public boolean mine(ContextI context)
     {
-        return dataSize >= MAX_BLOCK_SIZE || context.getTransactionPool().getLastTransactionWas(34_000);
+        return dataSize >= MAX_BLOCK_SIZE || context.getTransactionPool().getLastTransactionWas(1);
     }
 
     public MerkleTree getMerkleTree()
@@ -137,6 +137,12 @@ public class BlockData implements Encodeable, Exportable
     {
         if (!token.valid(context)) return;
 
+        merkleTree.add(token);
+        dataSize += token.toJSON().getBytes().length;
+    }
+
+    public void addNoValidation(TransactionI token)
+    {
         merkleTree.add(token);
         dataSize += token.toJSON().getBytes().length;
     }

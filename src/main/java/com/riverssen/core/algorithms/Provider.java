@@ -100,6 +100,19 @@ public class Provider
                 hash = algorithms_[i].encode64(hash.getBytes());
             return hash;
         }
+
+        @Override
+        public String toString()
+        {
+            String text = "";
+
+            for(int i = 0; i < algorithms_.length; i++)
+                text += algorithms_[i].getClass().getSimpleName() + ", ";
+
+            text = text.substring(0, text.length() - 2);
+
+            return text;
+        }
     }
 
     public HashAlgorithm getRandomFromHash(byte hash[])
