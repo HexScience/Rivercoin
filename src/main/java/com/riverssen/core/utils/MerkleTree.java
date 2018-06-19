@@ -13,10 +13,8 @@
 package com.riverssen.core.utils;
 
 import com.riverssen.core.algorithms.Sha3;
-import com.riverssen.core.headers.Encodeable;
-import com.riverssen.core.headers.HashAlgorithm;
-import com.riverssen.core.headers.Serialisable;
-import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.headers.*;
+import com.riverssen.core.mpp.compiler.Token;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -253,5 +251,18 @@ public class MerkleTree implements Serialisable, Encodeable
 
             return ByteUtil.concatenate(left.getBytes(), right.getBytes());
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder("");
+
+        for(TransactionI transaction : list)
+            builder.append(transaction).append(", ");
+
+        if(builder.length() == 0) return "";
+
+        return builder.toString().substring(0, builder.toString().length() - 2);
     }
 }

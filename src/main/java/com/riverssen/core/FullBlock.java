@@ -255,7 +255,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     }
 
     @Override
-    public JSON toJSON() {
-        return new JSON().add();
+    public String toJSON() {
+        return new JSON().add(header.toString()).add(new JSON("body").add(body.getMerkleTree().toString()).toString()).toString();
     }
 }

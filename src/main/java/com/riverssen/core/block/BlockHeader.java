@@ -299,8 +299,18 @@ public class BlockHeader implements Encodeable, Exportable
     @Override
     public String toString()
     {
-        return new JSONFormattable.JSON("header").add("version", version + "").add("hash", HashUtil.hashToStringBase16(hash)).add("merkleRoot", HashUtil.hashToStringBase16(merkleRoot))
-                .add("riverRoot", Base58.encode(riverMerkleRoot)).add("timestamp", timeStamp + "").add("difficulty", new BigInteger(difficulty).toString()).add("miner", Base58.encode(minerAddress)).add("nonce", nonce + "").add("block", blockID + "").add("reward", new RiverCoin(new BigInteger(reward)).toRiverCoinString()).toString();
+        return new JSONFormattable.JSON("header")
+                .add("version", version + "")
+                .add("hash", HashUtil.hashToStringBase16(hash))
+                .add("parent", HashUtil.hashToStringBase16(parentHash))
+                .add("merkleRoot", HashUtil.hashToStringBase16(merkleRoot))
+                .add("riverRoot", Base58.encode(riverMerkleRoot))
+                .add("timestamp", timeStamp + "")
+                .add("difficulty", new BigInteger(difficulty).toString())
+                .add("miner", Base58.encode(minerAddress))
+                .add("nonce", nonce + "")
+                .add("block", blockID + "")
+                .add("reward", new RiverCoin(new BigInteger(reward)).toRiverCoinString()).toString();
     }
 
     @Override
