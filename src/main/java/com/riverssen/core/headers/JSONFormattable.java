@@ -56,6 +56,13 @@ public interface JSONFormattable
 
             return this;
         }
+        public JSON add(String data)
+        {
+            this.json.append(added ? ", " : "").append(data);
+            this.added = true;
+
+            return this;
+        }
 
         @Override
         public String toString() {
