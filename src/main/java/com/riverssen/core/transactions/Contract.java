@@ -97,13 +97,17 @@ public class Contract implements TransactionI
     @Override
     public BigInteger getInputAmount()
     {
-        return null;
+        BigInteger amount = BigInteger.ZERO;
+
+        for(TransactionInput txi : fees)
+            amount = amount.add(((txi.getUTXO()).getValue().toBigInteger()));
+
+        return amount;
     }
 
     @Override
     public void revertOutputs(PublicAddress miner, ContextI context)
     {
-
     }
 
     @Override
