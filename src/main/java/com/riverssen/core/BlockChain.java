@@ -138,11 +138,12 @@ public class BlockChain implements BlockChainI
 
 //        Validate();
 
+        System.out.println(block.toJSON());
+
         if(block == null)
             block = new FullBlock(-1, null);
         else block = block.getHeader().continueChain();
 
-        System.out.println(block.toJSON());
 
         System.exit(0);
 

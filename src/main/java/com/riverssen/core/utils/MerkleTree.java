@@ -256,13 +256,11 @@ public class MerkleTree implements Serialisable, Encodeable
     @Override
     public String toString()
     {
-        StringBuilder builder = new StringBuilder("");
+        JSONFormattable.JSON json = new JSONFormattable.JSON("transactions");
 
         for(TransactionI transaction : list)
-            builder.append(transaction).append(", ");
+            json.addJSONString(transaction.encode58(ByteUtil.defaultEncoder()), transaction.toJSON());
 
-        if(builder.length() == 0) return "";
-
-        return builder.toString().substring(0, builder.toString().length() - 2);
+        return json.toString();
     }
 }

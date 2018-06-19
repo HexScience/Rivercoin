@@ -49,6 +49,14 @@ public interface JSONFormattable
 
             return this;
         }
+
+        public JSON addJSONString(String name, String value)
+        {
+            this.json.append(added ? ", " : "").append(quote).append(name).append(quote).append(colon).append(value);
+            this.added = true;
+
+            return this;
+        }
         public JSON add(String name, JSON json)
         {
             this.json.append(added ? ", " : "").append(quote).append(name).append(quote).append(colon).append(quote).append(json.json.toString()).append(quote);
