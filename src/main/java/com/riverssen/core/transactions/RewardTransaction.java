@@ -18,6 +18,7 @@ import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.SmartDataTransferer;
 
@@ -113,11 +114,18 @@ public class RewardTransaction implements TransactionI
 
     @Override
     public String toJSON() {
-        return "{"+
-                jsonLine("type", "reward") + comma() +
-                jsonLine("miner", getReceiver().toString()) + comma() +
-                jsonLine("time", getTimeStamp() + "")
-            + "}";
+        JSON json = new JSON().add("type", "reward").add("receiver", getReceiver().toString()).add("timestamp", getTimeStamp() + "");
+
+        String inputs = new String("\"inputs\":[");
+
+        for(TransactionInput input : txids)
+            inputs += ("\"" + Base58.encode(input.getTransactionOutputID()) + "\"") + ", ";
+
+        inputs = inputs.substring(0, inputs.length() - 2) + "]";
+
+        json.add(inputs);
+
+        return json.toString();
     }
 
     @Override
