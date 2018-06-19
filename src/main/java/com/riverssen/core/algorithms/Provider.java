@@ -13,6 +13,8 @@
 package com.riverssen.core.algorithms;
 
 import com.riverssen.core.headers.HashAlgorithm;
+import com.riverssen.core.utils.Base58;
+import com.riverssen.core.utils.HashUtil;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -64,41 +66,25 @@ public class Provider
         @Override
         public String encode16(byte[] data)
         {
-            String hash = algorithms_[0].encode16(data);
-
-            for(int i = 1; i < algorithms_.length; i ++)
-                hash = algorithms_[i].encode16(hash.getBytes());
-            return hash;
+            return HashUtil.hashToStringBase16(encode(data));
         }
 
         @Override
         public String encode32(byte[] data)
         {
-            String hash = algorithms_[0].encode32(data);
-
-            for(int i = 1; i < algorithms_.length; i ++)
-                hash = algorithms_[i].encode32(hash.getBytes());
-            return hash;
+            return HashUtil.base36Encode(encode(data));
         }
 
         @Override
         public String encode58(byte[] data)
         {
-            String hash = algorithms_[0].encode58(data);
-
-            for(int i = 1; i < algorithms_.length; i ++)
-                hash = algorithms_[i].encode58(hash.getBytes());
-            return hash;
+            return Base58.encode(encode(data));
         }
 
         @Override
         public String encode64(byte[] data)
         {
-            String hash = algorithms_[0].encode64(data);
-
-            for(int i = 1; i < algorithms_.length; i ++)
-                hash = algorithms_[i].encode64(hash.getBytes());
-            return hash;
+            return HashUtil.base64StringEncode(encode(data));
         }
 
         @Override

@@ -151,7 +151,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         long nonce = 0;
         this.hash = algorithm.encode16(data.array());
 
-        while (new BigInteger(hash, 16).compareTo(difficulty) > 0) { data.putLong(data.capacity() - 8, ++nonce); this.hash = algorithm.encode16(data.array()); }
+        while (new BigInteger(hash, 16).compareTo(difficulty) >= 0) { data.putLong(data.capacity() - 8, ++nonce); this.hash = algorithm.encode16(data.array()); }
 
         header.setHash(algorithm.encode(data.array()));
         header.setParentHash(parentHash);
