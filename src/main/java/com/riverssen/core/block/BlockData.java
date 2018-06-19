@@ -95,8 +95,10 @@ public class BlockData implements Encodeable, Exportable
 
     public boolean transactionsValid()
     {
-        Set<TransactionI> flat = new LinkedHashSet<>();
-        flat.addAll(merkleTree.flatten());
+        List<TransactionI> flat = merkleTree.flatten();
+
+//        Set<TransactionI> flat = new LinkedHashSet<>();
+//        flat.addAll(merkleTree.flatten());
 
         for (TransactionI token : flat)
             if (!token.valid(context)) return false;
