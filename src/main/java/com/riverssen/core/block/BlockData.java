@@ -25,7 +25,9 @@ import com.riverssen.core.utils.SmartDataTransferer;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.InflaterInputStream;
 
 public class BlockData implements Encodeable, Exportable
@@ -93,7 +95,9 @@ public class BlockData implements Encodeable, Exportable
 
     public boolean transactionsValid()
     {
-        List<TransactionI> flat = merkleTree.flatten();
+        Set<TransactionI> flat = new LinkedHashSet<>();
+        flat.addAll(merkleTree.flatten());
+
         for (TransactionI token : flat)
             if (!token.valid(context)) return false;
         return true;
