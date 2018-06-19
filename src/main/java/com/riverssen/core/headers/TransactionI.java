@@ -45,6 +45,7 @@ public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSON
     {
         try {
             int type = stream.read();
+
             if(type         == TRANSACTION)     return new Transaction(stream);
             else if(type    == REWARD)          return new RewardTransaction(stream);
             else if(type    == CONTRACT)        return new Contract(stream);

@@ -274,9 +274,12 @@ public class BlockHeader implements Encodeable, Exportable
         {
             stream = new DataInputStream(new InflaterInputStream(new FileInputStream(file)));
             BlockHeader header = new BlockHeader(stream);
-            System.out.println(header);
-            System.exit(0);
+//            System.out.println(header);
+//            System.exit(0);
             BlockHeader parent = new BlockHeader(header.getBlockID(), context);
+
+//            System.out.println("        System.out.println(\"hi\");\n");
+
             FullBlock fBlock = new FullBlock(header, new BlockData(stream), parent);
 
             stream.close();

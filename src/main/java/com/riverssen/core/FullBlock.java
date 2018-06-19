@@ -256,6 +256,6 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
 
     @Override
     public String toJSON() {
-        return null;
+        return new JSON().add();
     }
 }
