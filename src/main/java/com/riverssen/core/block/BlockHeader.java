@@ -76,6 +76,21 @@ public class BlockHeader implements Encodeable, Exportable
         blockID = stream.readLong();
     }
 
+    @Override
+    public void export(DataOutputStream dost) throws IOException
+    {
+        dost.writeLong(version);
+        dost.write(hash);
+        dost.write(parentHash);
+        dost.write(merkleRoot);
+        dost.write(riverMerkleRoot);
+        dost.writeLong(timeStamp);
+        dost.write(difficulty);
+        dost.write(minerAddress);
+        dost.writeLong(nonce);
+        dost.writeLong(blockID);
+    }
+
     public BlockHeader(long block, ContextI context)
     {
         if(block < 0) return;
@@ -127,7 +142,7 @@ public class BlockHeader implements Encodeable, Exportable
         return merkleRoot;
     }
 
-    public byte[] getTimeStamp()
+    public long getTimeStamp()
     {
         return timeStamp;
     }
@@ -142,7 +157,7 @@ public class BlockHeader implements Encodeable, Exportable
         return minerAddress;
     }
 
-    public byte[] getNonce()
+    public long getNonce()
     {
         return nonce;
     }
@@ -154,7 +169,7 @@ public class BlockHeader implements Encodeable, Exportable
 
     public long getBlockID()
     {
-        return ByteUtil.decode(blockID);
+        return blockID;
     }
 
     public String getParentHashAsString()
@@ -169,7 +184,7 @@ public class BlockHeader implements Encodeable, Exportable
 
     public long getTimeStampAsLong()
     {
-        return ByteUtil.decode(getTimeStamp());
+        return getTimeStamp();
     }
 
     public BigInteger getDifficultyAsInt()
@@ -179,7 +194,7 @@ public class BlockHeader implements Encodeable, Exportable
 
     public long getNonceAsInt()
     {
-        return ByteUtil.decode(getNonce());
+        return getNonce();
     }
 
     public PublicAddress getMinerAddressAsPublicAddress()
@@ -204,29 +219,18 @@ public class BlockHeader implements Encodeable, Exportable
 
     public void setTimeStamp(long serializable)
     {
-        timeStamp[0] = (byte) (serializable >> 56);
-        timeStamp[1] = (byte) (serializable >> 48);
-        timeStamp[2] = (byte) (serializable >> 40);
-        timeStamp[3] = (byte) (serializable >> 32);
-        timeStamp[4] = (byte) (serializable >> 24);
-        timeStamp[5] = (byte) (serializable >> 16);
-        timeStamp[6] = (byte) (serializable >> 8);
-        timeStamp[7] = (byte) serializable;
+        this.timeStamp = serializable;
+    }
+
+    public void setMiner(PublicAddress address)
+    {
+        this.minerAddress = address.getBytes();
     }
 
     @Override
     public byte[] getBytes()
     {
-        return ByteUtil.concatenate(
-                version,
-                hash,
-                parentHash,
-                merkleRoot,
-                timeStamp,
-                difficulty,
-                minerAddress,
-                nonce,
-                blockID);
+        return null;
     }
 
     public void setDifficulty(BigInteger difficulty)
@@ -250,14 +254,7 @@ public class BlockHeader implements Encodeable, Exportable
 
     public void setBlockID(long blockID)
     {
-        this.blockID[0] = (byte) (blockID >> 56);
-        this.blockID[1] = (byte) (blockID >> 48);
-        this.blockID[2] = (byte) (blockID >> 40);
-        this.blockID[3] = (byte) (blockID >> 32);
-        this.blockID[4] = (byte) (blockID >> 24);
-        this.blockID[5] = (byte) (blockID >> 16);
-        this.blockID[6] = (byte) (blockID >> 8);
-        this.blockID[7] = (byte)  blockID;
+        this.blockID = blockID;
     }
 
     public FullBlock continueChain()
@@ -307,9 +304,13 @@ public class BlockHeader implements Encodeable, Exportable
     {
     }
 
-    @Override
-    public void export(DataOutputStream dost) throws IOException
+    public void setRiverMerkleRoot(byte[] encode)
     {
-        dost.write(getBytes());
+        this.riverMerkleRoot = encode;
+    }
+
+    public void setVersion(long versionBytes)
+    {
+        this.version = versionBytes;
     }
 }

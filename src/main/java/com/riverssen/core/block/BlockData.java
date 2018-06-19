@@ -184,5 +184,12 @@ public class BlockData implements Encodeable, Exportable
     @Override
     public void export(DataOutputStream dost) throws IOException
     {
+        try
+        {
+            getMerkleTree().serialize(dost);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

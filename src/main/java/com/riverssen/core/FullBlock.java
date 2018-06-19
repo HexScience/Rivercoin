@@ -139,12 +139,31 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
 
         //System.out.println(new RewardTransaction(miner).toJSON());
 
-        ByteBuffer data = getBodyAsByteBuffer();
-
         /** add the reward BEFORE mining the block **/
-        body.addNoValidation(new RewardTransaction(miner, algorithm.encode(data.array())));
+        body.addNoValidation(new RewardTransaction(miner, algorithm.encode(body.getBytes())));
         /** rebuild tree to include reward **/
         body.getMerkleTree().buildTree();
+
+//        dost.writeLong(version);
+//        dost.write(hash);
+//        dost.write(parentHash);
+//        dost.write(merkleRoot);
+//        dost.write(riverMerkleRoot);
+//        dost.writeLong(timeStamp);
+//        dost.write(difficulty);
+//        dost.write(minerAddress);
+//        dost.writeLong(nonce);
+//        dost.writeLong(blockID);
+
+        header.setVersion(context.getVersionBytes());
+        header.setParentHash(parentHash);
+        header.setMerkleRoot(body.getMerkleTree().encode(ByteUtil.defaultEncoder()));
+        header.setRiverMerkleRoot(body.getMerkleTree().encode(ByteUtil.defaultEncoder()));
+        header.setTimeStamp(body.getTimeStamp());
+        header.setDifficulty(difficulty);
+        header.setMiner(context.getMiner());
+
+        ByteBuffer data = getBodyAsByteBuffer();
 
         long nonce = 0;
         this.hash = algorithm.encode16(data.array());
@@ -152,12 +171,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         while (new BigInteger(hash, 16).compareTo(difficulty) >= 0) { data.putLong(data.capacity() - 8, ++nonce); this.hash = algorithm.encode16(data.array()); }
 
         header.setHash(algorithm.encode(data.array()));
-        header.setParentHash(parentHash);
-        header.setMerkleRoot(body.getMerkleTree().encode(algorithm));
-        header.setTimeStamp(System.currentTimeMillis());
-        header.setDifficulty(difficulty);
         header.setNonce(nonce);
-        header.setMinerAddress(miner.toString().getBytes());
         this.hash = header.getHashAsString();
 
         double time = (System.currentTimeMillis() - this.body.getTimeStamp()) / 1000.0;
@@ -202,8 +216,8 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         {
             DataOutputStream stream = new DataOutputStream(new DeflaterOutputStream(new FileOutputStream(file)));
 
-            stream.write(header.getBytes());
-            stream.write(body.getBytes());
+            header.export(stream);
+            body.export(stream);
 
             stream.flush();
             stream.close();
@@ -235,12 +249,10 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
 
     @Override
     public void export(SmartDataTransferer smdt) {
-
     }
 
     @Override
     public void export(DataOutputStream dost) {
-
     }
 
     @Override
