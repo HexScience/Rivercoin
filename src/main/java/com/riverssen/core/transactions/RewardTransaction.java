@@ -121,7 +121,9 @@ public class RewardTransaction implements TransactionI
         for(TransactionInput input : txids)
             inputs += ("\"" + Base58.encode(input.getTransactionOutputID()) + "\"") + ", ";
 
+        if(inputs.length() > 0)
         inputs = inputs.substring(0, inputs.length() - 2) + "]";
+        else inputs = "[]";
 
         json.add(inputs);
 
