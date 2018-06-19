@@ -242,7 +242,7 @@ public class Transaction implements TransactionI, Encodeable
             dost.write(TRANSACTION);
 
             sender.export(dost);
-            dost.write(receiver.getBytes());
+            receiver.export(dost);
             txids.export(dost);
             amount.export(dost);
             dost.write(data);
