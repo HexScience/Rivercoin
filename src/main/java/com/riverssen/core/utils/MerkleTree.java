@@ -44,7 +44,7 @@ public class MerkleTree implements Serialisable, Encodeable
     @Override
     public void serialize(DataOutputStream stream) throws Exception
     {
-        stream.writeShort(this.size);
+        stream.writeInt(this.size);
 
         for (TransactionI token : list)
             token.export(stream);

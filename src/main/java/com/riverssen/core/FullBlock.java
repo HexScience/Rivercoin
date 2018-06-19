@@ -192,7 +192,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     private synchronized ByteBuffer getBodyAsByteBuffer()
     {
         byte bodydata[] = getBytes();
-        ByteBuffer data = ByteBuffer.allocate(32 + 32 + 20 + 32 + 8 + 8 + 32 + bodydata.length + 8);
+        ByteBuffer data = ByteBuffer.allocate(32 + 32 + 20 + 32 + 8 + 8 + 32 + RiverCoin.MAX_BYTES + bodydata.length + 8);
         data.put(header.getParentHash());
         data.put(header.getDifficulty());
         data.put(header.getMinerAddress());
@@ -200,6 +200,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         data.putLong(header.getBlockID());
         data.putLong(header.getVersion());
         data.put(header.getrvcRoot());
+        data.put(header.getReward());
         data.put(bodydata);
         data.putLong(0);
         data.flip();

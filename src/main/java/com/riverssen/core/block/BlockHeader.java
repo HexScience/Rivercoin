@@ -341,4 +341,9 @@ public class BlockHeader implements Encodeable, Exportable
     {
         this.reward = riverCoin.getBytes();
     }
+
+    public byte[] getReward()
+    {
+        return reward;
+    }
 }
