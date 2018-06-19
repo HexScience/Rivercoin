@@ -54,7 +54,7 @@ public class RivercoinCore
         System.out.println("--------------------Welcome To Rivercoin Core-------------------");
         System.out.println("----------------------------------------------------------------");
         Logger.alert("usable cpu threads: " + config.getMaxMiningThreads());
-    type = "node";
+    type = "miner";
         switch (type)
         {
             case "node":    context = new NodeContext(config);          break;

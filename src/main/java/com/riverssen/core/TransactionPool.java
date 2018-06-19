@@ -29,6 +29,7 @@ public class TransactionPool
     {
         pool = new LinkedHashSet<>();
         context = network;
+        lastTransactionTime = System.currentTimeMillis();
     }
 
     public void addInternal(TransactionI token)

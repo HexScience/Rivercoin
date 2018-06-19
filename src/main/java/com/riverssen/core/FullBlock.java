@@ -124,7 +124,9 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
      **/
     public synchronized void mine(ContextI context)
     {
-        HashAlgorithm algorithm     = context.getHashAlgorithm(this.parent.getHash());
+        byte parentHash[] = this.parent != null ? this.parent.getHash() : new byte[32];
+
+        HashAlgorithm algorithm     = context.getHashAlgorithm(parentHash);
         BigInteger    difficulty    = context.getDifficulty();
         PublicAddress miner         = context.getMiner();
 
