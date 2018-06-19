@@ -153,6 +153,8 @@ public class BlockChain implements BlockChainI
                 block.mine(context);
                 block.serialize(context);
 
+                System.exit(0);
+
                 block = block.getHeader().continueChain();
             }
         }

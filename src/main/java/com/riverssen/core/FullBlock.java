@@ -42,24 +42,21 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     private BlockHeader header;
     /** this blocks body **/
     private BlockData   body;
-
-    private long        timeCreated;
+    /** this transaction **/
 
     public FullBlock(BlockHeader header, BlockData data, BlockHeader parent)
     {
-        this.header = header;
-        this.body = data;
-        this.parent = parent;
-        this.timeCreated = System.currentTimeMillis();
+        this.header             = header;
+        this.body               = data;
+        this.parent             = parent;
     }
 
     public FullBlock(long lastBlock, BlockHeader parent)
     {
-        this.header = new BlockHeader();
-        this.body   = new BlockData();
-        this.parent = parent;
+        this.header         = new BlockHeader();
+        this.body           = new BlockData();
+        this.parent         = parent;
         this.header.setBlockID(lastBlock + 1);
-        this.timeCreated = System.currentTimeMillis();
     }
 
     public FullBlock(DataInputStream in)

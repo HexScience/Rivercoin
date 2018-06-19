@@ -27,27 +27,27 @@ import java.util.zip.InflaterInputStream;
 
 public class BlockHeader implements Encodeable, Exportable
 {
-    public static long SIZE = 32 + 32 + 32 + 8 + 32 + 20 + 8 + 8;
+    public static long SIZE = 8 + 32 + 32 + 32 + 32 + 8 + 32 + 20 + 8 + 8;
     /** 2 byte version information **/
-    private final byte version[] = new byte[2];
+    private long version;
     /** 32 byte hash of **/
-    private final byte hash[] = new byte[32];
+    private byte hash[] = new byte[32];
     /** 32 byte hash of the block **/
-    private final byte parentHash[] = new byte[32];
+    private byte parentHash[] = new byte[32];
     /** 32 byte hash of the merkle root **/
-    private final byte merkleRoot[] = new byte[32];
+    private byte merkleRoot[] = new byte[32];
     /** 32 byte hash of the UTXOChainmerkle root **/
-    private final byte riverMerkleRoot[] = new byte[32];
+    private byte riverMerkleRoot[] = new byte[32];
     /** 8 byte integer of the blocks timestamp **/
-    private final byte timeStamp[] = new byte[8];
+    private long timeStamp;
     /** 32 byte integer of the difficulty **/
-    private final byte difficulty[] = new byte[32];
+    private byte difficulty[] = new byte[32];
     /** 20 byte hash of the miners public address **/
-    private final byte minerAddress[] = new byte[20];
+    private byte minerAddress[] = new byte[20];
     /** 8 byte integer solution **/
-    private final byte nonce[] = new byte[8];
+    private long nonce;
     /** 8 byte integer referencing the block id **/
-    private final byte blockID[] = new byte[8];
+    private long blockID;
 
     public BlockHeader(String hash, String parentHash, String merkleRoot, MerkleTree tree, long timeStamp, BigInteger difficulty, PublicAddress minerAddress, long nonce)
     {
@@ -62,6 +62,20 @@ public class BlockHeader implements Encodeable, Exportable
     {
     }
 
+    private void read(DataInputStream stream) throws IOException
+    {
+        version = stream.readLong();
+        stream.read(hash);
+        stream.read(parentHash);
+        stream.read(merkleRoot);
+        stream.read(riverMerkleRoot);
+        timeStamp = stream.readLong();
+        stream.read(difficulty);
+        stream.read(minerAddress);
+        nonce = stream.readLong();
+        blockID = stream.readLong();
+    }
+
     public BlockHeader(long block, ContextI context)
     {
         if(block < 0) return;
@@ -72,15 +86,7 @@ public class BlockHeader implements Encodeable, Exportable
         {
             DataInputStream stream = new DataInputStream(new InflaterInputStream(new FileInputStream(file)));
 
-            stream.read(version);
-            stream.read(hash);
-            stream.read(parentHash);
-            stream.read(merkleRoot);
-            stream.read(timeStamp);
-            stream.read(difficulty);
-            stream.read(minerAddress);
-            stream.read(nonce);
-            stream.read(blockID);
+            read(stream);
 
             stream.close();
         } catch (FileNotFoundException e)
@@ -96,15 +102,7 @@ public class BlockHeader implements Encodeable, Exportable
     {
         try
         {
-            stream.read(version);
-            stream.read(hash);
-            stream.read(parentHash);
-            stream.read(merkleRoot);
-            stream.read(timeStamp);
-            stream.read(difficulty);
-            stream.read(minerAddress);
-            stream.read(nonce);
-            stream.read(blockID);
+            read(stream);
         } catch (FileNotFoundException e)
         {
             e.printStackTrace();
@@ -219,7 +217,16 @@ public class BlockHeader implements Encodeable, Exportable
     @Override
     public byte[] getBytes()
     {
-        return ByteUtil.concatenate(version, hash, parentHash, merkleRoot, timeStamp, difficulty, minerAddress, nonce, blockID);
+        return ByteUtil.concatenate(
+                version,
+                hash,
+                parentHash,
+                merkleRoot,
+                timeStamp,
+                difficulty,
+                minerAddress,
+                nonce,
+                blockID);
     }
 
     public void setDifficulty(BigInteger difficulty)
