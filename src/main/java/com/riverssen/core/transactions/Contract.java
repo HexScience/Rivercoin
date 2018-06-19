@@ -14,6 +14,7 @@ package com.riverssen.core.transactions;
 
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.mpp.compiler.Namespace;
 import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
@@ -28,26 +29,16 @@ import java.util.List;
 
 public class Contract implements TransactionI
 {
-    private byte bytecode[];
-    private int computationalCost;
+    private CompressedAddress sender;
+    private Namespace         global;
+    private long              timestamp;
 
     public Contract(DataInputStream stream)
     {
     }
 
-    public Contract(byte bytecode[])
+    public Contract(String text)
     {
-        this.bytecode = bytecode;
-    }
-
-    public static Contract generate(String code)
-    {
-        return new Contract(byteCode());
-    }
-
-    private static byte[] byteCode()
-    {
-        return new byte[0];
     }
 
     @Override
@@ -89,7 +80,7 @@ public class Contract implements TransactionI
     @Override
     public RiverCoin cost()
     {
-        return new RiverCoin(Config.getCost(computationalCost));
+        return null;
     }
 
     @Override
@@ -101,6 +92,7 @@ public class Contract implements TransactionI
     @Override
     public void revertOutputs(PublicAddress miner, ContextI context)
     {
+
     }
 
     @Override
@@ -124,18 +116,13 @@ public class Contract implements TransactionI
     @Override
     public void export(SmartDataTransferer smdt)
     {
+
     }
 
     @Override
-    public void export(DataOutputStream dost)
+    public void export(DataOutputStream dost) throws IOException
     {
-        try
-        {
-            dost.write(CONTRACT);
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+
     }
 
     @Override
