@@ -17,11 +17,9 @@ import com.riverssen.core.mpp.compiler.Message;
 import com.riverssen.core.networking.messages.BasicMessage;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class Client
+public class Client implements Runnable
 {
     private SocketConnection          connection;
     private ContextI                  context;
@@ -38,6 +36,8 @@ public class Client
     {
         this.connection = connection;
         this.context    = context;
+        this.cache      = new LinkedHashMap<>();
+        this.toSend     = new LinkedHashSet<>();
     }
 
     public synchronized void sendMessage(BasicMessage message)
@@ -172,5 +172,28 @@ public class Client
     public synchronized long getChainSize()
     {
         return chainSize;
+    }
+
+    @Override
+    public void run()
+    {
+        while (context.isRunning())
+        {
+            try
+            {
+                update();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+
+            try
+            {
+                Thread.sleep(12L);
+            } catch (InterruptedException e)
+            {
+                e.printStackTrace();;
+            }
+        }
     }
 }
