@@ -62,7 +62,7 @@ public class Contracts
 
         global.callMethod("tests");
 
-        System.out.println("object: " + global.get("int").get("c"));
+        System.out.println("object: " + global.get("tests").get("c"));
 
         global.get("tests").callMethod("helloMath");
 

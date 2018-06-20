@@ -15,11 +15,9 @@ package com.riverssen.core.mpp.compiler;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.mpp.exceptions.CompileException;
+import com.riverssen.core.mpp.objects.*;
 import com.riverssen.core.mpp.objects.Float;
 import com.riverssen.core.mpp.objects.Integer;
-import com.riverssen.core.mpp.objects.mapped_set;
-import com.riverssen.core.mpp.objects.set;
-import com.riverssen.core.mpp.objects.uint256;
 
 import java.io.*;
 
@@ -27,7 +25,10 @@ public class Namespace extends Container implements Serializable
 {
     public Namespace(Token ns) throws CompileException
     {
-        if (ns.getType().equals(Token.Type.ROOT)) name = "global";
+        if (ns.getType().equals(Token.Type.ROOT)) {
+            name = "global";
+            setGlobal();
+        }
         else if (ns.getType().equals(Token.Type.NAMESPACE)) name = ns.toString();
 
         for (Token token : ns.getTokens())
@@ -36,6 +37,9 @@ public class Namespace extends Container implements Serializable
             else if (token.getType().equals(Token.Type.METHOD_DECLARATION)) addMethod(token);
             else if (token.getType().equals(Token.Type.EMPTY_DECLARATION)) addDeclaration(token);
             else if (token.getType().equals(Token.Type.FULL_DECLARATION)) addDeclaration(token);
+
+        if (ns.getType().equals(Token.Type.ROOT))
+            setGlobal();
     }
 
     public static void check(Token methodCall)
@@ -67,6 +71,8 @@ public class Namespace extends Container implements Serializable
         setGlobal(this);
 
         setField("int", new Integer(0));
+        setField("string", new StringObject("null"));
+        setField("String", new StringObject("null"));
         setField("uint", new Integer(0));
         setField("uint256", new uint256("0"));
         setField("float", new Float(0));

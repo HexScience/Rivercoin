@@ -41,7 +41,7 @@ public class AST
 
     private void enterClass(Token clasz) throws CompileException
     {
-        Class clss = new Class(clasz);
+        Class clss = new Class(clasz, null);
         if(classes.containsKey(clss.getName())) throw new CompileException("Class already exists", clasz);
         classes.put(clss.getName(), clss);
 

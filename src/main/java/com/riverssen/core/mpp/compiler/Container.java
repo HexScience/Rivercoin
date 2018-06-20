@@ -42,13 +42,14 @@ public abstract class Container implements Serializable
     protected void addNameSpace(Token token) throws CompileException
     {
         Namespace ns = new Namespace(token);
+        ns.setGlobal(getGlobal());
         if(this.globalMap.containsKey(ns.getName())) throw new CompileException("namespace '" + ns.getName() + "' already defined.", token);
         this.globalMap.put(ns.getName(), ns);
     }
 
     protected void addClass(Token token) throws CompileException
     {
-        Class ns = new Class(token);
+        Class ns = new Class(token, getGlobal());
         if(this.globalMap.containsKey(ns.getName())) throw new CompileException("class '" + ns.getName() + "' already defined.", token);
         this.globalMap.put(ns.getName(), ns);
     }
@@ -56,15 +57,20 @@ public abstract class Container implements Serializable
     protected void addMethod(Token token) throws CompileException
     {
         Method ns = new Method(token);
+        ns.setGlobal(getGlobal());
         if(this.globalMap.containsKey(ns.getName())) throw new CompileException("method '" + ns.getName() + "' already defined.", token);
         this.globalMap.put(ns.getName(), ns);
     }
 
     protected void addDeclaration(Token token) throws CompileException
     {
-        Field ns = new Field(token);
-        if(this.globalMap.containsKey(ns.getName())) throw new CompileException("field '" + ns.getName() + "' already defined.", token);
-        this.globalMap.put(ns.getName(), ns);
+        if(token.getType().equals(Token.Type.FULL_DECLARATION))
+            token.interpret(this, this, this, this, false);
+        else {
+            Field ns = new Field(token);
+            if(this.globalMap.containsKey(ns.getName())) throw new CompileException("field '" + ns.getName() + "' already defined.", token);
+            this.globalMap.put(ns.getName(), ns);
+        }
     }
 
     protected static Container execute(ByteBuffer opcodes, Stack<Container> stack, Container context, Container self, Container ...args)
@@ -253,5 +259,9 @@ public abstract class Container implements Serializable
     public String getType()
     {
         return "object";
+    }
+
+    protected void initializeField(Container parent) throws CompileException
+    {
     }
 }

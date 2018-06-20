@@ -11,10 +11,9 @@
 //
 
 class tests {
-    private int c
+    private int c = 9
 
     function tests() : void{
-        this.c = 9
     }
 
     function helloMath() : void

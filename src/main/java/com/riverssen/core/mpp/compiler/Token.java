@@ -227,10 +227,10 @@ public class Token implements Serializable
 
     public Container interpret(Container context, Container self, Container fcontext, Container fself, Container initType, boolean proc, boolean mproc, Container ...args) throws CompileException
     {
-        this.interpret(context, self, fcontext, fself, initType, proc, mproc, args);
+        return this.interpret("null", context, self, fcontext, fself, initType, proc, mproc, args);
     }
 
-    public Container interpret(StringContainer context, Container self, Container fcontext, Container fself, Container initType, boolean proc, boolean mproc, Container ...args) throws CompileException
+    public Container interpret(String accessorType, Container context, Container self, Container fcontext, Container fself, Container initType, boolean proc, boolean mproc, Container ...args) throws CompileException
     {
         switch (type)
         {
@@ -281,7 +281,17 @@ public class Token implements Serializable
                 String name = getTokens().get(1).toString();
                 Token value = getTokens().get(2);
 
-                Container initType0 = fself.getGlobal().get(type.toString());
+                Container initType0 = null;
+
+                try{
+                    initType0 = fself.getGlobal().get(type.toString());
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+//                if (initType0 == null)
+//                    throw new CompileException("Type '" + type + "' doesn't exist.", this);
 
                 if (context.get(name) != null) throw new CompileException("object '" + name + "' already defined.", this);
 
@@ -316,8 +326,8 @@ public class Token implements Serializable
                 }
                 break;
             case PROCEDURAL_ACCESS:
-                Container returnee = getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);//self;
-
+                Container returnee   = getTokens().get(0).interpret(context, self, fcontext, fself, proc, args);//self;
+                String accessor_type = returnee.name;
 //                Container rvlue = getRoot().get(0).interpret(context, self, args);
 
 //                if(context.get(getRoot().get(0).toString()) != null) returnee = context.get(getRoot().get(0).toString());
@@ -336,7 +346,7 @@ public class Token implements Serializable
                         {
                             initType0_ = Container.VOID;
                         }
-                        Container returnedValue__ = value__.interpret(context, self, fcontext, fself, initType0_, true, false, args);
+                        Container returnedValue__ = value__.interpret(accessor_type, context, self, fcontext, fself, initType0_, true, false, args);
 
                         returnee.setField(name__, returnedValue__);
                     }
@@ -346,12 +356,12 @@ public class Token implements Serializable
                         {
                             initType0_ = Container.VOID;
                         }
-                        Container returnedValue__ = value__.interpret(context, self, fcontext, fself, initType0_, true, false, args);
+                        Container returnedValue__ = value__.interpret(accessor_type, context, self, fcontext, fself, initType0_, true, false, args);
 
                         self.setField(name__, returnedValue__);
                     }
                 } else
-                return getTokens().get(1).interpret(returnee, Container.EMPTY, fcontext, fself, true, args);
+                return getTokens().get(1).interpret(accessor_type, returnee, Container.EMPTY, fcontext, fself, initType, true, false, args);
             case VALUE:
                     return getTokens().get(0).interpret(context, self, fcontext, fself, initType, proc, mproc, args);
             case INPUT:

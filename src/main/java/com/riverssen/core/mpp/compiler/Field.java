@@ -12,6 +12,8 @@
 
 package com.riverssen.core.mpp.compiler;
 
+import com.riverssen.core.mpp.exceptions.CompileException;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.Serializable;
@@ -23,7 +25,6 @@ public class Field extends Container implements Serializable
 {
     private String          fieldType;
     private Set<Modifier>   fieldModifiers;
-    private Container       value;
     private int             offset;
 
     public Field(String name, String type)
@@ -47,8 +48,6 @@ public class Field extends Container implements Serializable
 
         this.fieldModifiers = new LinkedHashSet<>();
         this.fieldModifiers.addAll(tok.getModifiers());
-
-        if (tok.getType().equals(Token.Type.FULL_DECLARATION)) this.value = null;//tok.getRoot().get(2);
     }
 
     public Field addModifier(Modifier modifier)
@@ -97,8 +96,7 @@ public class Field extends Container implements Serializable
     @Override
     public String toString()
     {
-        if(value == null) return "null";
-        return value.toString();
+        return super.toString();
     }
 
     public Collection<Modifier> getModifiers()

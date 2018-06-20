@@ -24,8 +24,9 @@ public class Class extends Container implements Serializable
 {
     private Set<Class>      parents;
 
-    public Class(Token token) throws CompileException
+    public Class(Token token, Container global) throws CompileException
     {
+        setGlobal(global);
         this.name       = token.getTokens().get(0).toString();
         this.parents    = new LinkedHashSet<>();
 
