@@ -13,6 +13,7 @@
 package com.riverssen.core.networking;
 
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.mpp.compiler.Message;
 import com.riverssen.core.networking.messages.BasicMessage;
 
 import java.io.IOException;
@@ -72,6 +73,9 @@ public class Client
         while (connection.getInputStream().available() > 0)
         {
         }
+
+        for(BasicMessage message : toSend)
+            forceSendMessage(message);
     }
 
     public boolean keyMatch(String key)
