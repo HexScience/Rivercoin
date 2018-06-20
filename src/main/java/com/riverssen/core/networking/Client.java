@@ -46,8 +46,25 @@ public class Client
     public void sendMessage(BasicMessage message, String key)
     {
         if(keyMatch(key))
-            forceSendMessage(mess)
+            forceSendMessage(message);
          else toSend.add(message);
+    }
+
+    private void forceSendMessage(BasicMessage message)
+    {
+        if(!cache.containsKey(message.getHashCode()))
+            cache.put(message.getHashCode(), message);
+
+        try{
+            message.sendMessage(connection, context);
+            message.send();
+        } catch (IOException e)
+        {
+            message.send();
+        }
+
+        if(message.stopAttemptingToSend())
+            cache.remove(message.getHashCode());
     }
 
     public void update() throws IOException
