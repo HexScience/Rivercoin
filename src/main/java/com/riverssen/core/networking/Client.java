@@ -17,6 +17,7 @@ import com.riverssen.core.mpp.compiler.Message;
 import com.riverssen.core.networking.messages.BasicMessage;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -82,6 +83,15 @@ public class Client
 
         for(BasicMessage message : toSend)
             forceSendMessage(message);
+
+        Set<String> toRemove = new HashSet<>();
+
+        for(String message : cache.keySet())
+            if(cache.get(message).stopAttemptingToSend())
+                toRemove.add(message);
+
+        for(String message : toRemove)
+            cache.remove(message);
 
         toSend.clear();
     }
