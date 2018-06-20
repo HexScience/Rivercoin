@@ -30,6 +30,7 @@ public class BlockChain implements BlockChainI
     private FullBlock       block;
     private ContextI        context;
     private long            lastvalidated;
+    private boolean         lock;
 
     public BlockChain(ContextI context)
     {
@@ -149,14 +150,19 @@ public class BlockChain implements BlockChainI
 
         while(context.isRunning())
         {
-            if(block.getBody().mine(context))
+            if(lock)
             {
-                block.mine(context);
-                block.serialize(context);
 
-                System.exit(0);
+            } else {
+                if(block.getBody().mine(context))
+                {
+                    block.mine(context);
+                    block.serialize(context);
 
-                block = block.getHeader().continueChain();
+                    System.exit(0);
+
+                    block = block.getHeader().continueChain();
+                }
             }
         }
     }
