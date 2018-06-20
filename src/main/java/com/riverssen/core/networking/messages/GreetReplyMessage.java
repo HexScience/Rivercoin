@@ -27,7 +27,7 @@ public class GreetReplyMessage extends BasicMessage
     }
 
     @Override
-    public void sendMessage(SocketConnection connection, ContextI context, Object object) throws IOException
+    public void sendMessage(SocketConnection connection, ContextI context) throws IOException
     {
         connection.getOutputStream().writeInt(OP_GREET1);
         connection.getOutputStream().writeLong(context.getVersionBytes());
