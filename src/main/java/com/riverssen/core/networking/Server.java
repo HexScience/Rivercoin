@@ -124,8 +124,8 @@ public class Server implements NetworkManager
     {
         int amt = 0;
 
-        for(Communicator communicator : communications)
-            if(communicator.isNode()) amt ++;
+        for(Client communicator : communications)
+            if(communicator.isRelay()) amt ++;
         return amt;
     }
 
