@@ -15,14 +15,7 @@ package com.riverssen.core.networking;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.mpp.compiler.Message;
-import com.riverssen.core.networking.messages.BasicMessage;
-import com.riverssen.core.networking.messages.BlockMessage;
-import com.riverssen.core.networking.messages.GreetMessage;
-import com.riverssen.core.networking.messages.TransactionMessage;
-import com.riverssen.core.utils.ByteUtil;
-import com.riverssen.core.utils.Handler;
-import com.riverssen.core.utils.Tuple;
+import com.riverssen.core.networking.messages.*;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -107,16 +100,15 @@ public class Server implements NetworkManager
         for(Client communicator : communications)
             if(communicator.isRelay()) nodes.add(communicator);
 
+        //Descending Ordered List
         nodes.sort((a, b)->{ if(a.getChainSize() == b.getChainSize()) return 0;
-                                else if(a.getChainSize() > b.getChainSize()) return 1;
-                                else return -1;
+                                else if(a.getChainSize() > b.getChainSize()) return -1;
+                                else return 1;
         });
 
-        while (nodes.size() > 0)
-        {
-            nodes.get(nodes.size() - 1);
-
-        }
+        for(Client node : nodes)
+            for(long i = context.getBlockChain().currentBlock() - 1; i < node.getChainSize(); i ++)
+                node.sendMessage(new RequestBlockMessage(i));
     }
 
     @Override
