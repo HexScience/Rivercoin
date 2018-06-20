@@ -40,12 +40,14 @@ public abstract class BasicMessage
     public static final int OP_MSG      = 2;
 
 
-    String hashCode;
-    int timesSent;
+    private String hashCode;
+    private int timesSent;
+    private long timeStamp;
 
     public BasicMessage(String hashCodee)
     {
         this.hashCode = hashCode;
+        this.timeStamp= System.currentTimeMillis();
     }
 
     public void send()
@@ -85,6 +87,6 @@ public abstract class BasicMessage
 
     public boolean stopAttemptingToSend()
     {
-        return timesSent > 10 || timesSent < 0;
+        return (timesSent > 10 || timesSent < 0) || System.currentTimeMillis() - timeStamp >= 180_000L;
     }
 }
