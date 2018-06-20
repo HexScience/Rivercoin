@@ -70,6 +70,7 @@ public abstract class BasicMessage
             case OP_BLK:
                 return new BlockMessage();
             case OP_FAILED: return new FailedMessage();
+            case OP_SUCCESS: return new SuccessMessage();
 
                 default:
                     return null;
