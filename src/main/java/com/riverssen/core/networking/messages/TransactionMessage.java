@@ -14,6 +14,7 @@ package com.riverssen.core.networking.messages;
 
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.Client;
 import com.riverssen.core.networking.SocketConnection;
 import com.riverssen.core.utils.ByteUtil;
@@ -22,14 +23,14 @@ import java.io.IOException;
 
 public class TransactionMessage extends BasicMessage
 {
-    private FullBlock block;
+    private TransactionI block;
 
     public TransactionMessage()
     {
-        super(ByteUtil.defaultEncoder().encode58(("block message" + System.currentTimeMillis()).getBytes()));
+        super(ByteUtil.defaultEncoder().encode58(("transaction message" + System.currentTimeMillis()).getBytes()));
     }
 
-    public TransactionMessage(FullBlock block)
+    public TransactionMessage(TransactionI block)
     {
         super(block.encode58(ByteUtil.defaultEncoder()));
         this.block = block;
@@ -38,7 +39,7 @@ public class TransactionMessage extends BasicMessage
     @Override
     public void sendMessage(SocketConnection connection, ContextI context) throws IOException
     {
-        connection.getOutputStream().writeInt(OP_BLK);
+        connection.getOutputStream().writeInt(OP_TXN);
         connection.getOutputStream().writeUTF(getHashCode());
         block.export(connection.getOutputStream());
     }
@@ -49,7 +50,7 @@ public class TransactionMessage extends BasicMessage
         String hashCode = connection.getInputStream().readUTF();
 
         try{
-            context.getBlockChain().queueBlock(new FullBlock(connection.getInputStream()));
+            context.getTransactionPool().addRelayed(TransactionI.read(connection.getInputStream()));
             client.sendMessage(new SuccessMessage(hashCode));
         } catch (Exception e)
         {
