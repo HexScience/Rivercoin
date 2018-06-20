@@ -272,8 +272,8 @@ public class Token implements Serializable
                 else if(context.getGlobal().get(toString()) != null) return context.getGlobal().callMethod(toString());
                 else throw new CompileException("identifier 'new " + toString() + "' not defined.", this);
             case FULL_DECLARATION:
-                String name = getTokens().get(0).toString();
-                String type = getTokens().get(1).toString();
+                String type = getTokens().get(0).toString();
+                String name = getTokens().get(1).toString();
                 Token value = getTokens().get(2);
 
                 Container initType0 = fself.getGlobal().get(type.toString());

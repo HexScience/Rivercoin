@@ -47,9 +47,9 @@ public class Contracts
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-
         /** To start using the program we create a namespace with the root token **/
         Namespace global = new Namespace(pp.getRoot());
+//        System.out.println(list.getToken("class::Test").humanReadable(0));
         /** We set the namespace to global for the interpreter to recognize it as the global entry point **/
         global.setGlobal();
 
@@ -60,9 +60,15 @@ public class Contracts
 
         System.out.println(global.callMethod("set"));
 
-        global.get("NumTests").callMethod("NumTests");
+        global.callMethod("tests");
 
-        System.out.println(global.get("NumTests").get("total"));
+        System.out.println("object: " + global.get("int").get("c"));
+
+        global.get("tests").callMethod("helloMath");
+
+        System.out.println(global.get("tests").get("c"));
+
+        System.exit(0);
 
         global.get("HelloWorld").setField("msg", new Message(wallet.getPublicKey().getAddress()));
         global.get("Messenger") .setField("msg", new Message(wallet.getPublicKey().getAddress()));

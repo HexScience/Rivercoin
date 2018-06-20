@@ -10,6 +10,37 @@
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+class tests {
+    private int c
+
+    function tests() : void{
+        this.c = 9
+    }
+
+    function helloMath() : void
+    {
+        int a = 2
+        int b = 1
+
+        this.c = a  + b
+    }
+}
+
+class Test{
+    private string TestPrivateMember_String = "private"
+    public string TestPublicMember_String = "public"
+
+    public function getPublicMember() : string
+    {
+        return TestPublicMember_String;
+    }
+
+    pubic function getBothMembers() : string
+    {
+        return TestPrivateMember_String + " " + TestPublicMember_String
+    }
+}
+
 //This class is instantiated once.
 class HelloWorld {
     private PublicAddress owner
