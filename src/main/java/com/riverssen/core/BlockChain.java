@@ -16,6 +16,7 @@ import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.BlockChainI;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.networking.Client;
+import com.riverssen.core.networking.messages.RequestBlockMessage;
 import com.riverssen.core.system.LatestBlockInfo;
 
 import java.util.ArrayList;
@@ -64,6 +65,20 @@ public class BlockChain implements BlockChainI
         Set<Client> communicators = context.getNetworkManager().getCommunicators();
 
         context.getNetworkManager().downloadLongestChain();
+        List<Client> nodes = new ArrayList<>();
+
+        for(Client communicator : communicators)
+            if(communicator.isRelay()) nodes.add(communicator);
+
+        //Descending Ordered List
+        nodes.sort((a, b)->{ if(a.getChainSize() == b.getChainSize()) return 0;
+        else if(a.getChainSize() > b.getChainSize()) return -1;
+        else return 1;
+        });
+
+        for(Client node : nodes)
+            for(long i = context.getBlockChain().currentBlock() - 1; i < node.getChainSize(); i ++)
+                node.sendMessage(new RequestBlockMessage(i));
 //        List<FullBlock> blocks = context.getBlockPool().Fetch();
 
 //        Event<Tuple<Communicator, Long>> forkSizeEvent = (chainSize)->{
