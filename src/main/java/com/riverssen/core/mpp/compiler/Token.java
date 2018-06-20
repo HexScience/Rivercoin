@@ -102,6 +102,11 @@ public class Token implements Serializable
         return token;
     }
 
+    public void setName(String name)
+    {
+        this.value = new StringBuilder(name);
+    }
+
     public static enum          Type implements Serializable {
         NAMESPACE,
         KEYWORD,

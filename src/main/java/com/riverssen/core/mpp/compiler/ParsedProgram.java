@@ -156,6 +156,7 @@ public class ParsedProgram
         {
             clasz.add(body);
             clasz.setType(Token.Type.CLASS_DECLARATION);
+            clasz.setName(Token.Type.CLASS_DECLARATION.toString());
         }
         if (extension.getTokens().size() > 0) clasz.add(extension);
 

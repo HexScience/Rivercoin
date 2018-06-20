@@ -37,7 +37,7 @@ public class RivercoinCore
 
     private RivercoinCore(String type, String file) throws Exception
     {
-//        com.riverssen.testing.Contracts.test();
+        com.riverssen.testing.Contracts.test();
 
         /** This Code Starts The Rivercoin Client **/
 
