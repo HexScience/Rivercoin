@@ -175,7 +175,12 @@ public class Config
 
         if(latestBlock <= 0) return new RiverCoin("50.0").toRiverCoinString();
 
-        BigDecimal decimal = new BigDecimal("50").divide(new BigDecimal(latestBlock + 1).divide(new BigDecimal(halfEvery), 20, RoundingMode.HALF_DOWN).round(MathContext.DECIMAL128).multiply(new BigDecimal(2)), 20, RoundingMode.HALF_DOWN);
+        BigDecimal decimal = new BigDecimal("50");
+
+        long numDivisions = latestBlock / halfEvery + 1;
+
+        for(int i = 0; i < numDivisions; i ++)
+            decimal = decimal.divide(new BigDecimal(2), 200, RoundingMode.HALF_UP);
 
         return new RiverCoin(decimal).toRiverCoinString();
     }

@@ -18,6 +18,9 @@ import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.networking.Client;
 import com.riverssen.core.system.LatestBlockInfo;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 public class BlockChain implements BlockChainI
@@ -147,8 +150,54 @@ public class BlockChain implements BlockChainI
 
         System.exit(0);
 
+        Set<FullBlock> delete = new LinkedHashSet<>();
+        List<FullBlock> blockList = new ArrayList<>();
+
+        long lastBlockWas = 1L;
+
         while(context.isRunning())
         {
+            for (FullBlock block : orphanedBlocks)
+                if(block.getBlockID() < currentBlock() - 1)
+                    delete.add(block);
+
+            orphanedBlocks.removeAll(delete);
+
+            delete.clear();
+
+            if(System.currentTimeMillis() - lastBlockWas >= context.getConfig().getAverageBlockTime())
+            {
+                while (orphanedBlocks.size() > 0)
+                {
+                    long current = currentBlock() - 1;
+
+                    for(FullBlock block : orphanedBlocks)
+                        if(block.getBlockID() == current)
+                            blockList.add(block);
+
+                    orphanedBlocks.removeAll(blockList);
+
+                    blockList.sort((a, b)->{
+                        if          (a.getBlockID() == b.getBlockID()) return 0;
+                        else if     (a.getBlockID() > b.getBlockID()) return 1;
+
+                        return -1;
+                    });
+
+                    /** This function should choose the biggest block in queue at the current level **/
+                    this.block = blockList.get(blockList.size() - 1);
+
+                    this.block.serialize(context);
+                    this.block = this.block.getHeader().continueChain();
+                    lastBlockWas = System.currentTimeMillis();
+
+                    blockList.clear();
+                }
+            }
+
+            delete.clear();
+            blockList.clear();
+
             if(lock)
             {
 
@@ -161,6 +210,7 @@ public class BlockChain implements BlockChainI
                     System.exit(0);
 
                     block = block.getHeader().continueChain();
+                    lastBlockWas = System.currentTimeMillis();
                 }
             }
         }
