@@ -21,7 +21,7 @@ class tests {
         int a = 2
         int b = 1
 
-        this.c = a  + b
+        this.c = a  + b * b * a * a * a
     }
 }
 
