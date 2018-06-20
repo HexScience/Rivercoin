@@ -16,7 +16,6 @@ import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.Event;
 import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.networking.types.Client;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.Handler;
 import com.riverssen.core.utils.Tuple;
@@ -33,7 +32,7 @@ public class Server implements NetworkManager
     public static final String  seedNodeUrl = "http://www.rivercoin.net/developers/api/seednodes.php";
 
     private Set<String>         ipAddresses;
-    private Set<Communicator>   communications;
+    private Set<Client>         communications;
     private ContextI            context;
     private ServerSocket        socket;
 
