@@ -79,12 +79,6 @@ public class BlockChain implements BlockChainI
         for(Client node : nodes)
             for(long i = context.getBlockChain().currentBlock() - 1; i < node.getChainSize(); i ++)
                 node.sendMessage(new RequestBlockMessage(i));
-//        List<FullBlock> blocks = context.getBlockPool().Fetch();
-
-//        Event<Tuple<Communicator, Long>> forkSizeEvent = (chainSize)->{
-//        };
-
-//        for(FullBlock block : blocks) block.serialize(context);
     }
 
     @Override
