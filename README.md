@@ -30,4 +30,7 @@ Throughout the development of Rivercoin a Discord Bot
 has been developed to make it easier to use the coin API. 
 
 Want to invite it to your server? 
+
 https://discordapp.com/api/oauth2/authorize?client_id=440940039774535701&permissions=204482689&scope=bot
+
+Developers associated with BotCrypto: Tastazz (bot developer), Riverssen (API developer) 
