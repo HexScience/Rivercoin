@@ -12,6 +12,7 @@
 
 package com.riverssen.core.networking;
 
+import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.mpp.compiler.Message;
 import com.riverssen.core.networking.messages.BasicMessage;
@@ -74,9 +75,7 @@ public class Client implements Runnable
     {
         while (connection.getInputStream().available() > 0)
         {
-            int type = connection.getInputStream().readInt();
-
-            BasicMessage message = BasicMessage.decipher(type, this);
+            BasicMessage message = safeNext();
 
             if(message != null)
                 message.onReceive(this, connection, context);
@@ -202,5 +201,22 @@ public class Client implements Runnable
     {
         sendMessage(new GoodByeMessage());
         connection.closeConnection();
+    }
+
+    private synchronized BasicMessage safeNext() throws IOException
+    {
+        int type = connection.getInputStream().readInt();
+
+        return BasicMessage.decipher(type, this);
+    }
+
+    public synchronized BasicMessage next() throws IOException
+    {
+        long now = System.currentTimeMillis();
+        while (connection.getInputStream().available() == 0) {
+            if(System.currentTimeMillis() - now >= 230_000L) return null;
+        }
+
+        return safeNext();
     }
 }

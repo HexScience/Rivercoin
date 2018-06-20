@@ -15,6 +15,8 @@ package com.riverssen.core.networking;
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.mpp.compiler.Message;
+import com.riverssen.core.networking.messages.BasicMessage;
 import com.riverssen.core.networking.messages.BlockMessage;
 import com.riverssen.core.networking.messages.GreetMessage;
 import com.riverssen.core.networking.messages.TransactionMessage;
@@ -82,32 +84,6 @@ public class Server implements NetworkManager
     }
 
     @Override
-    @Deprecated
-    public void requestLongestForkAndDownload()
-    {
-        Tuple<Long, Communicator>   tuple = new Tuple(-1, null);
-        Handler<Integer>            numfired = new Handler<>(0);
-        int maxCommunicators = communications.size();
-
-        for (Client communicator : communications) communicator.requestLatestBlockInfo(context, (chainSize)->{
-
-            if(tuple.getI().longValue() < chainSize)
-            {
-                tuple.setI(chainSize);
-                tuple.setJ(communicator);
-            }
-
-            numfired.setI(numfired.getI().intValue() + 1);
-        });
-
-        long now = System.currentTimeMillis();
-
-        while(numfired.getI() < maxCommunicators && (System.currentTimeMillis() - now < 2_000))
-        {
-        }
-    }
-
-    @Override
     public Set<Client> getCommunicators()
     {
         return communications;
@@ -126,60 +102,17 @@ public class Server implements NetworkManager
     @Override
     public void downloadLongestChain()
     {
-        List<Communicator> nodes = new ArrayList<>();
+        List<Client> nodes = new ArrayList<>();
 
-        for(Communicator communicator : communications)
-            if(communicator.isNode()) nodes.add(communicator);
+        for(Client communicator : communications)
+            if(communicator.isRelay()) nodes.add(communicator);
 
-        nodes.sort((a, b)->{ if(a.chainSizeAtHandshake() == b.chainSizeAtHandshake()) return 0;
-                                else if(a.chainSizeAtHandshake() > b.chainSizeAtHandshake()) return 1;
+        nodes.sort((a, b)->{ if(a.getChainSize() == b.getChainSize()) return 0;
+                                else if(a.getChainSize() > b.getChainSize()) return 1;
                                 else return -1;
         });
 
-        context.getExecutorService().execute(()->{
-            while(nodes.size() > 0)
-            {
-                Communicator node = nodes.get(nodes.size() - 1);
-
-                long desiredChainSize = node.getType();
-
-                synchronized (node)
-                {
-                    String lock = ByteUtil.defaultEncoder().encode58((this.getClass().getName() + System.currentTimeMillis()).getBytes());
-
-                    while(!node.lock(lock)) {}
-
-                    node.requestBlock(context.getBlockChain().currentBlock() + 1, context, lock);
-                    FullBlock block = null;
-
-                    try
-                    {
-                        block = node.receiveBlock();
-
-                        node.unlock(lock);
-                    } catch (Exception e)
-                    {
-                        node.unlock(lock);
-                    }
-
-                    if (block == null)
-                    {
-                        nodes.remove(nodes.size() - 1);
-                        continue;
-                    }
-
-                    if (block.validate(context) != 0)
-                    {
-                        nodes.remove(nodes.size() - 1);
-                        continue;
-                    }
-
-                    context.getBlockChain().insertBlock(block);
-
-                    if (context.getBlockChain().currentBlock() >= desiredChainSize) nodes.clear();
-                }
-            }
-        });
+        nodes.get(nodes.size() - 1);
     }
 
     @Override
