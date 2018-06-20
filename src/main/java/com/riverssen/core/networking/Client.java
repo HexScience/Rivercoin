@@ -12,9 +12,7 @@
 
 package com.riverssen.core.networking;
 
-import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.ContextI;
-import com.riverssen.core.mpp.compiler.Message;
 import com.riverssen.core.networking.messages.BasicMessage;
 import com.riverssen.core.networking.messages.GoodByeMessage;
 
@@ -33,6 +31,7 @@ public class Client implements Runnable
     private long                      version;
     private long                      chainSize;
     private boolean                   greeted;
+    private boolean                   blocked;
 
     public Client(SocketConnection connection, ContextI context)
     {
@@ -218,5 +217,15 @@ public class Client implements Runnable
         }
 
         return safeNext();
+    }
+
+    public synchronized void block()
+    {
+        this.blocked = true;
+    }
+
+    public synchronized void unblock()
+    {
+        this.blocked = false;
     }
 }

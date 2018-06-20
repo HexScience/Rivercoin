@@ -112,7 +112,11 @@ public class Server implements NetworkManager
                                 else return -1;
         });
 
-        nodes.get(nodes.size() - 1);
+        while (nodes.size() > 0)
+        {
+            nodes.get(nodes.size() - 1);
+
+        }
     }
 
     @Override
