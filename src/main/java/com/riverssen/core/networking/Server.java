@@ -17,6 +17,7 @@ import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.messages.BlockMessage;
 import com.riverssen.core.networking.messages.GreetMessage;
+import com.riverssen.core.networking.messages.TransactionMessage;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.Handler;
 import com.riverssen.core.utils.Tuple;
@@ -77,7 +78,7 @@ public class Server implements NetworkManager
     @Override
     public void broadCastNewTransaction(TransactionI transaction)
     {
-        for (Communicator communicator : communications) communicator.sendTransaction(transaction);
+        for (Client communicator : communications) communicator.sendMessage(new TransactionMessage(transaction));
     }
 
     @Override
