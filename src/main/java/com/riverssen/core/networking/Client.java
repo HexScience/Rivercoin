@@ -40,19 +40,19 @@ public class Client
         this.context    = context;
     }
 
-    public void sendMessage(BasicMessage message)
+    public synchronized void sendMessage(BasicMessage message)
     {
         this.sendMessage(message, "");
     }
 
-    public void sendMessage(BasicMessage message, String key)
+    public synchronized void sendMessage(BasicMessage message, String key)
     {
         if(keyMatch(key))
             forceSendMessage(message);
          else toSend.add(message);
     }
 
-    private void forceSendMessage(BasicMessage message)
+    private synchronized void forceSendMessage(BasicMessage message)
     {
         if(!cache.containsKey(message.getHashCode()))
             cache.put(message.getHashCode(), message);
@@ -69,7 +69,7 @@ public class Client
             cache.remove(message.getHashCode());
     }
 
-    public void update() throws IOException
+    public synchronized void update() throws IOException
     {
         while (connection.getInputStream().available() > 0)
         {
@@ -96,14 +96,14 @@ public class Client
         toSend.clear();
     }
 
-    public boolean keyMatch(String key)
+    public synchronized boolean keyMatch(String key)
     {
         if(lock == null) return true;
 
         return lock.equals(key);
     }
 
-    public boolean lock(String key)
+    public synchronized boolean lock(String key)
     {
         if(lock != null)
             return false;
@@ -113,7 +113,7 @@ public class Client
         return true;
     }
 
-    public boolean unlock(String key)
+    public synchronized boolean unlock(String key)
     {
         if(lock == null) return true;
 
@@ -123,53 +123,53 @@ public class Client
         return lock == null;
     }
 
-    public boolean isLocked()
+    public synchronized boolean isLocked()
     {
         return lock != null;
     }
 
-    public boolean isRelay()
+    public synchronized boolean isRelay()
     {
         return relay;
     }
 
-    public void setVersion(long l)
+    public synchronized void setVersion(long l)
     {
         this.version = l;
     }
 
-    public void setChainSize(long l)
+    public synchronized void setChainSize(long l)
     {
         this.chainSize = l;
     }
 
-    public void setIsRelay(boolean r)
+    public synchronized void setIsRelay(boolean r)
     {
         this.relay = r;
     }
 
-    public void setGreeted(boolean g)
+    public synchronized void setGreeted(boolean g)
     {
         this.greeted = g;
     }
 
-    public boolean isGreeted()
+    public synchronized boolean isGreeted()
     {
         return greeted;
     }
 
-    public void removeMessage(String s)
+    public synchronized void removeMessage(String s)
     {
         cache.remove(s);
     }
 
-    public void resend(String s)
+    public synchronized void resend(String s)
     {
         if(cache.containsKey(s))
             sendMessage(cache.get(s));
     }
 
-    public long getChainSize()
+    public synchronized long getChainSize()
     {
         return chainSize;
     }
