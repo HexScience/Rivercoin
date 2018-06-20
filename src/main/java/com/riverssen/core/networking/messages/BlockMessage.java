@@ -49,8 +49,10 @@ public class BlockMessage extends BasicMessage
         String hashCode = connection.getInputStream().readUTF();
 
         try{
-            context.getBlockChain().queueBlock(new FullBlock(connection.getInputStream()));
+            FullBlock block = null;
+            context.getBlockChain().queueBlock(block = new FullBlock(connection.getInputStream()));
             client.sendMessage(new SuccessMessage(hashCode));
+            client.setChainSize(Math.max(client.getChainSize(), block.getBlockID()));
         } catch (Exception e)
         {
             client.sendMessage(new FailedMessage(hashCode));

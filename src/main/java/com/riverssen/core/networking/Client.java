@@ -142,4 +142,9 @@ public class Client
         if(cache.containsKey(s))
             sendMessage(cache.get(s));
     }
+
+    public long getChainSize()
+    {
+        return chainSize;
+    }
 }
