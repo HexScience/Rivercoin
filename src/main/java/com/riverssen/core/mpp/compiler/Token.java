@@ -227,6 +227,11 @@ public class Token implements Serializable
 
     public Container interpret(Container context, Container self, Container fcontext, Container fself, Container initType, boolean proc, boolean mproc, Container ...args) throws CompileException
     {
+        this.interpret(context, self, fcontext, fself, initType, proc, mproc, args);
+    }
+
+    public Container interpret(StringContainer context, Container self, Container fcontext, Container fself, Container initType, boolean proc, boolean mproc, Container ...args) throws CompileException
+    {
         switch (type)
         {
             case MATH_OP:
