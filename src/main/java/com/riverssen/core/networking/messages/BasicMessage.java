@@ -85,6 +85,11 @@ public abstract class BasicMessage
         return hashCode;
     }
 
+    public void setTimesSent(int numTimesSent)
+    {
+        this.timesSent = numTimesSent;
+    }
+
     public boolean stopAttemptingToSend()
     {
         return (timesSent > 10 || timesSent < 0) || System.currentTimeMillis() - timeStamp >= 180_000L;
