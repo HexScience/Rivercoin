@@ -71,6 +71,7 @@ public abstract class BasicMessage
                 return new BlockMessage();
             case OP_FAILED: return new FailedMessage();
             case OP_SUCCESS: return new SuccessMessage();
+            case OP_TXN: return new TransactionMessage();
 
                 default:
                     return null;
