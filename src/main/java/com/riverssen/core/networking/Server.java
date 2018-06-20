@@ -16,6 +16,7 @@ import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.Event;
 import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.networking.messages.BlockMessage;
 import com.riverssen.core.networking.messages.GreetMessage;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.Handler;
@@ -190,8 +191,8 @@ public class Server implements NetworkManager
     @Override
     public void sendBlock(FullBlock block)
     {
-        for(Communicator communicator : communications)
-            communicator.sendBlock(block);
+        for(Client communicator : communications)
+            communicator.sendMessage(new BlockMessage(block));
     }
 
     private void establishConnections()
