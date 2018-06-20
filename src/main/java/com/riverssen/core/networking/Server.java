@@ -16,6 +16,7 @@ import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.Event;
 import com.riverssen.core.headers.TransactionI;
+import com.riverssen.core.networking.messages.GreetMessage;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.Handler;
 import com.riverssen.core.utils.Tuple;
@@ -205,8 +206,10 @@ public class Server implements NetworkManager
             SocketConnection connection = new SocketConnection(ip, context.getConfig().getPort());
             if(connection.isConnected())
             {
-                Client client = new Client(connection);
-                client.sendHandShake(context.getVersionBytes(), context);
+                Client client = new Client(connection, context);
+                client.sendMessage(new GreetMessage());
+
+                context.getExecutorService().execute(client);
                 communications.add(client);
             }
         } catch (Exception e)
