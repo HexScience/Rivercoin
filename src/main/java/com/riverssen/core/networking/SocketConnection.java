@@ -12,8 +12,6 @@
 
 package com.riverssen.core.networking;
 
-import com.riverssen.core.networking.messages.Msg;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
