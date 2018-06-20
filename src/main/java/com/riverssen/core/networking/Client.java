@@ -72,6 +72,12 @@ public class Client
     {
         while (connection.getInputStream().available() > 0)
         {
+            int type = connection.getInputStream().readInt();
+
+            BasicMessage message = BasicMessage.decipher(type, this);
+
+            if(message != null)
+                message.onReceive(this, connection, context);
         }
 
         for(BasicMessage message : toSend)
