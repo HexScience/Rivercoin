@@ -14,7 +14,6 @@ package com.riverssen.core.networking;
 
 import com.riverssen.core.FullBlock;
 import com.riverssen.core.headers.ContextI;
-import com.riverssen.core.headers.Event;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.messages.BlockMessage;
 import com.riverssen.core.networking.messages.GreetMessage;
@@ -82,12 +81,6 @@ public class Server implements NetworkManager
     }
 
     @Override
-    public void requestNetworkChainSizes(Event event)
-    {
-        for (Communicator communicator : communications) communicator.requestLatestBlockInfo(context, event);
-    }
-
-    @Override
     @Deprecated
     public void requestLongestForkAndDownload()
     {
@@ -95,7 +88,7 @@ public class Server implements NetworkManager
         Handler<Integer>            numfired = new Handler<>(0);
         int maxCommunicators = communications.size();
 
-        for (Communicator communicator : communications) communicator.requestLatestBlockInfo(context, (chainSize)->{
+        for (Client communicator : communications) communicator.requestLatestBlockInfo(context, (chainSize)->{
 
             if(tuple.getI().longValue() < chainSize)
             {
@@ -114,7 +107,7 @@ public class Server implements NetworkManager
     }
 
     @Override
-    public Set<Communicator> getCommunicators()
+    public Set<Client> getCommunicators()
     {
         return communications;
     }
