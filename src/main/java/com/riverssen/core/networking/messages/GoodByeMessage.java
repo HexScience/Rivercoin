@@ -36,5 +36,6 @@ public class GoodByeMessage extends BasicMessage
     public void onReceive(Client client, SocketConnection connection, ContextI context) throws IOException
     {
         connection.closeConnection();
+        context.getNetworkManager().getCommunicators().remove(client);
     }
 }

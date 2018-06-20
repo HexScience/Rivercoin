@@ -69,6 +69,8 @@ public class SocketConnection
 
     public void closeConnection() throws IOException
     {
+        inputStream.close();
+        outputStream.close();
         socket.close();
     }
 
