@@ -228,4 +228,9 @@ public class Client implements Runnable
     {
         this.blocked = false;
     }
+
+    public synchronized boolean isBlocked()
+    {
+        return blocked;
+    }
 }
