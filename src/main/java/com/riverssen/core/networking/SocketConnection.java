@@ -45,11 +45,6 @@ public class SocketConnection
         this.outputStream   = new DataOutputStream(this.socket.getOutputStream());
     }
 
-    public void sendMessage(Msg msg)
-    {
-        msg.send(outputStream);
-    }
-
     public DataInputStream getInputStream()
     {
         return inputStream;
