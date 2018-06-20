@@ -15,13 +15,9 @@ package com.riverssen.core;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.BlockChainI;
 import com.riverssen.core.headers.ContextI;
-import com.riverssen.core.headers.Event;
-import com.riverssen.core.networking.Communicator;
+import com.riverssen.core.networking.Client;
 import com.riverssen.core.system.LatestBlockInfo;
-import com.riverssen.core.utils.Tuple;
 
-import java.io.File;
-import java.util.List;
 import java.util.Set;
 
 public class BlockChain implements BlockChainI
@@ -62,7 +58,7 @@ public class BlockChain implements BlockChainI
     {
         Logger.alert("attempting to download block from peers");
         final long totalNodes = context.getNetworkManager().amountNodesConnected();
-        Set<Communicator> communicators = context.getNetworkManager().getCommunicators();
+        Set<Client> communicators = context.getNetworkManager().getCommunicators();
 
         context.getNetworkManager().downloadLongestChain();
 //        List<FullBlock> blocks = context.getBlockPool().Fetch();
