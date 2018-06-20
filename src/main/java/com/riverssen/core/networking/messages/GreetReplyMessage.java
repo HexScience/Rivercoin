@@ -12,26 +12,34 @@
 
 package com.riverssen.core.networking.messages;
 
+import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.networking.Client;
+import com.riverssen.core.networking.SocketConnection;
 import com.riverssen.core.utils.ByteUtil;
 
-public class GetListMessage implements Msg
+import java.io.IOException;
+
+public class GreetReplyMessage extends BasicMessage
 {
-    private int type;
-
-    public GetListMessage(int type)
+    public GreetReplyMessage()
     {
-        this.type = type;
+        super(ByteUtil.defaultEncoder().encode58(("greet back" + System.currentTimeMillis()).getBytes()));
     }
 
     @Override
-    public int getType()
+    public void sendMessage(SocketConnection connection, ContextI context, Object object) throws IOException
     {
-        return listpeers;
+        connection.getOutputStream().writeInt(OP_GREET1);
+        connection.getOutputStream().writeLong(context.getVersionBytes());
+        connection.getOutputStream().writeLong(context.getBlockChain().currentBlock() - 1);
+        connection.getOutputStream().writeBoolean(context.actAsRelay());
     }
 
     @Override
-    public byte[] data()
+    public void onReceive(Client client, SocketConnection connection, ContextI context) throws IOException
     {
-        return ByteUtil.concatenate(ByteUtil.encodei(getType()), ByteUtil.encodei(type));
+        client.setVersion(connection.getInputStream().readLong());
+        client.setChainSize(connection.getInputStream().readLong());
+        client.setIsRelay(connection.getInputStream().readBoolean());
     }
 }

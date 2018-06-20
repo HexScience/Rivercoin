@@ -12,6 +12,38 @@
 
 package com.riverssen.core.networking.messages;
 
-public class Opcodes
+import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.networking.Client;
+import com.riverssen.core.networking.SocketConnection;
+import com.riverssen.core.utils.ByteUtil;
+
+import java.io.IOException;
+
+public class FailedMessage extends BasicMessage
 {
+    private String hashCodeReceived;
+
+    public FailedMessage()
+    {
+        super(ByteUtil.defaultEncoder().encode58(("failed message" + System.currentTimeMillis()).getBytes()));
+    }
+
+    public FailedMessage(String hashCode)
+    {
+        super(ByteUtil.defaultEncoder().encode58(("failed message" + System.currentTimeMillis()).getBytes()));
+        this.hashCodeReceived = hashCode;
+    }
+
+    @Override
+    public void sendMessage(SocketConnection connection, ContextI context) throws IOException
+    {
+        connection.getOutputStream().writeInt(OP_FAILED);
+        connection.getOutputStream().writeUTF(hashCodeReceived);
+    }
+
+    @Override
+    public void onReceive(Client client, SocketConnection connection, ContextI context) throws IOException
+    {
+        client.resend(connection.getInputStream().readUTF());
+    }
 }

@@ -62,6 +62,9 @@ public class BlockChain implements BlockChainI
     {
         Logger.alert("attempting to download block from peers");
         final long totalNodes = context.getNetworkManager().amountNodesConnected();
+        Set<Communicator> communicators = context.getNetworkManager().getCommunicators();
+
+        context.getNetworkManager().downloadLongestChain();
 //        List<FullBlock> blocks = context.getBlockPool().Fetch();
 
 //        Event<Tuple<Communicator, Long>> forkSizeEvent = (chainSize)->{

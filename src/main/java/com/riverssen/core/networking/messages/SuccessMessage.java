@@ -12,26 +12,38 @@
 
 package com.riverssen.core.networking.messages;
 
+import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.networking.Client;
+import com.riverssen.core.networking.SocketConnection;
 import com.riverssen.core.utils.ByteUtil;
 
-public class GreetingMessage implements Msg
+import java.io.IOException;
+
+public class SuccessMessage extends BasicMessage
 {
-    private int type;
+    private String hashCodeReceived;
 
-    public GreetingMessage(int type)
+    public SuccessMessage()
     {
-        this.type = type;
+        super(ByteUtil.defaultEncoder().encode58(("success message" + System.currentTimeMillis()).getBytes()));
+    }
+
+    public SuccessMessage(String hashCode)
+    {
+        super(ByteUtil.defaultEncoder().encode58(("success message" + System.currentTimeMillis()).getBytes()));
+        this.hashCodeReceived = hashCode;
     }
 
     @Override
-    public int getType()
+    public void sendMessage(SocketConnection connection, ContextI context) throws IOException
     {
-        return greeting;
+        connection.getOutputStream().writeInt(OP_SUCCESS);
+        connection.getOutputStream().writeUTF(hashCodeReceived);
     }
 
     @Override
-    public byte[] data()
+    public void onReceive(Client client, SocketConnection connection, ContextI context) throws IOException
     {
-        return ByteUtil.concatenate(ByteUtil.encodei(getType()), ByteUtil.encodei(type));
+        client.removeMessage(connection.getInputStream().readUTF());
     }
 }
