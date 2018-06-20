@@ -15,6 +15,7 @@ package com.riverssen.core.networking;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.mpp.compiler.Message;
 import com.riverssen.core.networking.messages.BasicMessage;
+import com.riverssen.core.networking.messages.GoodByeMessage;
 
 import java.io.IOException;
 import java.util.*;
@@ -177,7 +178,7 @@ public class Client implements Runnable
     @Override
     public void run()
     {
-        while (context.isRunning())
+        while (context.isRunning() && connection.isConnected())
         {
             try
             {
@@ -195,5 +196,11 @@ public class Client implements Runnable
                 e.printStackTrace();;
             }
         }
+    }
+
+    public synchronized void closeConnection() throws IOException
+    {
+        sendMessage(new GoodByeMessage());
+        connection.closeConnection();
     }
 }

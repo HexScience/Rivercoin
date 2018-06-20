@@ -26,6 +26,7 @@ public class SocketConnection
     private DataInputStream         inputStream;
     private DataOutputStream        outputStream;
     private int                     type;
+    private boolean                 closed;
 
     public SocketConnection(String ip, int port) throws IOException
     {
@@ -57,7 +58,7 @@ public class SocketConnection
 
     public boolean isConnected()
     {
-        return socket.isConnected();
+        return socket.isConnected() && !closed;
     }
 
     public void closeConnection() throws IOException
@@ -65,6 +66,7 @@ public class SocketConnection
         inputStream.close();
         outputStream.close();
         socket.close();
+        closed = true;
     }
 
     public String getIP()

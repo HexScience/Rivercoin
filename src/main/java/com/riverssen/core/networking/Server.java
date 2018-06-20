@@ -255,7 +255,7 @@ public class Server implements NetworkManager
 
     public void terminate()
     {
-        for(Communicator peer : communications) try{peer.closeConnection();} catch (Exception e) {}
+        for(Client peer : communications) try{peer.closeConnection();} catch (Exception e) {}
 
         String ipAddresses = "";
 
