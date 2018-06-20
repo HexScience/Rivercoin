@@ -76,6 +76,8 @@ public class Client
 
         for(BasicMessage message : toSend)
             forceSendMessage(message);
+
+        toSend.clear();
     }
 
     public boolean keyMatch(String key)
