@@ -163,6 +163,8 @@ public class Transaction implements TransactionI, Encodeable
             context.getUtxoManager().add(input.getUTXO());
         for(TransactionOutput output : utxos)
             context.getUtxoManager().remove(output);
+
+        context.getUtxoManager().addAll(utxos);
     }
 
     public BigInteger getFee()

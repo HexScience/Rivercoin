@@ -30,6 +30,11 @@ public class RiverFlowMap implements Encodeable
         return null;
     }
 
+    public void addAll(List<TransactionOutput> utxos) {
+        for(TransactionOutput output : utxos)
+            add(output);
+    }
+
     static interface CallBack<K, V>{
         void onEvent(K k, V v);
     }

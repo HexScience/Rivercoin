@@ -79,6 +79,11 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         return validate(getBlockID() > 0 ? new BlockHeader(getBlockID() - 1, context) : null, context);
     }
 
+    public synchronized void undoUTXOChanges(ContextI context)
+    {
+        body.undoUTXOChanges(context);
+    }
+
     public synchronized int validate(BlockHeader parent, ContextI context)
     {
         byte pHash[] = null;

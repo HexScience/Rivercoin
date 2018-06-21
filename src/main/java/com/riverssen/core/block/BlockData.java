@@ -12,6 +12,7 @@
 
 package com.riverssen.core.block;
 
+import com.riverssen.core.chainedmap.RiverFlowMap;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.Write;
@@ -38,8 +39,9 @@ public class BlockData implements Encodeable, Exportable
     private long dataSize;
     private ContextI context;
 
-    public BlockData()
+    public BlockData(ContextI context)
     {
+        this.context = context;
         this.merkleTree = new MerkleTree();
     }
 
@@ -143,25 +145,15 @@ public class BlockData implements Encodeable, Exportable
     {
         if (!token.valid(context)) return;
 
+        context.getUtxoManager().addAll(token.generateOutputs(context.getMiner(), context));
+
         merkleTree.add(token);
         dataSize += token.toJSON().getBytes().length;
     }
 
-    public void addNoValidation(TransactionI token)
-    {
+    public void addNoValidation(TransactionI token) {
         merkleTree.add(token);
         dataSize += token.toJSON().getBytes().length;
-    }
-
-    /** Generate Outputs From Old Inputs **/
-    public List<TransactionOutput> collectOutputs(PublicAddress miner, ContextI context)
-    {
-        List<TransactionOutput> list = new ArrayList<>();
-
-        for(TransactionI transactionI : merkleTree.flatten())
-            list.addAll(transactionI.generateOutputs(miner, context));
-
-        return list;
     }
 
     public void revertOutputs(PublicAddress miner, ContextI context)
@@ -188,13 +180,10 @@ public class BlockData implements Encodeable, Exportable
     }
 
     @Override
-    public void export(DataOutputStream dost) throws IOException
-    {
-        try
-        {
+    public void export(DataOutputStream dost) throws IOException {
+        try {
             getMerkleTree().serialize(dost);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
