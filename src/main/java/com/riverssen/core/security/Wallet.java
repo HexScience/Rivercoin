@@ -199,4 +199,8 @@ public class Wallet
             e.printStackTrace();
         }
     }
+
+    public PublicAddress getPublicAddress(int i) {
+        return getPublicKey(i).getAddress();
+    }
 }

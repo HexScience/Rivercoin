@@ -41,6 +41,8 @@ public class RivercoinCore
     {
         /** This Code Starts The Rivercoin Client **/
 
+        com.riverssen.testing.Wallet.test();
+
         /** create a context **/
         ContextI context = null;
         Config   config  = new Config(new File(file));
