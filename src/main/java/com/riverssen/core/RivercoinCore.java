@@ -39,8 +39,6 @@ public class RivercoinCore
 
     private RivercoinCore(String type, String file) throws Exception
     {
-//        com.riverssen.testing.Contracts.test();
-
         /** This Code Starts The Rivercoin Client **/
 
         /** create a context **/
@@ -56,7 +54,8 @@ public class RivercoinCore
         System.out.println("--------------------Welcome To Rivercoin Core-------------------");
         System.out.println("----------------------------------------------------------------");
         Logger.alert("usable cpu threads: " + config.getMaxMiningThreads());
-    type = "miner";
+        type = "miner";
+
         switch (type)
         {
             case "node":    context = new NodeContext(config);          break;

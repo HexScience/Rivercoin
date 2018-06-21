@@ -18,6 +18,7 @@ import com.riverssen.core.Logger;
 import com.riverssen.core.TransactionPool;
 import com.riverssen.core.algorithms.Provider;
 import com.riverssen.core.chainedmap.RiverFlowMap;
+import com.riverssen.core.exceptions.AddressInvalidException;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.networking.Server;
@@ -58,6 +59,8 @@ public class NodeContext implements ContextI
         this.provider = new Provider();
         this.blockChain = new BlockChain(this);
         this.versionBytes = ByteUtil.decode(new byte[]{'a', 0, 0, 0, 0, 0, 0, (byte)228});
+
+        if(!PublicAddress.isPublicAddressValid(config.getMinerAddress().toString())) throw new AddressInvalidException(config.getMinerAddress().toString());
 
         try
         {
