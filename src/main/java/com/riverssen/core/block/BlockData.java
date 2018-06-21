@@ -156,10 +156,10 @@ public class BlockData implements Encodeable, Exportable
         dataSize += token.toJSON().getBytes().length;
     }
 
-    public void revertOutputs(PublicAddress miner, ContextI context)
+    public void revertOutputs(ContextI context)
     {
         for(TransactionI transactionI : merkleTree.flatten())
-            transactionI.revertOutputs(miner, context);
+            transactionI.revertOutputs(context.getMiner(), context);
     }
 
     @Override
