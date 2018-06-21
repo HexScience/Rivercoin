@@ -200,6 +200,10 @@ public class Wallet
         }
     }
 
+    public PublicAddress getPublicAddress() {
+        return getPublicAddress(0);
+    }
+
     public PublicAddress getPublicAddress(int i) {
         return getPublicKey(i).getAddress();
     }
