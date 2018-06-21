@@ -39,8 +39,6 @@ public class RivercoinCore
 
     private RivercoinCore(String type, String file) throws Exception
     {
-        Wallet wallet = new Wallet("da", "dadad");
-        System.out.println(wallet.getPublicAddress(0));
         /** This Code Starts The Rivercoin Client **/
         /** create a context **/
         ContextI context = null;
