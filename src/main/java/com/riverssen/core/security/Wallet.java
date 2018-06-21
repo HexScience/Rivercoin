@@ -14,6 +14,7 @@ package com.riverssen.core.security;
 
 import com.riverssen.core.Logger;
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.utils.Tuple;
 
 import java.io.*;
 import java.security.KeyFactory;
@@ -21,6 +22,10 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
 import java.security.spec.ECGenParameterSpec;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class Wallet
 {
@@ -38,8 +43,7 @@ public class Wallet
         }
     }
 
-    private PrivKey privateKey;
-    private PubKey  publicKey;
+    private Set<Tuple<PrivKey, PubKey>> keyPairs;
     private String  name;
 
     public Wallet(String name, String seed)
@@ -49,51 +53,68 @@ public class Wallet
 
     public Wallet(String name, byte   seed[])
     {
-        this.name = name;
+        this.name       = name;
+        this.keyPairs   = new LinkedHashSet<>();
         try
         {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("ECDSA", "BC");
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
             random.setSeed(seed);
+
             ECGenParameterSpec ecSpec = new ECGenParameterSpec("prime192v1");
 
             keyGen.initialize(ecSpec, random);
             KeyPair keyPair = keyGen.generateKeyPair();
 
-            this.privateKey = new PrivKey(keyPair.getPrivate());
-            this.publicKey  = new PubKey(keyPair.getPublic());
+            keyPairs.add(new Tuple<>(new PrivKey(keyPair.getPrivate()), new PubKey(keyPair.getPublic())));
         } catch (Exception e)
         {
             throw new RuntimeException(e);
         }
     }
 
-    public Wallet(PubKey key)
-    {
-        this.publicKey = key;
-    }
+//    public Wallet(PubKey key)
+//    {
+//        this.publicKey = key;
+//    }
 
     public PrivKey getPrivateKey()
     {
-        return privateKey;
+        return getPrivateKey(0);
     }
 
-    public void setPrivateKey(PrivKey privateKey)
+    public PrivKey getPrivateKey(int i)
     {
-        this.privateKey = privateKey;
+        int index = 0;
+
+        for(Tuple<PrivKey, PubKey> keyPair : keyPairs)
+            if(index ++ == i)
+                return keyPair.getI();
+
+        return keyPairs.iterator().next().getI();
     }
 
     public PubKey getPublicKey()
     {
-        return publicKey;
+        return getPublicKey(0);
     }
 
-    public void setPublicKey(PubKey publicKey)
+    public PubKey getPublicKey(int i)
     {
-        this.publicKey = publicKey;
+        int index = 0;
+
+        for(Tuple<PrivKey, PubKey> keyPair : keyPairs)
+            if(index ++ == i)
+                return keyPair.getJ();
+
+        return keyPairs.iterator().next().getJ();
     }
 
-    public void export(String password, ContextI context)
+    public void export(String password, ContextI contextI)
+    {
+    }
+
+    public void export(PrivKey privateKey, PubKey publicKey, String password, ContextI context)
     {
         try
         {
