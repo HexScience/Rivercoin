@@ -188,4 +188,32 @@ public class ByteUtil
             return new byte[0];
         }
     }
+
+    public static byte[] trim(byte[] bytes, int i, int i1) {
+        byte new_bytes[]    = new byte[i1 - i];
+
+        int free            = 0;
+
+        for(int index = i; index < i1; index ++)
+            new_bytes[free ++] = bytes[index];
+        return new_bytes;
+    }
+
+    public static String list(byte[] checksum) {
+        StringBuilder builder = new StringBuilder("[");
+
+        for(byte b : checksum)
+            builder.append(b).append(", ");
+
+        return builder.toString().substring(0, builder.length() - 2) + "]";
+    }
+
+    public static boolean equals(byte[] trim, byte[] trim1) {
+        if(trim.length != trim1.length) return false;
+
+        for(int i = 0; i < trim1.length; i ++)
+            if(trim[i] != trim1[i]) return false;
+
+        return true;
+    }
 }

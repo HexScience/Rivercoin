@@ -14,6 +14,7 @@ package com.riverssen.core.security;
 
 import com.riverssen.core.Logger;
 import com.riverssen.core.utils.Base58;
+import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.HashUtil;
 
 import java.math.BigInteger;
@@ -119,7 +120,16 @@ public class PubKey
             byte sha2562[]  = HashUtil.applySha256(sha256);
             byte ripeMD[]   = HashUtil.applyRipeMD160(sha2562);
 
-            wad = new PublicAddress(Base58.encode(ripeMD));
+            byte version    = 0;
+            byte key_21[]   = ByteUtil.concatenate(new byte[] {version}, ripeMD);
+
+            byte checksum[] = ByteUtil.trim(HashUtil.applySha256(HashUtil.applySha256(key_21)), 0, 4);
+
+            /** validation testing checks **/
+//            System.out.println(ByteUtil.list(HashUtil.applySha256(HashUtil.applySha256(key_21))));
+//            System.out.println(ByteUtil.list(checksum));
+
+            wad = new PublicAddress(Base58.encode(ByteUtil.concatenate(key_21, checksum)));
             return Base58.encode(pubKeyBuffer.array());
 
         } catch (Exception e)

@@ -16,6 +16,8 @@ import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.headers.Encodeable;
+import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.core.utils.HashUtil;
 import com.riverssen.core.utils.SmartDataTransferer;
 
 import java.io.DataOutputStream;
@@ -34,6 +36,21 @@ public class PublicAddress implements Encodeable, Exportable, Serializable
     public PublicAddress(byte address[])
     {
         this.address = Base58.encode(address);
+    }
+
+    public static boolean isPublicAddressValid(String address) {
+        byte bytes[]    = Base58.decode(address);
+
+        int first       = bytes[0];
+
+        if(first        != 0) return false;
+
+        byte key_21[]   = ByteUtil.trim(bytes, 0, 21);
+
+        byte a[]        = ByteUtil.trim(bytes, 21, 25);
+        byte b[]        = ByteUtil.trim(HashUtil.applySha256(HashUtil.applySha256(key_21)), 0, 4);
+
+        return ByteUtil.equals(a, b);
     }
 
     @Override
