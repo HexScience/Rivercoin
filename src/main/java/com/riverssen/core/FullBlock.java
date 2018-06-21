@@ -98,7 +98,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         if (!body.getMerkleTree().hash().equals(header.getMerkleRootAsString())) return err_mrkl;
 
         /** validate transactions **/
-        if (!body.transactionsValid()) return err_transactions;
+        if (!body.transactionsValid(context)) return err_transactions;
 
         /** verify timestamp **/
         if (body.getTimeStamp() != header.getTimeStampAsLong()) return err_timestamp;
@@ -118,9 +118,9 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         return 0;
     }
 
-    public synchronized void add(TransactionI token)
+    public synchronized void add(TransactionI token, ContextI context)
     {
-        body.add(token);
+        body.add(token, context);
     }
 
     /**

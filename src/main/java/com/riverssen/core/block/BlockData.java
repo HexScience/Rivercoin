@@ -24,6 +24,7 @@ import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.utils.MerkleTree;
 import com.riverssen.core.utils.SmartDataTransferer;
 
+import javax.naming.Context;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -37,17 +38,14 @@ public class BlockData implements Encodeable, Exportable
     @Write private MerkleTree merkleTree;
     @Write private long time;
     private long dataSize;
-    private ContextI context;
 
-    public BlockData(ContextI context)
+    public BlockData()
     {
-        this.context = context;
         this.merkleTree = new MerkleTree();
     }
 
     public BlockData(long blockID, ContextI context)
     {
-        this.context = context;
         try
         {
             File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "block[" + blockID + "]");
@@ -95,7 +93,7 @@ public class BlockData implements Encodeable, Exportable
         return merkleTree;
     }
 
-    public boolean transactionsValid()
+    public boolean transactionsValid(ContextI context)
     {
         List<TransactionI> flat = merkleTree.flatten();
 
@@ -141,7 +139,7 @@ public class BlockData implements Encodeable, Exportable
         return time;
     }
 
-    public void add(TransactionI token)
+    public void add(TransactionI token, ContextI context)
     {
         if (!token.valid(context)) return;
 
