@@ -73,11 +73,6 @@ public class Wallet
         }
     }
 
-//    public Wallet(PubKey key)
-//    {
-//        this.publicKey = key;
-//    }
-
     public PrivKey getPrivateKey()
     {
         return getPrivateKey(0);
