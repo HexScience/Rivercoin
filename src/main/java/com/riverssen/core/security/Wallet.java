@@ -14,6 +14,9 @@ package com.riverssen.core.security;
 
 import com.riverssen.core.Logger;
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.core.utils.HashUtil;
+import com.riverssen.core.utils.Truple;
 import com.riverssen.core.utils.Tuple;
 
 import java.io.*;
@@ -43,7 +46,7 @@ public class Wallet
         }
     }
 
-    private Set<Tuple<PrivKey, PubKey>> keyPairs;
+    private Set<Truple<String, PrivKey, PubKey>> keyPairs;
     private String  name;
 
     public Wallet(String name, String seed)
@@ -55,22 +58,7 @@ public class Wallet
     {
         this.name       = name;
         this.keyPairs   = new LinkedHashSet<>();
-        try
-        {
-            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("ECDSA", "BC");
-            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-            random.setSeed(seed);
-
-            ECGenParameterSpec ecSpec = new ECGenParameterSpec("prime192v1");
-
-            keyGen.initialize(ecSpec, random);
-            KeyPair keyPair = keyGen.generateKeyPair();
-
-            keyPairs.add(new Tuple<>(new PrivKey(keyPair.getPrivate()), new PubKey(keyPair.getPublic())));
-        } catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+        generateNewKeyPair("default master keys", ByteUtil.concatenate(seed, HashUtil.applySha256(seed), HashUtil.applySha512("default master keys".getBytes())));
     }
 
     public PrivKey getPrivateKey()
@@ -82,11 +70,53 @@ public class Wallet
     {
         int index = 0;
 
-        for(Tuple<PrivKey, PubKey> keyPair : keyPairs)
+        for(Truple<String, PrivKey, PubKey> keyPair : keyPairs)
             if(index ++ == i)
-                return keyPair.getI();
+                return keyPair.getJ();
 
-        return keyPairs.iterator().next().getI();
+        return keyPairs.iterator().next().getJ();
+    }
+
+    public int generateNewKeyPair(String name)
+    {
+        return this.generateNewKeyPair(name, getNewSeed());
+    }
+
+    private byte[] getNewSeed()
+    {
+        byte seed[] = ByteUtil.encode(keyPairs.size());
+
+        for(Truple<String, PrivKey, PubKey> keyPair : keyPairs)
+        {
+            byte privHash[] = HashUtil.applySha512(keyPair.getJ().getPrivate().getEncoded());
+            byte publHash[] = HashUtil.applySha512(keyPair.getC().getPublic().getEncoded());
+
+            seed            = ByteUtil.concatenate(privHash, publHash, HashUtil.applySha512(ByteUtil.concatenate(privHash, publHash, seed)));
+        }
+
+        return ByteUtil.concatenate(seed, HashUtil.applySha512(seed), ByteUtil.encode(seed.length));
+    }
+
+    public int generateNewKeyPair(String name, byte seed[])
+    {
+        try
+        {
+            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("ECDSA", "BC");
+            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+            random.setSeed(seed);
+
+            ECGenParameterSpec ecSpec = new ECGenParameterSpec("prime192v1");
+
+            keyGen.initialize(ecSpec, random);
+            KeyPair keyPair = keyGen.generateKeyPair();
+
+            keyPairs.add(new Truple<>("default", new PrivKey(keyPair.getPrivate()), new PubKey(keyPair.getPublic())));
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        return keyPairs.size() - 1;
     }
 
     public PubKey getPublicKey()
@@ -98,15 +128,28 @@ public class Wallet
     {
         int index = 0;
 
-        for(Tuple<PrivKey, PubKey> keyPair : keyPairs)
+        for(Truple<String, PrivKey, PubKey> keyPair : keyPairs)
             if(index ++ == i)
-                return keyPair.getJ();
+                return keyPair.getC();
 
-        return keyPairs.iterator().next().getJ();
+        return keyPairs.iterator().next().getC();
     }
 
-    public void export(String password, ContextI contextI)
+    public void export(String password, ContextI context)
     {
+        try{
+            File diry = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//");
+            diry.mkdirs();
+
+            File file = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//" + name + ".rwt");
+            File pub = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//readme.txt");
+
+            FileOutputStream writer = new FileOutputStream(file);
+            DataOutputStream stream = new DataOutputStream(writer);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void export(PrivKey privateKey, PubKey publicKey, String password, ContextI context)
