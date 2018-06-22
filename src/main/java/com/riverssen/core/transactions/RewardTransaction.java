@@ -109,8 +109,6 @@ public class RewardTransaction implements TransactionI
         for(TransactionInput txi : txids)
             amount = amount.add(((txi.getUTXO()).getValue().toBigInteger()));
 
-        System.out.println(amount);
-
         return amount;
     }
 

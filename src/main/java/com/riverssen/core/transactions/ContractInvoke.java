@@ -172,9 +172,9 @@ public class ContractInvoke implements TransactionI, Encodeable
         }
 
         for(TransactionInput input : txids)
-            context.getUtxoManager().add(input.getUTXO());
+            context.getUtxoManager().add(input.getUTXO().getOwner().toString(), input.getUTXO());
         for(TransactionOutput output : utxos)
-            context.getUtxoManager().remove(output);
+            context.getUtxoManager().remove(output.getOwner().toString(), output);
     }
 
     public BigInteger getFee()
@@ -201,9 +201,9 @@ public class ContractInvoke implements TransactionI, Encodeable
         }
 
         for(TransactionInput input : txids)
-            context.getUtxoManager().remove(input.getTransactionOutputID());
+            context.getUtxoManager().remove(input.getUTXO().getOwner().toString(), input.getUTXO());
         for(TransactionOutput output : utxos)
-            context.getUtxoManager().add(output);
+            context.getUtxoManager().add(output.getOwner().toString(), output);
 
         return utxos;
     }

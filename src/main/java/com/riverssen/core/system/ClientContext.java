@@ -17,7 +17,7 @@ import com.riverssen.core.BlockPool;
 import com.riverssen.core.Logger;
 import com.riverssen.core.TransactionPool;
 import com.riverssen.core.algorithms.Provider;
-import com.riverssen.core.chainedmap.RiverFlowMap;
+import com.riverssen.riverssen.RiverFlowMap;
 import com.riverssen.core.exceptions.AddressInvalidException;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
@@ -27,6 +27,7 @@ import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.TimeUtil;
+import com.riverssen.riverssen.UTXOMap;
 
 import java.math.BigInteger;
 import java.util.concurrent.ExecutorService;
@@ -38,7 +39,7 @@ public class ClientContext implements ContextI
     private NetworkManager networkManager;
     private BlockPool blockPool;
     private TransactionPool transactionPool;
-    private RiverFlowMap utxoManager;
+    private UTXOMap utxoManager;
     private PublicAddress miner;
     private Wallet wallet;
     private Config config;
@@ -125,7 +126,7 @@ public class ClientContext implements ContextI
         this.transactionPool = transactionPool;
     }
 
-    public RiverFlowMap getUtxoManager()
+    public UTXOMap getUtxoManager()
     {
         return utxoManager;
     }

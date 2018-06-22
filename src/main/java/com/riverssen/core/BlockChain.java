@@ -15,6 +15,7 @@ package com.riverssen.core;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.BlockChainI;
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.Client;
 import com.riverssen.core.networking.messages.RequestBlockMessage;
 import com.riverssen.core.security.Wallet;
@@ -156,13 +157,13 @@ public class BlockChain implements BlockChainI
 
 //        Validate();
 
-//        System.out.println(block.toJSON());
+        System.out.println(block.toJSON());
 
         if(block == null)
             block = new FullBlock(-1, null);
         else block = block.getHeader().continueChain();
 
-//        System.exit(0);
+        System.exit(0);
 
         Set<FullBlock> delete = new LinkedHashSet<>();
         List<FullBlock> blockList = new ArrayList<>();
@@ -215,6 +216,12 @@ public class BlockChain implements BlockChainI
             if(lock)
             {
             } else {
+                while (context.getTransactionPool().available())
+                {
+                    block.add(context.getTransactionPool().next(), context);
+                    if(block.getBody().mine(context))
+                        break;
+                }
                 if(block.getBody().mine(context))
                 {
                     block.mine(context);
