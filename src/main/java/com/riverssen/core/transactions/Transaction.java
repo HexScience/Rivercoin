@@ -79,11 +79,13 @@ public class Transaction implements TransactionI, Encodeable
     }
 
     /** sign transaction **/
-    public void sign(PrivKey key)
+    public TransactionI sign(PrivKey key)
     {
         byte[] bytes = generateSignatureData();
 
         this.signature = key.signEncoded(bytes);
+
+        return this;
     }
 
     public boolean valid(ContextI context)

@@ -14,6 +14,7 @@ package com.riverssen.core.headers;
 
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.security.CompressedAddress;
+import com.riverssen.core.security.PrivKey;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.transactions.*;
 
@@ -29,6 +30,7 @@ public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSON
     CompressedAddress               getSender();
     PublicAddress                   getReceiver();
     int                             hashCode();
+    TransactionI                    sign(PrivKey key);
     default int                     compareTo(TransactionI token)
     {
         return getTimeStamp() > token.getTimeStamp() ? 1 : -1;
