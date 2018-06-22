@@ -92,7 +92,7 @@ public class Transaction implements TransactionI, Encodeable
 
         if (!sender.toPublicKey().isValid()) return false;
 
-        Set<UnspentTransaction> utxos = context.getUtxoManager().get(sender.toPublicKey().getAddress().toString());
+        Set<TransactionOutput> utxos = context.getUtxoManager().get(sender.toPublicKey().getAddress().toString());
 
         for(TransactionInput input : txids) if(!utxos.contains(input.getUTXO().getHash())) return false;
 
@@ -215,9 +215,9 @@ public class Transaction implements TransactionI, Encodeable
         }
 
         for(TransactionInput input : txids)
-            context.getUtxoManager().remove(input.getTransactionOutputID());
+            context.getUtxoManager().remove(input.getUTXO().getOwner().toString(), input.getUTXO());
         for(TransactionOutput output : utxos)
-            context.getUtxoManager().add(output);
+            context.getUtxoManager().add(output.getOwner().toString(), output);
 
         return utxos;
     }
