@@ -12,11 +12,9 @@
 
 package com.riverssen.core.block;
 
-import com.riverssen.core.chainedmap.RiverFlowMap;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.Write;
-import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.core.utils.Serializer;
@@ -24,59 +22,38 @@ import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.utils.MerkleTree;
 import com.riverssen.core.utils.SmartDataTransferer;
 
-import javax.naming.Context;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.zip.InflaterInputStream;
+import java.util.*;
 
 public class BlockData implements Encodeable, Exportable
 {
     public static final int MAX_BLOCK_SIZE = 4_000_000;
     @Write private MerkleTree merkleTree;
+    @Write private Set<TransactionOutput> outputs;
     @Write private long time;
     private long dataSize;
 
     public BlockData()
     {
+        this.outputs = new LinkedHashSet<>();
         this.merkleTree = new MerkleTree();
     }
 
-    public BlockData(long blockID, ContextI context)
+    public BlockData(DataInputStream stream, ContextI context)
     {
-        try
-        {
-            File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "block[" + blockID + "]");
-            DataInputStream stream = new DataInputStream(new InflaterInputStream(new FileInputStream(file)));
-
-            stream.skip(BlockHeader.SIZE);
-
-            load(stream);
-
-            stream.close();
-        } catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        load(stream, context);
     }
 
-    public BlockData(DataInputStream stream)
-    {
-        load(stream);
-    }
-
-    private void load(DataInputStream stream)
+    private void load(DataInputStream stream, ContextI context)
     {
         merkleTree = new MerkleTree();
+        this.outputs = new LinkedHashSet<>();
 
         try
         {
             merkleTree.deserialize(stream, null);
+            for(TransactionI transaction : merkleTree.flatten())
+                outputs.addAll(transaction.getOutputs(context.getMiner(), context));
         } catch (Exception e)
         {
             e.printStackTrace();
@@ -85,7 +62,7 @@ public class BlockData implements Encodeable, Exportable
 
     public boolean mine(ContextI context)
     {
-        return dataSize >= MAX_BLOCK_SIZE || context.getTransactionPool().getLastTransactionWas(context.getConfig().getAverageBlockTime());
+        return dataSize >= MAX_BLOCK_SIZE || context.getTransactionPool().getLastTransactionWas(1);
     }
 
     public MerkleTree getMerkleTree()
@@ -143,14 +120,23 @@ public class BlockData implements Encodeable, Exportable
     {
         if (!token.valid(context)) return;
 
-        context.getUtxoManager().addAll(token.generateOutputs(context.getMiner(), context));
+        List<TransactionOutput> outputs = token.generateOutputs(context.getMiner(), context);
+
+        context.getUtxoManager().addAll(outputs);
+        this.outputs.addAll(outputs);
 
         merkleTree.add(token);
         dataSize += token.toJSON().getBytes().length;
     }
 
-    public void addNoValidation(TransactionI token) {
+    public void addNoValidation(TransactionI token, ContextI context) {
         merkleTree.add(token);
+
+        List<TransactionOutput> outputs = token.generateOutputs(context.getMiner(), context);
+
+        context.getUtxoManager().addAll(outputs);
+
+        this.outputs.addAll(outputs);
         dataSize += token.toJSON().getBytes().length;
     }
 
@@ -184,5 +170,9 @@ public class BlockData implements Encodeable, Exportable
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public Set<TransactionOutput> getOutputs() {
+       return outputs;
     }
 }

@@ -136,6 +136,11 @@ public class ContractInvoke implements TransactionI, Encodeable
         return txids;
     }
 
+    @Override
+    public List<TransactionOutput> getOutputs(PublicAddress miner, ContextI context) {
+        return null;
+    }
+
     /** read all transaction inputs and return a rivercoin value **/
     public BigInteger getInputAmount()
     {

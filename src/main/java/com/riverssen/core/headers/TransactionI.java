@@ -34,6 +34,7 @@ public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSON
         return getTimeStamp() > token.getTimeStamp() ? 1 : -1;
     }
     TXIList                         getTXIDs();
+    List<TransactionOutput>         getOutputs(PublicAddress miner, ContextI context);
     List<TransactionOutput>         generateOutputs(PublicAddress miner, ContextI context);
     RiverCoin                       cost();
 

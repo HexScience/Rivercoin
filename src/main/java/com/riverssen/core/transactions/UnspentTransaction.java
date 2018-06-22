@@ -19,9 +19,9 @@ import com.riverssen.core.utils.ByteUtil;
 
 public class UnspentTransaction implements Encodeable
 {
-    private byte hash[];
-    private PublicAddress receiver;
-    private RiverCoin value;
+    private byte            hash[];
+    private PublicAddress   receiver;
+    private RiverCoin       value;
 
     public UnspentTransaction(byte hash[], String txhash, RiverCoin value, PublicAddress receiver)
     {

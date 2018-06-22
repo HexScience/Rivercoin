@@ -27,7 +27,7 @@ import java.util.zip.InflaterInputStream;
 
 public class BlockHeader implements Encodeable, Exportable
 {
-    public static long SIZE = 8 + 32 + 32 + 32 + 32 + 8 + 32 + 20 + 8 + 8 + 13;
+    public static long SIZE = 8 + 32 + 32 + 32 + 32 + 8 + 32 + PublicAddress.SIZE + 8 + 8 + 13;
     /** 2 byte version information **/
     private long version;
     /** 32 byte hash of **/
@@ -43,7 +43,7 @@ public class BlockHeader implements Encodeable, Exportable
     /** 32 byte integer of the difficulty **/
     private byte difficulty[] = new byte[32];
     /** 20 byte hash of the miners public address **/
-    private byte minerAddress[] = new byte[20];
+    private byte minerAddress[] = new byte[PublicAddress.SIZE];
     /** 8 byte integer solution **/
     private long nonce;
     /** 8 byte integer referencing the block id **/
@@ -280,7 +280,7 @@ public class BlockHeader implements Encodeable, Exportable
 
 //            System.out.println("        System.out.println(\"hi\");\n");
 
-            FullBlock fBlock = new FullBlock(header, new BlockData(stream), parent);
+            FullBlock fBlock = new FullBlock(header, new BlockData(stream, context), parent);
 
             stream.close();
 

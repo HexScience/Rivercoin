@@ -37,7 +37,7 @@ public class RewardTransaction implements TransactionI
 
     public RewardTransaction(DataInputStream stream) throws IOException, Exception
     {
-        receiver = new PublicAddress(ByteUtil.read(stream, 20));
+        receiver = new PublicAddress(ByteUtil.read(stream, PublicAddress.SIZE));
         time     = stream.readLong();
         txids    = new TXIList(stream);
     }
@@ -77,10 +77,13 @@ public class RewardTransaction implements TransactionI
         return txids;
     }
 
-    @Deprecated
-    public List<TransactionOutput> generateOutputs()
+    public List<TransactionOutput> getOutputs(PublicAddress miner, ContextI context)
     {
-        return generateOutputs(null, null);
+        List<TransactionOutput> utxos = new ArrayList<>();
+
+        utxos.add(new TransactionOutput(receiver, new RiverCoin(getInputAmount()), encode(ByteUtil.defaultEncoder())));
+
+        return utxos;
     }
 
     public List<TransactionOutput> generateOutputs(PublicAddress miner, ContextI context)
@@ -88,6 +91,8 @@ public class RewardTransaction implements TransactionI
         List<TransactionOutput> utxos = new ArrayList<>();
 
         utxos.add(new TransactionOutput(receiver, new RiverCoin(getInputAmount()), encode(ByteUtil.defaultEncoder())));
+
+        context.getUtxoManager().addAll(utxos);
 
         return utxos;
     }
@@ -103,6 +108,8 @@ public class RewardTransaction implements TransactionI
 
         for(TransactionInput txi : txids)
             amount = amount.add(((txi.getUTXO()).getValue().toBigInteger()));
+
+        System.out.println(amount);
 
         return amount;
     }

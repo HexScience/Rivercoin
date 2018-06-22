@@ -23,6 +23,7 @@ import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.SmartDataTransferer;
+import com.riverssen.riverssen.UTXO;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -52,10 +53,10 @@ public class Transaction implements TransactionI, Encodeable
     public Transaction(DataInputStream stream) throws IOException, Exception
     {
         sender      = new CompressedAddress(stream);
-        receiver    = new PublicAddress(ByteUtil.read(stream, 20));
+        receiver    = new PublicAddress(ByteUtil.read(stream, PublicAddress.SIZE));
         txids       = new TXIList(stream);
         amount      = RiverCoin.fromStream(stream);
-        data        = ByteUtil.read(stream, 256);
+        data        = ByteUtil.read(stream, stream.read());
         signature   = ByteUtil.read(stream, stream.read());
         timestamp   = ByteUtil.read(stream, 8);
     }
@@ -64,8 +65,7 @@ public class Transaction implements TransactionI, Encodeable
                       PublicAddress             receiver,
                       TXIList                   goods,
                       RiverCoin                 amount,
-                      String                    comment,
-                      long                      timestamp)
+                      String                    comment)
     {
         this.sender     = sender;
         this.receiver   = receiver;
@@ -75,7 +75,7 @@ public class Transaction implements TransactionI, Encodeable
         /** trim excess comment bytes **/
         if(comment.length() > 256) comment = comment.substring(0, 256);
         this.data       = comment.getBytes();
-        this.timestamp  = ByteUtil.encode(timestamp);
+        this.timestamp  = ByteUtil.encode(System.currentTimeMillis());
     }
 
     /** sign transaction **/
@@ -92,7 +92,7 @@ public class Transaction implements TransactionI, Encodeable
 
         if (!sender.toPublicKey().isValid()) return false;
 
-        Set<byte[]> utxos = context.getUtxoManager().getAllUTXOs(sender.toPublicKey().getAddress());
+        Set<UnspentTransaction> utxos = context.getUtxoManager().get(sender.toPublicKey().getAddress().toString());
 
         for(TransactionInput input : txids) if(!utxos.contains(input.getUTXO().getHash())) return false;
 
@@ -129,6 +129,30 @@ public class Transaction implements TransactionI, Encodeable
         return txids;
     }
 
+    @Override
+    public List<TransactionOutput> getOutputs(PublicAddress miner, ContextI context) {
+        List<TransactionOutput> utxos = new ArrayList<>();
+
+        utxos.add(new TransactionOutput(receiver, amount, encode(ByteUtil.defaultEncoder())));
+        RiverCoin leftOver = new RiverCoin(getInputAmount().subtract(amount.toBigInteger()));
+        /** if miner doesn't want fees, then all the leftover amount is returned to the sender as a new unspent output **/
+        if(miner == null) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
+        else {
+            RiverCoin fee = new RiverCoin(getFee());
+            leftOver = new RiverCoin(leftOver.toBigInteger().subtract(fee.toBigInteger()));
+
+            if (leftOver.toBigInteger().compareTo(BigInteger.ZERO) < 0)
+                return null;//("leftover must be bigger than zero");
+            if (fee.toBigInteger().compareTo(BigInteger.ZERO) < 0) return null;//("leftover must be bigger than zero");
+            if (fee.toBigInteger().compareTo(BigInteger.ZERO) > 0)
+                utxos.add(new TransactionOutput(miner, fee, encode(ByteUtil.defaultEncoder())));
+            if (leftOver.toBigInteger().compareTo(BigInteger.ZERO) > 0)
+                utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
+        }
+
+        return utxos;
+    }
+
     /** read all transaction inputs and return a rivercoin value **/
     public BigInteger getInputAmount()
     {
@@ -160,7 +184,7 @@ public class Transaction implements TransactionI, Encodeable
         }
 
         for(TransactionInput input : txids)
-            context.getUtxoManager().add(input.getUTXO());
+            context.getUtxoManager().add(input.getUTXO().getOwner().toString(), input.getUTXO());
         for(TransactionOutput output : utxos)
             context.getUtxoManager().remove(output);
 
@@ -247,6 +271,7 @@ public class Transaction implements TransactionI, Encodeable
             receiver.export(dost);
             txids.export(dost);
             amount.export(dost);
+            dost.write(data.length);
             dost.write(data);
             dost.write(signature.length);
             dost.write(signature);

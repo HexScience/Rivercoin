@@ -13,13 +13,13 @@
 package com.riverssen.core.transactions;
 
 import com.riverssen.core.RiverCoin;
-import com.riverssen.core.algorithms.Sha3;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.JSONFormattable;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.utils.*;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
 /** Instances of this class will be created during runtime using the Transaction::generateOutputs(Transaction*); **/
@@ -38,6 +38,10 @@ public class TransactionOutput/**<T extends Encodeable & JSONFormattable & Expor
 
         /** generate a custom hash id for this particular transactionoutput **/
         this.txoid = ByteUtil.defaultEncoder().encode(ByteUtil.concatenate(receiver.getBytes(), value.getBytes(), parentTXID));
+    }
+
+    public TransactionOutput(DataInputStream stream) throws Exception {
+        this(new PublicAddress(ByteUtil.read(stream, PublicAddress.SIZE)), RiverCoin.fromStream(stream), ByteUtil.read(stream, 32));
     }
 
     /** The parent transaction ID **/
@@ -74,7 +78,7 @@ public class TransactionOutput/**<T extends Encodeable & JSONFormattable & Expor
     @Override
     public String toJSON()
     {
-        return new JSONFormattable.JSON(encode58(new Sha3())).add("owner", getOwner().toString()).add("value", getValue().toString()).add("txid", Base58.encode(getParentTXID())).toString();
+        return new JSONFormattable.JSON().add("txoid", Base58.encode(txoid)).add("owner", getOwner().toString()).add("value", getValue().toRiverCoinString()).add("txid", Base58.encode(getParentTXID())).toString();
     }
 
     @Override
@@ -96,13 +100,13 @@ public class TransactionOutput/**<T extends Encodeable & JSONFormattable & Expor
 
     @Override
     public void export(DataOutputStream dost) {
-        throw new RuntimeException("TransactionOutput: should not be written to stream.");
-//        try {
-//            dost.write(header());
-//            dost.write(content());
-//        } catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
+        try {
+            owner.export(dost);
+            value.export(dost);
+            dost.write(ptxid);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

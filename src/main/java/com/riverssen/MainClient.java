@@ -35,7 +35,7 @@ public class MainClient
     {
         TXIList list = new TXIList();
         Transaction trxn = new Transaction(from.getPublicKey().getCompressed(), new PublicAddress(to), list, new
-                RiverCoin(amt), comment, System.currentTimeMillis());
+                RiverCoin(amt), comment);
         trxn.sign(from.getPrivateKey());
         context.getTransactionPool().addInternal(trxn);
     }

@@ -44,10 +44,10 @@ Rivercoin.iml
 .idea/libraries/Maven__org_jsoup_jsoup_1_11_3.xml
 .idea/libraries/Maven__net_java_jinput_jinput_platform_natives_windows_2_0_5.xml
 .idea/libraries/Maven__org_lwjgl_lwjgl_lwjgl_2_8_4.xml
-target/classes/com/riverssen/core/mpp/compiler/language.spec
-target/classes/com/riverssen/core/mpp/contracts/contracts.mpp
-target/classes/com/riverssen/core/mpp/contracts/currency_contract.mpp
-target/classes/com/riverssen/core/mpp/contracts/test.mpp
-target/classes/com/riverssen/core/mpp/contracts/token.mpp
-target/classes/com/riverssen/core/transactions/contract.rvc
-target/classes/com/riverssen/core/mpp/contracts/mocha.mpp
+target/classes/com/com.riverssen.thirdparty/core/mpp/compiler/language.spec
+target/classes/com/com.riverssen.thirdparty/core/mpp/contracts/contracts.mpp
+target/classes/com/com.riverssen.thirdparty/core/mpp/contracts/currency_contract.mpp
+target/classes/com/com.riverssen.thirdparty/core/mpp/contracts/test.mpp
+target/classes/com/com.riverssen.thirdparty/core/mpp/contracts/token.mpp
+target/classes/com/com.riverssen.thirdparty/core/transactions/contract.rvc
+target/classes/com/com.riverssen.thirdparty/core/mpp/contracts/mocha.mpp

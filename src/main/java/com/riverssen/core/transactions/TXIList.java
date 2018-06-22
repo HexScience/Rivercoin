@@ -35,8 +35,10 @@ public class TXIList extends ArrayList<TransactionInput> implements Encodeable, 
             int size = stream.readInt();
 
             for(int i = 0; i < size; i ++)
-                add(new TransactionInput(ByteUtil.read(stream, 32)));
+                add(new TransactionInput(stream));
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

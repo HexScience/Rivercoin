@@ -19,13 +19,16 @@ import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
 import com.riverssen.core.system.LatestBlockInfo;
 import com.riverssen.core.transactions.RewardTransaction;
+import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.core.utils.*;
 
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.zip.DeflaterOutputStream;
 
 public class FullBlock implements Encodeable, JSONFormattable, Exportable
@@ -43,6 +46,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     private BlockHeader header;
     /** this blocks body **/
     private BlockData   body;
+
     /** this transaction **/
 
     public FullBlock(BlockHeader header, BlockData data, BlockHeader parent)
@@ -146,7 +150,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         //System.out.println(new RewardTransaction(miner).toJSON());
 
         /** add the reward BEFORE mining the block **/
-        body.addNoValidation(new RewardTransaction(miner, algorithm.encode(body.getBytes())));
+        body.addNoValidation(new RewardTransaction(miner, algorithm.encode(body.getBytes())), context);
         /** rebuild tree to include reward **/
         body.getMerkleTree().buildTree();
 
@@ -197,7 +201,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     private synchronized ByteBuffer getBodyAsByteBuffer()
     {
         byte bodydata[] = getBytes();
-        ByteBuffer data = ByteBuffer.allocate(32 + 32 + 20 + 32 + 8 + 8 + 32 + RiverCoin.MAX_BYTES + bodydata.length + 8);
+        ByteBuffer data = ByteBuffer.allocate(32 + 32 + PublicAddress.SIZE + 32 + 8 + 8 + 32 + RiverCoin.MAX_BYTES + bodydata.length + 8);
         data.put(header.getParentHash());
         data.put(header.getDifficulty());
         data.put(header.getMinerAddress());
@@ -261,6 +265,19 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
 
     @Override
     public String toJSON() {
-        return new JSON().add(header.toString()).add(new JSON("body").add(body.getMerkleTree().toString()).toString()).toString();
+        return new JSON().add(header.toString())
+                .add(new JSON("outputs", true).add(outputsAsJSON()).toString())
+                .add(new JSON("body").add(body.getMerkleTree().toString()).toString()).toString();
+    }
+
+    private String outputsAsJSON() {
+        String data = "";
+
+        for(TransactionOutput output : getBody().getOutputs())
+            data += output.toString() + ", ";
+
+        if (data.length() == 0) return "";
+
+        return data.substring(0, data.length() - 2);
     }
 }

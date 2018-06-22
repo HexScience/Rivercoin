@@ -44,6 +44,9 @@ public class RivercoinCore
         ContextI context = null;
         Config   config  = new Config(new File(file));
 
+//        RiverCoin coin = new RiverCoin("14134.4134");
+//        System.out.println(new RiverCoin(coin.getBytes()));
+
         /** Generate directories if they don't exist **/
         FileUtils.createDirectoryIfDoesntExist(config.getBlockChainDirectory());
         FileUtils.createDirectoryIfDoesntExist(config.getBlockChainTransactionDirectory());

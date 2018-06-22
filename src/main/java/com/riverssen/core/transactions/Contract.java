@@ -83,6 +83,11 @@ public class Contract implements TransactionI
     }
 
     @Override
+    public List<TransactionOutput> getOutputs(PublicAddress miner, ContextI context) {
+        return null;
+    }
+
+    @Override
     public List<TransactionOutput> generateOutputs(PublicAddress miner, ContextI context)
     {
         return null;

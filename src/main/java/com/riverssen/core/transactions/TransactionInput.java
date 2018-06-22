@@ -17,6 +17,7 @@ import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.utils.SmartDataTransferer;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -34,6 +35,10 @@ public class TransactionInput/**<T extends Encodeable & JSONFormattable & Export
     public TransactionInput(byte transactionInputID[])
     {
         this.transactionOutputID = transactionInputID;
+    }
+
+    public TransactionInput(DataInputStream stream) throws Exception {
+        this(new TransactionOutput(stream));
     }
 
     public TransactionOutput getUTXO()
@@ -70,8 +75,8 @@ public class TransactionInput/**<T extends Encodeable & JSONFormattable & Export
     public void export(DataOutputStream dost)
     {
         try {
-            dost.write(transactionOutputID);
-        } catch (IOException e) {
+            utxo.export(dost);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

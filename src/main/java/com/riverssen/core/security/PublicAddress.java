@@ -26,6 +26,7 @@ import java.io.Serializable;
 
 public class PublicAddress implements Encodeable, Exportable, Serializable
 {
+    public static final int SIZE = 25;
     private String address;
 
     public PublicAddress(String address)

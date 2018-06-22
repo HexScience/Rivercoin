@@ -17,7 +17,10 @@ import com.riverssen.core.headers.BlockChainI;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.networking.Client;
 import com.riverssen.core.networking.messages.RequestBlockMessage;
+import com.riverssen.core.security.Wallet;
 import com.riverssen.core.system.LatestBlockInfo;
+import com.riverssen.core.transactions.TXIList;
+import com.riverssen.core.transactions.Transaction;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -34,7 +37,8 @@ public class BlockChain implements BlockChainI
 
     public BlockChain(ContextI context)
     {
-        this.context = context;
+        this.context        = context;
+        this.orphanedBlocks = new LinkedHashSet<>();
     }
 
     @Override
@@ -141,6 +145,8 @@ public class BlockChain implements BlockChainI
     @Override
     public void run()
     {
+        Wallet wallet = new Wallet("test", "test");
+        context.getTransactionPool().addInternal(new Transaction(wallet.getPublicKey().getCompressed(), context.getMiner(), new TXIList(), new RiverCoin("12.0"), "bro"));
         FetchBlockChainFromDisk();
 //        FetchBlockChainFromPeers();
 //        if(block == null)
@@ -150,14 +156,13 @@ public class BlockChain implements BlockChainI
 
 //        Validate();
 
-        System.out.println(block.toJSON());
+//        System.out.println(block.toJSON());
 
         if(block == null)
             block = new FullBlock(-1, null);
         else block = block.getHeader().continueChain();
 
-
-        System.exit(0);
+//        System.exit(0);
 
         Set<FullBlock> delete = new LinkedHashSet<>();
         List<FullBlock> blockList = new ArrayList<>();
@@ -209,7 +214,6 @@ public class BlockChain implements BlockChainI
 
             if(lock)
             {
-
             } else {
                 if(block.getBody().mine(context))
                 {
