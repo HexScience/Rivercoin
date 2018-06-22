@@ -147,7 +147,7 @@ public class BlockChain implements BlockChainI
     public void run()
     {
         Wallet wallet = new Wallet("test", "test");
-        context.getTransactionPool().addInternal(new Transaction(wallet.getPublicKey().getCompressed(), context.getMiner(), new TXIList(), new RiverCoin("12.0"), "bro"));
+        context.getTransactionPool().addInternal(new Transaction(wallet.getPublicKey().getCompressed(), context.getMiner(), new TXIList(), new RiverCoin("12.0"), "bro").sign(wallet.getPrivateKey()));
 
         FetchBlockChainFromDisk();
 //        FetchBlockChainFromPeers();

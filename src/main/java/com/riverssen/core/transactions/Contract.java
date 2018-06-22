@@ -21,6 +21,7 @@ import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.mpp.exceptions.CompileException;
 import com.riverssen.core.mpp.exceptions.ParseException;
 import com.riverssen.core.security.CompressedAddress;
+import com.riverssen.core.security.PrivKey;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
 import com.riverssen.core.headers.ContextI;
@@ -73,6 +74,11 @@ public class Contract implements TransactionI
     @Override
     public PublicAddress getReceiver()
     {
+        return null;
+    }
+
+    @Override
+    public TransactionI sign(PrivKey key) {
         return null;
     }
 
