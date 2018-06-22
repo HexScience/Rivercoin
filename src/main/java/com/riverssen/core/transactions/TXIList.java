@@ -63,6 +63,7 @@ public class TXIList extends ArrayList<TransactionInput> implements Encodeable, 
     @Override
     public byte[] getBytes()
     {
+        if(size() == 0) return new byte[1];
         byte data[] = get(0).getBytes();
 
         for(int i = 1; i < size(); i ++) data = ByteUtil.concatenate(data, get(i).getBytes());
