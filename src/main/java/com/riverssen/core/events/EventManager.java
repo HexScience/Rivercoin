@@ -12,20 +12,6 @@
 
 package com.riverssen.core.events;
 
-import com.riverssen.core.headers.Event;
-
-public class TerminateEvent implements Event<String>
+public class EventManager
 {
-    private String data;
-
-    public TerminateEvent(String reason)
-    {
-        this.data = reason;
-    }
-
-    @Override
-    public void fireEvent(String data)
-    {
-
-    }
 }
