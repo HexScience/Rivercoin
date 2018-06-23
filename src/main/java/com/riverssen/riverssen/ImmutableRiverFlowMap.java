@@ -1,32 +1,33 @@
-/**
- * Copyright 2018 Ragnarr Ivarssen
- * This Software Is Free For Use And Must
+/*
+ * The MIT License (MIT)
  *
- * Not Be Sold And Or Distributed Without The Written Permission Of
- * (Ragnarr Ivarssen Riverssen@gmail.com).
+ * Copyright (c) 2018 Riverssen
  *
- * The Software's Code Must Not Be Made Public, The Software Must Not Be Decompiled, Reverse Engineered, Or Unobfuscated In Any Way
- * Without The Written Permission Of (Ragnarr Ivarssen Riverssen@gmail.com).
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
- * The Creator (Ragnarr Ivarssen Riverssen@Gmail.com) Does Not Provide Any Warranties
- * To The Quality Of The Software And It Is Provided "As Is".
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.riverssen.riverssen;
 
-import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.transactions.TransactionOutput;
-import com.riverssen.core.transactions.UnspentTransaction;
 
 import java.util.*;
 
-public class RiverFlowMap implements UTXOMap
+public class ImmutableRiverFlowMap implements UTXOMap
 {
     private HashMap<String, Set<TransactionOutput>> data;
 
-    public RiverFlowMap()
+    public ImmutableRiverFlowMap()
     {
         this.data = new HashMap<>();
+    }
+
+    public ImmutableRiverFlowMap(HashMap<String, Set<TransactionOutput>> data)
+    {
+        this.data = data;
     }
 
     @Override
@@ -98,6 +99,7 @@ public class RiverFlowMap implements UTXOMap
     }
 
     @Override
+    @Constant
     public Set<TransactionOutput> get(String address)
     {
         if(data.containsKey(address)) return data.get(address);
