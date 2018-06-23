@@ -14,15 +14,19 @@ package com.riverssen.core.security;
 
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.Exportable;
+import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.HashUtil;
 import com.riverssen.core.utils.SmartDataTransferer;
+import com.riverssen.riverssen.UTXOMap;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Set;
 
 public class PublicAddress implements Encodeable, Exportable, Serializable
 {
@@ -70,9 +74,15 @@ public class PublicAddress implements Encodeable, Exportable, Serializable
         return Base58.decode(public_address);
     }
 
-    public RiverCoin getBalance()
+    public RiverCoin getBalance(UTXOMap map)
     {
-        return UTXOTree.traverse(this);
+        Set<TransactionOutput> set = map.get(this.address);
+
+        BigInteger balance = BigInteger.ZERO;
+
+        for ()
+
+        return balance;
     }
 
     public boolean equals(PublicAddress address)
