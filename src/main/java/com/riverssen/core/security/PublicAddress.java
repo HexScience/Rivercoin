@@ -80,9 +80,10 @@ public class PublicAddress implements Encodeable, Exportable, Serializable
 
         BigInteger balance = BigInteger.ZERO;
 
-        for ()
+        for (TransactionOutput output : set)
+            balance = balance.add(output.getValue().toBigInteger());
 
-        return balance;
+        return new RiverCoin(balance);
     }
 
     public boolean equals(PublicAddress address)
