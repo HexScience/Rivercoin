@@ -28,5 +28,9 @@ public interface UTXOMap {
     public void remove(String publicAddress, TransactionOutput utxo);
     public void remove(TransactionOutput utxo);
 
+    public UTXOMap getBranch();
+
+    public byte[] getStamp();
+
     Set<TransactionOutput> get(String address);
 }

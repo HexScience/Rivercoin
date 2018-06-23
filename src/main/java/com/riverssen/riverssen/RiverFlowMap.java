@@ -14,13 +14,11 @@
 
 package com.riverssen.riverssen;
 
+import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.core.transactions.UnspentTransaction;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class RiverFlowMap implements UTXOMap
 {
@@ -66,6 +64,32 @@ public class RiverFlowMap implements UTXOMap
         for(Set<TransactionOutput> set : data.values())
             if(set.contains(utxo))
                 set.remove(utxo);
+    }
+
+
+    private Element createMerkleTree(String address)
+    {
+        PriorityQueue<Element> hashes = new PriorityQueue<>();
+
+        for(TransactionOutput array : data.get(address)) hashes.add(new Element(array));
+
+        while(hashes.size() > 1)
+            hashes.add(new Element(hashes.poll(), hashes.poll()));
+
+        return hashes.poll();
+    }
+
+    @Override
+    public byte[] getStamp() {
+        PriorityQueue<Element> hashes = new PriorityQueue<>();
+
+        for(String address : data.keySet())
+            hashes.add(createMerkleTree(address));
+
+        while(hashes.size() > 1)
+            hashes.add(new Element(hashes.poll(), hashes.poll()));
+
+        return new byte[0];
     }
 
     @Override
