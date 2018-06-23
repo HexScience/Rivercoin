@@ -15,11 +15,10 @@ package com.riverssen.core.compression;
 import com.riverssen.core.algorithms.Sha3;
 import com.riverssen.core.utils.Base58;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.security.Security;
 import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterInputStream;
 
 public class CompressionUtil
 {
@@ -55,6 +54,25 @@ public class CompressionUtil
         deflaterOutputStream.close();
 
         outputStream.writeInt(byteArrayOutputStream.size());
+        outputStream.writeInt(data.length);
         outputStream.write(byteArrayOutputStream.toByteArray());
+    }
+
+    public static byte[] decompressData(DataInputStream inputStream) throws IOException
+    {
+        int compressedsize  = inputStream.readInt();
+        int originalsize    = inputStream.readInt();
+
+        byte data[] = new byte[compressedsize];
+
+        inputStream.read(data);
+
+        InflaterInputStream inflaterInputStream = new InflaterInputStream(new ByteArrayInputStream(data));
+
+        byte originalData[] = new byte[originalsize];
+
+        inflaterInputStream.read(originalData);
+
+        return originalData;
     }
 }
