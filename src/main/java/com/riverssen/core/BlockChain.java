@@ -13,9 +13,9 @@
 package com.riverssen.core;
 
 import com.riverssen.core.block.BlockHeader;
+import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.headers.BlockChainI;
 import com.riverssen.core.headers.ContextI;
-import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.Client;
 import com.riverssen.core.networking.messages.RequestBlockMessage;
 import com.riverssen.core.security.Wallet;

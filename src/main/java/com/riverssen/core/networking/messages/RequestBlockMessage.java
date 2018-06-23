@@ -12,7 +12,7 @@
 
 package com.riverssen.core.networking.messages;
 
-import com.riverssen.core.FullBlock;
+import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.networking.Client;

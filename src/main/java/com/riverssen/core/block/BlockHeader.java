@@ -12,7 +12,6 @@
 
 package com.riverssen.core.block;
 
-import com.riverssen.core.FullBlock;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.Exportable;

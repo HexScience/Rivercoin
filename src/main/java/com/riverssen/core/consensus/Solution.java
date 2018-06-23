@@ -12,7 +12,7 @@
 
 package com.riverssen.core.consensus;
 
-import com.riverssen.core.FullBlock;
+import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.ContextI;

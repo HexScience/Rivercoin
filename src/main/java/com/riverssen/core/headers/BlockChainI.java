@@ -1,6 +1,6 @@
 package com.riverssen.core.headers;
 
-import com.riverssen.core.FullBlock;
+import com.riverssen.core.block.FullBlock;
 
 public interface BlockChainI extends Runnable
 {

@@ -13,6 +13,7 @@
 package com.riverssen.core;
 
 import com.riverssen.core.block.BlockHeader;
+import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.system.LatestBlockInfo;
 

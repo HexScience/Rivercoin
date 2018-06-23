@@ -1,6 +1,6 @@
 package com.riverssen.core.system;
 
-import com.riverssen.core.FullBlock;
+import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.ContextI;
 

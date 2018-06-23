@@ -10,10 +10,10 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen.core;
+package com.riverssen.core.block;
 
-import com.riverssen.core.block.BlockData;
-import com.riverssen.core.block.BlockHeader;
+import com.riverssen.core.Logger;
+import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.*;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
@@ -25,10 +25,6 @@ import com.riverssen.core.utils.*;
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
 import java.util.zip.DeflaterOutputStream;
 
 public class FullBlock implements Encodeable, JSONFormattable, Exportable

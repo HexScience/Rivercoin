@@ -12,7 +12,7 @@
 
 package com.riverssen.core.transactions;
 
-import com.riverssen.core.FullBlock;
+import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.compression.Base58Hash;
 import com.riverssen.core.headers.TransactionI;

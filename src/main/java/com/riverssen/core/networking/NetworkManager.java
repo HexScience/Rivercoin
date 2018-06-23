@@ -12,8 +12,7 @@
 
 package com.riverssen.core.networking;
 
-import com.riverssen.core.FullBlock;
-import com.riverssen.core.headers.Event;
+import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.headers.TransactionI;
 
 import java.util.Set;
