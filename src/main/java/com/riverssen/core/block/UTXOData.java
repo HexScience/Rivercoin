@@ -18,6 +18,9 @@ import com.riverssen.core.utils.SmartDataTransferer;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+/**
+ * this class contains NEWLY created utxos
+ */
 public class UTXOData implements Exportable
 {
     public UTXOData()
