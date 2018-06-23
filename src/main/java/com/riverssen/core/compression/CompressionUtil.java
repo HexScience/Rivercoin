@@ -15,7 +15,11 @@ package com.riverssen.core.compression;
 import com.riverssen.core.algorithms.Sha3;
 import com.riverssen.core.utils.Base58;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.security.Security;
+import java.util.zip.DeflaterOutputStream;
 
 public class CompressionUtil
 {
@@ -38,5 +42,19 @@ public class CompressionUtil
     {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         System.out.println(Base58.encode(new Sha3().encode(new byte[3342])).length());
+    }
+
+    public static void compressData(byte data[], DataOutputStream outputStream) throws IOException
+    {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DeflaterOutputStream  deflaterOutputStream  = new DeflaterOutputStream(byteArrayOutputStream);
+
+        deflaterOutputStream.write(data);
+
+        deflaterOutputStream.flush();
+        deflaterOutputStream.close();
+
+        outputStream.writeInt(byteArrayOutputStream.size());
+        outputStream.write(byteArrayOutputStream.toByteArray());
     }
 }
