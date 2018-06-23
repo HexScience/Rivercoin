@@ -13,16 +13,23 @@
 package com.riverssen.riverssen;
 
 import com.riverssen.core.transactions.TransactionOutput;
+import com.riverssen.core.utils.Tuple;
 
 import java.util.*;
 
 public class ImmutableRiverFlowMap implements UTXOMap
 {
     private HashMap<String, Set<TransactionOutput>> data;
+    private Set<Tuple<String, TransactionOutput>>   add;
+    private Set<String>                             remove;
+    private Set<Tuple<String, TransactionOutput>>   remove_values;
 
     public ImmutableRiverFlowMap()
     {
-        this.data = new HashMap<>();
+        this.data   = new HashMap<>();
+        this.add    = new LinkedHashSet<>();
+        this.remove = new LinkedHashSet<>();
+        this.remove_values = new LinkedHashSet<>();
     }
 
     public ImmutableRiverFlowMap(HashMap<String, Set<TransactionOutput>> data)
@@ -32,15 +39,13 @@ public class ImmutableRiverFlowMap implements UTXOMap
 
     @Override
     public void add(String publicAddress, TransactionOutput utxo) {
-        get(publicAddress).add(utxo);
+        add.add(new Tuple<>(publicAddress, utxo));
     }
 
     @Override
     public void addAll(String publicAddress, List<TransactionOutput> utxos) {
-        Set<TransactionOutput> set = get(publicAddress);
-
         for(TransactionOutput utxo : utxos)
-            set.add(utxo);
+            add(publicAddress, utxo);
     }
 
     @Override
@@ -51,12 +56,12 @@ public class ImmutableRiverFlowMap implements UTXOMap
 
     @Override
     public void remove(String publicAddress) {
-        data.remove(publicAddress);
+        remove.add(publicAddress);
     }
 
     @Override
     public void remove(String publicAddress, TransactionOutput utxo) {
-        get(publicAddress).remove(utxo);
+        remove_values.add(new Tuple<>(publicAddress, utxo));
     }
 
     @Override

@@ -14,9 +14,7 @@
 
 package com.riverssen.riverssen;
 
-import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.transactions.TransactionOutput;
-import com.riverssen.core.transactions.UnspentTransaction;
 
 import java.util.*;
 
