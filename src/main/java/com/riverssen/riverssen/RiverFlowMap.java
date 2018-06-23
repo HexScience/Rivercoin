@@ -15,6 +15,7 @@
 package com.riverssen.riverssen;
 
 import com.riverssen.core.transactions.TransactionOutput;
+import com.riverssen.core.utils.Tuple;
 
 import java.util.*;
 
@@ -57,14 +58,6 @@ public class RiverFlowMap implements UTXOMap
     }
 
     @Override
-    @Deprecated
-    public void remove(TransactionOutput utxo) {
-        for(Set<TransactionOutput> set : data.values())
-            if(set.contains(utxo))
-                set.remove(utxo);
-    }
-
-    @Override
     public UTXOMap getBranch() {
         return new ImmutableRiverFlowMap(data);
     }
@@ -93,6 +86,24 @@ public class RiverFlowMap implements UTXOMap
             hashes.add(new Element(hashes.poll(), hashes.poll()));
 
         return new byte[0];
+    }
+
+    @Override
+    public void addAll(UTXOMap map) {
+        if(map instanceof RiverFlowMap)
+            data.putAll(((RiverFlowMap) map).data);
+        else {
+            ImmutableRiverFlowMap map_ = (ImmutableRiverFlowMap) map;
+
+            for(String remove : map_.remove)
+                remove(remove);
+
+            for(Tuple<String, TransactionOutput> remove : map_.remove_values)
+                remove(remove.getI(), remove.getJ());
+
+            for(Tuple<String, TransactionOutput> add : map_.add)
+                add(add.getI(), add.getJ());
+        }
     }
 
     @Override

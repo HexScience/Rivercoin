@@ -19,10 +19,10 @@ import java.util.*;
 
 public class ImmutableRiverFlowMap implements UTXOMap
 {
-    private HashMap<String, Set<TransactionOutput>> data;
-    private Set<Tuple<String, TransactionOutput>>   add;
-    private Set<String>                             remove;
-    private Set<Tuple<String, TransactionOutput>>   remove_values;
+    private     HashMap<String, Set<TransactionOutput>> data;
+    protected   Set<Tuple<String, TransactionOutput>>   add;
+    protected   Set<String>                             remove;
+    protected   Set<Tuple<String, TransactionOutput>>   remove_values;
 
     public ImmutableRiverFlowMap()
     {
@@ -65,14 +65,6 @@ public class ImmutableRiverFlowMap implements UTXOMap
     }
 
     @Override
-    @Deprecated
-    public void remove(TransactionOutput utxo) {
-        for(Set<TransactionOutput> set : data.values())
-            if(set.contains(utxo))
-                set.remove(utxo);
-    }
-
-    @Override
     public UTXOMap getBranch() {
         return new ImmutableRiverFlowMap(data);
     }
@@ -101,6 +93,10 @@ public class ImmutableRiverFlowMap implements UTXOMap
             hashes.add(new Element(hashes.poll(), hashes.poll()));
 
         return new byte[0];
+    }
+
+    @Override
+    public void addAll(UTXOMap map) {
     }
 
     @Override
