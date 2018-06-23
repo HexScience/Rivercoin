@@ -74,7 +74,7 @@ public class PublicAddress implements Encodeable, Exportable, Serializable
         return Base58.decode(public_address);
     }
 
-    public RiverCoin getBalance(UTXOMap map)
+    public BigInteger getBalance(UTXOMap map)
     {
         Set<TransactionOutput> set = map.get(this.address);
 
@@ -83,7 +83,7 @@ public class PublicAddress implements Encodeable, Exportable, Serializable
         for (TransactionOutput output : set)
             balance = balance.add(output.getValue().toBigInteger());
 
-        return new RiverCoin(balance);
+        return balance;
     }
 
     public boolean equals(PublicAddress address)

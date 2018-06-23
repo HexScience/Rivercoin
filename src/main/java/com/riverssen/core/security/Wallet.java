@@ -18,8 +18,10 @@ import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.HashUtil;
 import com.riverssen.core.utils.Truple;
 import com.riverssen.core.utils.Tuple;
+import com.riverssen.riverssen.UTXOMap;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -117,6 +119,16 @@ public class Wallet
         }
 
         return keyPairs.size() - 1;
+    }
+
+    public BigInteger getBalance(UTXOMap map)
+    {
+        BigInteger integer = BigInteger.ZERO;
+
+        for(int i = 0; i < keyPairs.size(); i ++)
+            integer = integer.add(getPublicAddress(i).getBalance(map));
+
+        return integer;
     }
 
     public PubKey getPublicKey()
