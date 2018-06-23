@@ -188,7 +188,7 @@ public class Transaction implements TransactionI, Encodeable
         for(TransactionInput input : txids)
             context.getUtxoManager().add(input.getUTXO().getOwner().toString(), input.getUTXO());
         for(TransactionOutput output : utxos)
-            context.getUtxoManager().remove(output);
+            context.getUtxoManager().remove(output.getOwner().toString(), output);
 
         context.getUtxoManager().addAll(utxos);
     }
