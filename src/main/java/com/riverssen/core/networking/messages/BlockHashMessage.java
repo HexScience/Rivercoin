@@ -49,7 +49,7 @@ public class BlockHashMessage extends BasicMessage
         String hashCode = connection.getInputStream().readUTF();
 
         try{
-            FullBlock block = new FullBlock(connection.getInputStream());
+            FullBlock block = new FullBlock(connection.getInputStream(), context);
             if(block.validate(context) > 0)
             {
                 client.sendMessage(new SuccessMessage(hashCode));
