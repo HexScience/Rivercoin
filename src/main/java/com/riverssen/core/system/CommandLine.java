@@ -35,6 +35,13 @@ public class CommandLine
     {
         @Override
         public Command parse(String text, ContextI context) {
+            if(text == null)
+            {
+                Logger.prt(Logger.COLOUR_YELLOW, "incorrect arguments.");
+                logHelp();
+
+                return this;
+            }
             switch (text)
             {
                 case "-balance":
@@ -45,25 +52,23 @@ public class CommandLine
                 case "-generate":
                 case "-g":
                     return (name, context2)->{
+                        if(name == null)
+                        {
+                            Logger.prt(Logger.COLOUR_YELLOW, "incorrect arguments.");
+                            logHelp();
+
+                            return this;
+                        }
                         return (seed, context3)->{
+                            if(seed == null)
+                            {
+                                Logger.prt(Logger.COLOUR_YELLOW, "incorrect arguments.");
+                                logHelp();
+
+                                return this;
+                            }
                             return (password, context4)->{
-                                if(name == null)
-                                {
-                                    Logger.prt(Logger.COLOUR_YELLOW, "incorrect arguments.");
-                                    logHelp();
-
-                                    return this;
-                                }
-
-                                else if(seed == null)
-                                {
-                                    Logger.prt(Logger.COLOUR_YELLOW, "incorrect arguments.");
-                                    logHelp();
-
-                                    return this;
-                                }
-
-                                else if(password == null)
+                                if(password == null)
                                     password = "0000000000000000";
 
 

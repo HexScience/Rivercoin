@@ -181,7 +181,7 @@ public class ClientContext implements ContextI
                 command = command.parse(text, this);
             }
 
-            command.parse("", this);
+            command.parse(null, this);
         }
     }
 
