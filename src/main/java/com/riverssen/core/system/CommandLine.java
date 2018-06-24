@@ -15,5 +15,34 @@ package com.riverssen.core.system;
 public class CommandLine
 {
     interface Command{
+        Command parse(String text);
+    }
+
+    static class WalletCommand implements Command
+    {
+        @Override
+        public Command parse(String text) {
+            switch (text)
+            {
+                case "-balance":
+                    return (t)->{return this;};
+            }
+
+            return this;
+        }
+    }
+
+    public static Command newCommand()
+    {
+        return (text)->{
+            switch (text)
+            {
+                case "wallet":
+                    return new WalletCommand();
+
+                default:
+                    return newCommand();
+            }
+        };
     }
 }
