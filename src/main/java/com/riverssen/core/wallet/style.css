@@ -1,0 +1,40 @@
+.tab{
+    -fx-background-radius: 0px;
+    -fx-background-color: #212E35;
+}
+
+.mywallet
+{
+    /* -fx-background-image: url("file:wallet.svg"); */
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 10px;
+    -fx-background-size: 70px;
+}
+
+.tab:selected
+{
+    -fx-background-color: #2C383F;
+}
+.tab:hover{
+    -fx-background-color: #2C383F;
+}
+
+.send{
+    /* -fx-background-color: linear-gradient(#e66465, #9198e5); */
+    -fx-background-color: linear-gradient(to left, #00C5FF, #00C5FF 50%, #007CFF);
+    -fx-background-radius: 20px;
+}
+
+.choice{
+    -fx-background-color: #212E35;
+    -fx-background-radius: 20px;
+}
+
+.list{
+    -fx-background-radius: 0px;
+    -fx-background-color: #16232B;
+}
+
+.text_area{
+    -fx-background-color: #212E35;
+}
