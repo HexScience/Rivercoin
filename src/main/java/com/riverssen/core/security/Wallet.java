@@ -12,12 +12,11 @@
 
 package com.riverssen.core.security;
 
-import com.riverssen.core.Logger;
+import com.riverssen.core.system.Logger;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.HashUtil;
 import com.riverssen.core.utils.Truple;
-import com.riverssen.core.utils.Tuple;
 import com.riverssen.riverssen.UTXOMap;
 
 import java.io.*;
@@ -27,8 +26,6 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
 import java.security.spec.ECGenParameterSpec;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

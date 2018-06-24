@@ -12,7 +12,7 @@
 
 package com.riverssen.core.utils;
 
-import com.riverssen.core.Logger;
+import com.riverssen.core.system.Logger;
 
 import java.io.*;
 import java.nio.file.FileSystems;

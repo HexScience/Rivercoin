@@ -12,7 +12,7 @@
 
 package com.riverssen.core.rsql;
 
-import com.riverssen.core.Logger;
+import com.riverssen.core.system.Logger;
 import com.riverssen.core.headers.SQLCommand;
 import com.riverssen.core.utils.ByteUtil;
 

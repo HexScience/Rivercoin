@@ -20,6 +20,7 @@ import com.riverssen.core.networking.Client;
 import com.riverssen.core.networking.messages.RequestBlockMessage;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.system.LatestBlockInfo;
+import com.riverssen.core.system.Logger;
 import com.riverssen.core.transactions.TXIList;
 import com.riverssen.core.transactions.Transaction;
 

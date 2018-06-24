@@ -14,7 +14,6 @@ package com.riverssen.core.system;
 
 import com.riverssen.core.BlockChain;
 import com.riverssen.core.BlockPool;
-import com.riverssen.core.Logger;
 import com.riverssen.core.TransactionPool;
 import com.riverssen.core.algorithms.Provider;
 import com.riverssen.riverssen.RiverFlowMap;

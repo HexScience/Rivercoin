@@ -12,13 +12,8 @@
 
 package com.riverssen.core;
 
-import com.riverssen.core.security.PublicAddress;
-import com.riverssen.core.security.Wallet;
-import com.riverssen.core.system.ClientContext;
-import com.riverssen.core.system.Config;
-import com.riverssen.core.system.MiningContext;
+import com.riverssen.core.system.*;
 import com.riverssen.core.headers.ContextI;
-import com.riverssen.core.system.NodeContext;
 import com.riverssen.core.utils.FileUtils;
 
 import java.io.File;

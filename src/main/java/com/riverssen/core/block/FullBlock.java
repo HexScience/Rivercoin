@@ -12,7 +12,7 @@
 
 package com.riverssen.core.block;
 
-import com.riverssen.core.Logger;
+import com.riverssen.core.system.Logger;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.*;
 import com.riverssen.core.security.PublicAddress;

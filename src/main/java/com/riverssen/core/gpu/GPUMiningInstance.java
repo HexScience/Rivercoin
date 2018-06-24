@@ -12,7 +12,7 @@
 
 package com.riverssen.core.gpu;
 
-import com.riverssen.core.Logger;
+import com.riverssen.core.system.Logger;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.PointerBuffer;

@@ -12,7 +12,6 @@
 
 package com.riverssen.core.system;
 
-import com.riverssen.core.Logger;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
@@ -22,7 +21,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.math.RoundingMode;
 
 public class Config

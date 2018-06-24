@@ -12,7 +12,7 @@
 
 package com.riverssen.core.utils;
 
-import com.riverssen.core.Logger;
+import com.riverssen.core.system.Logger;
 import com.riverssen.core.security.PubKey;
 
 import java.math.BigInteger;
