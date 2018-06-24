@@ -39,6 +39,9 @@ public class CommandLine
             {
                 case "-balance":
                     return (t, context1)->{return this;};
+                case "-send":
+                case "-s":
+                    return this;
                 case "-generate":
                 case "-g":
                     return (name, context2)->{
@@ -67,6 +70,8 @@ public class CommandLine
                                 Wallet wallet = new Wallet(name, seed);
 
                                 wallet.export(password, context4);
+
+                                Logger.alert("wallet generation successful!");
                                 return this;
                             };
                         };

@@ -172,12 +172,16 @@ public class ClientContext implements ContextI
 
         while (isRunning())
         {
+            CommandLine.Command command = CommandLine.newCommand();
+
             while(scanner.hasNext())
             {
                 String text = scanner.next();
 
-                Logger.err(text);
+                command = command.parse(text, this);
             }
+
+            command.parse("", this);
         }
     }
 
