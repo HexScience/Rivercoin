@@ -14,8 +14,10 @@
 
 package com.riverssen.riverssen;
 
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.transactions.TransactionOutput;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -32,6 +34,8 @@ public interface UTXOMap {
     public byte[] getStamp();
 
     public void addAll(UTXOMap map);
+
+    public void serialize(ContextI context) throws IOException;
 
     Set<TransactionOutput> get(String address);
 }

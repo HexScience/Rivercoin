@@ -22,7 +22,7 @@ public class SmartInput
     public static final int MODE_INT  = 2;
     private byte input[];
 
-    public SmartInput(int ...utxos)
+    public SmartInput(int utxos[], TransactionOutput outputs[])
     {
         int mode        = 0;
         for(int u : utxos)
@@ -30,7 +30,7 @@ public class SmartInput
                 mode = MODE_SHORT;
             else if(u > Short.MAX_VALUE)
                 mode = MODE_INT;
-            
+
         int size        = utxos.length;
 
         int index       = 0;
@@ -53,5 +53,7 @@ public class SmartInput
                     input = ByteUtil.concatenate(input, new byte[] {(byte) utxo});
                 break;
         }
+
+        input = ByteUtil.concatenate(input, ByteUtil.defaultEncoder().encode(input));
     }
 }

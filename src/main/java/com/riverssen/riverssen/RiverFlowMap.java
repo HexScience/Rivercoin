@@ -14,10 +14,12 @@
 
 package com.riverssen.riverssen;
 
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.transactions.TransactionOutput;
-import com.riverssen.core.utils.Tuple;
 
+import java.io.*;
 import java.util.*;
+import java.util.zip.DeflaterOutputStream;
 
 public class RiverFlowMap implements UTXOMap
 {
@@ -59,9 +61,8 @@ public class RiverFlowMap implements UTXOMap
 
     @Override
     public UTXOMap getBranch() {
-        return new ImmutableRiverFlowMap(data);
+        return this;
     }
-
 
     private Element createMerkleTree(String address)
     {
@@ -90,19 +91,42 @@ public class RiverFlowMap implements UTXOMap
 
     @Override
     public void addAll(UTXOMap map) {
-        if(map instanceof RiverFlowMap)
-            data.putAll(((RiverFlowMap) map).data);
-        else {
-            ImmutableRiverFlowMap map_ = (ImmutableRiverFlowMap) map;
+//        if(map instanceof RiverFlowMap)
+//            data.putAll(((RiverFlowMap) map).data);
+//        else {
+//            ImmutableRiverFlowMap map_ = (ImmutableRiverFlowMap) map;
+//
+//            for(String remove : map_.remove)
+//                remove(remove);
+//
+//            for(Tuple<String, TransactionOutput> remove : map_.remove_values)
+//                remove(remove.getI(), remove.getJ());
+//
+//            for(Tuple<String, TransactionOutput> add : map_.add)
+//                add(add.getI(), add.getJ());
+//        }
+    }
 
-            for(String remove : map_.remove)
-                remove(remove);
+    @Override
+    public void serialize(ContextI context) throws IOException {
+        File file = new File(context.getConfig().getBlockChainTransactionDirectory() + File.separator + "ledger" + File.separator);
 
-            for(Tuple<String, TransactionOutput> remove : map_.remove_values)
-                remove(remove.getI(), remove.getJ());
+        file.mkdir();
 
-            for(Tuple<String, TransactionOutput> add : map_.add)
-                add(add.getI(), add.getJ());
+        for(String address : data.keySet())
+        {
+            Set<TransactionOutput> set = get(address);
+            File balance_ = new File(file.toString() + File.separator + address);
+
+                DataOutputStream stream = new DataOutputStream(new DeflaterOutputStream(new FileOutputStream(balance_)));
+
+                stream.writeInt(set.size());
+
+                for(TransactionOutput output : set)
+                    output.export(stream);
+
+                stream.flush();
+                stream.close();
         }
     }
 
