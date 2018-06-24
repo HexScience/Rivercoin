@@ -170,14 +170,14 @@ public class Config
             e.printStackTrace();
         }
 
-        long latestBlock =  info.getLatestBlock();
-        long halfEvery   =  20000;
+        long latestBlock =  Math.max(1, info.getLatestBlock());
+        long halfEvery   =  50_0000L;
 
         if(latestBlock <= 0) return new RiverCoin("50.0").toRiverCoinString();
 
         BigDecimal decimal = new BigDecimal("50");
 
-        long numDivisions = latestBlock / halfEvery + 1;
+        long numDivisions = latestBlock / halfEvery;
 
         for(int i = 0; i < numDivisions; i ++)
             decimal = decimal.divide(new BigDecimal(2), 200, RoundingMode.HALF_UP);
