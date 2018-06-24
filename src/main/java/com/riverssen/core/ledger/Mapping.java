@@ -40,7 +40,7 @@ public class Mapping
 
     public void put(PublicAddress address, Balance balance)
     {
-        
+
     }
 
     public void get(PublicAddress address, Balance balance) {
