@@ -12,20 +12,65 @@
 
 package com.riverssen.core.system;
 
+import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.security.Wallet;
+
 public class CommandLine
 {
     interface Command{
-        Command parse(String text);
+        Command parse(String text, ContextI context);
+    }
+
+    static final void logHelp()
+    {
+        Logger.prt(Logger.COLOUR_YELLOW, "----------------------------------");
+        Logger.prt(Logger.COLOUR_YELLOW, "Wallet Command:");
+        Logger.prt(Logger.COLOUR_YELLOW, "\twallet -g <name> <seed> <password but not required>");
+        Logger.prt(Logger.COLOUR_YELLOW, "\twallet -b <name> <id but not required>");
+        Logger.prt(Logger.COLOUR_YELLOW, "\twallet -s <recipient> <amount>");
+        Logger.prt(Logger.COLOUR_YELLOW, "----------------------------------");
     }
 
     static class WalletCommand implements Command
     {
         @Override
-        public Command parse(String text) {
+        public Command parse(String text, ContextI context) {
             switch (text)
             {
                 case "-balance":
-                    return (t)->{return this;};
+                    return (t, context1)->{return this;};
+                case "-generate":
+                case "-g":
+                    return (name, context2)->{
+                        return (seed, context3)->{
+                            return (password, context4)->{
+                                if(name == null)
+                                {
+                                    Logger.prt(Logger.COLOUR_YELLOW, "incorrect arguments.");
+                                    logHelp();
+
+                                    return this;
+                                }
+
+                                else if(seed == null)
+                                {
+                                    Logger.prt(Logger.COLOUR_YELLOW, "incorrect arguments.");
+                                    logHelp();
+
+                                    return this;
+                                }
+
+                                else if(password == null)
+                                    password = "0000000000000000";
+
+
+                                Wallet wallet = new Wallet(name, seed);
+
+                                wallet.export(password, context4);
+                                return this;
+                            };
+                        };
+                    };
             }
 
             return this;
@@ -34,12 +79,11 @@ public class CommandLine
 
     public static Command newCommand()
     {
-        return (text)->{
+        return (text, context)->{
             switch (text)
             {
                 case "wallet":
                     return new WalletCommand();
-
                 default:
                     return newCommand();
             }
