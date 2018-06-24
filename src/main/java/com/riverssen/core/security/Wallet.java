@@ -155,6 +155,8 @@ public class Wallet
 
             FileOutputStream writer = new FileOutputStream(file);
             DataOutputStream stream = new DataOutputStream(writer);
+
+            
         } catch (Exception e)
         {
             e.printStackTrace();
