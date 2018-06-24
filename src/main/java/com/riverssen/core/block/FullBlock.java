@@ -21,6 +21,7 @@ import com.riverssen.core.system.LatestBlockInfo;
 import com.riverssen.core.transactions.RewardTransaction;
 import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.core.utils.*;
+import com.riverssen.riverssen.RiverFlowMap;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -43,13 +44,14 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     /** this blocks body **/
     private BlockData   body;
 
-    /** this transaction **/
+    private RiverFlowMap map;
 
     public FullBlock(BlockHeader header, BlockData data, BlockHeader parent)
     {
         this.header             = header;
         this.body               = data;
         this.parent             = parent;
+        this.map                = new RiverFlowMap();
     }
 
     public FullBlock(long lastBlock, BlockHeader parent)
@@ -58,10 +60,15 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         this.body           = new BlockData();
         this.parent         = parent;
         this.header.setBlockID(lastBlock + 1);
+        this.map                = new RiverFlowMap();
     }
 
-    public FullBlock(DataInputStream in)
+    public FullBlock(DataInputStream in, ContextI context)
     {
+        this.header             = new BlockHeader(in);
+        this.body               = new BlockData(in, context);
+        if(header.getBlockID() > 0) this.parent = new BlockHeader(header.getBlockID() - 1, context);
+        this.map                = new RiverFlowMap();
     }
 
     public synchronized String getHashAsString()
