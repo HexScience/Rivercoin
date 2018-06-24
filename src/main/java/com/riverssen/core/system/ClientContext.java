@@ -30,6 +30,7 @@ import com.riverssen.core.utils.TimeUtil;
 import com.riverssen.riverssen.UTXOMap;
 
 import java.math.BigInteger;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -68,7 +69,6 @@ public class ClientContext implements ContextI
         try
         {
             this.getNetworkManager().establishConnection();
-            this.executorService.execute(blockChain);
         } catch (Exception e)
         {
             e.printStackTrace();
@@ -170,12 +170,15 @@ public class ClientContext implements ContextI
     {
         long timer = System.currentTimeMillis();
 
+        Scanner scanner = new Scanner(System.in);
+
         while (isRunning())
         {
-            if (System.currentTimeMillis() - timer >= 1000)
+            while(scanner.hasNext())
             {
-                Logger.prt(Logger.COLOUR_BLUE, TimeUtil.getPretty("[H:M:S]: " + "info"));
-                timer = System.currentTimeMillis();
+                String text = scanner.next();
+
+                Logger.err(text);
             }
         }
     }

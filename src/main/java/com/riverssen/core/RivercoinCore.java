@@ -56,14 +56,14 @@ public class RivercoinCore
         Logger.alert("--------------------Welcome To Rivercoin Core-------------------");
         Logger.alert("----------------------------------------------------------------");
         Logger.alert("----------usable cpu threads: " + config.getMaxMiningThreads());
-        type = "miner";
 
         switch (type)
         {
             case "node":    context = new NodeContext(config);          break;
             case "miner":   context = new MiningContext(config);        break;
-            case "wallet":  context = new ClientContext(config);        break;
+            case "client":  context = new ClientContext(config);        break;
         }
+
         context.run();
     }
 }

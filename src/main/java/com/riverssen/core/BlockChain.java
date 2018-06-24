@@ -76,9 +76,10 @@ public class BlockChain implements BlockChainI
             if(communicator.isRelay()) nodes.add(communicator);
 
         //Descending Ordered List
-        nodes.sort((a, b)->{ if(a.getChainSize() == b.getChainSize()) return 0;
-        else if(a.getChainSize() > b.getChainSize()) return -1;
-        else return 1;
+        nodes.sort((a, b)->{
+            if(a.getChainSize() == b.getChainSize()) return 0;
+            else if(a.getChainSize() > b.getChainSize()) return -1;
+            else return 1;
         });
 
         for(Client node : nodes)
