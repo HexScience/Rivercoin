@@ -12,7 +12,6 @@
 
 package com.riverssen.core.headers;
 import com.riverssen.core.block.FullBlock;
-import com.riverssen.core.consensus.Solution;
 
 public interface Messenger
 {
