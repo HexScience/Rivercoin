@@ -158,13 +158,13 @@ public class BlockChain implements BlockChainI
 
 //        Validate();
 
-        System.out.println(block.toJSON());
+//        System.out.println(block.toJSON());
 
         if(block == null)
             block = new FullBlock(-1, null);
         else block = block.getHeader().continueChain();
 
-        System.exit(0);
+//        System.exit(0);
 
         Set<FullBlock> delete = new LinkedHashSet<>();
         List<FullBlock> blockList = new ArrayList<>();
@@ -228,7 +228,7 @@ public class BlockChain implements BlockChainI
                     block.mine(context);
                     block.serialize(context);
 
-                    System.exit(0);
+//                    System.exit(0);
 
                     block = block.getHeader().continueChain();
                     lastBlockWas = System.currentTimeMillis();
