@@ -166,12 +166,18 @@ public class Wallet
 
                 stream.writeUTF(keypair.getI());
 
-                stream.writeInt(keypair.getJ().getPrivate().getEncoded().length);
+                AdvancedEncryptionStandard advancedEncryptionStandard = new AdvancedEncryptionStandard(password.getBytes());
+                byte bytes[] = advancedEncryptionStandard.encrypt(keypair.getJ().getPrivate().getEncoded());
+
+                stream.writeInt(bytes.length);
                 stream.write(keypair.getJ().getPrivate().getEncoded());
 
                 stream.writeInt(keypair.getC().getCompressed().getBytes().length);
                 stream.write(keypair.getC().getCompressed().getBytes());
             }
+
+            stream.flush();
+            stream.close();
 
 
         } catch (Exception e)
