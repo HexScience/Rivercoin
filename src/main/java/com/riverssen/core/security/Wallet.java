@@ -156,6 +156,7 @@ public class Wallet
 
             FileOutputStream writer = new FileOutputStream(file);
             DataOutputStream stream = new DataOutputStream(writer);
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(pub));
 
             stream.writeInt(keyPairs.size());
             Iterator<Truple<String, PrivKey, PubKey>> iterator = keyPairs.iterator();
@@ -176,9 +177,22 @@ public class Wallet
                 stream.write(keypair.getC().getCompressed().getBytes());
             }
 
+            iterator = keyPairs.iterator();
+
+            bufferedWriter.write("these are all your public keys.\n\n\n");
+
+            while(iterator.hasNext())
+            {
+                Truple<String, PrivKey, PubKey> keypair = iterator.next();
+
+                bufferedWriter.write(keypair.getI() + "\t\t\t:\t\t\t" + keypair.getC().getAddress() + "\n");
+            }
+
+            bufferedWriter.flush();
+            bufferedWriter.close();
+
             stream.flush();
             stream.close();
-
 
         } catch (Exception e)
         {
