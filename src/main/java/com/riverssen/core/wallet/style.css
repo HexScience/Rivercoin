@@ -72,6 +72,11 @@
     -fx-background-color: #16232B;
 }
 
+.keypair_list{
+    -fx-background-radius: 0px;
+    -fx-background-color: #16232B;
+}
+
 .text_area{
     -fx-background-color: #212E35;
 }
