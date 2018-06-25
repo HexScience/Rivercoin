@@ -2,16 +2,33 @@ package com.riverssen.testing;
 
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.security.AdvancedEncryptionStandard;
-import com.riverssen.core.security.PrivKey;
-import com.riverssen.core.security.PubKey;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
-import com.riverssen.core.utils.Truple;
 
 import java.io.*;
-import java.util.zip.InflaterInputStream;
 
 public class Wallet {
+
+    public static void launchTests(ContextI context)
+    {
+        com.riverssen.core.security.Wallet wallet = new com.riverssen.core.security.Wallet("burger-test", "burger-test");
+        wallet.generateNewKeyPair("broski");
+        wallet.generateNewKeyPair("broski");
+        wallet.generateNewKeyPair("broski");
+        wallet.generateNewKeyPair("broski");
+        wallet.generateNewKeyPair("broski");
+        wallet.generateNewKeyPair("broski");
+        wallet.generateNewKeyPair("broski");
+        wallet.generateNewKeyPair("broski");
+        wallet.generateNewKeyPair("broski");
+        wallet.generateNewKeyPair("broski");
+        wallet.generateNewKeyPair("broski");
+
+        wallet.export("broski password ", context);
+
+        com.riverssen.testing.Wallet.WalletReadTest("burger-test", "broski password ", context);
+    }
+
     public static void WalletReadTest(String name, String password, ContextI context)
     {
         AdvancedEncryptionStandard advancedEncryptionStandard = new AdvancedEncryptionStandard(password.getBytes());
@@ -23,7 +40,7 @@ public class Wallet {
         File pub = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//readme.txt");
 
         try {
-            DataInputStream stream = new DataInputStream(new InflaterInputStream(new FileInputStream(file)));
+            DataInputStream stream = new DataInputStream(new FileInputStream(file));
 
             int size = stream.readInt();
 

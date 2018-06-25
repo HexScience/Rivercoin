@@ -19,9 +19,9 @@
   ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   -->
 
-<Pane maxHeight="720.0" maxWidth="1280.0" minHeight="720.0" minWidth="1280.0" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #16232B;" stylesheets="@../../../../../target/classes/com/riverssen/style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="720.0" maxWidth="1280.0" minHeight="720.0" minWidth="1280.0" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #16232B;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.riverssen.Controller" fx:id="main">
    <children>
-      <BorderPane layoutY="-1.0" prefHeight="80.0" prefWidth="1281.0" styleClass="border-pane" stylesheets="@../../../../../target/classes/com/riverssen/style.css" />
+      <BorderPane layoutY="-1.0" prefHeight="80.0" prefWidth="1281.0" styleClass="border-pane" stylesheets="@style.css" />
       <Text fx:id="send_funds_error_log" fill="WHITE" layoutX="968.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="161.63519287109375" />
       <Pane layoutX="1.0" layoutY="-2.0" prefHeight="723.0" prefWidth="275.0" style="-fx-background-color: #212E35;">
          <children>
@@ -35,7 +35,7 @@
                   <Font size="31.0" />
                </font>
             </Text>
-            <ToggleButton fx:id="my_wallet" contentDisplay="RIGHT" layoutX="-1.0" layoutY="176.0" mnemonicParsing="false" onKeyPressed="#selectMyWallet" prefHeight="65.0" prefWidth="276.0" selected="true" textFill="WHITE">
+            <ToggleButton fx:id="my_wallet" contentDisplay="RIGHT" layoutX="-1.0" layoutY="176.0" mnemonicParsing="false" onKeyPressed="#selectMyWallet" prefHeight="65.0" prefWidth="276.0" selected="true" textFill="WHITE" onAction="#selectMyWallet">
                <font>
                   <Font size="23.0" />
                </font>
@@ -51,7 +51,7 @@
                   <String fx:value="mywallet" />
                </styleClass>
             </ToggleButton>
-            <ToggleButton fx:id="transactions" contentDisplay="RIGHT" layoutX="-1.0" layoutY="241.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="276.0" textAlignment="CENTER" textFill="WHITE">
+            <ToggleButton fx:id="transactions" contentDisplay="RIGHT" layoutX="-1.0" layoutY="241.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="276.0" textAlignment="CENTER" textFill="WHITE" onAction="#selectTransactions">
                <font>
                   <Font size="23.0" />
                </font>
@@ -67,7 +67,7 @@
                   <String fx:value="transactions" />
                </styleClass>
             </ToggleButton>
-            <ToggleButton fx:id="settings" contentDisplay="RIGHT" layoutX="-1.0" layoutY="306.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="276.0" textFill="WHITE">
+            <ToggleButton fx:id="settings" contentDisplay="RIGHT" layoutX="-1.0" layoutY="306.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="276.0" textFill="WHITE" onAction="#selectSettings">
                <font>
                   <Font size="23.0" />
                </font>
@@ -83,12 +83,12 @@
                   <String fx:value="settings" />
                </styleClass>
             </ToggleButton>
-            <ToggleButton fx:id="dark_theme" layoutX="-1.0" layoutY="657.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="138.0" selected="true" styleClass="tab" text="Dark" textFill="WHITE">
+            <ToggleButton fx:id="dark_theme" layoutX="-1.0" layoutY="657.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="138.0" selected="true" styleClass="tab" text="Dark" textFill="WHITE" onAction="#selectDarkTheme">
                <font>
                   <Font size="23.0" />
                </font>
             </ToggleButton>
-            <ToggleButton fx:id="light_theme" layoutX="137.0" layoutY="657.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="138.0" styleClass="tab" text="Light" textFill="WHITE">
+            <ToggleButton fx:id="light_theme" layoutX="137.0" layoutY="657.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="138.0" styleClass="tab" text="Light" textFill="WHITE" onAction="#selectLightTheme">
                <font>
                   <Font size="23.0" />
                </font>

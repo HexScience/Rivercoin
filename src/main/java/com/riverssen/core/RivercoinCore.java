@@ -12,6 +12,7 @@
 
 package com.riverssen.core;
 
+import com.riverssen.core.security.Wallet;
 import com.riverssen.core.system.*;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.utils.FileUtils;
@@ -51,6 +52,7 @@ public class RivercoinCore
         Logger.alert("--------------------Welcome To Rivercoin Core-------------------");
         Logger.alert("----------------------------------------------------------------");
         Logger.alert("----------usable cpu threads: " + config.getMaxMiningThreads());
+
 
         switch (type)
         {

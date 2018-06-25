@@ -171,7 +171,7 @@ public class Wallet
                 byte bytes[] = advancedEncryptionStandard.encrypt(keypair.getJ().getPrivate().getEncoded());
 
                 stream.writeInt(bytes.length);
-                stream.write(keypair.getJ().getPrivate().getEncoded());
+                stream.write(bytes);
 
                 stream.writeInt(keypair.getC().getCompressed().getBytes().length);
                 stream.write(keypair.getC().getCompressed().getBytes());
@@ -200,53 +200,53 @@ public class Wallet
         }
     }
 
-    public void export(PrivKey privateKey, PubKey publicKey, String password, ContextI context)
-    {
-//        try
-//        {
-//            File diry = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//");
-//            diry.mkdirs();
-//            File file = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//" + name + ".rwt");
-//            File pub = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//readme.txt");
-//
-//            FileOutputStream writer = new FileOutputStream(file);
-//            DataOutputStream stream = new DataOutputStream(writer);
-//
-//            byte out[] = privateKey.getPrivate().getEncoded();
-//
-//            if (password != null)
-//            {
-//                AdvancedEncryptionStandard aes = new AdvancedEncryptionStandard(password.getBytes());
-//                out = aes.encrypt(out);
-//            }
-//
-//            stream.writeShort(publicKey.getPublic().getEncoded().length);
-//            stream.writeShort(out.length);
-//
-//            stream.write(publicKey.getPublic().getEncoded());
-//            stream.write(out);
-//
-//            stream.flush();
-//            stream.close();
-//
-//            final String api = "https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=" + publicKey.getCompressed();
-//
-//            FileWriter writer1 = new FileWriter(pub);
-//
-//            writer1.write("This file and the image are public, so don't worry about sharing it with people!\n\n");
-//            writer1.write(publicKey.getCompressed().toString());
-//            writer1.write("\n\n\t<3 Riverssen\n");
-//
-//            writer1.flush();
-//            writer1.close();
-//
-//            Logger.prt(Logger.COLOUR_BLUE + "wallet[" + name + "] created.");
-//        } catch (Exception e)
-//        {
-//            Logger.err("couldn't export wallet!");
-//            e.printStackTrace();
-//        }
-    }
+//    public void export(PrivKey privateKey, PubKey publicKey, String password, ContextI context)
+//    {
+////        try
+////        {
+////            File diry = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//");
+////            diry.mkdirs();
+////            File file = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//" + name + ".rwt");
+////            File pub = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//readme.txt");
+////
+////            FileOutputStream writer = new FileOutputStream(file);
+////            DataOutputStream stream = new DataOutputStream(writer);
+////
+////            byte out[] = privateKey.getPrivate().getEncoded();
+////
+////            if (password != null)
+////            {
+////                AdvancedEncryptionStandard aes = new AdvancedEncryptionStandard(password.getBytes());
+////                out = aes.encrypt(out);
+////            }
+////
+////            stream.writeShort(publicKey.getPublic().getEncoded().length);
+////            stream.writeShort(out.length);
+////
+////            stream.write(publicKey.getPublic().getEncoded());
+////            stream.write(out);
+////
+////            stream.flush();
+////            stream.close();
+////
+////            final String api = "https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=" + publicKey.getCompressed();
+////
+////            FileWriter writer1 = new FileWriter(pub);
+////
+////            writer1.write("This file and the image are public, so don't worry about sharing it with people!\n\n");
+////            writer1.write(publicKey.getCompressed().toString());
+////            writer1.write("\n\n\t<3 Riverssen\n");
+////
+////            writer1.flush();
+////            writer1.close();
+////
+////            Logger.prt(Logger.COLOUR_BLUE + "wallet[" + name + "] created.");
+////        } catch (Exception e)
+////        {
+////            Logger.err("couldn't export wallet!");
+////            e.printStackTrace();
+////        }
+//    }
 
     public PublicAddress getPublicAddress() {
         return getPublicAddress(0);
