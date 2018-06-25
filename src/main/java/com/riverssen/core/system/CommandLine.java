@@ -35,6 +35,7 @@ public class CommandLine
     {
         @Override
         public Command parse(String text, ContextI context) {
+            System.out.println(text);
             if(text == null)
             {
                 Logger.prt(Logger.COLOUR_YELLOW, "incorrect arguments.");
