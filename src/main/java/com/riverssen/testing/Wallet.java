@@ -1,6 +1,44 @@
 package com.riverssen.testing;
 
+import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.security.AdvancedEncryptionStandard;
+import com.riverssen.core.security.PrivKey;
+import com.riverssen.core.security.PubKey;
+import com.riverssen.core.utils.Base58;
+import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.core.utils.Truple;
+
+import java.io.*;
+import java.util.zip.InflaterInputStream;
+
 public class Wallet {
+    public static void WalletReadTest(String name, String password, ContextI context)
+    {
+        AdvancedEncryptionStandard advancedEncryptionStandard = new AdvancedEncryptionStandard(password.getBytes());
+
+        File diry = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//");
+        diry.mkdirs();
+
+        File file = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//" + name + ".rwt");
+        File pub = new File(context.getConfig().getBlockChainWalletDirectory() + name + "//readme.txt");
+
+        try {
+            DataInputStream stream = new DataInputStream(new InflaterInputStream(new FileInputStream(file)));
+
+            int size = stream.readInt();
+
+            for(int i = 0; i < size; i ++)
+                System.out.println("name: " + stream.readUTF() + " private: " + Base58.encode(advancedEncryptionStandard.decrypt(ByteUtil.read(stream, stream.readInt()))) + " public: " + Base58.encode(ByteUtil.read(stream, stream.readInt())));
+
+            stream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public static final void test()
     {
         String nameOfWallet = "name"; //unimportant
