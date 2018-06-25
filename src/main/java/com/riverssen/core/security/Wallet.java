@@ -110,7 +110,7 @@ public class Wallet
             keyGen.initialize(ecSpec, random);
             KeyPair keyPair = keyGen.generateKeyPair();
 
-            keyPairs.add(new Truple<>("default", new PrivKey(keyPair.getPrivate()), new PubKey(keyPair.getPublic())));
+            keyPairs.add(new Truple<>(name == null ? "default" : name, new PrivKey(keyPair.getPrivate()), new PubKey(keyPair.getPublic())));
         } catch (Exception e)
         {
             throw new RuntimeException(e);
