@@ -73,21 +73,26 @@
     -fx-text-fill: aliceblue;
 }
 
-.list-cell:odd{
+.list-cell{
+    -fx-background-image: url("content/arrow_red.png");
+    -fx-background-size: 13px;
+    -fx-background-position: 0px;
     -fx-background-color: #16232B;
     -fx-text-fill: aliceblue;
+    -fx-background-repeat: no-repeat;
 }
 
-.list-cell:even{
+.list-cell:hover{
     -fx-background-color: #16232B;
     -fx-text-fill: aliceblue;
+    -fx-font-size: 16px;
+    -fx-background-size: 16px;
 }
 
 .list-cell:selected{
-    transition: all .2s ease-in-out;
     -fx-background-color: #16232B;
-    -fx-background-image: url("content/arrow_green.png");
     -fx-text-fill: aliceblue;
+    -fx-font-size: 16px;
 }
 
 .keypair_list{
