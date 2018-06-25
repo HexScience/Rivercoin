@@ -53,7 +53,6 @@ public class RivercoinCore
         Logger.alert("----------------------------------------------------------------");
         Logger.alert("----------usable cpu threads: " + config.getMaxMiningThreads());
 
-
         switch (type)
         {
             case "node":    context = new NodeContext(config);          break;
