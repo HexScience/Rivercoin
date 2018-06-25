@@ -5,18 +5,60 @@
 
 .mywallet
 {
-    /* -fx-background-image: url("file:wallet.svg"); */
+    -fx-background-image: url("content/wallet0.png");
     -fx-background-repeat: no-repeat;
-    -fx-background-position: 10px;
-    -fx-background-size: 70px;
+    -fx-background-position: 69px;
+    -fx-background-size: 30px;
+}
+
+.mywallet:selected
+{
+    -fx-background-image: url("content/wallet.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 69px;
+    -fx-background-size: 30px;
+}
+
+.transactions
+{
+    -fx-background-image: url("content/exchange0.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 69px;
+    -fx-background-size: 30px;
+}
+
+.transactions:selected
+{
+    -fx-background-image: url("content/exchange.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 69px;
+    -fx-background-size: 30px;
+}
+
+.settings
+{
+    -fx-background-image: url("content/account0.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 69px;
+    -fx-background-size: 30px;
+}
+
+.settings:selected
+{
+    -fx-background-image: url("content/account1.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 69px;
+    -fx-background-size: 30px;
+}
+
+.tab:hover{
+    -fx-background-color: #2C383F;
 }
 
 .tab:selected
 {
     -fx-background-color: #2C383F;
-}
-.tab:hover{
-    -fx-background-color: #2C383F;
+    -fx-background-color: linear-gradient(to left, #2C383F, #2C383F 97.5%, #007CFF 50%, #00C5FF 100%);
 }
 
 .send{
@@ -37,4 +79,9 @@
 
 .text_area{
     -fx-background-color: #212E35;
+}
+
+.icons{
+    -fx-background-color: linear-gradient(to left, #00C5FF, #00C5FF 50%, #007CFF);
+    -fx-blend-mode: screen;
 }
