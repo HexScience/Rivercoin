@@ -109,8 +109,7 @@ public class BlockChain implements BlockChainI
                 String lock = ByteUtil.defaultEncoder().encode58((System.currentTimeMillis() + " BlockChainLock: " + node).getBytes());
 
                 //Wait for node to unlock.
-                while (!node.lock(lock)) {
-                }
+                while (!node.lock(lock)) {}
 
                 for (long i = context.getBlockChain().currentBlock(); i < node.getChainSize(); i++)
                     if (i >= 0) node.sendMessage(new RequestBlockMessage(i));
@@ -123,9 +122,12 @@ public class BlockChain implements BlockChainI
                 while (currentBlock() < required)
                 {
                     if(lastChainS != currentBlock())
+                    {
                         lastChange = System.currentTimeMillis();
+                        lastChainS = currentBlock();
+                    }
 
-                    if (System.currentTimeMillis() - lastChange > ((3.5 * 60_000L) * required))
+                    if (System.currentTimeMillis() - lastChange > ((3.75 * 60_000L) * required))
                         Logger.err("a network error might have occurred, no updates to the network.");
 
                     if (System.currentTimeMillis() - lastChange > ((7.5 * 60_000L) * required))
