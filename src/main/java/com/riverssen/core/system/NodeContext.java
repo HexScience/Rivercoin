@@ -220,4 +220,10 @@ public class NodeContext implements ContextI
     {
         return true;
     }
+
+    @Override
+    public void shutDown() {
+        this.running = false;
+        System.exit(0);
+    }
 }

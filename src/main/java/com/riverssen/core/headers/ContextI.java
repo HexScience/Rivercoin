@@ -59,4 +59,6 @@ public interface ContextI
     public BlockChain getBlockChain();
 
     boolean actAsRelay();
+
+    void shutDown();
 }

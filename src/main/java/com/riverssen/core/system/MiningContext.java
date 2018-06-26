@@ -210,4 +210,10 @@ public class MiningContext implements ContextI
     {
         return false;
     }
+
+    @Override
+    public void shutDown() {
+        this.running = false;
+        System.exit(0);
+    }
 }
