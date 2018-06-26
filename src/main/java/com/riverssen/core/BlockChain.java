@@ -25,6 +25,7 @@ import com.riverssen.core.transactions.TXIList;
 import com.riverssen.core.transactions.Transaction;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.core.utils.FileUtils;
 import com.riverssen.riverssen.Constant;
 
 import java.util.*;
@@ -128,10 +129,24 @@ public class BlockChain implements BlockChainI
                         FullBlock next  = null;
 
                         for(FullBlock fullBlock : downloadedBlocks)
-                        {
                             if(fullBlock.getBlockID() == (currentBlock() + 1))
+                            {
                                 next = fullBlock;
-                        }
+                                break;
+                            }
+
+                            if(next != null)
+                            {
+                                if(block.validate(context) != 0)
+                                {
+                                    node.block();
+
+                                    for(long i = startingPoint; i < currentBlock(); i ++)
+                                        FileUtils.deleteblock(i, context);
+
+                                    break client_iterator;
+                                }
+                            }
                     }
                 }
 

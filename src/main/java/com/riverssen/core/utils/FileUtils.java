@@ -12,6 +12,7 @@
 
 package com.riverssen.core.utils;
 
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.system.Logger;
 
 import java.io.*;
@@ -155,5 +156,13 @@ public class FileUtils
         }
 
         return "";
+    }
+
+    public static void deleteblock(long i, ContextI context)
+    {
+        File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "block[" + i + "]");
+
+        if(file.exists())
+            file.delete();
     }
 }
