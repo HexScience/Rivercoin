@@ -63,10 +63,16 @@ public class BlockChain implements BlockChainI
     {
     }
 
+    public BlockHeader lastBlockHeader()
+    {
+        if(currentBlock() == 0) return null;
+        return new BlockHeader(currentBlock() - 1, context);
+    }
+
     @Override
     public void FetchBlockChainFromPeers()
     {
-        Logger.alert("attempting to download block from peers");
+        Logger.alert("attempting to download block(s) from peers");
         final long totalNodes = context.getNetworkManager().amountNodesConnected();
         Set<Client> communicators = context.getNetworkManager().getCommunicators();
 
@@ -82,6 +88,10 @@ public class BlockChain implements BlockChainI
             else if(a.getChainSize() > b.getChainSize()) return -1;
             else return 1;
         });
+
+        if(nodes.size() == 0) return;
+
+        Logger.alert("client '" + nodes.get(0).getChainSize() + "' block(s) behind");
 
         for(Client node : nodes)
             for(long i = context.getBlockChain().currentBlock() - 1; i < node.getChainSize(); i ++)

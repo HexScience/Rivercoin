@@ -13,6 +13,7 @@
 package com.riverssen.core.system;
 
 import com.riverssen.core.RiverCoin;
+import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
 
@@ -198,8 +199,26 @@ public class Config
         return null;
     }
 
-    public BigInteger getCurrentDifficulty() {
-        return CURRENT_TARGET;
+    public BigInteger getMinimumTargetDifficulty()
+    {
+        return MINIMUM_TARGET_DIFFICULTY;
+    }
+
+    public BigInteger getCurrentDifficulty(BlockHeader lastBlock, BlockHeader lastOneHundred) {
+        if(lastBlock == null) return MINIMUM_TARGET_DIFFICULTY;
+        BigInteger min = MINIMUM_TARGET_DIFFICULTY;
+        BigInteger cur = lastBlock.getDifficultyAsInt();
+
+        BigDecimal tdf = new BigDecimal((lastBlock.getTimeStampAsLong() - lastOneHundred.getTimeStampAsLong()));
+        BigDecimal tph = new BigDecimal(lastBlock.getNonce() + 1).divide(tdf, 200, RoundingMode.HALF_DOWN);
+
+        BigDecimal correctTimePerBlock = new BigDecimal(getAverageBlockTime());
+
+        BigDecimal adjustedTimePerBlock= tdf.divide(correctTimePerBlock, 200, RoundingMode.HALF_DOWN);
+
+        BigDecimal adjustedHashPerBlock= tph.multiply(adjustedTimePerBlock);
+
+        return MINIMUM_TARGET_DIFFICULTY;//new BigDecimal(cur).multiply(adjustedTimePerBlock.multiply(new BigDecimal(100.0))).toBigInteger();
     }
 
     public long getVSSSize()

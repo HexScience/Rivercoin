@@ -16,6 +16,7 @@ import com.riverssen.core.BlockChain;
 import com.riverssen.core.BlockPool;
 import com.riverssen.core.TransactionPool;
 import com.riverssen.core.algorithms.Provider;
+import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.exceptions.AddressInvalidException;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
@@ -186,7 +187,12 @@ public class MiningContext implements ContextI
 
     public BigInteger getDifficulty()
     {
-        return config.getCurrentDifficulty();
+        BlockHeader last = getBlockChain().lastBlockHeader();
+        if(last == null) return config.getMinimumTargetDifficulty();
+        else if(last.getBlockID() == 0) return config.getMinimumTargetDifficulty();
+        BlockHeader lastLast = new BlockHeader(last.getBlockID() - 1, this);
+
+        return config.getCurrentDifficulty(last, lastLast);
     }
 
     public boolean isRunning()
