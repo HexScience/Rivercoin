@@ -73,6 +73,10 @@ public abstract class BasicMessage
                 if(!client.isGreeted())
                 return new GreetReplyMessage();
                 return null;
+            case OP_BKH:
+                return new BlockHashMessage();
+            case OP_BLH:
+                return new RequestBlockHashMessage();
             case OP_BLK:
                 return new BlockMessage();
             case OP_FAILED: return new FailedMessage();
