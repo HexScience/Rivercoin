@@ -235,9 +235,26 @@ public class BlockHeader implements Encodeable, Exportable
         return null;
     }
 
+    private byte[] difficultyBytes(BigInteger integer)
+    {
+        byte bytes[] = new byte[32];
+
+        byte nn[]    = integer.toByteArray();
+
+        int toPad    = 32 - nn.length;
+
+        for(int i = 0; i < toPad; i ++) bytes[i] = 0;
+
+        for(int i = 0; i < nn.length; i ++) bytes[i + toPad] = nn[i];
+
+        return bytes;
+    }
+
     public void setDifficulty(BigInteger difficulty)
     {
-        System.arraycopy(difficulty.toByteArray(), 0, this.difficulty, 32 - difficulty.toByteArray().length, difficulty.toByteArray().length);
+//        System.arraycopy(difficulty.toByteArray(), 0, this.difficulty, 32 - difficulty.toByteArray().length, difficulty.toByteArray().length);
+
+        System.arraycopy(difficultyBytes(difficulty), 0, this.difficulty, 0, 32);
     }
 
     public void setNonce(long nonce)

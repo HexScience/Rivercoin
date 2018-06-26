@@ -189,7 +189,9 @@ public class Config
         return MINIMUM_TARGET_DIFFICULTY;
     }
 
+//    private static final BigInteger MINIMUM_TARGET_DIFFICULTY = new BigDecimal("225269536353234632640832032722171634457188848844000484574312395358531977087").toBigInteger();
     private static final BigInteger MINIMUM_TARGET_DIFFICULTY = new BigDecimal("225269536353234632640832032722171634457188848844000484574312395358531977087").toBigInteger();
+    private static final BigInteger MAXIMUM_TARGET_DIFFICULTY = new BigDecimal("2252695363532346326408320327221716344571888488").toBigInteger();
 
     public PublicAddress getMinerAddress() {
         return new PublicAddress(PUBLIC_ADDRESS);
@@ -210,15 +212,33 @@ public class Config
         BigInteger cur = lastBlock.getDifficultyAsInt();
 
         BigDecimal tdf = new BigDecimal((lastBlock.getTimeStampAsLong() - lastOneHundred.getTimeStampAsLong()));
-        BigDecimal tph = new BigDecimal(lastBlock.getNonce() + 1).divide(tdf, 200, RoundingMode.HALF_DOWN);
+        if(tdf.compareTo(BigDecimal.ZERO) == 0) tdf = BigDecimal.ONE;
+        BigDecimal tph = new BigDecimal(Math.max(lastBlock.getNonce(), 1)).divide(tdf, 200, RoundingMode.HALF_DOWN);
 
-        BigDecimal correctTimePerBlock = new BigDecimal(getAverageBlockTime());
+        BigDecimal correctTimePerBlock = new BigDecimal(getAverageBlockTime()).multiply(new BigDecimal(0.25));
 
         BigDecimal adjustedTimePerBlock= tdf.divide(correctTimePerBlock, 200, RoundingMode.HALF_DOWN);
 
-        BigDecimal adjustedHashPerBlock= tph.multiply(adjustedTimePerBlock);
+        BigDecimal adjustedHashPerBlock= tph.multiply(adjustedTimePerBlock).multiply(new BigDecimal(10.0));
 
-        return MINIMUM_TARGET_DIFFICULTY;//new BigDecimal(cur).multiply(adjustedTimePerBlock.multiply(new BigDecimal(100.0))).toBigInteger();
+        BigInteger result = cur;
+
+        System.out.println(adjustedHashPerBlock);
+
+        try{
+            result = new BigDecimal(cur).divide(new BigDecimal("7.5").multiply(adjustedHashPerBlock), 200, RoundingMode.HALF_UP).toBigInteger();
+        } catch (Exception e)
+        {
+        }
+
+        if(result.compareTo(MINIMUM_TARGET_DIFFICULTY) > 0)
+            return MINIMUM_TARGET_DIFFICULTY;
+
+        if(result.compareTo(MAXIMUM_TARGET_DIFFICULTY) < 0)
+            return MAXIMUM_TARGET_DIFFICULTY;
+
+
+        return result;//MINIMUM_TARGET_DIFFICULTY;//new BigDecimal(cur).multiply(adjustedTimePerBlock.multiply(new BigDecimal(100.0))).toBigInteger();
     }
 
     public long getVSSSize()
