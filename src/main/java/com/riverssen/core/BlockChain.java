@@ -27,18 +27,16 @@ import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.riverssen.Constant;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class BlockChain implements BlockChainI
 {
-    private Set<FullBlock>  orphanedBlocks;
-    private FullBlock       block;
-    private ContextI        context;
-    private long            lastvalidated;
-    private boolean         lock;
+    private Set<FullBlock>                  orphanedBlocks;
+    private Map<Client, Set<FullBlock>>     downloadedBlocks;
+    private FullBlock                   block;
+    private ContextI                    context;
+    private long                        lastvalidated;
+    private boolean                     lock;
 
     public BlockChain(ContextI context)
     {
@@ -99,19 +97,34 @@ public class BlockChain implements BlockChainI
         Logger.alert("client '" + nodes.get(0).getChainSize() + "' block(s) behind");
 
         for(Client node : nodes)
-        {
-            String lock = ByteUtil.defaultEncoder().encode58((System.currentTimeMillis() + " BlockChainLock: " + node).getBytes());
-            
-            //Wait for node to unlock.
-            while (!node.lock(lock))
-            {
+            downloadedBlocks.put(node, new LinkedHashSet<>());
+
+            for(Client node : nodes) {
+                String lock = ByteUtil.defaultEncoder().encode58((System.currentTimeMillis() + " BlockChainLock: " + node).getBytes());
+
+                //Wait for node to unlock.
+                while (!node.lock(lock)) {
+                }
+
+                for (long i = context.getBlockChain().currentBlock() - 1; i < node.getChainSize(); i++)
+                    if (i >= 0) node.sendMessage(new RequestBlockMessage(i));
+
+                long required = node.getChainSize() - Math.max(currentBlock(), 0);
+
+                long now = System.currentTimeMillis();
+
+                while (orphanedBlocks.size() < required) {
+                    if (System.currentTimeMillis() - now > ((5 * 60_000L) * required))
+                        Logger.err("a network error might have occurred, '" + downloadedBlocks.get(node).size() + "' downloaded out of '" + required + "'.");
+                    else if(System.currentTimeMillis() - now > ((7.5 * 60_000L) * required))
+                    {
+                        Logger.err("a network error might have occurred, '" + downloadedBlocks.get(node).size() + "' downloaded out of '" + required + "'.");
+                        context.shutDown();
+                    }
+                }
+
+                node.unlock(lock);
             }
-
-            for(long i = context.getBlockChain().currentBlock() - 1; i < node.getChainSize(); i ++)
-                if(i >= 0) node.sendMessage(new RequestBlockMessage(i));
-
-            node.unlock(lock);
-        }
     }
 
     @Override
