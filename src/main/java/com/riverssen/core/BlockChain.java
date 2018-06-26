@@ -123,7 +123,16 @@ public class BlockChain implements BlockChainI
 
                 while (currentBlock() < required)
                 {
-                    
+                    if(downloadedBlocks.size() > 0)
+                    {
+                        FullBlock next  = null;
+
+                        for(FullBlock fullBlock : downloadedBlocks)
+                        {
+                            if(fullBlock.getBlockID() == (currentBlock() + 1))
+                                next = fullBlock;
+                        }
+                    }
                 }
 
 //                while (downloadedBlocks.size() < required) {
