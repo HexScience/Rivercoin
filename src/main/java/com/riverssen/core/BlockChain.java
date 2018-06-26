@@ -100,7 +100,7 @@ public class BlockChain implements BlockChainI
 
         if(nodes.size() == 0) return;
 
-        long startingPoint = currentBlock() - 1;
+        long startingPoint = currentBlock();
 
         Logger.alert("client '" + nodes.get(0).getChainSize() + "' block(s) behind");
 
@@ -115,7 +115,7 @@ public class BlockChain implements BlockChainI
                 while (!node.lock(lock)) {
                 }
 
-                for (long i = context.getBlockChain().currentBlock() - 1; i < node.getChainSize(); i++)
+                for (long i = context.getBlockChain().currentBlock(); i < node.getChainSize(); i++)
                     if (i >= 0) node.sendMessage(new RequestBlockMessage(i));
 
                 long required = node.getChainSize() - Math.max(currentBlock(), 0);
@@ -146,6 +146,9 @@ public class BlockChain implements BlockChainI
 
                                     break client_iterator;
                                 }
+
+                                this.block = next;
+                                downloadedBlocks.remove(next);
                             }
                     }
                 }
