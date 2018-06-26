@@ -65,7 +65,7 @@ public class BlockMessage extends BasicMessage
                 context.getBlockChain().download(block);
             else
                 context.getBlockChain().queueBlock(block);
-            
+
             client.sendMessage(new SuccessMessage(hashCode));
             client.setChainSize(Math.max(client.getChainSize(), block.getBlockID()));
         } catch (Exception e)

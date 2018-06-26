@@ -39,7 +39,7 @@ public class RequestBlockHashMessage extends BasicMessage
     @Override
     public void sendMessage(SocketConnection connection, ContextI context) throws IOException
     {
-        connection.getOutputStream().writeInt(OP_BLK);
+        connection.getOutputStream().writeInt(OP_BLH);
         connection.getOutputStream().writeUTF(getHashCode());
         connection.getOutputStream().writeLong(block);
     }
@@ -52,7 +52,7 @@ public class RequestBlockHashMessage extends BasicMessage
         try{
             FullBlock block = BlockHeader.FullBlock(connection.getInputStream().readLong(), context);
             client.sendMessage(new SuccessMessage(hashCode));
-            client.sendMessage(new BlockMessage(block));
+            client.sendMessage(new BlockHashMessage(block.getHashAsString()));
         } catch (Exception e)
         {
             client.sendMessage(new FailedMessage(hashCode));
