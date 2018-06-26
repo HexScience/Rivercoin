@@ -33,10 +33,10 @@ public class BlockChain implements BlockChainI
 {
     private Set<FullBlock>                  orphanedBlocks;
     private Map<Client, Set<FullBlock>>     downloadedBlocks;
-    private FullBlock                   block;
-    private ContextI                    context;
-    private long                        lastvalidated;
-    private boolean                     lock;
+    private FullBlock                       block;
+    private ContextI                        context;
+    private long                            lastvalidated;
+    private boolean                         lock;
 
     public BlockChain(ContextI context)
     {
@@ -136,10 +136,6 @@ public class BlockChain implements BlockChainI
                     else if(a.getBlockID() == b.getBlockID()) return 0;
                     else return -1;
                 });
-
-                for(FullBlock block : blocks)
-                {
-                }
 
                 node.unlock(lock);
             }
