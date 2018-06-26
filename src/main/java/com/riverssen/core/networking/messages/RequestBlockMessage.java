@@ -52,7 +52,7 @@ public class RequestBlockMessage extends BasicMessage
         try{
             FullBlock block = BlockHeader.FullBlock(connection.getInputStream().readLong(), context);
             client.sendMessage(new SuccessMessage(hashCode));
-            client.sendMessage(new BlockMessage(block));
+            client.sendMessage(new BlockMessage(block, true));
         } catch (Exception e)
         {
             client.sendMessage(new FailedMessage(hashCode));
