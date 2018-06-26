@@ -91,11 +91,15 @@ public class BlockChain implements BlockChainI
 
         if(nodes.size() == 0) return;
 
+        long startingPoint = currentBlock() - 1;
+
         Logger.alert("client '" + nodes.get(0).getChainSize() + "' block(s) behind");
 
         for(Client node : nodes)
+        {
             for(long i = context.getBlockChain().currentBlock() - 1; i < node.getChainSize(); i ++)
                 node.sendMessage(new RequestBlockMessage(i));
+        }
     }
 
     @Override

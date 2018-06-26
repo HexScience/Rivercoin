@@ -36,6 +36,10 @@ public abstract class BasicMessage
     public static final int OP_ALL      = 12;
     public static final int OP_NODE     = 13;
     public static final int OP_OTHER    = 14;
+    public static final int OP_MSM      = 15;
+    public static final int OP_BLH      = 16;
+    public static final int OP_BLR      = 17;
+
 
     public static final int OP_MSG      = 2;
 

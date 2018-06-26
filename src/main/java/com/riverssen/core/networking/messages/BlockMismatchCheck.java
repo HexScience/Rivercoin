@@ -20,27 +20,28 @@ import com.riverssen.core.utils.ByteUtil;
 
 import java.io.IOException;
 
-public class BlockHashMessage extends BasicMessage
+public class BlockMismatchCheck extends BasicMessage
 {
-    private String blockHash;
+    private String block;
 
-    public BlockHashMessage()
+    public BlockMismatchCheck()
     {
-        super(ByteUtil.defaultEncoder().encode58(("block hash message" + System.currentTimeMillis()).getBytes()));
+        super(ByteUtil.defaultEncoder().encode58(("block mismatch message" + System.currentTimeMillis()).getBytes()));
     }
 
-    public BlockHashMessage(String block)
+    public BlockMismatchCheck(String block)
     {
-        super(ByteUtil.defaultEncoder().encode58((block + System.currentTimeMillis()).getBytes()));
-        this.blockHash = block;
+        super(block);
+        this.block = block;
     }
 
     @Override
     public void sendMessage(SocketConnection connection, ContextI context) throws IOException
     {
-        connection.getOutputStream().writeInt(OP_BLH);
+        connection.getOutputStream().writeInt(OP_MSM);
         connection.getOutputStream().writeUTF(getHashCode());
-        connection.getOutputStream().writeUTF(blockHash);
+
+        connection.getOutputStream().writeUTF(block);
     }
 
     @Override
