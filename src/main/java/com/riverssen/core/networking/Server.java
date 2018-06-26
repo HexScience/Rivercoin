@@ -115,7 +115,13 @@ public class Server implements NetworkManager
     public void sendBlock(FullBlock block)
     {
         for(Client communicator : communications)
-            communicator.sendMessage(new BlockMessage(block));
+            communicator.sendMessage(new BlockMessage(block, false));
+    }
+
+    @Override
+    public void sendMessage(GoodByeMessage message) {
+        for (Client client : communications)
+            client.sendMessage(message);
     }
 
     private void establishConnections()
