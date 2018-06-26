@@ -99,6 +99,7 @@ public class BlockChain implements BlockChainI
         for(Client node : nodes)
             downloadedBlocks.put(node, new LinkedHashSet<>());
 
+        client_iterator :
             for(Client node : nodes) {
                 String lock = ByteUtil.defaultEncoder().encode58((System.currentTimeMillis() + " BlockChainLock: " + node).getBytes());
 
@@ -113,13 +114,18 @@ public class BlockChain implements BlockChainI
 
                 long now = System.currentTimeMillis();
 
-                while (orphanedBlocks.size() < required) {
+                while (downloadedBlocks.get(node).size() < required) {
                     if (System.currentTimeMillis() - now > ((5 * 60_000L) * required))
                         Logger.err("a network error might have occurred, '" + downloadedBlocks.get(node).size() + "' downloaded out of '" + required + "'.");
                     else if(System.currentTimeMillis() - now > ((7.5 * 60_000L) * required))
                     {
                         Logger.err("a network error might have occurred, '" + downloadedBlocks.get(node).size() + "' downloaded out of '" + required + "'.");
-                        context.shutDown();
+                        Logger.err("forking...");
+//                        context.shutDown();
+
+                        node.block();
+                        downloadedBlocks.get(node).clear();
+                        break client_iterator;
                     }
                 }
 
