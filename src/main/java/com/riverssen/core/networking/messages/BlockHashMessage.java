@@ -38,7 +38,7 @@ public class BlockHashMessage extends BasicMessage
     @Override
     public void sendMessage(SocketConnection connection, ContextI context) throws IOException
     {
-        connection.getOutputStream().writeInt(OP_BLH);
+        connection.getOutputStream().writeInt(OP_BKH);
         connection.getOutputStream().writeUTF(getHashCode());
         connection.getOutputStream().writeUTF(blockHash);
     }
