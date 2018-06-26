@@ -23,7 +23,7 @@ public class GoodByeMessage extends BasicMessage
 {
     public GoodByeMessage()
     {
-        super(ByteUtil.defaultEncoder().encode58(("bye message" + System.currentTimeMillis()).getBytes()));
+        super(ByteUtil.defaultEncoder().encode58(("good bye message" + System.currentTimeMillis()).getBytes()));
     }
 
     @Override
