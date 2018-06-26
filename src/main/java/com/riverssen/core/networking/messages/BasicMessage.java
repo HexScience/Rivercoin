@@ -77,12 +77,14 @@ public abstract class BasicMessage
                 return new BlockHashMessage();
             case OP_BLH:
                 return new RequestBlockHashMessage();
+            case OP_BLR:
+                return new RequestBlockMessage();
             case OP_BLK:
                 return new BlockMessage();
+            case OP_HALT: return new GoodByeMessage();
             case OP_FAILED: return new FailedMessage();
             case OP_SUCCESS: return new SuccessMessage();
             case OP_TXN: return new TransactionMessage();
-
                 default:
                     return null;
         }
