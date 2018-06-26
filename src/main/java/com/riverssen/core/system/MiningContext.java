@@ -22,6 +22,7 @@ import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.networking.Server;
+import com.riverssen.core.networking.messages.GoodByeMessage;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.utils.ByteUtil;
@@ -214,6 +215,7 @@ public class MiningContext implements ContextI
     @Override
     public void shutDown() {
         this.running = false;
+        this.networkManager.sendMessage(new GoodByeMessage());
         System.exit(0);
     }
 }

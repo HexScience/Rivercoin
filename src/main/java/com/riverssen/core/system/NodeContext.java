@@ -17,6 +17,7 @@ import com.riverssen.core.BlockPool;
 import com.riverssen.core.TransactionPool;
 import com.riverssen.core.algorithms.Provider;
 import com.riverssen.core.block.BlockHeader;
+import com.riverssen.core.networking.messages.GoodByeMessage;
 import com.riverssen.riverssen.RiverFlowMap;
 import com.riverssen.core.exceptions.AddressInvalidException;
 import com.riverssen.core.headers.ContextI;
@@ -224,6 +225,7 @@ public class NodeContext implements ContextI
     @Override
     public void shutDown() {
         this.running = false;
+        this.networkManager.sendMessage(new GoodByeMessage());
         System.exit(0);
     }
 }
