@@ -104,9 +104,6 @@ public class BlockChain implements BlockChainI
 
         Logger.alert("client '" + nodes.get(0).getChainSize() + "' block(s) behind");
 
-//        for(Client node : nodes)
-//            downloadedBlocks.put(node, new LinkedHashSet<>());
-
         client_iterator :
             for(Client node : nodes) {
                 String lock = ByteUtil.defaultEncoder().encode58((System.currentTimeMillis() + " BlockChainLock: " + node).getBytes());
@@ -120,10 +117,27 @@ public class BlockChain implements BlockChainI
 
                 long required = node.getChainSize() - Math.max(currentBlock(), 0);
 
-                long now = System.currentTimeMillis();
+                long lastChange = System.currentTimeMillis();
+                long lastChainS = startingPoint;
 
                 while (currentBlock() < required)
                 {
+                    if(lastChainS != currentBlock())
+                        lastChange = System.currentTimeMillis();
+
+                    if (System.currentTimeMillis() - lastChange > ((3.5 * 60_000L) * required))
+                        Logger.err("a network error might have occurred, no updates to the network.");
+
+                    if (System.currentTimeMillis() - lastChange > ((7.5 * 60_000L) * required))
+                    {
+                        Logger.err("a network error might have occurred, '" + downloadedBlocks.size() + "' downloaded out of '" + required + "'.");
+                        Logger.alert("forking...");
+
+                        node.block();
+                        downloadedBlocks.clear();
+                        break client_iterator;
+                    }
+
                     if(downloadedBlocks.size() > 0)
                     {
                         FullBlock next  = null;
