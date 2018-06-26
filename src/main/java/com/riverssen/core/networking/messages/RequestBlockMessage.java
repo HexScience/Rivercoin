@@ -39,7 +39,7 @@ public class RequestBlockMessage extends BasicMessage
     @Override
     public void sendMessage(SocketConnection connection, ContextI context) throws IOException
     {
-        connection.getOutputStream().writeInt(OP_BLK);
+        connection.getOutputStream().writeInt(OP_BLR);
         connection.getOutputStream().writeUTF(getHashCode());
         connection.getOutputStream().writeLong(block);
     }

@@ -23,6 +23,9 @@ import com.riverssen.core.system.LatestBlockInfo;
 import com.riverssen.core.system.Logger;
 import com.riverssen.core.transactions.TXIList;
 import com.riverssen.core.transactions.Transaction;
+import com.riverssen.core.utils.Base58;
+import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.riverssen.Constant;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -74,7 +77,7 @@ public class BlockChain implements BlockChainI
     {
         Logger.alert("attempting to download block(s) from peers");
         final long totalNodes = context.getNetworkManager().amountNodesConnected();
-        Set<Client> communicators = context.getNetworkManager().getCommunicators();
+        @Constant Set<Client> communicators = context.getNetworkManager().getCommunicators();
 
         context.getNetworkManager().downloadLongestChain();
         List<Client> nodes = new ArrayList<>();
@@ -97,8 +100,17 @@ public class BlockChain implements BlockChainI
 
         for(Client node : nodes)
         {
+            String lock = ByteUtil.defaultEncoder().encode58((System.currentTimeMillis() + " BlockChainLock: " + node).getBytes());
+            
+            //Wait for node to unlock.
+            while (!node.lock(lock))
+            {
+            }
+
             for(long i = context.getBlockChain().currentBlock() - 1; i < node.getChainSize(); i ++)
-                node.sendMessage(new RequestBlockMessage(i));
+                if(i >= 0) node.sendMessage(new RequestBlockMessage(i));
+
+            node.unlock(lock);
         }
     }
 
