@@ -103,8 +103,8 @@ public class BlockChain implements BlockChainI
 
         Logger.alert("client '" + nodes.get(0).getChainSize() + "' block(s) behind");
 
-        for(Client node : nodes)
-            downloadedBlocks.put(node, new LinkedHashSet<>());
+//        for(Client node : nodes)
+//            downloadedBlocks.put(node, new LinkedHashSet<>());
 
         client_iterator :
             for(Client node : nodes) {
@@ -121,28 +121,30 @@ public class BlockChain implements BlockChainI
 
                 long now = System.currentTimeMillis();
 
-                while (downloadedBlocks.get(node).size() < required) {
-                    if (System.currentTimeMillis() - now > ((5 * 60_000L) * required))
-                        Logger.err("a network error might have occurred, '" + downloadedBlocks.get(node).size() + "' downloaded out of '" + required + "'.");
-                    else if(System.currentTimeMillis() - now > ((7.5 * 60_000L) * required))
-                    {
-                        Logger.err("a network error might have occurred, '" + downloadedBlocks.get(node).size() + "' downloaded out of '" + required + "'.");
-                        Logger.alert("forking...");
-//                        context.shutDown();
+                while (downloadedBlocks.size() < required) {
 
-                        node.block();
-                        downloadedBlocks.get(node).clear();
-                        break client_iterator;
-                    }
+
+//                    if (System.currentTimeMillis() - now > ((5 * 60_000L) * required))
+//                        Logger.err("a network error might have occurred, '" + downloadedBlocks.size() + "' downloaded out of '" + required + "'.");
+//                    else if(System.currentTimeMillis() - now > ((7.5 * 60_000L) * required))
+//                    {
+//                        Logger.err("a network error might have occurred, '" + downloadedBlocks.size() + "' downloaded out of '" + required + "'.");
+//                        Logger.alert("forking...");
+////                        context.shutDown();
+//
+//                        node.block();
+//                        downloadedBlocks.get(node).clear();
+//                        break client_iterator;
+//                    }
                 }
 
-                List<FullBlock> blocks = new ArrayList<>(downloadedBlocks.get(node));
-
-                blocks.sort((a, b)->{
-                    if(a.getBlockID() > b.getBlockID()) return 1;
-                    else if(a.getBlockID() == b.getBlockID()) return 0;
-                    else return -1;
-                });
+//                List<FullBlock> blocks = new ArrayList<>(downloadedBlocks.get(node));
+//
+//                blocks.sort((a, b)->{
+//                    if(a.getBlockID() > b.getBlockID()) return 1;
+//                    else if(a.getBlockID() == b.getBlockID()) return 0;
+//                    else return -1;
+//                });
 
                 node.unlock(lock);
             }
