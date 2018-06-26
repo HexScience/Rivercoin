@@ -121,7 +121,12 @@ public class BlockChain implements BlockChainI
 
                 long now = System.currentTimeMillis();
 
-                while (downloadedBlocks.size() < required) {
+                while (currentBlock() < required)
+                {
+                    
+                }
+
+//                while (downloadedBlocks.size() < required) {
 
 
 //                    if (System.currentTimeMillis() - now > ((5 * 60_000L) * required))
@@ -136,7 +141,7 @@ public class BlockChain implements BlockChainI
 //                        downloadedBlocks.get(node).clear();
 //                        break client_iterator;
 //                    }
-                }
+//                }
 
 //                List<FullBlock> blocks = new ArrayList<>(downloadedBlocks.get(node));
 //
