@@ -32,7 +32,8 @@ import java.util.*;
 public class BlockChain implements BlockChainI
 {
     private Set<FullBlock>                  orphanedBlocks;
-    private Map<Client, Set<FullBlock>>     downloadedBlocks;
+//    private Map<Client, Set<FullBlock>>     downloadedBlocks;
+    private Set<FullBlock>                  downloadedBlocks;
     private FullBlock                       block;
     private ContextI                        context;
     private long                            lastvalidated;
@@ -42,6 +43,7 @@ public class BlockChain implements BlockChainI
     {
         this.context        = context;
         this.orphanedBlocks = new LinkedHashSet<>();
+        this.downloadedBlocks= new LinkedHashSet<>();
     }
 
     @Override
@@ -68,6 +70,11 @@ public class BlockChain implements BlockChainI
     {
         if(currentBlock() == 0) return null;
         return new BlockHeader(currentBlock() - 1, context);
+    }
+
+    public void download(FullBlock block)
+    {
+        this.downloadedBlocks.add(block);
     }
 
     @Override

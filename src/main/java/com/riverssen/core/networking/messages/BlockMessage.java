@@ -22,17 +22,19 @@ import java.io.IOException;
 
 public class BlockMessage extends BasicMessage
 {
-    private FullBlock block;
+    private FullBlock   block;
+    private boolean     requested;
 
     public BlockMessage()
     {
         super(ByteUtil.defaultEncoder().encode58(("block message" + System.currentTimeMillis()).getBytes()));
     }
 
-    public BlockMessage(FullBlock block)
+    public BlockMessage(FullBlock block, boolean requested)
     {
         super(block.encode58(ByteUtil.defaultEncoder()));
         this.block = block;
+        this.requested = requested;
     }
 
     @Override
@@ -40,6 +42,7 @@ public class BlockMessage extends BasicMessage
     {
         connection.getOutputStream().writeInt(OP_BLK);
         connection.getOutputStream().writeUTF(getHashCode());
+        connection.getOutputStream().writeBoolean(requested);
         block.export(connection.getOutputStream());
     }
 
@@ -49,6 +52,7 @@ public class BlockMessage extends BasicMessage
         String hashCode = connection.getInputStream().readUTF();
 
         try{
+            boolean requested = connection.getInputStream().readBoolean();
             FullBlock block = new FullBlock(connection.getInputStream(), context);
             if(block.validate(context) > 0)
             {
@@ -56,7 +60,12 @@ public class BlockMessage extends BasicMessage
                 client.block();
                 return;
             }
-            context.getBlockChain().queueBlock(block);
+
+            if(requested)
+                context.getBlockChain().download(block);
+            else
+                context.getBlockChain().queueBlock(block);
+            
             client.sendMessage(new SuccessMessage(hashCode));
             client.setChainSize(Math.max(client.getChainSize(), block.getBlockID()));
         } catch (Exception e)
