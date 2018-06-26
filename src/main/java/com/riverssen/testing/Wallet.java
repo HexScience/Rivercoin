@@ -2,12 +2,43 @@ package com.riverssen.testing;
 
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.security.AdvancedEncryptionStandard;
+import com.riverssen.core.system.Logger;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
 
 import java.io.*;
 
 public class Wallet {
+
+    public static void generate(ContextI context, String...args)
+    {
+        if (args == null)
+        {
+            Logger.err("must launch with 3 arguments: <name> <seed> <encryption password> <num addresses>");
+        }
+
+        if(args.length != 4)
+        {
+            Logger.err("must launch with 3 arguments: <name> <seed> <encryption password> <num addresses>");
+        }
+
+        String name = args[0];
+        String seed = args[1];
+        String pass = args[2];
+        String numa = args[3];
+
+        while (pass.length() < 16)
+            pass = pass += '0';
+
+        pass = pass.substring(0, 16);
+
+        com.riverssen.core.security.Wallet wallet = new com.riverssen.core.security.Wallet(name, seed);
+
+        for(int i = 0; i < Integer.parseInt(numa); i ++)
+            wallet.generateNewKeyPair("default");
+
+        wallet.export(pass, context);
+    }
 
     public static void launchTests(ContextI context)
     {

@@ -29,11 +29,11 @@ public class RivercoinCore
          */
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         if(args != null && args.length > 1)
-        new RivercoinCore(args[0], args[1]);
+        new RivercoinCore(args[0], args[1], args);
         else throw new RuntimeException("Please specify a rivercoin.config file.");
     }
 
-    private RivercoinCore(String type, String file) throws Exception
+    private RivercoinCore(String type, String file, String ...args) throws Exception
     {
         /** This Code Starts The Rivercoin Client **/
         /** create a context **/
@@ -53,7 +53,8 @@ public class RivercoinCore
         Logger.alert("----------------------------------------------------------------");
         Logger.alert("----------usable cpu threads: " + config.getMaxMiningThreads());
 
-        switch (type) {
+        switch (type)
+        {
             case "node":
                 context = new NodeContext(config);
                 break;

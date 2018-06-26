@@ -68,7 +68,7 @@ public class ClientContext implements ContextI
 
         try
         {
-            this.getNetworkManager().establishConnection();
+//            this.getNetworkManager().establishConnection();
         } catch (Exception e)
         {
             e.printStackTrace();
@@ -174,13 +174,61 @@ public class ClientContext implements ContextI
 
         while (isRunning())
         {
-            CommandLine.Command command = CommandLine.newCommand();
+//            CommandLine.Command command = CommandLine.newCommand();
             String text = null;
 
-            while(!(text = scanner.next()).isEmpty())
-                command = command.parse(text, this);
+            while(scanner.hasNextLine())
+            {
+                text = scanner.nextLine();
+//                command = command.parse(text, this);
 
-            command.parse(null, this);
+                String sub[] = text.split(" ");
+
+                if(sub.length > 0)
+                {
+                    String op   = sub[0];
+
+                    switch (op)
+                    {
+                        case "wallet":
+                            if(sub.length != 6)
+                            {
+                                Logger.err("correct usage[0]: wallet -g <name> <seed> <encryption key> <num addresses>");
+                                break;
+                            }
+                            switch (sub[1])
+                            {
+                                default:
+                                    Logger.err("correct usage[1]: wallet -g <name> <seed> <encryption key> <num addresses>");
+                                    break;
+                                case "-g":
+                                case "-generate":
+                                    String name = sub[2];
+                                    String seed = sub[3];
+                                    String encr = sub[4];
+                                    String numa = sub[5];
+
+                                    int num = 0;
+
+                                    try{
+                                        num = Integer.parseInt(numa);
+                                    } catch (Exception e)
+                                    {
+                                        Logger.err("correct usage[2]: wallet -g <name> <seed> <encryption key> <num addresses>");
+                                        break;
+                                    }
+
+                                    com.riverssen.testing.Wallet.generate(this, name, seed, encr, numa);
+
+                                    Logger.alert("wallet generation successful!");
+                                break;
+                            }
+                            break;
+                    }
+                }
+            }
+
+//            command.parse(null, this);
         }
     }
 
