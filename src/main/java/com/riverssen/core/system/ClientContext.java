@@ -191,15 +191,35 @@ public class ClientContext implements ContextI
                     switch (op)
                     {
                         case "wallet":
-                            if(sub.length != 6)
+                            if(sub.length < 2)
                             {
-                                Logger.err("correct usage[0]: wallet -g <name> <seed> <encryption key> <num addresses>");
+                                Logger.err("incorrect usage:\n\twallet -g <name> <seed> <encryption key> <num addresses>\n\twallet -i <name>\n\twallet -n <keypair> <name>\n\twallet -e");
                                 break;
                             }
                             switch (sub[1])
                             {
                                 default:
                                     Logger.err("correct usage[1]: wallet -g <name> <seed> <encryption key> <num addresses>");
+                                    break;
+
+                                case "-n":
+                                    if(sub.length < 3)
+                                    {
+                                        Logger.err("incorrect usage:\n\twallet -g <name> <seed> <encryption key> <num addresses>\n\twallet -i <name>\n\twallet -n <keypair name>");
+                                        break;
+                                    }
+
+                                    if(wallet != null)
+                                    {
+                                        wallet.generateNewKeyPair(sub[2]);
+                                    } else
+                                        Logger.err("generate a wallet first!");
+
+                                    break;
+                                case "-i":
+//                                        String wallet_name = sub[1];
+
+//                                        Wallet wallet = new Wallet()
                                     break;
                                 case "-g":
                                 case "-generate":
@@ -218,7 +238,7 @@ public class ClientContext implements ContextI
                                         break;
                                     }
 
-                                    com.riverssen.testing.Wallet.generate(this, name, seed, encr, numa);
+                                    this.wallet = com.riverssen.testing.Wallet.generate(this, name, seed, encr, numa);
 
                                     Logger.alert("wallet generation successful!");
                                 break;

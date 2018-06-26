@@ -10,7 +10,7 @@ import java.io.*;
 
 public class Wallet {
 
-    public static void generate(ContextI context, String...args)
+    public static com.riverssen.core.security.Wallet generate(ContextI context, String...args)
     {
         if (args == null)
         {
@@ -38,6 +38,8 @@ public class Wallet {
             wallet.generateNewKeyPair("default");
 
         wallet.export(pass, context);
+
+        return wallet;
     }
 
     public static void launchTests(ContextI context)

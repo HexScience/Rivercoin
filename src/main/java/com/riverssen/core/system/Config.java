@@ -223,7 +223,7 @@ public class Config
 
         BigInteger result = cur;
 
-        System.out.println(adjustedHashPerBlock);
+//        System.out.println(adjustedHashPerBlock);
 
         try{
             result = new BigDecimal(cur).divide(new BigDecimal("7.5").multiply(adjustedHashPerBlock), 200, RoundingMode.HALF_UP).toBigInteger();
