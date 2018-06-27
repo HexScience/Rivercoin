@@ -86,7 +86,7 @@ public class Config
         String root = ".//";
         self = this;
 
-        if(config != null && config.length() > 0)
+        if(config != null && config.toString().length() > 0)
             root = config.toString();
 
         try{
@@ -106,17 +106,17 @@ public class Config
             {
                 if(string.startsWith("PORT:"))                          this.PORT = Integer.parseInt(string.substring(5));
                 else if(string.startsWith("MAX_CPU_THREADS:"))          this.MAX_MINING_THREADS = Integer.parseInt(string.substring("MAX_CPU_THREADS:".length()));
-                else if(string.startsWith("STRUCTURE_DIRECTORY"))       structure = string.substring("STRUCTURE_DIRECTORY:".length()).replace(".", root);
-                else if(string.startsWith("BLOCKCHAIN_DIRECTORY:"))     this.BLOCKCHAIN_DIRECTORY = string.substring("BLOCKCHAIN_DIRECTORY:".length()).replace(".", root);
-                else if(string.startsWith("BLOCKCHAIN_TRX_DB:"))        this.BLOCKCHAIN_TRX_DB = string.substring("BLOCKCHAIN_TRX_DB:".length()).replace(".", root);
-                else if(string.startsWith("BLOCKCHAIN_WLT_DB:"))        this.BLOCKCHAIN_WLT_DB = string.substring("BLOCKCHAIN_WLT_DB:".length()).replace(".", root);
-                else if(string.startsWith("WALLET_DIRECTORY:"))         this.WALLET_DIRECTORY = string.substring("WALLET_DIRECTORY:".length()).replace(".", root);
+                else if(string.startsWith("STRUCTURE_DIRECTORY"))       structure = string.substring("STRUCTURE_DIRECTORY:".length()).replace(".", root + File.separator);
+                else if(string.startsWith("BLOCKCHAIN_DIRECTORY:"))     this.BLOCKCHAIN_DIRECTORY = string.substring("BLOCKCHAIN_DIRECTORY:".length()).replace(".", root + File.separator);
+                else if(string.startsWith("BLOCKCHAIN_TRX_DB:"))        this.BLOCKCHAIN_TRX_DB = string.substring("BLOCKCHAIN_TRX_DB:".length()).replace(".", root + File.separator);
+                else if(string.startsWith("BLOCKCHAIN_WLT_DB:"))        this.BLOCKCHAIN_WLT_DB = string.substring("BLOCKCHAIN_WLT_DB:".length()).replace(".", root + File.separator);
+                else if(string.startsWith("WALLET_DIRECTORY:"))         this.WALLET_DIRECTORY = string.substring("WALLET_DIRECTORY:".length()).replace(".", root + File.separator);
                 else if(string.startsWith("PEER_FINDER:"))              this.UNIQUE_PEER_LINK = string.substring("PEER_FINDER:".length());
                 else if(string.startsWith("PUBLIC_KEY:"))               this.PUBLIC_ADDRESS = string.substring("PUBLIC_KEY:".length());
                 else if(string.startsWith("DBKEY:"))                    this.PUBLIC_ADDRESS = string.substring("PUBLIC_KEY:".length());
                 else if(string.startsWith("BOOL_PRUNING:"))              this.PRUNE = Boolean.parseBoolean(string.substring("BOOL_PRUNING".length()));
                 else if(string.startsWith("VIRTUAL_SPACE_SIZE:"))        this.VSSSIZE = Long.parseLong(string.substring("VIRTUAL_SPACE_SIZE:".length()));
-                else if(string.startsWith("VIRTUAL_SPACE_FILE:"))        this.VSSFILE = (string.substring("VIRTUAL_SPACE_FILE:".length()).replace(".", root));
+                else if(string.startsWith("VIRTUAL_SPACE_FILE:"))        this.VSSFILE = (string.substring("VIRTUAL_SPACE_FILE:".length()).replace(".", root + File.separator));
             }
 
             this.BLOCKCHAIN_DIRECTORY += File.separator;
