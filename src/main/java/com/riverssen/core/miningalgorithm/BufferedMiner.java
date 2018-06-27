@@ -14,8 +14,12 @@ package com.riverssen.core.miningalgorithm;
 
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
+import com.riverssen.core.system.FileSpec;
+import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.core.utils.Tuple;
 
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 
 public class BufferedMiner
@@ -29,12 +33,48 @@ public class BufferedMiner
         buffer = new byte[524_288 * mod];
     }
 
-    public byte[] mine(HashAlgorithm algorithm, ContextI context)
-    {
+    public Tuple<byte[], Long> mine(HashAlgorithm algorithm, BigInteger difficulty, ContextI context) throws IOException {
         BigInteger result = BigInteger.ZERO;
 
-//        DataInputStream stream = context.getLedger().asInputStream();
+        FileSpec ledger = context.getLedger();
+        DataInputStream stream = null;
 
-        return result.toByteArray();
+        if(ledger.length() > 0)
+            stream = ledger.next().asInputStream();
+
+        while (ledger.remaining() > 0)
+        {
+            int cod = stream.read(buffer);
+
+            if(cod == 1)
+                stream = ledger.next().asInputStream();
+
+            result = new BigInteger(algorithm.encode(buffer));
+        }
+
+        long nonce = 0;
+
+        {
+            byte data[] = ByteUtil.encode(nonce);
+
+            for(int i = 0; i < data.length; i ++)
+                buffer[i] = data[i];
+
+            result = new BigInteger(algorithm.encode(buffer));
+        }
+
+        while (result.compareTo(difficulty) >= 0)
+        {
+            nonce ++;
+
+            byte data[] = ByteUtil.encode(nonce);
+
+            for(int i = 0; i < data.length; i ++)
+                buffer[i] = data[i];
+
+            result = new BigInteger(algorithm.encode(buffer));
+        }
+
+        return new Tuple<>(result.toByteArray(), nonce);
     }
 }
