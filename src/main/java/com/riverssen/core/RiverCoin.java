@@ -126,15 +126,15 @@ public class RiverCoin implements Encodeable, JSONFormattable, Exportable {
         return "{"+toRiverCoinString()+"}";
     }
 
-    @Override
-    public byte[] header() {
-        return HEADER_BYTES;
-    }
-
-    @Override
-    public byte[] content() {
-        return nanocoin.toByteArray();
-    }
+//    @Override
+//    public byte[] header() {
+//        return HEADER_BYTES;
+//    }
+//
+//    @Override
+//    public byte[] content() {
+//        return nanocoin.toByteArray();
+//    }
 
     @Override
     public void export(SmartDataTransferer smdt) {

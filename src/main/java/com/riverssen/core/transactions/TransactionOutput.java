@@ -81,17 +81,17 @@ public class TransactionOutput/**<T extends Encodeable & JSONFormattable & Expor
         return new JSONFormattable.JSON().add("txoid", Base58.encode(txoid)).add("owner", getOwner().toString()).add("value", getValue().toRiverCoinString()).add("txid", Base58.encode(getParentTXID())).toString();
     }
 
-    @Override
-    public byte[] header()
-    {
-        return ByteUtil.concatenate(getValue().header());
-    }
-
-    @Override
-    public byte[] content()
-    {
-        return ByteUtil.concatenate(getOwner().getBytes(), getValue().getBytes(), getParentTXID());
-    }
+//    @Override
+//    public byte[] header()
+//    {
+//        return ByteUtil.concatenate(getValue().header());
+//    }
+//
+//    @Override
+//    public byte[] content()
+//    {
+//        return ByteUtil.concatenate(getOwner().getBytes(), getValue().getBytes(), getParentTXID());
+//    }
 
     @Override
     public void export(SmartDataTransferer smdt)

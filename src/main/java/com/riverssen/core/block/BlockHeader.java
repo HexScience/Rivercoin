@@ -329,17 +329,17 @@ public class BlockHeader implements Encodeable, Exportable
                 .add("reward", new RiverCoin(new BigInteger(reward)).toRiverCoinString()).toString();
     }
 
-    @Override
-    public byte[] header()
-    {
-        return new byte[0];
-    }
-
-    @Override
-    public byte[] content()
-    {
-        return new byte[0];
-    }
+//    @Override
+//    public byte[] header()
+//    {
+//        return new byte[0];
+//    }
+//
+//    @Override
+//    public byte[] content()
+//    {
+//        return new byte[0];
+//    }
 
     @Override
     public void export(SmartDataTransferer smdt)

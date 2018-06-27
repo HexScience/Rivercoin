@@ -235,15 +235,15 @@ public class ContractInvoke implements TransactionI, Encodeable
                                     timestamp);
     }
 
-    @Override
-    public byte[] header() {
-        return new byte[] {TRANSACTION};
-    }
-
-    @Override
-    public byte[] content() {
-        return new byte[0];
-    }
+//    @Override
+//    public byte[] header() {
+//        return new byte[] {TRANSACTION};
+//    }
+//
+//    @Override
+//    public byte[] content() {
+//        return new byte[0];
+//    }
 
     @Override
     public void export(SmartDataTransferer smdt) {

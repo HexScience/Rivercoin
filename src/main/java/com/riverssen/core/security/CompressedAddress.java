@@ -63,15 +63,15 @@ public class CompressedAddress implements Encodeable, Exportable
         return Base58.decode(address);
     }
 
-    @Override
-    public byte[] header() {
-        return new byte[0];
-    }
-
-    @Override
-    public byte[] content() {
-        return new byte[0];
-    }
+//    @Override
+//    public byte[] header() {
+//        return new byte[0];
+//    }
+//
+//    @Override
+//    public byte[] content() {
+//        return new byte[0];
+//    }
 
     @Override
     public void export(SmartDataTransferer smdt) {

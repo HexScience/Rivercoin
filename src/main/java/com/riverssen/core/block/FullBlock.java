@@ -248,15 +248,15 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         return BlockHeader.FullBlock(getBlockID()-1, context);
     }
 
-    @Override
-    public byte[] header() {
-        return header.getBytes();
-    }
-
-    @Override
-    public byte[] content() {
-        return body.getBytes();
-    }
+//    @Override
+//    public byte[] header() {
+//        return header.getBytes();
+//    }
+//
+//    @Override
+//    public byte[] content() {
+//        return body.getBytes();
+//    }
 
     @Override
     public void export(SmartDataTransferer smdt) {

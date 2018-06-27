@@ -70,17 +70,17 @@ public class TXIList extends ArrayList<TransactionInput> implements Encodeable, 
         return data;
     }
 
-    @Override
-    public byte[] header() {
-        return ByteUtil.encodei(size());
-    }
-
-    @Override
-    public byte[] content() {
-        byte data[] = get(0).data();
-        for(int i = 1; i < size(); i ++) data = ByteUtil.concatenate(data, get(i).data());
-        return new byte[0];
-    }
+//    @Override
+//    public byte[] header() {
+//        return ByteUtil.encodei(size());
+//    }
+//
+//    @Override
+//    public byte[] content() {
+//        byte data[] = get(0).data();
+//        for(int i = 1; i < size(); i ++) data = ByteUtil.concatenate(data, get(i).data());
+//        return new byte[0];
+//    }
 
     @Override
     public void export(SmartDataTransferer smdt) {

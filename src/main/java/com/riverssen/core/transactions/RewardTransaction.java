@@ -146,15 +146,15 @@ public class RewardTransaction implements TransactionI
         return ByteUtil.concatenate(receiver.getBytes(), getTXIDs().getBytes(), ByteUtil.encode(time));
     }
 
-    @Override
-    public byte[] header() {
-        return new byte[0];
-    }
-
-    @Override
-    public byte[] content() {
-        return new byte[0];
-    }
+//    @Override
+//    public byte[] header() {
+//        return new byte[0];
+//    }
+//
+//    @Override
+//    public byte[] content() {
+//        return new byte[0];
+//    }
 
     @Override
     public void export(SmartDataTransferer smdt) {

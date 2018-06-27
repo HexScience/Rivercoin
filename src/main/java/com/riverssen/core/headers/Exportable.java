@@ -20,12 +20,12 @@ import java.io.IOException;
 
 public interface Exportable
 {
-    public byte[] header();
-    public byte[] content();
-    public default byte[] data()
-    {
-        return ByteUtil.concatenate(header(), content());
-    }
+//    public byte[] header();
+//    public byte[] content();
+//    public default byte[] data()
+//    {
+//        return ByteUtil.concatenate(header(), content());
+//    }
 
     public void export(SmartDataTransferer smdt);
     public void export(DataOutputStream    dost) throws IOException;
