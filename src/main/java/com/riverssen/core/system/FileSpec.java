@@ -12,7 +12,9 @@
 
 package com.riverssen.core.system;
 
-import java.io.File;
+import java.io.*;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterInputStream;
 
 public abstract class FileSpec
 {
@@ -21,6 +23,28 @@ public abstract class FileSpec
     public FileSpec(File file)
     {
         this.file = file;
+    }
+
+    public DataInputStream asInputStream() throws IOException
+    {
+        return new DataInputStream(new InflaterInputStream(new FileInputStream(file)));
+    }
+
+    public DataOutputStream asOutputStream() throws IOException
+    {
+        return new DataOutputStream(new DeflaterOutputStream(new FileOutputStream(file)));
+    }
+
+    public byte[] asRawData() throws IOException {
+        if (!file.exists()) return null;
+
+        byte data[] = new byte[(int) file.length()];
+
+        FileInputStream stream = new FileInputStream(file);
+
+        stream.read(data);
+
+        return data;
     }
 
     public abstract FileSpec next();
