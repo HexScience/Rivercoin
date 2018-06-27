@@ -19,8 +19,11 @@ import com.riverssen.core.networking.NetworkManager;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.system.Config;
+import com.riverssen.core.system.FileSpec;
 import com.riverssen.riverssen.UTXOMap;
 
+import java.io.DataInputStream;
+import java.io.File;
 import java.math.BigInteger;
 import java.util.concurrent.ExecutorService;
 
@@ -61,4 +64,9 @@ public interface ContextI
     boolean actAsRelay();
 
     void shutDown();
+
+    default FileSpec getLedger()
+    {
+        return FileSpec.fromFile(new File(getConfig().getBlockChainTransactionDirectory()));
+    }
 }

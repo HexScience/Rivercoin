@@ -33,6 +33,8 @@ public class BufferedMiner
     {
         BigInteger result = BigInteger.ZERO;
 
+//        DataInputStream stream = context.getLedger().asInputStream();
+
         return result.toByteArray();
     }
 }
