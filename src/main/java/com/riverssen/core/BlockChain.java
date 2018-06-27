@@ -258,8 +258,8 @@ public class BlockChain implements BlockChainI
     @Override
     public void run()
     {
-        Wallet wallet = new Wallet("test", "test");
-        context.getTransactionPool().addInternal(new Transaction(wallet.getPublicKey().getCompressed(), context.getMiner(), new TXIList(), new RiverCoin("12.0"), "bro").sign(wallet.getPrivateKey()));
+//        Wallet wallet = new Wallet("test", "test");
+//        context.getTransactionPool().addInternal(new Transaction(wallet.getPublicKey().getCompressed(), context.getMiner(), new TXIList(), new RiverCoin("12.0"), "bro").sign(wallet.getPrivateKey()));
 
         FetchBlockChainFromDisk();
 //        FetchBlockChainFromPeers();
@@ -329,21 +329,65 @@ public class BlockChain implements BlockChainI
             if(lock)
             {
             } else {
-                while (context.getTransactionPool().available())
-                {
+                while (context.getTransactionPool().available()) {
                     block.add(context.getTransactionPool().next(), context);
-                    if(block.getBody().mine(context))
+                    if (block.getBody().mine(context))
                         break;
                 }
+
+                if(System.currentTimeMillis() - lastBlockWas >= context.getConfig().getAverageBlockTime())
+                {
+                    while (orphanedBlocks.size() > 0)
+                    {
+                        FullBlock orphaned = orphanedBlocks.iterator().next();
+
+                        orphanedBlocks.remove(orphaned);
+
+                        if(orphaned.getBlockID() == currentBlock() && orphaned.validate(context) == 0)
+                        {
+                            this.block.free(context);
+
+                            this.block = orphaned;
+                            this.block.serialize(context);
+                            this.block = this.block.getHeader().continueChain();
+                        }
+                    }
+                }
+
                 if(block.getBody().mine(context))
                 {
                     block.mine(context);
-                    block.serialize(context);
 
-//                    System.exit(0);
+                    boolean continueBlock = true;
 
-                    block = block.getHeader().continueChain();
-                    lastBlockWas = System.currentTimeMillis();
+                    while (orphanedBlocks.size() > 0)
+                    {
+                        FullBlock orphaned = orphanedBlocks.iterator().next();
+
+                        orphanedBlocks.remove(orphaned);
+
+                        if(orphaned.getBlockID() == currentBlock() && orphaned.validate(context) == 0 && orphaned.getHeader().getTimeStampAsLong() <= block.getHeader().getTimeStampAsLong())
+                        {
+                            this.block.free(context);
+
+                            this.block = orphaned;
+                            this.block.serialize(context);
+                            this.block = this.block.getHeader().continueChain();
+                            continueBlock = false;
+                        }
+                    }
+
+                    if(continueBlock)
+                    {
+                        /** Send Solution To Nodes **/
+
+                        context.getNetworkManager().sendBlock(block);
+
+                        block.serialize(context);
+
+                        block = block.getHeader().continueChain();
+                        lastBlockWas = System.currentTimeMillis();
+                    }
                 }
             }
         }

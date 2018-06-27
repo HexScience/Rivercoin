@@ -14,8 +14,10 @@ package com.riverssen.core;
 
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.transactions.Transaction;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -52,6 +54,12 @@ public class TransactionPool
         lastTransactionTime = System.currentTimeMillis();
 
         pool.add(transaction);
+    }
+
+    public void putBack(List<TransactionI> transactions)
+    {
+        for (TransactionI transaction : transactions)
+            addRelayed(transaction);
     }
 
     public boolean available()

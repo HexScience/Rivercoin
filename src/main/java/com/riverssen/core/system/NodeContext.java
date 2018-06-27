@@ -14,6 +14,7 @@ package com.riverssen.core.system;
 
 import com.riverssen.core.BlockChain;
 import com.riverssen.core.BlockPool;
+import com.riverssen.core.RivercoinCore;
 import com.riverssen.core.TransactionPool;
 import com.riverssen.core.algorithms.Provider;
 import com.riverssen.core.block.BlockHeader;
@@ -60,7 +61,7 @@ public class NodeContext implements ContextI
         this.wallet = this.config.getWallet();
         this.provider = new Provider();
         this.blockChain = new BlockChain(this);
-        this.versionBytes = ByteUtil.decode(new byte[]{'a', 0, 0, 0, 0, 0, 0, (byte)228});
+        this.versionBytes = RivercoinCore.actual_version;
 
         if(!PublicAddress.isPublicAddressValid(config.getMinerAddress().toString())) throw new AddressInvalidException(config.getMinerAddress().toString());
 

@@ -108,7 +108,15 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         if (!body.transactionsValid(context)) return err_transactions;
 
         /** verify timestamp **/
-        if (body.getTimeStamp() != header.getTimeStampAsLong()) return err_timestamp;
+//        if (body.getTimeStamp() != header.getTimeStampAsLong()) return err_timestamp;
+        long timeDifference = 0;
+
+        if(parent != null)
+            timeDifference = getHeader().getTimeStampAsLong() - parent.getTimeStampAsLong();
+
+        if(timeDifference >= (context.getConfig().getAverageBlockTime() * 10)) return err_timestamp;
+
+        if(timeDifference < 0) return err_timestamp;
 
         /** verify block started mining at least lastblock_time + blocktime/5 after **/
         if (body.getTimeStamp() <= (header.getTimeStampAsLong() + (context.getConfig().getAverageBlockTime() / 5))) return err_timestamp;
@@ -179,10 +187,6 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
 
         double time = (System.currentTimeMillis() - this.body.getTimeStamp()) / 1000.0;
         Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: hashing took '" + time + "s' '" + this.hash + "'");
-
-        /** Send Solution To Nodes **/
-
-        context.getNetworkManager().sendBlock(this);
     }
 
     public synchronized BlockHeader getHeader()
@@ -248,16 +252,6 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         return BlockHeader.FullBlock(getBlockID()-1, context);
     }
 
-//    @Override
-//    public byte[] header() {
-//        return header.getBytes();
-//    }
-//
-//    @Override
-//    public byte[] content() {
-//        return body.getBytes();
-//    }
-
     @Override
     public void export(SmartDataTransferer smdt) {
     }
@@ -282,5 +276,10 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         if (data.length() == 0) return "";
 
         return data.substring(0, data.length() - 2);
+    }
+
+    public void free(ContextI context)
+    {
+        context.getTransactionPool().putBack(getBody().getMerkleTree().flatten());
     }
 }

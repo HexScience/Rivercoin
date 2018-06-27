@@ -14,6 +14,7 @@ package com.riverssen.core;
 
 import com.riverssen.core.system.*;
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.FileUtils;
 
 import java.io.File;
@@ -32,15 +33,14 @@ public class RivercoinCore
         else throw new RuntimeException("Please specify a rivercoin.config file.");
     }
 
+    public static final long actual_version = ByteUtil.decode(new byte[]{'a', 0, 0, 0, 0, 0, 0, (byte)228});
+
     private RivercoinCore(String type, String file, String ...args) throws Exception
     {
         /** This Code Starts The Rivercoin Client **/
         /** create a context **/
         ContextI context = null;
         Config   config  = new Config(new File(file + File.separator));
-
-//        RiverCoin coin = new RiverCoin("14134.4134");
-//        System.out.println(new RiverCoin(coin.getBytes()));
 
         /** Generate directories if they don't exist **/
         FileUtils.createDirectoryIfDoesntExist(config.getBlockChainDirectory());
