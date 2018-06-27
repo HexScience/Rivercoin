@@ -13,6 +13,7 @@
 package com.riverssen.core.system;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
@@ -47,12 +48,28 @@ public abstract class FileSpec
         return data;
     }
 
+    public static FileSpec fromFile(File file)
+    {
+        if(file.isDirectory()) return new DirectoryFileSpec(file);
+        else return new FileFileSpec(file);
+    }
+
+    public boolean isDirectory()
+    {
+        return file.isDirectory();
+    }
+
+    public File getFile()
+    {
+        return file;
+    }
+
     public abstract FileSpec next();
     public abstract void     rewind();
     public abstract int      length();
     public abstract int      remaining();
 
-    public class DirectoryFileSpec extends FileSpec
+    public static class DirectoryFileSpec extends FileSpec
     {
         private FileSpec subFiles[];
         private int      fileIndex;
@@ -60,6 +77,12 @@ public abstract class FileSpec
         public DirectoryFileSpec(File file) {
             super(file);
             File files[] = file.listFiles();
+
+            Arrays.sort(files, (a, b)->{
+                if (a.lastModified() > b.lastModified()) return 1;
+                else if (a.lastModified() == b.lastModified()) return 0;
+                else return -1;
+            });
 
             for (File file1 : files)
                 if(file1.isDirectory()) subFiles[fileIndex ++] = new DirectoryFileSpec(file1);
@@ -91,7 +114,7 @@ public abstract class FileSpec
         }
     }
 
-    public class FileFileSpec extends FileSpec
+    public static class FileFileSpec extends FileSpec
     {
         public FileFileSpec(File file) {
             super(file);
@@ -104,7 +127,6 @@ public abstract class FileSpec
 
         @Override
         public void rewind() {
-
         }
 
         @Override
