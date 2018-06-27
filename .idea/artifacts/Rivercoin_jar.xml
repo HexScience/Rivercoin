@@ -1,0 +1,25 @@
+<component name="ArtifactManager">
+  <artifact name="Rivercoin:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Rivercoin_jar</output-path>
+    <root id="root">
+      <element id="archive" name="Rivercoin.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="Rivercoin" />
+      </element>
+      <element id="library" level="project" name="Maven: net.java.jinput:jinput:2.0.5" />
+      <element id="library" level="project" name="Maven: org.jsoup:jsoup:1.11.3" />
+      <element id="library" level="project" name="Maven: org.bouncycastle:bcprov-jdk15on:1.59" />
+      <element id="library" level="project" name="Maven: net.java.jinput:jinput-platform:natives-linux:2.0.5" />
+      <element id="library" level="project" name="Maven: org.lwjgl.lwjgl:lwjgl-platform:natives-linux:2.8.4" />
+      <element id="library" level="project" name="Maven: org.lwjgl.lwjgl:lwjgl-platform:natives-windows:2.8.4" />
+      <element id="library" level="project" name="Maven: net.java.jutils:jutils:1.0.0" />
+      <element id="library" level="project" name="Maven: org.lwjgl.lwjgl:lwjgl-platform:natives-osx:2.8.4" />
+      <element id="library" level="project" name="Maven: org.json:json:20180130" />
+      <element id="library" level="project" name="Maven: net.java.jinput:jinput-platform:natives-windows:2.0.5" />
+      <element id="library" level="project" name="Maven: net.java.jinput:jinput-platform:natives-osx:2.0.5" />
+      <element id="library" level="project" name="Maven: org.lwjgl.lwjgl:lwjgl:2.8.4" />
+    </root>
+  </artifact>
+</component>

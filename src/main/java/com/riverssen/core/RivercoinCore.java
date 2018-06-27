@@ -38,7 +38,7 @@ public class RivercoinCore
         /** This Code Starts The Rivercoin Client **/
         /** create a context **/
         ContextI context = null;
-        Config   config  = new Config(new File(file));
+        Config   config  = new Config(new File(file + File.separator));
 
 //        RiverCoin coin = new RiverCoin("14134.4134");
 //        System.out.println(new RiverCoin(coin.getBytes()));
