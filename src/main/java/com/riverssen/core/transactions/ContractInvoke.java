@@ -228,22 +228,12 @@ public class ContractInvoke implements TransactionI, Encodeable
     @Override
     public byte[] getBytes() {
         return ByteUtil.concatenate(sender.getBytes(),
-                                    method.getBytes(),
-                                    txids.getBytes(),
-                                    amount.getBytes(),
-                                    data,
-                                    timestamp);
+                method.getBytes(),
+                txids.getBytes(),
+                amount.getBytes(),
+                data,
+                timestamp);
     }
-
-//    @Override
-//    public byte[] header() {
-//        return new byte[] {TRANSACTION};
-//    }
-//
-//    @Override
-//    public byte[] content() {
-//        return new byte[0];
-//    }
 
     @Override
     public void export(SmartDataTransferer smdt) {

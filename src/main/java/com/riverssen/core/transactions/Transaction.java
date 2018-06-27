@@ -37,7 +37,7 @@ public class Transaction implements TransactionI, Encodeable
 {
     /** 64 byte compressed ecdsa public key **/
     private CompressedAddress                   sender;
-    /** 20 byte receiver public address **/
+    /** 25 byte receiver public address **/
     private PublicAddress                       receiver;
     /** list containing the type and amount of txids to be transferred **/
     private TXIList                             txids;
@@ -242,22 +242,12 @@ public class Transaction implements TransactionI, Encodeable
     @Override
     public byte[] getBytes() {
         return ByteUtil.concatenate(sender.getBytes(),
-                                    receiver.getBytes(),
-                                    txids.getBytes(),
-                                    amount.getBytes(),
-                                    data,
-                                    timestamp);
+                receiver.getBytes(),
+                txids.getBytes(),
+                amount.getBytes(),
+                data,
+                timestamp);
     }
-
-//    @Override
-//    public byte[] header() {
-//        return new byte[] {TRANSACTION};
-//    }
-//
-//    @Override
-//    public byte[] content() {
-//        return new byte[0];
-//    }
 
     @Override
     public void export(SmartDataTransferer smdt) {

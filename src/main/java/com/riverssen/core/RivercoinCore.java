@@ -12,7 +12,6 @@
 
 package com.riverssen.core;
 
-import com.riverssen.core.security.Wallet;
 import com.riverssen.core.system.*;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.utils.FileUtils;

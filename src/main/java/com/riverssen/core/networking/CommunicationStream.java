@@ -47,14 +47,10 @@ public class CommunicationStream
             return next;
         }
 
-        public Ticket getLast()
-        {
-            if(next == null) return this;
+        public Ticket getLast() {
+            if (next == null) return this;
             return next.getNext();
         }
-
-//        public abstract void send(ContextI context);
-//        public abstract void receive(ContextI context);
     }
 
     private Ticket root = new Ticket();

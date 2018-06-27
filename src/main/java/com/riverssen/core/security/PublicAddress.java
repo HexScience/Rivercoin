@@ -12,7 +12,6 @@
 
 package com.riverssen.core.security;
 
-import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.core.utils.Base58;
@@ -91,22 +90,9 @@ public class PublicAddress implements Encodeable, Exportable, Serializable
         return address.address.equals(this.address);
     }
 
-    public boolean equals(CompressedAddress address)
-    {
+    public boolean equals(CompressedAddress address) {
         return address.toPublicKey().getAddress().address.equals(this.address);
     }
-
-//    @Override
-//    public byte[] header()
-//    {
-//        return new byte[0];
-//    }
-//
-//    @Override
-//    public byte[] content()
-//    {
-//        return new byte[0];
-//    }
 
     @Override
     public void export(SmartDataTransferer smdt)
