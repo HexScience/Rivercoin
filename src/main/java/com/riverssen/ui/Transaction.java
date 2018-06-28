@@ -16,10 +16,12 @@ import com.riverssen.core.RiverCoin;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
 
+import java.text.SimpleDateFormat;
+
 public class Transaction
 {
     private int  type;
-    private RiverCoin amount;
+    private String amount;
     private long dateTime;
     private String recipient;
     private String comment;
@@ -28,7 +30,7 @@ public class Transaction
     public Transaction(Wallet wallet, int type, RiverCoin amount, long dateTime, String recipient, String comment, String data)
     {
         this.type = type;
-        this.amount = amount;
+        this.amount = amount.toRiverCoinString();
         this.dateTime = dateTime;
         this.recipient = recipient;
         this.comment = comment;
@@ -38,5 +40,29 @@ public class Transaction
 
         if(wallet.containsAddress(new PublicAddress(recipient)))
             this.recipient = "me: " + wallet.getKeyPairFromAddress(new PublicAddress(recipient));
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public String getDate() {
+        return new SimpleDateFormat("EEE dd MM yy HH:mm:ss").format(dateTime);
+    }
+
+    public String getRecipient() {
+        return recipient;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public String getData() {
+        return data;
     }
 }

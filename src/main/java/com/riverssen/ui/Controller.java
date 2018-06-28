@@ -19,10 +19,7 @@ import com.riverssen.core.security.Wallet;
 import com.riverssen.core.transactions.TXIList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableView;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 
@@ -54,10 +51,6 @@ public class Controller implements Initializable
     @FXML
     TableView<Transaction> txlist;
 
-    {
-        System.out.println(txlist);
-    }
-
     public void selectMyWallet()
     {
         my_wallet.setSelected(true);
@@ -77,6 +70,35 @@ public class Controller implements Initializable
 
         tabpane.getSelectionModel().select(1);
 
+        if(txlist.getColumns().size() == 0)
+        {
+            TableColumn<Transaction, Integer> type = new TableColumn<>("Type");
+            type.setMinWidth(3);
+            type.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+            TableColumn<Transaction, String> amount = new TableColumn<>("Amount");
+            amount.setMinWidth(150);
+            amount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+
+            TableColumn<Transaction, String> date = new TableColumn<>("Date");
+            date.setMinWidth(150);
+            date.setCellValueFactory(new PropertyValueFactory<>("date"));
+
+            TableColumn<Transaction, String> recipient = new TableColumn<>("Recipient");
+            recipient.setMinWidth(150);
+            recipient.setCellValueFactory(new PropertyValueFactory<>("recipient"));
+
+            TableColumn<Transaction, String> comment = new TableColumn<>("Comment");
+            comment.setMinWidth(300);
+            comment.setCellValueFactory(new PropertyValueFactory<>("comment"));
+
+            TableColumn<Transaction, String> data = new TableColumn<>("Data");
+            data.setMinWidth(200);
+            data.setCellValueFactory(new PropertyValueFactory<>("data"));
+
+            txlist.getColumns().addAll(type, amount, date, recipient, comment, data);
+        }
+
         txlist.getItems().add(new Transaction(null, 0, new RiverCoin(Math.random() + ""), System.currentTimeMillis(), "jafjiwhfi12e1", "hello world", "hello world data"));
     }
 
@@ -91,14 +113,14 @@ public class Controller implements Initializable
 
     public void selectDarkTheme()
     {
-        main.getStylesheets().set(0, getClass().getResource("style.css").toExternalForm());
+        main.getStylesheets().set(0, getClass().getClassLoader().getResource("style.css").toExternalForm());
         dark_theme.setSelected(true);
         light_theme.setSelected(false);
     }
 
     public void selectLightTheme()
     {
-        main.getStylesheets().set(0, getClass().getResource("light.css").toExternalForm());
+        main.getStylesheets().set(0, getClass().getClassLoader().getResource("light.css").toExternalForm());
         dark_theme.setSelected(false);
         light_theme.setSelected(true);
     }

@@ -68,37 +68,57 @@
 }
 
 .list{
-    -fx-background-radius: 0px;
+    -fx-text-fill: aliceblue;
     -fx-background-color: #16232B;
+}
+
+.list .column-header{
+    -fx-text-fill: aliceblue;
+    -fx-background-color: rgb(51, 84, 105);
+}
+
+.list .table-cell{
     -fx-text-fill: aliceblue;
 }
 
-.list .column-header-background{
-    -fx-background-radius: 0px;
-    -fx-background-color: #16232B;
+.list .column-header-background .label{
+    -fx-background-color: transparent;
     -fx-text-fill: aliceblue;
 }
 
-.list-cell{
-    -fx-background-image: url("content/arrow_red.png");
-    -fx-background-size: 13px;
-    -fx-background-position: 0px;
-    -fx-background-color: #16232B;
+.table-row-cell .label
+{
     -fx-text-fill: aliceblue;
-    -fx-background-repeat: no-repeat;
 }
 
-.list-cell:hover{
-    -fx-background-color: #16232B;
+.table-row-cell{
+    -fx-background-color: rgb(35, 61, 77);
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+
     -fx-text-fill: aliceblue;
-    -fx-font-size: 16px;
-    -fx-background-size: 16px;
 }
 
-.list-cell:selected{
-    -fx-background-color: #16232B;
+.table-row-cell:odd{
+    -fx-background-color: rgb(51, 84, 105);
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+
     -fx-text-fill: aliceblue;
-    -fx-font-size: 16px;
+}
+
+.table-row-cell:hover {
+    -fx-background-insets: 0;
+    -fx-background-radius: 1;
+
+    -fx-font-size: 14px;
+}
+
+.table-row-cell:selected {
+    -fx-background-insets: 0;
+    -fx-background-radius: 1;
+
+    -fx-font-size: 15px;
 }
 
 .keypair_list{
