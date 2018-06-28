@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.web.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
@@ -141,11 +140,20 @@
                            </font>
                         </Button>
                         <ChoiceBox fx:id="wallet_choice" layoutX="868.0" layoutY="305.0" prefHeight="37.0" prefWidth="98.0" styleClass="choice" />
-                        <ListView fx:id="txlist" editable="true" layoutX="14.0" layoutY="362.0" prefHeight="353.0" prefWidth="976.0" styleClass="list" />
                         <TextField fx:id="amount" layoutX="17.0" layoutY="305.0" prefHeight="37.0" prefWidth="265.0" styleClass="text_area" />
                         <TextField fx:id="address" layoutX="296.0" layoutY="305.0" prefHeight="37.0" prefWidth="265.0" styleClass="text_area" />
                         <Text fx:id="send_funds_error_log1" fill="WHITE" layoutX="17.0" layoutY="301.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To" wrappingWidth="161.63519287109375" />
                         <Text fx:id="send_funds_error_log11" fill="WHITE" layoutX="297.0" layoutY="301.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Amount" wrappingWidth="161.63519287109375" />
+                        <TableView fx:id="txlist" layoutX="18.0" layoutY="361.0" prefHeight="351.0" prefWidth="968.0" styleClass="list">
+                          <columns>
+                            <TableColumn fx:id="type_col" prefWidth="139.29647827148438" text="Type" />
+                              <TableColumn fx:id="amount_col" prefWidth="139.29647827148438" text="Amount" />
+                            <TableColumn fx:id="date_col" minWidth="2.316986083984375" prefWidth="138.66107177734375" text="Date" />
+                              <TableColumn fx:id="recipient_col" minWidth="2.316986083984375" prefWidth="138.66107177734375" text="Recipient" />
+                              <TableColumn fx:id="comment_col" minWidth="2.316986083984375" prefWidth="138.66107177734375" text="Comment" />
+                              <TableColumn fx:id="data_col" minWidth="2.316986083984375" prefWidth="138.66107177734375" text="Data" />
+                          </columns>
+                        </TableView>
                      </children>
                   </AnchorPane>
             </content>
@@ -154,25 +162,25 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TextField layoutX="7.0" layoutY="146.0" prefHeight="27.0" prefWidth="354.0" styleClass="text_area">
+                        <TextField layoutX="331.0" layoutY="145.0" prefHeight="27.0" prefWidth="354.0" styleClass="text_area">
                            <tooltip>
                               <Tooltip text="Choose a wallet name to expore (name.rwt)." />
                            </tooltip>
                         </TextField>
-                        <Text fill="WHITE" layoutX="7.0" layoutY="134.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wallet Name" />
-                        <Text fill="WHITE" layoutX="9.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wallet Seed" />
-                        <TextField layoutX="9.0" layoutY="205.0" prefHeight="27.0" prefWidth="354.0" styleClass="text_area">
+                        <Text fill="WHITE" layoutX="211.0" layoutY="163.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wallet Name" />
+                        <Text fill="WHITE" layoutX="212.0" layoutY="222.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wallet Seed" />
+                        <TextField layoutX="333.0" layoutY="204.0" prefHeight="27.0" prefWidth="354.0" styleClass="text_area">
                            <tooltip>
                               <Tooltip text="Choose a seed to generate your initial keypair, this must stay unique to you as it can be used to regenerate your wallet." />
                            </tooltip>
                         </TextField>
-                        <TextField layoutX="8.0" layoutY="264.0" prefHeight="27.0" prefWidth="354.0" styleClass="text_area">
+                        <TextField layoutX="332.0" layoutY="263.0" prefHeight="27.0" prefWidth="354.0" styleClass="text_area">
                            <tooltip>
                               <Tooltip text="This is a password that is used to encrypt your wallet information, it should be 16 characters long." />
                            </tooltip>
                         </TextField>
-                        <Text fill="WHITE" layoutX="8.0" layoutY="252.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wallet Password" />
-                        <Button fx:id="generate_wallet" layoutX="259.0" layoutY="316.0" mnemonicParsing="false" styleClass="send" text="Generate" textAlignment="CENTER" textFill="WHITE">
+                        <Text fill="WHITE" layoutX="213.0" layoutY="281.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wallet Password" />
+                        <Button fx:id="generate_wallet" layoutX="453.0" layoutY="348.0" mnemonicParsing="false" styleClass="send" text="Generate" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font size="18.0" />
                            </font>

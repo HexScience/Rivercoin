@@ -17,23 +17,17 @@ import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.transactions.TXIList;
-import com.riverssen.core.transactions.Transaction;
-import javafx.application.Application;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 public class Controller implements Initializable
 {
@@ -58,7 +52,11 @@ public class Controller implements Initializable
     ListView keypair_list;
 
     @FXML
-    ListView txlist;
+    TableView<Transaction> txlist;
+
+    {
+        System.out.println(txlist);
+    }
 
     public void selectMyWallet()
     {
@@ -79,7 +77,7 @@ public class Controller implements Initializable
 
         tabpane.getSelectionModel().select(1);
 
-        txlist.getItems().add(Math.random() * 10.0 + "" + (int)(Math.random() * 100));
+        txlist.getItems().add(new Transaction(null, 0, new RiverCoin(Math.random() + ""), System.currentTimeMillis(), "jafjiwhfi12e1", "hello world", "hello world data"));
     }
 
     public void selectSettings()
@@ -108,7 +106,7 @@ public class Controller implements Initializable
     public void sendFunds(ContextI context, Wallet from, String to, String amt, String comment)
     {
         TXIList list = new TXIList();
-        Transaction trxn = new Transaction(from.getPublicKey().getCompressed(), new PublicAddress(to), list, new
+        com.riverssen.core.transactions.Transaction trxn = new com.riverssen.core.transactions.Transaction(from.getPublicKey().getCompressed(), new PublicAddress(to), list, new
                 RiverCoin(amt), comment);
         trxn.sign(from.getPrivateKey());
         context.getTransactionPool().addInternal(trxn);

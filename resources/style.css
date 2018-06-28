@@ -73,6 +73,12 @@
     -fx-text-fill: aliceblue;
 }
 
+.list .column-header-background{
+    -fx-background-radius: 0px;
+    -fx-background-color: #16232B;
+    -fx-text-fill: aliceblue;
+}
+
 .list-cell{
     -fx-background-image: url("content/arrow_red.png");
     -fx-background-size: 13px;

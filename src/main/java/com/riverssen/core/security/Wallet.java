@@ -255,4 +255,16 @@ public class Wallet
     public PublicAddress getPublicAddress(int i) {
         return getPublicKey(i).getAddress();
     }
+
+    public boolean containsAddress(PublicAddress address) {
+            for(Truple<String, PrivKey, PubKey> keyPair : keyPairs)
+                if(keyPair.getC().getAddress().equals(address)) return true;
+        return false;
+    }
+
+    public Truple<String, PrivKey, PubKey> getKeyPairFromAddress(PublicAddress address) {
+        for(Truple<String, PrivKey, PubKey> keyPair : keyPairs)
+            if(keyPair.getC().getAddress().equals(address)) return keyPair;
+        return null;
+    }
 }
