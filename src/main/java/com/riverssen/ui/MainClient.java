@@ -10,7 +10,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.riverssen;
+package com.riverssen.ui;
 
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.ContextI;
@@ -43,7 +43,7 @@ public class MainClient extends Application
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("wallet.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("com/riverssen/ui/wallet.fxml"));
         primaryStage.setTitle("Rivercoin wallet");
         primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.setResizable(false);
