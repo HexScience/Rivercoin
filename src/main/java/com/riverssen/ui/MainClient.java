@@ -43,7 +43,7 @@ public class MainClient extends Application
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("com/riverssen/ui/wallet.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("wallet.fxml"));
         primaryStage.setTitle("Rivercoin wallet");
         primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.setResizable(false);
