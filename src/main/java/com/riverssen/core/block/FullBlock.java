@@ -135,7 +135,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
 
     public synchronized void add(TransactionI token, ContextI context)
     {
-        body.add(token, context);
+        body.add(token, map, context);
     }
 
     /**
@@ -161,7 +161,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         //System.out.println(new RewardTransaction(miner).toJSON());
 
         /** add the reward BEFORE mining the block **/
-        body.addNoValidation(new RewardTransaction(miner, algorithm.encode(body.getBytes())), context);
+        body.addNoValidation(new RewardTransaction(miner, algorithm.encode(body.getBytes())), map, context);
         /** rebuild tree to include reward **/
         body.getMerkleTree().buildTree();
 

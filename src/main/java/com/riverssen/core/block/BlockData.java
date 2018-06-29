@@ -21,6 +21,7 @@ import com.riverssen.core.utils.Serializer;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.utils.MerkleTree;
 import com.riverssen.core.utils.SmartDataTransferer;
+import com.riverssen.riverssen.UTXOMap;
 
 import java.io.*;
 import java.util.*;
@@ -116,23 +117,25 @@ public class BlockData implements Encodeable, Exportable
         return time;
     }
 
-    public void add(TransactionI token, ContextI context)
+    public boolean add(TransactionI token, UTXOMap map, ContextI context)
     {
-        if (!token.valid(context)) return;
+        if (!token.valid(context)) return false;
 
-        List<TransactionOutput> outputs = token.generateOutputs(context.getMiner(), context);
+        List<TransactionOutput> outputs = token.generateOutputs(context.getMiner(), map, context);
 
         context.getUtxoManager().addAll(outputs);
         this.outputs.addAll(outputs);
 
         merkleTree.add(token);
         dataSize += token.toJSON().getBytes().length;
+
+        return true;
     }
 
-    public void addNoValidation(TransactionI token, ContextI context) {
+    public void addNoValidation(TransactionI token, UTXOMap map, ContextI context) {
         merkleTree.add(token);
 
-        List<TransactionOutput> outputs = token.generateOutputs(context.getMiner(), context);
+        List<TransactionOutput> outputs = token.generateOutputs(context.getMiner(), map, context);
 
         context.getUtxoManager().addAll(outputs);
 

@@ -53,7 +53,7 @@ public class UTXOManager
         ContextI context = null;
 
         for(TransactionI transaction : mt.flatten())
-            for(TransactionOutput transactionOutput : transaction.generateOutputs(block.getHeader().getMinerAddressAsPublicAddress(), context))
+            for(TransactionOutput transactionOutput : transaction.generateOutputs(block.getHeader().getMinerAddressAsPublicAddress(), map, context))
                 map.put(transactionOutput.getHash(), transactionOutput);
     }
 }

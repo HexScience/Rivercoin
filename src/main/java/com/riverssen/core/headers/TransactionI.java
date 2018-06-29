@@ -17,6 +17,7 @@ import com.riverssen.core.security.CompressedAddress;
 import com.riverssen.core.security.PrivKey;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.transactions.*;
+import com.riverssen.riverssen.UTXOMap;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -37,7 +38,7 @@ public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSON
     }
     TXIList                         getTXIDs();
     List<TransactionOutput>         getOutputs(PublicAddress miner, ContextI context);
-    List<TransactionOutput>         generateOutputs(PublicAddress miner, ContextI context);
+    List<TransactionOutput>         generateOutputs(PublicAddress miner, UTXOMap map, ContextI context);
     RiverCoin                       cost();
 
     BigInteger                      getInputAmount();

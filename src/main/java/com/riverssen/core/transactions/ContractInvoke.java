@@ -24,6 +24,7 @@ import com.riverssen.core.system.Config;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.SmartDataTransferer;
+import com.riverssen.riverssen.UTXOMap;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -184,7 +185,7 @@ public class ContractInvoke implements TransactionI, Encodeable
         return new RiverCoin(Config.getMiningFee()).toBigInteger();
     }
 
-    public List<TransactionOutput> generateOutputs(PublicAddress miner, ContextI context)
+    public List<TransactionOutput> generateOutputs(PublicAddress miner, UTXOMap map, ContextI context)
     {
         List<TransactionOutput> utxos = new ArrayList<>();
 

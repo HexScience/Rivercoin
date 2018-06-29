@@ -22,6 +22,7 @@ import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.SmartDataTransferer;
+import com.riverssen.riverssen.UTXOMap;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -92,7 +93,7 @@ public class RewardTransaction implements TransactionI
         return utxos;
     }
 
-    public List<TransactionOutput> generateOutputs(PublicAddress miner, ContextI context)
+    public List<TransactionOutput> generateOutputs(PublicAddress miner, UTXOMap map, ContextI context)
     {
         List<TransactionOutput> utxos = new ArrayList<>();
 

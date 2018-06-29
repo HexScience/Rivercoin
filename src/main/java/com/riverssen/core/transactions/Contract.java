@@ -26,6 +26,7 @@ import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.utils.SmartDataTransferer;
+import com.riverssen.riverssen.UTXOMap;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -94,7 +95,7 @@ public class Contract implements TransactionI
     }
 
     @Override
-    public List<TransactionOutput> generateOutputs(PublicAddress miner, ContextI context)
+    public List<TransactionOutput> generateOutputs(PublicAddress miner, UTXOMap map, ContextI context)
     {
         return null;
     }
