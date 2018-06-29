@@ -143,7 +143,7 @@ public class BlockData implements Encodeable, Exportable
         dataSize += token.toJSON().getBytes().length;
     }
 
-    public void revertOutputs(ContextI context)
+    public void revertOutputs(UTXOMap map, ContextI context)
     {
         for(TransactionI transactionI : merkleTree.flatten())
             transactionI.revertOutputs(context.getMiner(), map, context);
