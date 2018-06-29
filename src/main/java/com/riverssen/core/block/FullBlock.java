@@ -88,7 +88,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
 
     public synchronized void undoUTXOChanges(ContextI context)
     {
-        body.revertOutputs(context);
+        body.revertOutputs(map, context);
     }
 
     public synchronized int validate(BlockHeader parent, ContextI context)
