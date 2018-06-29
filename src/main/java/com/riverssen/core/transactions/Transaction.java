@@ -167,7 +167,7 @@ public class Transaction implements TransactionI, Encodeable
     }
 
     @Override
-    public void revertOutputs(PublicAddress miner, ContextI context)
+    public void revertOutputs(PublicAddress miner, UTXOMap map, ContextI ontext)
     {
         List<TransactionOutput> utxos = new ArrayList<>();
 
@@ -186,11 +186,11 @@ public class Transaction implements TransactionI, Encodeable
         }
 
         for(TransactionInput input : txids)
-            context.getUtxoManager().add(input.getUTXO().getOwner().toString(), input.getUTXO());
+            map.add(input.getUTXO().getOwner().toString(), input.getUTXO());
         for(TransactionOutput output : utxos)
-            context.getUtxoManager().remove(output.getOwner().toString(), output);
+            map.remove(output.getOwner().toString(), output);
 
-        context.getUtxoManager().addAll(utxos);
+        map.addAll(utxos);
     }
 
     public BigInteger getFee()
@@ -217,9 +217,9 @@ public class Transaction implements TransactionI, Encodeable
         }
 
         for(TransactionInput input : txids)
-            context.getUtxoManager().remove(input.getUTXO().getOwner().toString(), input.getUTXO());
+            map.remove(input.getUTXO().getOwner().toString(), input.getUTXO());
         for(TransactionOutput output : utxos)
-            context.getUtxoManager().add(output.getOwner().toString(), output);
+            map.add(output.getOwner().toString(), output);
 
         return utxos;
     }

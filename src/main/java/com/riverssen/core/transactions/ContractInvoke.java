@@ -156,7 +156,7 @@ public class ContractInvoke implements TransactionI, Encodeable
     }
 
     @Override
-    public void revertOutputs(PublicAddress miner, ContextI context)
+    public void revertOutputs(PublicAddress miner, UTXOMap map, ContextI context)
     {
         List<TransactionOutput> utxos = new ArrayList<>();
 

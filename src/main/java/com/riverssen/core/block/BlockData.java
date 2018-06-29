@@ -146,7 +146,7 @@ public class BlockData implements Encodeable, Exportable
     public void revertOutputs(ContextI context)
     {
         for(TransactionI transactionI : merkleTree.flatten())
-            transactionI.revertOutputs(context.getMiner(), context);
+            transactionI.revertOutputs(context.getMiner(), map, context);
     }
 
 //    @Override

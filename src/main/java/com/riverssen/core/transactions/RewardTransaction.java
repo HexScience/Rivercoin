@@ -120,7 +120,7 @@ public class RewardTransaction implements TransactionI
     }
 
     @Override
-    public void revertOutputs(PublicAddress miner, ContextI context)
+    public void revertOutputs(PublicAddress miner, UTXOMap map, ContextI context)
     {
     }
 

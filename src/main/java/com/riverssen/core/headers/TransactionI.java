@@ -63,5 +63,5 @@ public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSON
         return null;
     }
 
-    void revertOutputs(PublicAddress miner, ContextI context);
+    void revertOutputs(PublicAddress miner, UTXOMap map, ContextI context);
 }
