@@ -246,6 +246,8 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
             info.read();
 
             info.write(getBlockID(), info.getLastBlockCheck(), info.getLastBlockCheckTimestamp(), info.getDifficulty(), info.getTotalHashes());
+
+            map.serialize(context);
         } catch (Exception e)
         {
             e.printStackTrace();
