@@ -134,10 +134,17 @@ public class RiverFlowMap implements UTXOMap
         }
     }
 
+    private void deserialize(String name)
+    {
+        
+    }
+
     @Override
     public Set<TransactionOutput> get(String address)
     {
         if(data.containsKey(address)) return data.get(address);
+
+        if()
 
         data.put(address, new LinkedHashSet<>());
 
