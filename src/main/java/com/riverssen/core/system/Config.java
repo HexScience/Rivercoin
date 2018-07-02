@@ -159,7 +159,7 @@ public class Config
     /** calculate the cost of a contract **/
     public static String getCost(long contractSize)
     {
-        return new BigDecimal(contractSize).multiply(new BigDecimal());
+        return new BigDecimal(contractSize).multiply(new BigDecimal(getByteFee())).toPlainString();
     }
 
     public static String getReward()
