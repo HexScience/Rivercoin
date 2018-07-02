@@ -360,7 +360,7 @@ public class BlockChain implements BlockChainI
 
                         block.serialize(context);
 
-                        block = block.getHeader().continueChain();
+                        block = block.getHeader().continueChain(context);
                         lastBlockWas = System.currentTimeMillis();
                     }
                 }
