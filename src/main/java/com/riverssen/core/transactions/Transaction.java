@@ -133,7 +133,9 @@ public class Transaction implements TransactionI, Encodeable
     public List<TransactionOutput> getOutputs(PublicAddress miner, ContextI context) {
         List<TransactionOutput> utxos = new ArrayList<>();
 
+        /** Add new UTXO (base transaction amount) **/
         utxos.add(new TransactionOutput(receiver, amount, encode(ByteUtil.defaultEncoder())));
+
         RiverCoin leftOver = new RiverCoin(getInputAmount().subtract(amount.toBigInteger()));
         /** if miner doesn't want fees, then all the leftover amount is returned to the sender as a new unspent output **/
         if(miner == null) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
