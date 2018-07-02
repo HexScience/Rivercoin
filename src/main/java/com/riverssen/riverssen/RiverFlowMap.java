@@ -151,6 +151,8 @@ public class RiverFlowMap implements UTXOMap
             stream.close();
 
             data.put(name, set);
+
+            return true;
         } catch (Exception e)
         {
             e.printStackTrace();
