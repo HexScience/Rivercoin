@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Class-Path: jinput-2.0.5.jar jsoup-1.11.3.jar bcprov-jdk15on-1.59.jar 
- jinput-platform-2.0.5-natives-linux.jar lwjgl-platform-2.8.4-natives-
- linux.jar lwjgl-platform-2.8.4-natives-windows.jar jutils-1.0.0.jar l
- wjgl-platform-2.8.4-natives-osx.jar json-20180130.jar jinput-platform
- -2.0.5-natives-windows.jar jinput-platform-2.0.5-natives-osx.jar lwjg
- l-2.8.4.jar
-Main-Class: com.riverssen.core.RivercoinCore
-
