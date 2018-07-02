@@ -225,7 +225,8 @@ public class Transaction implements TransactionI, Encodeable
     }
 
     @Override
-    public RiverCoin cost() {
+    public RiverCoin cost()
+    {
         return new RiverCoin("0");
     }
 
