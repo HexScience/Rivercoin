@@ -52,7 +52,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         this.header             = header;
         this.body               = data;
         this.parent             = parent;
-        this.map                = new RiverFlowMap();
+        this.map                = new RiverFlowMap(context);
         this.context            = context;
     }
 
