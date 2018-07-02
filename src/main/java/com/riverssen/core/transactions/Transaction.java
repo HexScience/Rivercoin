@@ -98,8 +98,6 @@ public class Transaction implements TransactionI, Encodeable
 
         for(TransactionInput input : txids) if(!utxos.contains(input.getUTXO().getHash())) return false;
 
-//        for(TransactionInput input : txids) if(!input.getUTXO().getOwner().equals(sender)) return false;
-
         /** check amount is more than or equal to the minimum transaction amount **/
         if(amount.toBigInteger().compareTo(new BigInteger(Config.getMinimumTransactionAmount())) < 0) return false;
 
