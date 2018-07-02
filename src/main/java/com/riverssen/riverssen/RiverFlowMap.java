@@ -136,7 +136,7 @@ public class RiverFlowMap implements UTXOMap
 
     private void deserialize(String name)
     {
-        
+
     }
 
     @Override
@@ -144,7 +144,7 @@ public class RiverFlowMap implements UTXOMap
     {
         if(data.containsKey(address)) return data.get(address);
 
-        if()
+        if(deserialize(address)) return data.get(address);
 
         data.put(address, new LinkedHashSet<>());
 
