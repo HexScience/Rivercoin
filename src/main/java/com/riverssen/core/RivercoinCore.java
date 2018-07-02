@@ -12,6 +12,7 @@
 
 package com.riverssen.core;
 
+import com.riverssen.core.exceptions.FeatureUnavailableException;
 import com.riverssen.core.system.*;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.utils.ByteUtil;
@@ -54,9 +55,11 @@ public class RivercoinCore
 
         switch (type)
         {
+                //** A Node Will Collect And Relay Information But Won't Get Into Mining **/
             case "node":
                 context = new NodeContext(config);
-                break;
+                throw new FeatureUnavailableException("NodeContext");
+                //** Miners Act As Nodes But They Attempt To Mine To Get A Reward**/
             case "miner":
                 context = new MiningContext(config);
                 break;
