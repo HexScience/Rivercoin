@@ -347,7 +347,7 @@ public class BlockChain implements BlockChainI
 
                             this.block = orphaned;
                             this.block.serialize(context);
-                            this.block = this.block.getHeader().continueChain();
+                            this.block = this.block.getHeader().continueChain(context);
                             continueBlock = false;
                         }
                     }
