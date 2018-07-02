@@ -34,27 +34,6 @@ public class RiverFlowMap implements UTXOMap
     public RiverFlowMap(ContextI context)
     {
         this.data = new HashMap<>();
-        File file = new File(context.getConfig().getBlockChainTransactionDirectory() + File.separator + "ledger" + File.separator);
-        File files[] = file.listFiles();
-
-        for(File address : files)
-        {
-            try{
-                Set<TransactionOutput> set = new LinkedHashSet<>();
-                DataInputStream stream = new DataInputStream(new InflaterInputStream(new FileInputStream(address)));
-                int size = stream.readInt();
-
-                for(int i = 0; i < size; i ++)
-                    set.add(new TransactionOutput(stream));
-
-                stream.close();
-
-                data.put(address.getName(), set);
-            } catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
