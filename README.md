@@ -1,4 +1,4 @@
-![alt text](http://rivercoin.net/common-content/logo-transparent-sml.png "Logo")
+![alt text](http://rivercoin.net/common-content/image-content/logo-transparent-sml.png "Logo")
 # Rivercoin
 A Decentralized Cryptocurrency That Was Created On Stream
 
