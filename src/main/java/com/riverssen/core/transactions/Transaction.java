@@ -210,21 +210,7 @@ public class Transaction implements TransactionI, Encodeable
 
     public List<TransactionOutput> generateOutputs(PublicAddress miner, UTXOMap map, ContextI context)
     {
-        List<TransactionOutput> utxos = new ArrayList<>();
-
-        utxos.add(new TransactionOutput(receiver, amount, encode(ByteUtil.defaultEncoder())));
-        RiverCoin leftOver = new RiverCoin(getInputAmount().subtract(amount.toBigInteger()));
-        /** if miner doesn't want fees, then all the leftover amount is returned to the sender as a new unspent output **/
-        if(miner == null) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
-        else{
-            RiverCoin fee = new RiverCoin(getFee());
-            leftOver = new RiverCoin(leftOver.toBigInteger().subtract(fee.toBigInteger()));
-
-            if(leftOver.toBigInteger().compareTo(BigInteger.ZERO) < 0) return null;//("leftover must be bigger than zero");
-            if(fee.toBigInteger().compareTo(     BigInteger.ZERO) < 0) return null;//("leftover must be bigger than zero");
-            if(fee.toBigInteger().compareTo(     BigInteger.ZERO) > 0) utxos.add(new TransactionOutput(miner, fee, encode(ByteUtil.defaultEncoder())));
-            if(leftOver.toBigInteger().compareTo(BigInteger.ZERO) > 0) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
-        }
+        List<TransactionOutput> utxos = getOutputs(miner, context);
 
         for(TransactionInput input : txids)
             map.remove(input.getUTXO().getOwner().toString(), input.getUTXO());
