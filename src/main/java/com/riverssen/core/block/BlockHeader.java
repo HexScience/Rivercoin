@@ -296,7 +296,7 @@ public class BlockHeader implements Encodeable, Exportable
 
 //            System.out.println("        System.out.println(\"hi\");\n");
 
-            FullBlock fBlock = new FullBlock(header, new BlockData(stream, context), parent);
+            FullBlock fBlock = new FullBlock(header, new BlockData(stream, context), parent, context);
 
             stream.close();
 
