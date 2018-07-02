@@ -210,7 +210,7 @@ public class MiningContext implements ContextI
     @Override
     public boolean actAsRelay()
     {
-        return false;
+        return true;
     }
 
     @Override

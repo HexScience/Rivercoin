@@ -169,31 +169,6 @@ public class BlockChain implements BlockChainI
                     }
                 }
 
-//                while (downloadedBlocks.size() < required) {
-
-
-//                    if (System.currentTimeMillis() - now > ((5 * 60_000L) * required))
-//                        Logger.err("a network error might have occurred, '" + downloadedBlocks.size() + "' downloaded out of '" + required + "'.");
-//                    else if(System.currentTimeMillis() - now > ((7.5 * 60_000L) * required))
-//                    {
-//                        Logger.err("a network error might have occurred, '" + downloadedBlocks.size() + "' downloaded out of '" + required + "'.");
-//                        Logger.alert("forking...");
-////                        context.shutDown();
-//
-//                        node.block();
-//                        downloadedBlocks.get(node).clear();
-//                        break client_iterator;
-//                    }
-//                }
-
-//                List<FullBlock> blocks = new ArrayList<>(downloadedBlocks.get(node));
-//
-//                blocks.sort((a, b)->{
-//                    if(a.getBlockID() > b.getBlockID()) return 1;
-//                    else if(a.getBlockID() == b.getBlockID()) return 0;
-//                    else return -1;
-//                });
-
                 node.unlock(lock);
             }
     }
