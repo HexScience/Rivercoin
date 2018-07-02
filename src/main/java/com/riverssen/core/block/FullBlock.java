@@ -43,15 +43,17 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     private BlockHeader header;
     /** this blocks body **/
     private BlockData   body;
+    private ContextI    context;
 
     private RiverFlowMap map;
 
-    public FullBlock(BlockHeader header, BlockData data, BlockHeader parent)
+    public FullBlock(BlockHeader header, BlockData data, BlockHeader parent, ContextI context)
     {
         this.header             = header;
         this.body               = data;
         this.parent             = parent;
         this.map                = new RiverFlowMap();
+        this.context            = context;
     }
 
     public FullBlock(long lastBlock, BlockHeader parent, ContextI context)
@@ -60,7 +62,8 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         this.body           = new BlockData();
         this.parent         = parent;
         this.header.setBlockID(lastBlock + 1);
-        this.map            = new RiverFlowMap();
+        this.map            = new RiverFlowMap(context);
+        this.context        = context;
     }
 
     public FullBlock(DataInputStream in, ContextI context)
@@ -68,7 +71,8 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         this.header             = new BlockHeader(in);
         this.body               = new BlockData(in, context);
         if(header.getBlockID() > 0) this.parent = new BlockHeader(header.getBlockID() - 1, context);
-        this.map                = new RiverFlowMap();
+        this.map                = new RiverFlowMap(context);
+        this.context            = context;
     }
 
     public synchronized String getHashAsString()
