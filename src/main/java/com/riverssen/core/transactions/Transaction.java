@@ -149,14 +149,15 @@ public class Transaction implements TransactionI, Encodeable
             leftOver = new RiverCoin(leftOver.toBigInteger().subtract(fee.toBigInteger()));
 
             /** check that there is a left over **/
-            if (leftOver.toBigInteger().compareTo(BigInteger.ZERO) < 0)
+            if (leftOver.toBigInteger().compareTo(BigInteger.ZERO) <= 0)
                 return null;
 
             /** check that the fee is more than zero **/
             if (fee.toBigInteger().compareTo(BigInteger.ZERO) <= 0) return null;
 
-            if (fee.toBigInteger().compareTo(BigInteger.ZERO) > 0)
-                utxos.add(new TransactionOutput(miner, fee, encode(ByteUtil.defaultEncoder())));
+
+            utxos.add(new TransactionOutput(miner, fee, encode(ByteUtil.defaultEncoder())));
+
             if (leftOver.toBigInteger().compareTo(BigInteger.ZERO) > 0)
                 utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
         }
