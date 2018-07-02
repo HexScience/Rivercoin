@@ -43,6 +43,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     private BlockHeader header;
     /** this blocks body **/
     private BlockData   body;
+    /** the context of the program **/
     private ContextI    context;
 
     private RiverFlowMap map;
