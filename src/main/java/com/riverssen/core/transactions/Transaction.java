@@ -227,6 +227,7 @@ public class Transaction implements TransactionI, Encodeable
     @Override
     public RiverCoin cost()
     {
+        int sizeInBytes = data.length + txids.length();
         return new RiverCoin("0");
     }
 

@@ -96,6 +96,10 @@ public class TXIList extends ArrayList<TransactionInput> implements Encodeable, 
 //        throw new RuntimeException("TransactionInputList: unexportable.");
     }
 
+    public int length() {
+        return size() * TransactionInput.SIZE;
+    }
+
     public interface TraverserI<T>
     {
         T traverse(TXIList list);
