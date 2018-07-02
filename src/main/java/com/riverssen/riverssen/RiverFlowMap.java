@@ -25,6 +25,7 @@ import java.util.zip.InflaterInputStream;
 public class RiverFlowMap implements UTXOMap
 {
     private HashMap<String, Set<TransactionOutput>> data;
+    private ContextI                                context;
 
     public RiverFlowMap()
     {
