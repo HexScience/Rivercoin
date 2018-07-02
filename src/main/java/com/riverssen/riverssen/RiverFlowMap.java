@@ -134,7 +134,7 @@ public class RiverFlowMap implements UTXOMap
         }
     }
 
-    private void deserialize(String name)
+    private boolean deserialize(String name)
     {
 
     }
