@@ -35,6 +35,7 @@ public class RiverFlowMap implements UTXOMap
     public RiverFlowMap(ContextI context)
     {
         this.data = new HashMap<>();
+        this.context = context;
     }
 
     @Override
