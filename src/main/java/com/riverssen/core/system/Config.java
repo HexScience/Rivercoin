@@ -45,6 +45,10 @@ public class Config
     {
         return "0.0000015";
     }
+    public static String getByteFee()
+    {
+        return "0.000000375";
+    }
 
     public static String getMinimumTransactionAmount()
     {
@@ -155,7 +159,7 @@ public class Config
     /** calculate the cost of a contract **/
     public static String getCost(long contractSize)
     {
-        return new BigDecimal(getReward()).divide(new BigDecimal(3000), 20, RoundingMode.HALF_UP).multiply(new BigDecimal(contractSize)).toPlainString();
+        return new BigDecimal(contractSize).multiply(new BigDecimal());
     }
 
     public static String getReward()
