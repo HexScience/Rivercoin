@@ -23,6 +23,7 @@ import java.io.IOException;
 
 public class TransactionInput/**<T extends Encodeable & JSONFormattable & Exportable>**/ implements Encodeable, Exportable
 {
+    public static final int SIZE = TransactionOutput.SIZE;
     private byte transactionOutputID[];
     private TransactionOutput utxo;
 

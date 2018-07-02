@@ -25,6 +25,7 @@ import java.io.DataOutputStream;
 /** Instances of this class will be created during runtime using the Transaction::generateOutputs(Transaction*); **/
 public class TransactionOutput/**<T extends Encodeable & JSONFormattable & Exportable>**/ implements Encodeable, JSONFormattable, Exportable
 {
+    public static final int SIZE = PublicAddress.SIZE + RiverCoin.MAX_BYTES + 64;
     private final PublicAddress owner;
     private final RiverCoin     value;
     private final byte          ptxid[];
