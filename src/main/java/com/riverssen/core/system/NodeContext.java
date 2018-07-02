@@ -56,7 +56,7 @@ public class NodeContext implements ContextI
         this.executorService = Executors.newCachedThreadPool();
         this.networkManager = new Server(this);
         this.blockPool = new BlockPool(this);
-        this.utxoManager = new RiverFlowMap();
+        this.utxoManager = new RiverFlowMap(this);
         this.miner = this.config.getMinerAddress();
         this.wallet = this.config.getWallet();
         this.provider = new Provider();
