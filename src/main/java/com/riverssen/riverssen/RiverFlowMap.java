@@ -22,6 +22,11 @@ import java.util.*;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
+/**
+ *
+ * This is a TEMP utxo map,
+ * Every block holds a new instance, which can be changed, if a block is serialized then all content is dumped to disk.
+ */
 public class RiverFlowMap implements UTXOMap
 {
     private HashMap<String, Set<TransactionOutput>> data;
