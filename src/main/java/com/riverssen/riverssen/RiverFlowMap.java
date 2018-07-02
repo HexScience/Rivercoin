@@ -136,6 +136,10 @@ public class RiverFlowMap implements UTXOMap
 
     private boolean deserialize(String name)
     {
+        File file = new File(context.getConfig().getBlockChainTransactionDirectory() + File.separator + "ledger" + File.separator + name);
+
+        if(!file.exists()) return false;
+
         return true;
     }
 
