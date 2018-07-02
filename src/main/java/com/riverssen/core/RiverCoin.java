@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class RiverCoin implements Encodeable, JSONFormattable, Exportable {
+public class RiverCoin implements Encodeable, JSONFormattable, Exportable
+{
     //9.223.372.0,36.854.775.807
 
     public  static final long    NANO_COIN_TO_RVC    = 100_000_000_000L;
@@ -34,7 +35,7 @@ public class RiverCoin implements Encodeable, JSONFormattable, Exportable {
 
     //    public static final long    MAX_VALUE           = 9_223_372_036_854_775_807L;
     //    public static final long    MAX_VALUE           = 18_223_372_036__854_775_807L;
-    public static final int     MAX_BYTES = new RiverCoin(MAX_RIVERCOINS + "").nanocoin.toByteArray().length;
+    public static final int      SIZE                = new RiverCoin(MAX_RIVERCOINS + "").nanocoin.toByteArray().length;
 
     private BigInteger nanocoin;
 
@@ -90,11 +91,11 @@ public class RiverCoin implements Encodeable, JSONFormattable, Exportable {
     @Override
     public byte[] getBytes()
     {
-        byte bytes[] = new byte[MAX_BYTES];
+        byte bytes[] = new byte[SIZE];
 
         byte nn[]    = nanocoin.toByteArray();
 
-        int toPad    = MAX_BYTES - nn.length;
+        int toPad    = SIZE - nn.length;
 
         for(int i = 0; i < toPad; i ++) bytes[i] = 0;
 
@@ -114,7 +115,7 @@ public class RiverCoin implements Encodeable, JSONFormattable, Exportable {
 
     public static RiverCoin fromStream(DataInputStream stream) throws Exception
     {
-        byte array[] = new byte[MAX_BYTES];
+        byte array[] = new byte[SIZE];
 
         stream.read(array);
 

@@ -23,7 +23,7 @@ import java.math.BigInteger;
 
 public class Balance
 {
-    public static final int         MAX_SIZE = PublicAddress.SIZE + RiverCoin.MAX_BYTES;
+    public static final int         MAX_SIZE = PublicAddress.SIZE + RiverCoin.SIZE;
     public static final int         MAX_FILE_SIZE = 16_000;
     public static final BigInteger  MAX_BALANCES_IN_FILE = new BigInteger((MAX_FILE_SIZE / MAX_SIZE) + "");
 

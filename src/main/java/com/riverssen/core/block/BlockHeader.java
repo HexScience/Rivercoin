@@ -47,7 +47,7 @@ public class BlockHeader implements Encodeable, Exportable
     private long nonce;
     /** 8 byte integer referencing the block id **/
     private long blockID;
-    private byte reward[] = new byte[RiverCoin.MAX_BYTES];
+    private byte reward[] = new byte[RiverCoin.SIZE];
 
     public BlockHeader(String hash, String parentHash, String merkleRoot, MerkleTree tree, long timeStamp, BigInteger difficulty, PublicAddress minerAddress, long nonce)
     {

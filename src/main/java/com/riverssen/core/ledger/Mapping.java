@@ -32,7 +32,7 @@ public class Mapping
         for(int i = 0; i < size; i ++)
         {
             byte address[] = ByteUtil.read(stream, PublicAddress.SIZE);
-            byte balance[] = ByteUtil.read(stream, RiverCoin.MAX_BYTES);
+            byte balance[] = ByteUtil.read(stream, RiverCoin.SIZE);
 
             data[new BigInteger(address).mod(Balance.MAX_BALANCES_IN_FILE).intValue()] = new Balance(new PublicAddress(address), new BigInteger(balance));
         }
