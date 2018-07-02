@@ -291,7 +291,7 @@ public class BlockChain implements BlockChainI
                     this.block = blockList.get(blockList.size() - 1);
 
                     this.block.serialize(context);
-                    this.block = this.block.getHeader().continueChain();
+                    this.block = this.block.getHeader().continueChain(context);
                     lastBlockWas = System.currentTimeMillis();
 
                     blockList.clear();
