@@ -136,7 +136,7 @@ public class RiverFlowMap implements UTXOMap
 
     private boolean deserialize(String name)
     {
-
+        return true;
     }
 
     @Override
