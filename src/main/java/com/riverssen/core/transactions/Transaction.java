@@ -153,7 +153,8 @@ public class Transaction implements TransactionI, Encodeable
                 return null;
 
             /** check that the fee is more than zero **/
-            if (fee.toBigInteger().compareTo(BigInteger.ZERO) < 0) return null;//("leftover must be bigger than zero");
+            if (fee.toBigInteger().compareTo(BigInteger.ZERO) <= 0) return null;
+
             if (fee.toBigInteger().compareTo(BigInteger.ZERO) > 0)
                 utxos.add(new TransactionOutput(miner, fee, encode(ByteUtil.defaultEncoder())));
             if (leftOver.toBigInteger().compareTo(BigInteger.ZERO) > 0)
