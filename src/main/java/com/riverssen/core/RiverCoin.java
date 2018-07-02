@@ -118,6 +118,21 @@ public class RiverCoin implements Encodeable, JSONFormattable, Exportable
         return new RiverCoin(nanocoin.add(other.nanocoin));
     }
 
+    public RiverCoin sub(RiverCoin other)
+    {
+        return new RiverCoin(nanocoin.subtract(other.nanocoin));
+    }
+
+    public RiverCoin mul(RiverCoin other)
+    {
+        return new RiverCoin(nanocoin.multiply(other.nanocoin));
+    }
+
+    public RiverCoin div(RiverCoin other)
+    {
+        return new RiverCoin(nanocoin.divide(other.nanocoin));
+    }
+
     public static RiverCoin fromStream(DataInputStream stream) throws Exception
     {
         byte array[] = new byte[SIZE];
