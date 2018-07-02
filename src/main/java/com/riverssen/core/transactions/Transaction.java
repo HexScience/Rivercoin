@@ -158,8 +158,7 @@ public class Transaction implements TransactionI, Encodeable
 
             utxos.add(new TransactionOutput(miner, fee, encode(ByteUtil.defaultEncoder())));
 
-            if (leftOver.toBigInteger().compareTo(BigInteger.ZERO) > 0)
-                utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
+            utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
         }
 
         return utxos;
