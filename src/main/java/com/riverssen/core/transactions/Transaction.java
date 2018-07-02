@@ -228,7 +228,7 @@ public class Transaction implements TransactionI, Encodeable
     public RiverCoin cost()
     {
         int sizeInBytes = data.length + txids.length();
-        return new RiverCoin("0");
+        return new RiverCoin(Config.getCost(sizeInBytes));
     }
 
     public byte[] generateSignatureData()
