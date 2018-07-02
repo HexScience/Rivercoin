@@ -113,6 +113,11 @@ public class RiverCoin implements Encodeable, JSONFormattable, Exportable
         return super.equals(obj);
     }
 
+    public RiverCoin add(RiverCoin other)
+    {
+        return new RiverCoin(nanocoin.add(other.nanocoin));
+    }
+
     public static RiverCoin fromStream(DataInputStream stream) throws Exception
     {
         byte array[] = new byte[SIZE];
