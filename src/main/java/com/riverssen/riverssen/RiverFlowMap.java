@@ -150,7 +150,7 @@ public class RiverFlowMap implements UTXOMap
 
             stream.close();
 
-            data.put(address.getName(), set);
+            data.put(name, set);
         } catch (Exception e)
         {
             e.printStackTrace();
