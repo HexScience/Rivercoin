@@ -54,13 +54,13 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         this.map                = new RiverFlowMap();
     }
 
-    public FullBlock(long lastBlock, BlockHeader parent)
+    public FullBlock(long lastBlock, BlockHeader parent, ContextI context)
     {
         this.header         = new BlockHeader();
         this.body           = new BlockData();
         this.parent         = parent;
         this.header.setBlockID(lastBlock + 1);
-        this.map                = new RiverFlowMap();
+        this.map            = new RiverFlowMap();
     }
 
     public FullBlock(DataInputStream in, ContextI context)
