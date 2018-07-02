@@ -158,7 +158,7 @@ public class RiverFlowMap implements UTXOMap
             e.printStackTrace();
         }
 
-        return true;
+        return false;
     }
 
     @Override
