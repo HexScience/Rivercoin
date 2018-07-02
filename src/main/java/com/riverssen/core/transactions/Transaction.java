@@ -142,6 +142,7 @@ public class Transaction implements TransactionI, Encodeable
         /** if miner doesn't want fees, then all the leftover amount is returned to the sender as a new unspent output **/
         if(miner == null) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
         else {
+            /** measure the cost as a fee **/
             RiverCoin fee = cost();
             leftOver = new RiverCoin(leftOver.toBigInteger().subtract(fee.toBigInteger()));
 
