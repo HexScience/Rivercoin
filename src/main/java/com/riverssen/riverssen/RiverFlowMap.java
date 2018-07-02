@@ -27,11 +27,6 @@ public class RiverFlowMap implements UTXOMap
     private HashMap<String, Set<TransactionOutput>> data;
     private ContextI                                context;
 
-    public RiverFlowMap()
-    {
-        this.data = new HashMap<>();
-    }
-
     public RiverFlowMap(ContextI context)
     {
         this.data = new HashMap<>();
