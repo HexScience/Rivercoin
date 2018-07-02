@@ -20,6 +20,7 @@ import com.riverssen.core.transactions.TransactionOutput;
 import java.io.*;
 import java.util.*;
 import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterInputStream;
 
 public class RiverFlowMap implements UTXOMap
 {
@@ -28,6 +29,32 @@ public class RiverFlowMap implements UTXOMap
     public RiverFlowMap()
     {
         this.data = new HashMap<>();
+    }
+
+    public RiverFlowMap(ContextI context)
+    {
+        this.data = new HashMap<>();
+        File file = new File(context.getConfig().getBlockChainTransactionDirectory() + File.separator + "ledger" + File.separator);
+        File files[] = file.listFiles();
+
+        for(File address : files)
+        {
+            try{
+                Set<TransactionOutput> set = new LinkedHashSet<>();
+                DataInputStream stream = new DataInputStream(new InflaterInputStream(new FileInputStream(address)));
+                int size = stream.readInt();
+
+                for(int i = 0; i < size; i ++)
+                    set.add(new TransactionOutput(stream));
+
+                stream.close();
+
+                data.put(address.getName(), set);
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -117,14 +144,10 @@ public class RiverFlowMap implements UTXOMap
         {
             Set<TransactionOutput> set = get(address);
             File balance_ = new File(file.toString() + File.separator + address);
-
                 DataOutputStream stream = new DataOutputStream(new DeflaterOutputStream(new FileOutputStream(balance_)));
-
                 stream.writeInt(set.size());
-
                 for(TransactionOutput output : set)
                     output.export(stream);
-
                 stream.flush();
                 stream.close();
         }
