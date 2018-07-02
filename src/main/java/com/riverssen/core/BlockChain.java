@@ -249,7 +249,7 @@ public class BlockChain implements BlockChainI
 
         if(block == null)
             block = new FullBlock(-1, null, context);
-        else block = block.getHeader().continueChain();
+        else block = block.getHeader().continueChain(context);
 
 //        System.exit(0);
 
