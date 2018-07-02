@@ -248,7 +248,7 @@ public class BlockChain implements BlockChainI
 //        System.out.println(block.toJSON());
 
         if(block == null)
-            block = new FullBlock(-1, null);
+            block = new FullBlock(-1, null, context);
         else block = block.getHeader().continueChain();
 
 //        System.exit(0);
