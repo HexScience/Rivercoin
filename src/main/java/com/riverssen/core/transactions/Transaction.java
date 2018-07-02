@@ -144,6 +144,8 @@ public class Transaction implements TransactionI, Encodeable
         else {
             /** measure the cost as a fee **/
             RiverCoin fee = cost();
+
+            /** calculate new leftover **/
             leftOver = new RiverCoin(leftOver.toBigInteger().subtract(fee.toBigInteger()));
 
             if (leftOver.toBigInteger().compareTo(BigInteger.ZERO) < 0)
