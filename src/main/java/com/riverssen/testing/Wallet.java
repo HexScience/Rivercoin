@@ -14,12 +14,12 @@ public class Wallet {
     {
         if (args == null)
         {
-            Logger.err("must launch with 3 arguments: <name> <seed> <encryption password> <num addresses>");
+            Logger.err("must launch with 4 arguments: <name> <seed> <encryption password> <num addresses>");
         }
 
         if(args.length != 4)
         {
-            Logger.err("must launch with 3 arguments: <name> <seed> <encryption password> <num addresses>");
+            Logger.err("must launch with 4 arguments: <name> <seed> <encryption password> <num addresses>");
         }
 
         String name = args[0];
