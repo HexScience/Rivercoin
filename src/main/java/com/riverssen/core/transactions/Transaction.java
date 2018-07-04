@@ -103,8 +103,9 @@ public class Transaction implements TransactionI, Encodeable
 
         /** check utxo amount is more than transaction amount **/
         if (amount.toBigInteger().compareTo(getInputAmount()) > 0) return false;
+
         /** check utxo amount is contains a transaction fee **/
-        if (amount.toBigInteger().add(getFee()).compareTo(getInputAmount()) >= 0) return false;
+        if (cost().toBigInteger().compareTo(getInputAmount()) >= 0) return false;
 
         return sender.toPublicKey().verifySignature(generateSignatureData(), Base58.encode(signature));
     }
@@ -154,7 +155,6 @@ public class Transaction implements TransactionI, Encodeable
 
             /** check that the fee is more than zero **/
             if (fee.toBigInteger().compareTo(BigInteger.ZERO) <= 0) return null;
-
 
             utxos.add(new TransactionOutput(miner, fee, encode(ByteUtil.defaultEncoder())));
 

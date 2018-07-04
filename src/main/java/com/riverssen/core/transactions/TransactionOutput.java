@@ -21,6 +21,7 @@ import com.riverssen.core.utils.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.util.Set;
 
 /** Instances of this class will be created during runtime using the Transaction::generateOutputs(Transaction*); **/
 public class TransactionOutput/**<T extends Encodeable & JSONFormattable & Exportable>**/ implements Encodeable, JSONFormattable, Exportable
@@ -74,6 +75,14 @@ public class TransactionOutput/**<T extends Encodeable & JSONFormattable & Expor
     public byte[] getBytes()
     {
         return ByteUtil.concatenate(getOwner().getBytes(), getValue().getBytes(), getParentTXID());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof TransactionOutput)
+            return ((TransactionOutput) obj).owner.equals(owner) && ByteUtil.equals(((TransactionOutput) obj).ptxid, ptxid) && ByteUtil.equals(((TransactionOutput) obj).txoid, txoid) && ((TransactionOutput) obj).value.equals(value);
+
+        return false;
     }
 
     @Override
