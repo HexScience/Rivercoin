@@ -179,8 +179,8 @@ public class Config
             while (current > halfEvery)
             {
                 current -= halfEvery;
-                max = max.sub(cur.mul(new RiverCoin(halfEvery + "")));
-                cur = cur.div(new RiverCoin("2.0"));
+                max = max.sub(new RiverCoin(cur.toBigInteger().multiply(new BigInteger(halfEvery + ""))));
+                cur = new RiverCoin(cur.toBigInteger().divide(new BigInteger("2")));
             }
 
             if(current > 0 && current < halfEvery)
