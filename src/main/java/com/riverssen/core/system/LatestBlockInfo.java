@@ -1,5 +1,6 @@
 package com.riverssen.core.system;
 
+import com.riverssen.core.RiverCoin;
 import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.ContextI;
@@ -13,6 +14,7 @@ public class LatestBlockInfo
     private long            lastBlockCheck;
     private long            lastBlockCheckTimestamp;
     private long            lastBlock;
+    private RiverCoin       total_nano_coins_left;
     private BigInteger      difficulty;
     private BigInteger      totalHashes;
     private Config          config;

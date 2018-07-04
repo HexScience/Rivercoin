@@ -14,6 +14,7 @@ package com.riverssen.core.system;
 
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.block.BlockHeader;
+import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
 
@@ -49,6 +50,7 @@ public class Config
     {
         return "0.000000375";
     }
+    public static String getFirstReward() { return "50"; };
 
     public static String getMinimumTransactionAmount()
     {
@@ -162,6 +164,42 @@ public class Config
         return new BigDecimal(contractSize).multiply(new BigDecimal(getByteFee())).toPlainString();
     }
 
+    public static RiverCoin totalCoinsLeft()
+    {
+        LatestBlockInfo info = new LatestBlockInfo(self);
+        try {
+            info.read();
+
+            long current = info.getLatestBlock() + 1;
+            long halfEvery = getHalfEvery();
+
+            RiverCoin max = new RiverCoin(RiverCoin.MAX_RIVERCOINS);
+            RiverCoin cur = new RiverCoin(getFirstReward());
+
+            while (current > halfEvery)
+            {
+                current -= halfEvery;
+                max = max.sub(cur.mul(new RiverCoin(halfEvery + "")));
+                cur = cur.div(new RiverCoin("2.0"));
+            }
+
+            if(current > 0 && current < halfEvery)
+                max = max.sub(cur.mul(new RiverCoin(halfEvery + "")));
+
+            return max;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new RiverCoin(RiverCoin.MAX_RIVERCOINS);
+    }
+
+    public static long getHalfEvery()
+    {
+        return 500_000L;
+    }
+
     public static String getReward()
     {
         LatestBlockInfo info = new LatestBlockInfo(self);
@@ -173,12 +211,13 @@ public class Config
             e.printStackTrace();
         }
 
-        long latestBlock =  Math.max(1, info.getLatestBlock());
-        long halfEvery   =  50_0000L;
+        /** blocks start at 0 **/
+        long latestBlock =  info.getLatestBlock() + 1L;
+        long halfEvery   =  getHalfEvery();
 
         if(latestBlock <= 0) return new RiverCoin("50.0").toRiverCoinString();
 
-        BigDecimal decimal = new BigDecimal("50");
+        BigDecimal decimal = new BigDecimal(getFirstReward());
 
         long numDivisions = latestBlock / halfEvery;
 
