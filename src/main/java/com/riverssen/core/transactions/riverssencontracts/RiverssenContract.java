@@ -1,10 +1,6 @@
 package com.riverssen.core.transactions.riverssencontracts;
 
-import com.riverssen.core.transactions.Contract;
-
-import java.nio.ByteBuffer;
-
-public class RiverssenContract// extends Contract
+public class RiverssenContract// extends ContractDeploy
 {
 //    public static final long header = 0;
 //

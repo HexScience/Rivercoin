@@ -54,7 +54,7 @@ public class TXIList extends ArrayList<TransactionInput> implements Encodeable, 
         return amount;
     }
 
-    /** this function should be used for traversing a list for a Contract **/
+    /** this function should be used for traversing a list for a ContractDeploy **/
     public <K> K traverse(TraverserI<K> traverserI)
     {
         return traverserI.traverse(this);

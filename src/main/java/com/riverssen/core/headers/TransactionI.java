@@ -52,7 +52,7 @@ public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSON
 
             if(type         == TRANSACTION)     return new Transaction(stream);
             else if(type    == REWARD)          return new RewardTransaction(stream);
-            else if(type    == CONTRACT)        return new Contract(stream);
+            else if(type    == CONTRACT)        return new ContractDeploy(stream);
             else if(type    == CONTRACT_INVOKE) return new ContractInvoke(stream);
             else throw new Exception("corrupted transaction data");
         } catch (IOException e) {

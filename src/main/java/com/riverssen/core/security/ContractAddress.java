@@ -12,12 +12,26 @@
 
 package com.riverssen.core.security;
 
-import com.riverssen.core.RiverCoin;
+import com.riverssen.core.algorithms.RipeMD256;
+import com.riverssen.core.algorithms.Sha256;
 import com.riverssen.core.headers.Encodeable;
+import com.riverssen.core.headers.Exportable;
+import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.core.utils.Base58;
+import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.core.utils.HashUtil;
+import com.riverssen.core.utils.SmartDataTransferer;
+import com.riverssen.riverssen.UTXOMap;
 
-public class ContractAddress implements Encodeable
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Set;
+
+public class ContractAddress implements Encodeable, Exportable, Serializable
 {
+    public static final int SIZE = 25;
     private String address;
 
     public ContractAddress(String address)
@@ -27,6 +41,29 @@ public class ContractAddress implements Encodeable
 
     public ContractAddress(byte address[])
     {
+        this.address = Base58.encode(address);
+    }
+
+    public static String  generateAddress(CompressedAddress sender, byte contract[])
+    {
+        byte hash[] = new RipeMD256().encode(new Sha256().encode(ByteUtil.concatenate(sender.getBytes(), contract)));
+
+        return Base58.encode(hash);
+    }
+
+    public static boolean isPublicAddressValid(String address) {
+        byte bytes[]    = Base58.decode(address);
+
+        int first       = bytes[0];
+
+        if(first        != 0) return false;
+
+        byte key_21[]   = ByteUtil.trim(bytes, 0, 21);
+
+        byte a[]        = ByteUtil.trim(bytes, 21, 25);
+        byte b[]        = ByteUtil.trim(HashUtil.applySha256(HashUtil.applySha256(key_21)), 0, 4);
+
+        return ByteUtil.equals(a, b);
     }
 
     @Override
@@ -45,13 +82,31 @@ public class ContractAddress implements Encodeable
         return Base58.decode(public_address);
     }
 
-    public RiverCoin getCost()
+    public BigInteger getBalance(UTXOMap map)
     {
-        return new RiverCoin("0");
+        Set<TransactionOutput> set = map.get(this.address);
+
+        BigInteger balance = BigInteger.ZERO;
+
+        for (TransactionOutput output : set)
+            balance = balance.add(output.getValue().toBigInteger());
+
+        return balance;
     }
 
     public boolean equals(ContractAddress address)
     {
         return address.address.equals(this.address);
+    }
+
+    @Override
+    public void export(SmartDataTransferer smdt)
+    {
+    }
+
+    @Override
+    public void export(DataOutputStream dost) throws IOException
+    {
+        dost.write(Base58.decode(address));
     }
 }

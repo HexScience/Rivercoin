@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
-public class Contract implements TransactionI
+public class ContractDeploy implements TransactionI
 {
     private CompressedAddress sender;
     private Namespace         global;
@@ -43,11 +43,11 @@ public class Contract implements TransactionI
 
     private Token             root;
 
-    public Contract(DataInputStream stream)
+    public ContractDeploy(DataInputStream stream)
     {
     }
 
-    public Contract(CompressedAddress sender, TXIList fees, String contract) throws ParseException, CompileException
+    public ContractDeploy(CompressedAddress sender, TXIList fees, String contract) throws ParseException, CompileException
     {
         this.sender = sender;
         this.fees   = fees;
@@ -55,8 +55,7 @@ public class Contract implements TransactionI
     }
 
     @Override
-    public boolean valid(ContextI context)
-    {
+    public boolean valid(UTXOMap map, ContextI context) {
         return false;
     }
 
@@ -128,28 +127,14 @@ public class Contract implements TransactionI
         return new byte[0];
     }
 
-//    @Override
-//    public byte[] header()
-//    {
-//        return new byte[0];
-//    }
-//
-//    @Override
-//    public byte[] content()
-//    {
-//        return new byte[0];
-//    }
-
     @Override
     public void export(SmartDataTransferer smdt)
     {
-
     }
 
     @Override
     public void export(DataOutputStream dost) throws IOException
     {
-
     }
 
     @Override
