@@ -110,7 +110,7 @@ public class RiverCoin implements Encodeable, JSONFormattable, Exportable
         if(obj instanceof RiverCoin) return nanocoin.compareTo(((RiverCoin) obj).nanocoin) == 0;
         else if(obj instanceof BigInteger) return nanocoin.compareTo(((BigInteger) obj)) == 0;
 
-        return super.equals(obj);
+        return false;
     }
 
     public RiverCoin add(RiverCoin other)
