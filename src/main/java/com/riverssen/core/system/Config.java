@@ -173,20 +173,20 @@ public class Config
             long current = info.getLatestBlock() + 1;
             long halfEvery = getHalfEvery();
 
-            RiverCoin max = new RiverCoin(RiverCoin.MAX_RIVERCOINS);
-            RiverCoin cur = new RiverCoin(getFirstReward());
+            BigInteger max = RiverCoin.MAX_RIVERCOINS;
+            BigInteger cur = new RiverCoin(getFirstReward()).toBigInteger();
 
             while (current > halfEvery)
             {
                 current -= halfEvery;
-                max = max.sub(new RiverCoin(cur.toBigInteger().multiply(new BigInteger(halfEvery + ""))));
-                cur = new RiverCoin(cur.toBigInteger().divide(new BigInteger("2")));
+                max = max.subtract(cur.multiply(new BigInteger(halfEvery + "")));
+                cur = cur.divide(new BigInteger("2"));
             }
 
             if(current > 0 && current < halfEvery)
-                max = max.sub(cur.mul(new RiverCoin(halfEvery + "")));
+                max = max.subtract(cur.multiply(new BigInteger(halfEvery + "")));
 
-            return max;
+            return new RiverCoin(max);
 
         } catch (Exception e) {
             e.printStackTrace();
