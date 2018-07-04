@@ -86,6 +86,11 @@ public class TransactionOutput/**<T extends Encodeable & JSONFormattable & Expor
     }
 
     @Override
+    public int hashCode() {
+        return HashUtil.applySha512(ByteUtil.concatenate(owner.getBytes(), ptxid, txoid, value.getBytes())).hashCode();
+    }
+
+    @Override
     public String toJSON()
     {
         return new JSONFormattable.JSON().add("txoid", Base58.encode(txoid)).add("owner", getOwner().toString()).add("value", getValue().toRiverCoinString()).add("txid", Base58.encode(getParentTXID())).toString();
