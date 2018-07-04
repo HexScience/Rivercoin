@@ -94,7 +94,7 @@ public class Transaction implements TransactionI, Encodeable
 
         if (!sender.toPublicKey().isValid()) return false;
 
-        Set<TransactionOutput> utxos = context.getUtxoManager().get(sender.toPublicKey().getAddress().toString());
+        Set<TransactionOutput> utxos = map.get(sender.toPublicKey().getAddress().toString());
 
         for(TransactionInput input : txids) if(!utxos.contains(input.getUTXO().getHash())) return false;
 
