@@ -88,7 +88,7 @@ public class Transaction implements TransactionI, Encodeable
         return this;
     }
 
-    public boolean valid(ContextI context)
+    public boolean valid(UTXOMap map, ContextI context)
     {
         if (sender.toPublicKey() == null) return false;
 
