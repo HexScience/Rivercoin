@@ -25,17 +25,9 @@ import java.math.BigInteger;
 
 public class RiverCoin implements Encodeable, JSONFormattable, Exportable
 {
-    //9.223.372.0,36.854.775.807
-
-    public  static final long    NANO_COIN_TO_RVC    = 100_000_000_000L;
-    public static final byte[]   HEADER_BYTES        = new byte[] {0,0,0,1};
-    private static final String  NANO_COIN_ZEROS     = "00000000000";
-    public  static final long    MAX_RIVERCOINS      = 4_000_000_000_000_000_000L;
-//    public  static final long    MAX_RIVERCOINS      = 18446744073709551615L;
-
-    //    public static final long    MAX_VALUE           = 9_223_372_036_854_775_807L;
-    //    public static final long    MAX_VALUE           = 18_223_372_036__854_775_807L;
-    public static final int      SIZE                = new RiverCoin(MAX_RIVERCOINS + "").nanocoin.toByteArray().length;
+    public  static final long       NANO_COIN_TO_RVC        = 100_000_000_000L;
+    public static final BigInteger  MAX_RIVERCOINS          = new BigInteger("184_467_440__737_095_516_150".replace("_", ""));
+    public static final int         SIZE                    = MAX_RIVERCOINS.toByteArray().length;
 
     private BigInteger nanocoin;
 
@@ -45,7 +37,7 @@ public class RiverCoin implements Encodeable, JSONFormattable, Exportable
     @Deprecated
     public RiverCoin(BigInteger nanocoin)
     {
-        this.nanocoin = nanocoin;//new BigInteger(new BigDecimal(nanocoin).multiply(new BigDecimal(NANO_COIN_TO_RVC + "")).toPlainString().replaceAll("\\..*", ""));
+        this.nanocoin = nanocoin;
     }
 
     public RiverCoin(String rvc)
@@ -61,15 +53,6 @@ public class RiverCoin implements Encodeable, JSONFormattable, Exportable
     public RiverCoin(BigDecimal decimal)
     {
         this(decimal.toPlainString());
-    }
-
-    public static String fastRiverCoinValueToNanoCoinConversion(String amt)
-    {
-//        if(!amt.contains(".")) return amt + NANO_COIN_ZEROS;
-//        int index = amt.indexOf(".") + 1;
-//        return amt.replaceAll("\\.", "") + NANO_COIN_ZEROS.substring(amt.substring(index).length());
-
-        return new RiverCoin(amt).toString();
     }
 
     @Override
