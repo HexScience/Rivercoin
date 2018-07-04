@@ -267,4 +267,9 @@ public class Wallet
             if(keyPair.getC().getAddress().equals(address)) return keyPair;
         return null;
     }
+
+    public int size()
+    {
+        return keyPairs.size();
+    }
 }

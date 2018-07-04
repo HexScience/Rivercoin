@@ -89,6 +89,7 @@ public class Wallet {
             e.printStackTrace();
         }
     }
+
     public static final void test()
     {
         String nameOfWallet = "name"; //unimportant
