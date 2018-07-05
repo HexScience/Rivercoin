@@ -22,6 +22,7 @@ import com.riverssen.core.transactions.RewardTransaction;
 import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.core.utils.*;
 import com.riverssen.riverssen.RiverFlowMap;
+import com.riverssen.riverssen.UTXOMap;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -110,7 +111,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         if (!body.getMerkleTree().hash().equals(header.getMerkleRootAsString())) return err_mrkl;
 
         /** validate transactions **/
-        if (!body.transactionsValid(context)) return err_transactions;
+        if (!body.transactionsValid(map, context)) return err_transactions;
 
         /** verify timestamp **/
 //        if (body.getTimeStamp() != header.getTimeStampAsLong()) return err_timestamp;

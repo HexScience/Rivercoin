@@ -71,15 +71,12 @@ public class BlockData implements Encodeable, Exportable
         return merkleTree;
     }
 
-    public boolean transactionsValid(ContextI context)
+    public boolean transactionsValid(UTXOMap map, ContextI context)
     {
         List<TransactionI> flat = merkleTree.flatten();
 
-//        Set<TransactionI> flat = new LinkedHashSet<>();
-//        flat.addAll(merkleTree.flatten());
-
         for (TransactionI token : flat)
-            if (!token.valid(context)) return false;
+            if (!token.valid(map, context)) return false;
         return true;
     }
 
@@ -119,7 +116,7 @@ public class BlockData implements Encodeable, Exportable
 
     public boolean add(TransactionI token, UTXOMap map, ContextI context)
     {
-        if (!token.valid(context)) return false;
+        if (!token.valid(map, context)) return false;
 
         List<TransactionOutput> outputs = token.generateOutputs(context.getMiner(), map, context);
 

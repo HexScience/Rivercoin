@@ -93,7 +93,7 @@ public class ContractInvoke implements TransactionI, Encodeable
         return this;
     }
 
-    public boolean valid()
+    public boolean valid(UTXOMap map, ContextI context)
     {
         if (sender.toPublicKey() == null) return false;
 
@@ -111,12 +111,6 @@ public class ContractInvoke implements TransactionI, Encodeable
 
 
         return sender.toPublicKey().verifySignature(generateSignatureData(), Base58.encode(signature));
-    }
-
-    @Override
-    public boolean valid(ContextI context)
-    {
-        return false;
     }
 
     @Override
