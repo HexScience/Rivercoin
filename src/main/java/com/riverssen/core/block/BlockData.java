@@ -33,11 +33,13 @@ public class BlockData implements Encodeable, Exportable
     @Write private Set<TransactionOutput> outputs;
     @Write private long time;
     private long dataSize;
+    private int validation;
 
     public BlockData()
     {
         this.outputs = new LinkedHashSet<>();
         this.merkleTree = new MerkleTree();
+        this.validation = 0;
     }
 
     public BlockData(DataInputStream stream, ContextI context)
@@ -47,8 +49,9 @@ public class BlockData implements Encodeable, Exportable
 
     private void load(DataInputStream stream, ContextI context)
     {
-        merkleTree = new MerkleTree();
-        this.outputs = new LinkedHashSet<>();
+        merkleTree      = new MerkleTree();
+        this.validation = 1;
+        this.outputs    = new LinkedHashSet<>();
 
         try
         {
