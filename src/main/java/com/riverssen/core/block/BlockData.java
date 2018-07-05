@@ -21,6 +21,7 @@ import com.riverssen.core.utils.Serializer;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.utils.MerkleTree;
 import com.riverssen.core.utils.SmartDataTransferer;
+import com.riverssen.riverssen.RiverFlowMap;
 import com.riverssen.riverssen.UTXOMap;
 
 import java.io.*;
@@ -39,7 +40,7 @@ public class BlockData implements Encodeable, Exportable
     {
         this.outputs = new LinkedHashSet<>();
         this.merkleTree = new MerkleTree();
-        this.validation = 0;
+        this.validation = 1;
     }
 
     public BlockData(DataInputStream stream, ContextI context)
@@ -74,13 +75,9 @@ public class BlockData implements Encodeable, Exportable
         return merkleTree;
     }
 
-    public boolean transactionsValid(UTXOMap map, ContextI context)
+    public boolean transactionsValid()
     {
-        List<TransactionI> flat = merkleTree.flatten();
-
-        for (TransactionI token : flat)
-            if (!token.valid(map, context)) return false;
-        return true;
+        return validation == 1;
     }
 
     @Override
@@ -119,7 +116,10 @@ public class BlockData implements Encodeable, Exportable
 
     public boolean add(TransactionI token, UTXOMap map, ContextI context)
     {
-        if (!token.valid(map, context)) return false;
+        if (!token.valid(map, context)) {
+            validation = -1;
+            return false;
+        }
 
         List<TransactionOutput> outputs = token.generateOutputs(context.getMiner(), map, context);
 
@@ -177,5 +177,17 @@ public class BlockData implements Encodeable, Exportable
 
     public Set<TransactionOutput> getOutputs() {
        return outputs;
+    }
+
+    public void validate(RiverFlowMap map, ContextI context)
+    {
+        if(validation == 1)
+        {
+            MerkleTree old = merkleTree;
+            merkleTree = new MerkleTree();
+
+            for(TransactionI transaction : old.flatten())
+                add(transaction, map, context);
+        }
     }
 }

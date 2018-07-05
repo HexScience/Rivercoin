@@ -56,6 +56,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         this.parent             = parent;
         this.map                = new RiverFlowMap(context);
         this.context            = context;
+        this.validateBody();
     }
 
     public FullBlock(long lastBlock, BlockHeader parent, ContextI context)
@@ -75,6 +76,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         if(header.getBlockID() > 0) this.parent = new BlockHeader(header.getBlockID() - 1, context);
         this.map                = new RiverFlowMap(context);
         this.context            = context;
+        this.validateBody();
     }
 
     public synchronized String getHashAsString()
@@ -85,6 +87,11 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     public synchronized long getBlockID()
     {
         return header.getBlockID();
+    }
+
+    public synchronized void validateBody()
+    {
+        this.body.validate(map, context);
     }
 
     public synchronized int validate(ContextI context)
@@ -111,7 +118,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         if (!body.getMerkleTree().hash().equals(header.getMerkleRootAsString())) return err_mrkl;
 
         /** validate transactions **/
-        if (!body.transactionsValid(map, context)) return err_transactions;
+        if (!body.transactionsValid()) return err_transactions;
 
         /** verify timestamp **/
 //        if (body.getTimeStamp() != header.getTimeStampAsLong()) return err_timestamp;
