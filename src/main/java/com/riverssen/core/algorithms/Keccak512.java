@@ -16,12 +16,12 @@ import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.HashUtil;
 
-public class Keccak2 implements HashAlgorithm
+public class Keccak512 implements HashAlgorithm
 {
     @Override
     public byte[] encode(byte[] data)
     {
-        return HashUtil.applyKeccak(data);
+        return HashUtil.applyKeccak(data, 512);
     }
 
     @Override
