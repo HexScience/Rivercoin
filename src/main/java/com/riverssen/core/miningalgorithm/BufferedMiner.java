@@ -12,6 +12,7 @@
 
 package com.riverssen.core.miningalgorithm;
 
+import com.riverssen.core.algorithms.*;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.system.FileSpec;
@@ -24,13 +25,21 @@ import java.math.BigInteger;
 
 public class BufferedMiner
 {
+    public static final HashAlgorithm keccak = new Keccak(), keccak2 = new Keccak(), keccak3 = new Keccak(), skein2 = new Skein_256_256(), skein3 = new Skein_512_512(), skein_4 = new Skein_1024_1024(), sha = new Sha1(), sha2 = new Sha256(), sha3 = new Sha3(), sha4 = new Sha4(), blake = new Blake(), gost = new Gost(), ripemd1 = new RipeMD128(), ripemd2 = new RipeMD160(), ripemd3 = new RipeMD256();
     private final byte buffer[];
 
     public BufferedMiner(ContextI context)
     {
-        int mod = Math.max(1, (int)(context.getBlockChain().currentBlock() / 262_800L));
+        long bph = (60_000L * 60L) / context.getConfig().getAverageBlockTime();
+
+        int mod = Math.max(1, (int)(context.getBlockChain().currentBlock() / (365 * 24 * bph)));
         //0.5 Gb buffer / 262800 blocks. (every year an incease of 0.5Gb) memory needed.
         buffer = new byte[524_288 * mod];
+    }
+
+    public static byte[] custom_hash(byte input[])
+    {
+        return skein2.encode(keccak.encode(blake.encode(gost.encode(sha3.encode(skein3.encode(sha2.encode(ripemd2.encode(sha4.encode(ripemd3.encode(keccak2.encode(keccak3.encode(skein_4.encode(input)))))))))))));
     }
 
     public Tuple<byte[], Long> mine(HashAlgorithm algorithm, BigInteger difficulty, ContextI context) throws IOException {

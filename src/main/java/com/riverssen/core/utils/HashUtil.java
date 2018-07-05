@@ -227,6 +227,11 @@ public class HashUtil
         return hashWith(input, "KECCAK-256");
     }
 
+    public static byte[] applyKeccak(byte[] input, int number)
+    {
+        return hashWith(input, "KECCAK-" + number);
+    }
+
     public static byte[] applyRipeMD128(byte[] input) { return hashWith(input, "RIPEMD128"); }
     public static byte[] applyRipeMD160(byte[] input) { return hashWith(input, "RIPEMD160"); }
     public static byte[] applyRipeMD256(byte[] input) { return hashWith(input, "RIPEMD256"); }
