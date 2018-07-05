@@ -26,8 +26,8 @@ import java.math.BigInteger;
 
 public class BufferedMiner
 {
-    public static final HashAlgorithm keccak = new Keccak(), keccak2 = new Keccak384(), keccak3 = new Keccak512(), skein2 = new Skein_256_256(), skein3 = new Skein_512_512(), skein_4 = new Skein_1024_1024(), sha = new Sha1(), sha2 = new Sha256(), sha3 = new Sha3(), sha4 = new Sha4(), blake = new Blake(), gost = new Gost(), ripemd1 = new RipeMD128(), ripemd2 = new RipeMD160(), ripemd3 = new RipeMD256();
-    private final byte  buffer[];
+    private static final HashAlgorithm   hash = new RiverHash();
+    private final byte                   buffer[];
 
     public BufferedMiner(ContextI context)
     {
@@ -40,7 +40,7 @@ public class BufferedMiner
 
     public static byte[] custom_hash(byte input[])
     {
-        return skein2.encode(keccak.encode(blake.encode(gost.encode(sha3.encode(skein3.encode(sha2.encode(ripemd2.encode(sha4.encode(ripemd3.encode(keccak2.encode(keccak3.encode(skein_4.encode(input)))))))))))));
+        return hash.encode(input);
     }
 
     private static byte[] pad(byte input[], int length)
@@ -66,8 +66,6 @@ public class BufferedMiner
         AdvancedEncryptionStandard aes  = new AdvancedEncryptionStandard(input_hash);
 
         byte encrypted_input[]          = aes.encrypt(input);
-
-
 
         System.out.println(encrypted_input.length);
 

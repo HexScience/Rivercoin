@@ -74,10 +74,14 @@ public class TransactionPool
         return txi;
     }
 
-    public boolean getLastTransactionWas(long time) {
-        boolean bool = System.currentTimeMillis() - lastTransactionTime >= time;
-
+    public void resetTimer()
+    {
         lastTransactionTime = System.currentTimeMillis();
+    }
+
+    public boolean getLastTransactionWas(long time)
+    {
+        boolean bool = System.currentTimeMillis() - lastTransactionTime >= time;
         return bool;
     }
 }
