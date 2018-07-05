@@ -233,4 +233,9 @@ public class Client implements Runnable
     {
         return blocked;
     }
+
+    public synchronized BasicMessage getReply(String digest)
+    {
+        return null;
+    }
 }

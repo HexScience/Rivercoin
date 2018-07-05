@@ -60,7 +60,6 @@ public abstract class BasicMessage
     }
     public abstract void sendMessage(SocketConnection connection, ContextI context) throws IOException;
     public abstract void onReceive(Client client, SocketConnection connection, ContextI context) throws IOException;
-//    public abstract void onReply(Client client, SocketConnection connection, ContextI context) throws IOException;
 
     public static BasicMessage decipher(int type, Client client)
     {
@@ -69,7 +68,6 @@ public abstract class BasicMessage
             case OP_GREET: return new GreetMessage();
             case OP_GREET1:
                 //prevent spam
-
                 if(!client.isGreeted()) return new GreetReplyMessage(); return null;
             case OP_BKH: return new BlockHashMessage();
             case OP_BLH: return new RequestBlockHashMessage();
