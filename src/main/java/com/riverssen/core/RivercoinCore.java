@@ -19,10 +19,13 @@ import com.riverssen.core.system.*;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.FileUtils;
+import com.riverssen.core.utils.HashUtil;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.Security;
+import java.util.Random;
 
 public class RivercoinCore
 {
@@ -71,11 +74,30 @@ public class RivercoinCore
                 break;
         }
 
-        BufferedMiner miner = new BufferedMiner(context);
+//        BufferedMiner miner = new BufferedMiner(context);
 
-        RiverHash     hash  = new RiverHash();
+//        RiverHash     hash  = new RiverHash();
+//        byte test[]         = new byte[1000000];
+//        byte hfds[]         = new byte[1000000];
 
-        System.out.println(hash.encode58("2Wgd5szGrbJQePbpa4jR14zdrndbwCDCWAfRtWqKYfXH".getBytes()));
+//        new Random(System.currentTimeMillis()).nextBytes(test);
+
+//        long now = System.currentTimeMillis();
+
+//        for(int i = 0; i < 24_686; i ++)
+//            hfds = hash.encode(test);
+
+//        BigInteger target = new BigDecimal(Config.getMinimumDifficulty()).divide(new BigDecimal(24_686), 200, BigDecimal.ROUND_HALF_UP).toBigInteger();
+//        String difficultyHash = HashUtil.hashToStringBase16(target.toByteArray());
+//        while (difficultyHash.length() < 64) difficultyHash = "0" + difficultyHash;
+//        System.out.println(difficultyHash);
+//
+//        System.out.println(System.currentTimeMillis() - now);
+//
+//        System.exit(0);
+
+        //Difficulty = At / Th
+        //difficulty = 120_000 / 120
 
         context.run();
     }

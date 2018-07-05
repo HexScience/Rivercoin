@@ -173,4 +173,11 @@ public class RiverFlowMap implements UTXOMap
 
         return data.get(address);
     }
+
+    @Override
+    public void removeAll(List<TransactionOutput> utxos)
+    {
+        for(TransactionOutput transactionOutput : utxos)
+            remove(transactionOutput.getOwner().toString(), transactionOutput);
+    }
 }

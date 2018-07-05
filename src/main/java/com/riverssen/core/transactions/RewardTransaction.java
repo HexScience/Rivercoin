@@ -95,11 +95,9 @@ public class RewardTransaction implements TransactionI
 
     public List<TransactionOutput> generateOutputs(PublicAddress miner, UTXOMap map, ContextI context)
     {
-        List<TransactionOutput> utxos = new ArrayList<>();
+        List<TransactionOutput> utxos = getOutputs(miner, context);
 
-        utxos.add(new TransactionOutput(receiver, new RiverCoin(getInputAmount()), encode(ByteUtil.defaultEncoder())));
-
-        context.getUtxoManager().addAll(utxos);
+        map.addAll(utxos);
 
         return utxos;
     }
@@ -122,6 +120,11 @@ public class RewardTransaction implements TransactionI
     @Override
     public void revertOutputs(PublicAddress miner, UTXOMap map, ContextI context)
     {
+        List<TransactionOutput> utxos = getOutputs(miner, context);
+
+        utxos.add(new TransactionOutput(receiver, new RiverCoin(getInputAmount()), encode(ByteUtil.defaultEncoder())));
+
+        map.removeAll(utxos);
     }
 
     @Override

@@ -38,4 +38,6 @@ public interface UTXOMap {
     public void serialize(ContextI context) throws IOException;
 
     Set<TransactionOutput> get(String address);
+
+    void removeAll(List<TransactionOutput> utxos);
 }

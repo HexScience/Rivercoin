@@ -17,6 +17,7 @@ import com.riverssen.core.BlockPool;
 import com.riverssen.core.RivercoinCore;
 import com.riverssen.core.TransactionPool;
 import com.riverssen.core.algorithms.Provider;
+import com.riverssen.core.algorithms.RiverHash;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.exceptions.AddressInvalidException;
 import com.riverssen.core.headers.ContextI;
@@ -49,6 +50,7 @@ public class MiningContext implements ContextI
     private Provider provider;
     private boolean running;
     private final long versionBytes;
+    private HashAlgorithm hashAlgorithm;
 
     public MiningContext(Config config) throws Exception
     {
@@ -64,13 +66,13 @@ public class MiningContext implements ContextI
         this.provider = new Provider();
         this.blockChain = new BlockChain(this);
         this.versionBytes = RivercoinCore.actual_version;
+        this.hashAlgorithm= new RiverHash();
 
         if(!PublicAddress.isPublicAddressValid(config.getMinerAddress().toString())) throw new AddressInvalidException(config.getMinerAddress().toString());
 
         try
         {
             this.getNetworkManager().establishConnection();
-            this.executorService.execute(blockChain);
         } catch (Exception e)
         {
             e.printStackTrace();
@@ -170,6 +172,7 @@ public class MiningContext implements ContextI
 
     public void run()
     {
+        this.executorService.execute(blockChain);
         long timer = System.currentTimeMillis();
 
         while (isRunning())
@@ -184,7 +187,7 @@ public class MiningContext implements ContextI
 
     public HashAlgorithm getHashAlgorithm(byte blockHash[])
     {
-        return provider.getRandomFromHash(blockHash);
+        return hashAlgorithm;//provider.getRandomFromHash(blockHash);
     }
 
     public BigInteger getDifficulty()

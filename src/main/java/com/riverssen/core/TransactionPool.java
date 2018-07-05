@@ -75,6 +75,9 @@ public class TransactionPool
     }
 
     public boolean getLastTransactionWas(long time) {
-        return System.currentTimeMillis() - lastTransactionTime >= time;
+        boolean bool = System.currentTimeMillis() - lastTransactionTime >= time;
+
+        lastTransactionTime = System.currentTimeMillis();
+        return bool;
     }
 }
