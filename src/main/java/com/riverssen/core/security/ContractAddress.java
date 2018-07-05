@@ -12,10 +12,12 @@
 
 package com.riverssen.core.security;
 
+import com.riverssen.core.algorithms.RipeMD160;
 import com.riverssen.core.algorithms.RipeMD256;
 import com.riverssen.core.algorithms.Sha256;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
+import com.riverssen.core.system.Config;
 import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
@@ -46,9 +48,13 @@ public class ContractAddress implements Encodeable, Exportable, Serializable
 
     public static String  generateAddress(CompressedAddress sender, byte contract[])
     {
-        byte hash[] = new RipeMD256().encode(new Sha256().encode(ByteUtil.concatenate(sender.getBytes(), contract)));
+        byte hash[] = ByteUtil.concatenate(new byte[] {Config.MAIN_NETWORK}, new RipeMD160().encode(new Sha256().encode(new Sha256().encode(ByteUtil.concatenate(sender.getBytes(), contract)))));
 
-        return Base58.encode(hash);
+        byte checksum[] = ByteUtil.trim(HashUtil.applySha256(HashUtil.applySha256(hash)), 0, 4);
+
+        byte addr[] = ByteUtil.concatenate(hash, checksum);
+
+        return Base58.encode(addr);
     }
 
     public static boolean isPublicAddressValid(String address) {

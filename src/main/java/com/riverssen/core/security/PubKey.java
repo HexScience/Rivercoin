@@ -12,6 +12,7 @@
 
 package com.riverssen.core.security;
 
+import com.riverssen.core.system.Config;
 import com.riverssen.core.system.Logger;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
@@ -120,7 +121,7 @@ public class PubKey
             byte sha2562[]  = HashUtil.applySha256(sha256);
             byte ripeMD[]   = HashUtil.applyRipeMD160(sha2562);
 
-            byte version    = 0;
+            byte version    = Config.MAIN_NETWORK;
             byte key_21[]   = ByteUtil.concatenate(new byte[] {version}, ripeMD);
 
             byte checksum[] = ByteUtil.trim(HashUtil.applySha256(HashUtil.applySha256(key_21)), 0, 4);

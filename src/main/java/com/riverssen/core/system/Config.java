@@ -27,6 +27,8 @@ import java.math.RoundingMode;
 
 public class Config
 {
+    public static final byte MAIN_NETWORK = 0;
+    public static final byte TEST_NETWORK = 1;
     private int         PORT;
     private int         MAX_MINING_THREADS;
     private String      BLOCKCHAIN_DIRECTORY;
