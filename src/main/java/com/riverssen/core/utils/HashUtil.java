@@ -28,48 +28,7 @@ import java.util.Set;
 
 public class HashUtil
 {
-    private static final void showHashAlgorithms(Provider prov, Class<?> typeClass) {
-        String type = typeClass.getSimpleName();
-
-        List<Provider.Service> algos = new ArrayList<>();
-
-        Set<Provider.Service> services = prov.getServices();
-        for (Provider.Service service : services) {
-            if (service.getType().equalsIgnoreCase(type)) {
-                algos.add(service);
-            }
-        }
-
-        if (!algos.isEmpty()) {
-            System.out.printf(" --- Provider %s, version %.2f --- %n", prov.getName(), prov.getVersion());
-            for (Provider.Service service : algos) {
-                String algo = service.getAlgorithm();
-                System.out.printf("Algorithm name: \"%s\"%n", algo);
-
-
-            }
-        }
-
-        // --- find aliases (inefficiently)
-        Set<Object> keys = prov.keySet();
-        for (Object key : keys) {
-            final String prefix = "Alg.Alias." + type + ".";
-            if (key.toString().startsWith(prefix)) {
-                String value = prov.get(key.toString()).toString();
-                System.out.printf("Alias: \"%s\" -> \"%s\"%n",
-                        key.toString().substring(prefix.length()),
-                        value);
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        Provider[] providers = Security.getProviders();
-        for (Provider provider : providers) {
-            showHashAlgorithms(provider, MessageDigest.class);
-        }
-    }
-//    --- Provider SUN, version 1.80 ---
+//     --- Provider SUN, version 1.80 ---
 //    Algorithm name: "MD2"
 //    Algorithm name: "MD5"
 //    Algorithm name: "SHA"
@@ -90,8 +49,15 @@ public class HashUtil
 //    Alias: "2.16.840.1.101.3.4.2.1" -> "SHA-256"
 //    Alias: "SHA1" -> "SHA"
 //
-//    --- Provider BC, version 1.51 ---
+//        --- Provider BC, version 1.59 ---
 //    Algorithm name: "GOST3411"
+//    Algorithm name: "GOST3411-2012-256"
+//    Algorithm name: "GOST3411-2012-512"
+//    Algorithm name: "KECCAK-224"
+//    Algorithm name: "KECCAK-288"
+//    Algorithm name: "KECCAK-256"
+//    Algorithm name: "KECCAK-384"
+//    Algorithm name: "KECCAK-512"
 //    Algorithm name: "MD2"
 //    Algorithm name: "MD4"
 //    Algorithm name: "MD5"
@@ -110,6 +76,14 @@ public class HashUtil
 //    Algorithm name: "SHA3-256"
 //    Algorithm name: "SHA3-384"
 //    Algorithm name: "SHA3-512"
+//    Algorithm name: "2.16.840.1.101.3.4.2.7"
+//    Algorithm name: "OID.2.16.840.1.101.3.4.2.7"
+//    Algorithm name: "2.16.840.1.101.3.4.2.8"
+//    Algorithm name: "OID.2.16.840.1.101.3.4.2.8"
+//    Algorithm name: "2.16.840.1.101.3.4.2.9"
+//    Algorithm name: "OID.2.16.840.1.101.3.4.2.9"
+//    Algorithm name: "2.16.840.1.101.3.4.2.10"
+//    Algorithm name: "OID.2.16.840.1.101.3.4.2.10"
 //    Algorithm name: "Skein-256-128"
 //    Algorithm name: "Skein-256-160"
 //    Algorithm name: "Skein-256-224"
@@ -126,32 +100,63 @@ public class HashUtil
 //    Algorithm name: "SM3"
 //    Algorithm name: "TIGER"
 //    Algorithm name: "WHIRLPOOL"
+//    Algorithm name: "BLAKE2B-512"
+//    Algorithm name: "BLAKE2B-384"
+//    Algorithm name: "BLAKE2B-256"
+//    Algorithm name: "BLAKE2B-160"
+//    Algorithm name: "BLAKE2S-256"
+//    Algorithm name: "BLAKE2S-224"
+//    Algorithm name: "BLAKE2S-160"
+//    Algorithm name: "BLAKE2S-128"
+//    Algorithm name: "DSTU7564-256"
+//    Algorithm name: "DSTU7564-384"
+//    Algorithm name: "DSTU7564-512"
+//    Algorithm name: "1.2.804.2.1.1.1.1.2.2.1"
+//    Algorithm name: "OID.1.2.804.2.1.1.1.1.2.2.1"
+//    Algorithm name: "1.2.804.2.1.1.1.1.2.2.2"
+//    Algorithm name: "OID.1.2.804.2.1.1.1.1.2.2.2"
+//    Algorithm name: "1.2.804.2.1.1.1.1.2.2.3"
+//    Algorithm name: "OID.1.2.804.2.1.1.1.1.2.2.3"
 //    Alias: "SHA256" -> "SHA-256"
 //    Alias: "SHA224" -> "SHA-224"
 //    Alias: "1.3.36.3.2.3" -> "RIPEMD256"
 //    Alias: "1.3.36.3.2.2" -> "RIPEMD128"
 //    Alias: "1.3.36.3.2.1" -> "RIPEMD160"
-//    Alias: "1.2.156.197.1.401" -> "SM3"
-//    Alias: "SHA512" -> "SHA-512"
-//    Alias: "SHA1" -> "SHA-1"
-//    Alias: "GOST" -> "GOST3411"
+//    Alias: "1.3.14.3.2.26" -> "SHA-1"
+//    Alias: "GOST-3411-2012-256" -> "GOST3411-2012-256"
+//    Alias: "SHA512/224" -> "SHA-512/224"
 //    Alias: "2.16.840.1.101.3.4.2.6" -> "SHA-512/256"
 //    Alias: "2.16.840.1.101.3.4.2.5" -> "SHA-512/224"
 //    Alias: "2.16.840.1.101.3.4.2.4" -> "SHA-224"
 //    Alias: "2.16.840.1.101.3.4.2.3" -> "SHA-512"
 //    Alias: "2.16.840.1.101.3.4.2.2" -> "SHA-384"
 //    Alias: "2.16.840.1.101.3.4.2.1" -> "SHA-256"
-//    Alias: "1.2.643.2.2.9" -> "GOST3411"
-//    Alias: "1.3.14.3.2.26" -> "SHA-1"
-//    Alias: "SHA512/224" -> "SHA-512/224"
-//    Alias: "GOST-3411" -> "GOST3411"
-//    Alias: "SHA512256" -> "SHA-512/256"
-//    Alias: "SHA384" -> "SHA-384"
 //    Alias: "SM3" -> "SM3"
 //    Alias: "SHA" -> "SHA-1"
+//    Alias: "1.3.6.1.4.1.1722.12.2.2.8" -> "BLAKE2S-256"
+//    Alias: "1.3.6.1.4.1.1722.12.2.2.7" -> "BLAKE2S-224"
+//    Alias: "1.3.6.1.4.1.1722.12.2.2.5" -> "BLAKE2S-160"
+//    Alias: "1.3.6.1.4.1.1722.12.2.2.4" -> "BLAKE2S-128"
+//    Alias: "GOST-2012-256" -> "GOST3411-2012-256"
+//    Alias: "SHA1" -> "SHA-1"
+//    Alias: "GOST" -> "GOST3411"
+//    Alias: "1.3.6.1.4.1.1722.12.2.1.16" -> "BLAKE2B-512"
+//    Alias: "1.3.6.1.4.1.1722.12.2.1.12" -> "BLAKE2B-384"
+//    Alias: "1.3.6.1.4.1.1722.12.2.1.8" -> "BLAKE2B-256"
+//    Alias: "1.3.6.1.4.1.1722.12.2.1.5" -> "BLAKE2B-160"
+//    Alias: "SHA512" -> "SHA-512"
+//    Alias: "1.2.643.7.1.1.2.3" -> "GOST3411-2012-512"
+//    Alias: "1.2.643.7.1.1.2.2" -> "GOST3411-2012-256"
+//    Alias: "GOST-3411" -> "GOST3411"
+//    Alias: "SHA512256" -> "SHA-512/256"
 //    Alias: "1.2.840.113549.2.5" -> "MD5"
 //    Alias: "1.2.840.113549.2.4" -> "MD4"
 //    Alias: "1.2.840.113549.2.2" -> "MD2"
+//    Alias: "GOST-3411-2012-512" -> "GOST3411-2012-512"
+//    Alias: "SHA384" -> "SHA-384"
+//    Alias: "1.2.156.197.1.401" -> "SM3"
+//    Alias: "1.2.643.2.2.9" -> "GOST3411"
+//    Alias: "GOST-2012-512" -> "GOST3411-2012-512"
 
     public static String compressPublicKey(PubKey key)
     {
