@@ -15,6 +15,7 @@ package com.riverssen.core.miningalgorithm;
 import com.riverssen.core.algorithms.*;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
+import com.riverssen.core.security.AdvancedEncryptionStandard;
 import com.riverssen.core.system.FileSpec;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.Tuple;
@@ -25,8 +26,8 @@ import java.math.BigInteger;
 
 public class BufferedMiner
 {
-    public static final HashAlgorithm keccak = new Keccak(), keccak2 = new Keccak(), keccak3 = new Keccak(), skein2 = new Skein_256_256(), skein3 = new Skein_512_512(), skein_4 = new Skein_1024_1024(), sha = new Sha1(), sha2 = new Sha256(), sha3 = new Sha3(), sha4 = new Sha4(), blake = new Blake(), gost = new Gost(), ripemd1 = new RipeMD128(), ripemd2 = new RipeMD160(), ripemd3 = new RipeMD256();
-    private final byte buffer[];
+    public static final HashAlgorithm keccak = new Keccak(), keccak2 = new Keccak384(), keccak3 = new Keccak512(), skein2 = new Skein_256_256(), skein3 = new Skein_512_512(), skein_4 = new Skein_1024_1024(), sha = new Sha1(), sha2 = new Sha256(), sha3 = new Sha3(), sha4 = new Sha4(), blake = new Blake(), gost = new Gost(), ripemd1 = new RipeMD128(), ripemd2 = new RipeMD160(), ripemd3 = new RipeMD256();
+    private final byte  buffer[];
 
     public BufferedMiner(ContextI context)
     {
@@ -42,9 +43,37 @@ public class BufferedMiner
         return skein2.encode(keccak.encode(blake.encode(gost.encode(sha3.encode(skein3.encode(sha2.encode(ripemd2.encode(sha4.encode(ripemd3.encode(keccak2.encode(keccak3.encode(skein_4.encode(input)))))))))))));
     }
 
-    public Tuple<byte[], Long> mine(HashAlgorithm algorithm, BigInteger difficulty, ContextI context) throws IOException {
-        BigInteger result = BigInteger.ZERO;
+    private static byte[] pad(byte input[], int length)
+    {
+        if(input.length < length)
+        {
+            byte newinput[] = new byte[length];
 
+            int i = 0;
+
+            for(int j = 0; j < input.length; j ++)
+                newinput[j] = input[i ++];
+
+            while (i < length)
+                newinput[i ++] = 0;
+        }
+
+        return ByteUtil.trim(input, 0, length);
+    }
+
+    public Tuple<byte[], Long> mine(byte input[], BigInteger difficulty, ContextI context) throws Exception {
+        byte input_hash[]               = custom_hash(input);
+        AdvancedEncryptionStandard aes  = new AdvancedEncryptionStandard(input_hash);
+
+        byte encrypted_input[]          = aes.encrypt(input);
+
+
+
+        System.out.println(encrypted_input.length);
+
+        System.exit(0);
+
+        BigInteger result = BigInteger.ZERO;
         FileSpec ledger = context.getLedger();
         DataInputStream stream = null;
 
@@ -58,7 +87,7 @@ public class BufferedMiner
             if(cod == 1)
                 stream = ledger.next().asInputStream();
 
-            result = new BigInteger(algorithm.encode(buffer));
+            result = new BigInteger(custom_hash(buffer));
         }
 
         long nonce = 0;
@@ -69,7 +98,7 @@ public class BufferedMiner
             for(int i = 0; i < data.length; i ++)
                 buffer[i] = data[i];
 
-            result = new BigInteger(algorithm.encode(buffer));
+            result = new BigInteger(custom_hash(buffer));
         }
 
         while (result.compareTo(difficulty) >= 0)
@@ -81,7 +110,7 @@ public class BufferedMiner
             for(int i = 0; i < data.length; i ++)
                 buffer[i] = data[i];
 
-            result = new BigInteger(algorithm.encode(buffer));
+            result = new BigInteger(custom_hash(buffer));
         }
 
         return new Tuple<>(result.toByteArray(), nonce);

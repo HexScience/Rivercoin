@@ -12,13 +12,16 @@
 
 package com.riverssen.core;
 
+import com.riverssen.core.algorithms.RiverHash;
 import com.riverssen.core.exceptions.FeatureUnavailableException;
+import com.riverssen.core.miningalgorithm.BufferedMiner;
 import com.riverssen.core.system.*;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.FileUtils;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.security.Security;
 
 public class RivercoinCore
@@ -67,6 +70,12 @@ public class RivercoinCore
                 context = new ClientContext(config);
                 break;
         }
+
+        BufferedMiner miner = new BufferedMiner(context);
+
+        RiverHash     hash  = new RiverHash();
+
+        System.out.println(hash.encode58("2Wgd5szGrbJQePbpa4jR14zdrndbwCDCWAfRtWqKYfXH".getBytes()));
 
         context.run();
     }
