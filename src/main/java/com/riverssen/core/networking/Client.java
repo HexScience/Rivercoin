@@ -61,6 +61,7 @@ public class Client implements Runnable
 
         try{
             message.sendMessage(connection, context);
+            connection.getOutputStream().flush();
             message.send();
         } catch (IOException e)
         {
