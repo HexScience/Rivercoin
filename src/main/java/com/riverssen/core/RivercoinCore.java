@@ -99,6 +99,8 @@ public class RivercoinCore
         //Difficulty = At / Th
         //difficulty = 120_000 / 120
 
+        Thread.sleep(1000);
+
         context.run();
     }
 }

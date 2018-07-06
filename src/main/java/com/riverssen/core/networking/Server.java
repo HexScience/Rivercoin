@@ -36,16 +36,17 @@ public class Server implements NetworkManager
     public Server(ContextI context) throws Exception
     {
         this.ipAddresses    = new LinkedHashSet<>();
-        this.communications = new LinkedHashSet<>();
+        this.communications = Collections.synchronizedSet(new LinkedHashSet<>());
         this.context        = context;
         this.socket         = new ServerSocket(context.getConfig().getPort());
     }
 
-    public void establishConnection() throws Exception
+    public synchronized void establishConnection() throws Exception
     {
         addSavedIps();
         addSeedIPs();
         createListener();
+        ipAddresses.add("192.168.178.41");
 
         if(ipAddresses.size() == 0)
             throw new Exception("no seed ip address found.");
@@ -53,7 +54,7 @@ public class Server implements NetworkManager
         establishConnections();
     }
 
-    private void createListener()
+    private synchronized void createListener()
     {
         context.getExecutorService().execute(()->{
             while(context.isRunning())
@@ -73,19 +74,19 @@ public class Server implements NetworkManager
     }
 
     @Override
-    public void broadCastNewTransaction(TransactionI transaction)
+    public synchronized void broadCastNewTransaction(TransactionI transaction)
     {
         for (Client communicator : communications) communicator.sendMessage(new TransactionMessage(transaction));
     }
 
     @Override
-    public Set<Client> getCommunicators()
+    public synchronized Set<Client> getCommunicators()
     {
         return communications;
     }
 
     @Override
-    public int amountNodesConnected()
+    public synchronized int amountNodesConnected()
     {
         int amt = 0;
 
@@ -95,7 +96,7 @@ public class Server implements NetworkManager
     }
 
     @Override
-    public void downloadLongestChain()
+    public synchronized void downloadLongestChain()
     {
         List<Client> nodes = new ArrayList<>();
 
@@ -114,20 +115,23 @@ public class Server implements NetworkManager
     }
 
     @Override
-    public void sendBlock(FullBlock block)
+    public synchronized void sendBlock(FullBlock block)
     {
         for(Client communicator : communications)
-            communicator.sendMessage(new BlockMessage(block, false));
+            synchronized (communicator)
+            {
+                communicator.sendMessage(new BlockMessage(block, false));
+            }
     }
 
     @Override
-    public void sendMessage(GoodByeMessage message) {
+    public synchronized void sendMessage(GoodByeMessage message) {
         for (Client client : communications)
             client.sendMessage(message);
     }
 
     @Override
-    public void sendBlock(FullBlock block, Client... client) {
+    public synchronized void sendBlock(FullBlock block, Client... client) {
         Set<Client> communicators = new LinkedHashSet<>(this.communications);
         for(Client client1 : client)
             communicators.remove(client1);
@@ -136,13 +140,13 @@ public class Server implements NetworkManager
             client_0.sendMessage(new BlockMessage(block, false));
     }
 
-    private void establishConnections()
+    private synchronized void establishConnections()
     {
         for(String ipAddress : ipAddresses)
             connectToIp(ipAddress);
     }
 
-    private void connectToIp(String ip)
+    private synchronized void connectToIp(String ip)
     {
         try{
             SocketConnection connection = new SocketConnection(ip, context.getConfig().getPort());
@@ -159,12 +163,12 @@ public class Server implements NetworkManager
         }
     }
 
-    private void addSavedIps()
+    private synchronized void addSavedIps()
     {
         ipAddresses.addAll(getList());
     }
 
-    private void addSeedIPs() throws Exception
+    private synchronized void addSeedIPs() throws Exception
     {
         Connection connection = Jsoup.connect(seedNodeUrl);
         Document doc = connection.get();
@@ -176,7 +180,7 @@ public class Server implements NetworkManager
             ipAddresses.add(string);
     }
 
-    public Set<String> getList()
+    public synchronized Set<String> getList()
     {
         Set<String> ips = new HashSet<>();
 
@@ -194,7 +198,7 @@ public class Server implements NetworkManager
         return ips;
     }
 
-    public void terminate()
+    public synchronized void terminate()
     {
         for(Client peer : communications) try{peer.closeConnection();} catch (Exception e) {}
 

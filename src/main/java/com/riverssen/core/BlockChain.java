@@ -48,48 +48,47 @@ public class BlockChain implements BlockChainI
     }
 
     @Override
-    public void FetchTransactions()
+    public synchronized void FetchTransactions()
     {
     }
 
     @Override
-    public void ValidateTransactions()
+    public synchronized void ValidateTransactions()
     {
     }
 
     @Override
-    public void RemoveDoubleSpends()
+    public synchronized void RemoveDoubleSpends()
     {
     }
 
     @Override
-    public void LoadBlockChain()
+    public synchronized void LoadBlockChain()
     {
     }
 
-    public BlockHeader lastBlockHeader()
+    public synchronized BlockHeader lastBlockHeader()
     {
         if(currentBlock() == 0) return null;
         return new BlockHeader(currentBlock() - 1, context);
     }
 
-    public void download(FullBlock block)
+    public synchronized void download(FullBlock block)
     {
         this.downloadedBlocks.add(block);
     }
 
     @Override
-    public void FetchBlockChainFromPeers()
+    public synchronized void FetchBlockChainFromPeers()
     {
         Logger.alert("attempting to download block(s) from peers");
-        final long totalNodes = context.getNetworkManager().amountNodesConnected();
-        @Constant Set<Client> communicators = context.getNetworkManager().getCommunicators();
+        @Constant Set<Client> communicators = new LinkedHashSet<>(context.getNetworkManager().getCommunicators());
 
 //        context.getNetworkManager().downloadLongestChain();
-        List<Client> nodes = new ArrayList<>();
+        Logger.alert("listing...");
 
-        for(Client communicator : communicators)
-            if(communicator.isRelay()) nodes.add(communicator);
+        List<Client> nodes = new ArrayList<>(communicators);
+        Logger.alert("arranging...");
 
         //Descending Ordered List
         nodes.sort((a, b)->{
@@ -97,6 +96,8 @@ public class BlockChain implements BlockChainI
             else if(a.getChainSize() > b.getChainSize()) return -1;
             else return 1;
         });
+
+        Logger.alert("rearranging...");
 
         if(nodes.size() == 0) {
             Logger.alert("no nodes found.");
@@ -109,6 +110,8 @@ public class BlockChain implements BlockChainI
 
         client_iterator :
             for(Client node : nodes) {
+                Logger.alert("attempting: " + node);
+
                 if(node.isBlocked()) continue;
                 String lock = ByteUtil.defaultEncoder().encode58((System.currentTimeMillis() + " BlockChainLock: " + node).getBytes());
 
@@ -178,7 +181,7 @@ public class BlockChain implements BlockChainI
     }
 
     @Override
-    public void FetchBlockChainFromDisk()
+    public synchronized void FetchBlockChainFromDisk()
     {
         Logger.alert("attempting to load the blockchain from disk");
 
@@ -201,7 +204,7 @@ public class BlockChain implements BlockChainI
     }
 
     @Override
-    public void Validate()
+    public synchronized void Validate()
     {
         /** check (25 minutes) time passed since last validation **/
         if(System.currentTimeMillis() - lastvalidated < 1_500_000L) return;
@@ -229,7 +232,7 @@ public class BlockChain implements BlockChainI
     }
 
     @Override
-    public void queueBlock(FullBlock block)
+    public synchronized void queueBlock(FullBlock block)
     {
         orphanedBlocks.add(block);
     }
@@ -374,7 +377,7 @@ public class BlockChain implements BlockChainI
         }
     }
 
-    public void insertBlock(FullBlock block)
+    public synchronized void insertBlock(FullBlock block)
     {
         if(currentBlock() + 1 == block.getBlockID())
         {

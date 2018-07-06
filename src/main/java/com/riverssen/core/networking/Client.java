@@ -19,35 +19,42 @@ import com.riverssen.core.system.Logger;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Client implements Runnable
 {
-    private SocketConnection          connection;
-    private ContextI                  context;
+    private volatile SocketConnection          connection;
+    private volatile ContextI                  context;
 
-    private Map<String, BasicMessage> cache;
-    private Set<BasicMessage>         toSend;
-    private String                    lock;
-    private boolean                   relay;
-    private long                      version;
-    private long                      chainSize;
-    private boolean                   greeted;
-    private boolean                   blocked;
+    private volatile Map<String, BasicMessage> cache;
+    private volatile Set<BasicMessage>         toSend;
+    private volatile String             lock;
+    private volatile AtomicBoolean         relay;
+    private volatile AtomicLong            version;
+    private volatile AtomicLong            chainSize;
+    private volatile AtomicBoolean         greeted;
+    private volatile AtomicBoolean         blocked;
 
     public Client(SocketConnection connection, ContextI context)
     {
         this.connection = connection;
         this.context    = context;
-        this.cache      = new LinkedHashMap<>();
-        this.toSend     = new LinkedHashSet<>();
+        this.cache      = Collections.synchronizedMap(new LinkedHashMap<>());
+        this.toSend     = Collections.synchronizedSet(new LinkedHashSet<>());
+        this.version    = new AtomicLong(0);
+        this.chainSize  = new AtomicLong(0);
+        this.greeted    = new AtomicBoolean(false);
+        this.relay      = new AtomicBoolean(false);
+        this.blocked    = new AtomicBoolean(false);
     }
 
-    public synchronized void sendMessage(BasicMessage message)
+    public final void sendMessage(BasicMessage message)
     {
         this.sendMessage(message, "");
     }
 
-    public synchronized void sendMessage(BasicMessage message, String key)
+    public final void sendMessage(BasicMessage message, String key)
     {
         if(keyMatch(key))
             forceSendMessage(message);
@@ -100,7 +107,7 @@ public class Client implements Runnable
         toSend.clear();
     }
 
-    public synchronized boolean keyMatch(String key)
+    public final boolean keyMatch(String key)
     {
         if(lock == null) return true;
 
@@ -132,34 +139,35 @@ public class Client implements Runnable
         return lock != null;
     }
 
-    public synchronized boolean isRelay()
+    public boolean isRelay()
     {
-        return relay;
+        return relay.get();
     }
 
     public synchronized void setVersion(long l)
     {
-        this.version = l;
+        this.version.set(l);
     }
 
-    public synchronized void setChainSize(long l)
+    public void setChainSize(long l)
     {
-        this.chainSize = l;
+        System.out.println("CHAINSIZE ");
+        this.chainSize.set(l);
     }
 
     public synchronized void setIsRelay(boolean r)
     {
-        this.relay = r;
+        this.relay.set(r);
     }
 
     public synchronized void setGreeted(boolean g)
     {
-        this.greeted = g;
+        this.greeted.set(g);
     }
 
     public synchronized boolean isGreeted()
     {
-        return greeted;
+        return greeted.get();
     }
 
     public synchronized void removeMessage(String s)
@@ -173,9 +181,9 @@ public class Client implements Runnable
             sendMessage(cache.get(s));
     }
 
-    public synchronized long getChainSize()
+    public long getChainSize()
     {
-        return chainSize;
+        return chainSize.get();
     }
 
     @Override
@@ -196,7 +204,7 @@ public class Client implements Runnable
                 Thread.sleep(12L);
             } catch (InterruptedException e)
             {
-                e.printStackTrace();;
+                e.printStackTrace();
             }
         }
     }
@@ -226,21 +234,26 @@ public class Client implements Runnable
 
     public synchronized void block()
     {
-        this.blocked = true;
+        this.blocked.set(true);
     }
 
     public synchronized void unblock()
     {
-        this.blocked = false;
+        this.blocked.set(false);
     }
 
     public synchronized boolean isBlocked()
     {
-        return blocked;
+        return blocked.get();
     }
 
     public synchronized BasicMessage getReply(String digest)
     {
         return null;
+    }
+
+    @Override
+    public synchronized String toString() {
+        return "client{ip: " + connection.getIP() + " relay: " + relay + " chain: " + chainSize + "}";
     }
 }

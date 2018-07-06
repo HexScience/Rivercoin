@@ -19,6 +19,7 @@ import com.riverssen.core.networking.SocketConnection;
 import com.riverssen.core.utils.ByteUtil;
 
 import java.io.IOException;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class BlockMessage extends BasicMessage
 {
@@ -53,6 +54,7 @@ public class BlockMessage extends BasicMessage
 
         try{
             boolean requested = connection.getInputStream().readBoolean();
+
             FullBlock block = new FullBlock(connection.getInputStream(), context);
             if(block.validate(context) > 0)
             {
@@ -68,6 +70,8 @@ public class BlockMessage extends BasicMessage
                 context.getBlockChain().queueBlock(block);
                 context.getNetworkManager().sendBlock(block, client);
             }
+
+            System.out.println(block.getBlockID());
 
             client.sendMessage(new SuccessMessage(hashCode));
             client.setChainSize(Math.max(client.getChainSize(), block.getBlockID()));

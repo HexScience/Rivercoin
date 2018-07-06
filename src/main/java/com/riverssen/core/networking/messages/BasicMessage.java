@@ -17,6 +17,8 @@ import com.riverssen.core.networking.Client;
 import com.riverssen.core.networking.SocketConnection;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class BasicMessage
 {
@@ -45,23 +47,24 @@ public abstract class BasicMessage
 
 
     private String hashCode;
-    private int timesSent;
-    private long timeStamp;
+    private final AtomicInteger timesSent;
+    private final AtomicLong timeStamp;
 
     public BasicMessage(String hashCode)
     {
         this.hashCode = hashCode;
-        this.timeStamp= System.currentTimeMillis();
+        this.timesSent= new AtomicInteger(0);
+        this.timeStamp= new AtomicLong(System.currentTimeMillis());
     }
 
     public void send()
     {
-        timesSent ++;
+        timesSent.set(timesSent.intValue() + 1);
     }
     public abstract void sendMessage(SocketConnection connection, ContextI context) throws IOException;
     public abstract void onReceive(Client client, SocketConnection connection, ContextI context) throws IOException;
 
-    public static BasicMessage decipher(int type, Client client)
+    public static synchronized BasicMessage decipher(int type, Client client)
     {
         switch (type)
         {
@@ -82,18 +85,18 @@ public abstract class BasicMessage
         }
     }
 
-    public String getHashCode()
+    public synchronized String getHashCode()
     {
         return hashCode;
     }
 
-    public void setTimesSent(int numTimesSent)
+    public synchronized void setTimesSent(int numTimesSent)
     {
-        this.timesSent = numTimesSent;
+        this.timesSent.set(numTimesSent);
     }
 
     public boolean stopAttemptingToSend()
     {
-        return (timesSent > 10 || timesSent < 0) || System.currentTimeMillis() - timeStamp >= 180_000L;
+        return (timesSent.intValue() > 10 || timesSent.intValue() < 0) || System.currentTimeMillis() - timeStamp.longValue() >= 180_000L;
     }
 }

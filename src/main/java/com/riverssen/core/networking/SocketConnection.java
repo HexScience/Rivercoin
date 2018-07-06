@@ -20,13 +20,13 @@ import java.net.Socket;
 
 public class SocketConnection
 {
-    private String                  ip;
-    private int                     port;
-    private Socket                  socket;
-    private DataInputStream         inputStream;
-    private DataOutputStream        outputStream;
-    private int                     type;
-    private boolean                 closed;
+    private volatile String                  ip;
+    private volatile int                     port;
+    private volatile Socket                  socket;
+    private volatile DataInputStream         inputStream;
+    private volatile DataOutputStream        outputStream;
+    private volatile int                     type;
+    private volatile boolean                 closed;
 
     public SocketConnection(String ip, int port) throws IOException
     {
@@ -46,22 +46,22 @@ public class SocketConnection
         this.outputStream   = new DataOutputStream(this.socket.getOutputStream());
     }
 
-    public DataInputStream getInputStream()
+    public synchronized DataInputStream getInputStream()
     {
         return inputStream;
     }
 
-    public DataOutputStream getOutputStream()
+    public synchronized DataOutputStream getOutputStream()
     {
         return outputStream;
     }
 
-    public boolean isConnected()
+    public synchronized boolean isConnected()
     {
         return socket.isConnected() && !closed;
     }
 
-    public void closeConnection() throws IOException
+    public synchronized void closeConnection() throws IOException
     {
         inputStream.close();
         outputStream.close();
@@ -69,23 +69,23 @@ public class SocketConnection
         closed = true;
     }
 
-    public String getIP()
+    public synchronized String getIP()
     {
         return ip;
     }
 
-    public int    getType()
+    public synchronized int    getType()
     {
         return type;
     }
 
-    public void   setType(int type)
+    public synchronized void   setType(int type)
     {
         this.type = type;
     }
 
     @Override
-    public String toString()
+    public synchronized String toString()
     {
         return ip + port;
     }
