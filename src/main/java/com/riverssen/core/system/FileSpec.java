@@ -45,6 +45,8 @@ public abstract class FileSpec
 
         stream.read(data);
 
+        stream.close();
+
         return data;
     }
 
