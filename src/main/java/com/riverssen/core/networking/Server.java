@@ -41,7 +41,7 @@ public class Server implements NetworkManager
         this.socket         = new ServerSocket(context.getConfig().getPort());
     }
 
-    public synchronized void establishConnection() throws Exception
+    public void establishConnection() throws Exception
     {
         addSavedIps();
         addSeedIPs();
@@ -54,7 +54,7 @@ public class Server implements NetworkManager
         establishConnections();
     }
 
-    private synchronized void createListener()
+    private void createListener()
     {
         context.getExecutorService().execute(()->{
             while(context.isRunning())
@@ -74,19 +74,19 @@ public class Server implements NetworkManager
     }
 
     @Override
-    public synchronized void broadCastNewTransaction(TransactionI transaction)
+    public void broadCastNewTransaction(TransactionI transaction)
     {
         for (Client communicator : communications) communicator.sendMessage(new TransactionMessage(transaction));
     }
 
     @Override
-    public synchronized Set<Client> getCommunicators()
+    public Set<Client> getCommunicators()
     {
         return communications;
     }
 
     @Override
-    public synchronized int amountNodesConnected()
+    public int amountNodesConnected()
     {
         int amt = 0;
 
@@ -96,7 +96,7 @@ public class Server implements NetworkManager
     }
 
     @Override
-    public synchronized void downloadLongestChain()
+    public void downloadLongestChain()
     {
         List<Client> nodes = new ArrayList<>();
 
@@ -115,23 +115,23 @@ public class Server implements NetworkManager
     }
 
     @Override
-    public synchronized void sendBlock(FullBlock block)
+    public void sendBlock(FullBlock block)
     {
         for(Client communicator : communications)
-            synchronized (communicator)
+            (communicator)
             {
                 communicator.sendMessage(new BlockMessage(block, false));
             }
     }
 
     @Override
-    public synchronized void sendMessage(GoodByeMessage message) {
+    public void sendMessage(GoodByeMessage message) {
         for (Client client : communications)
             client.sendMessage(message);
     }
 
     @Override
-    public synchronized void sendBlock(FullBlock block, Client... client) {
+    public void sendBlock(FullBlock block, Client... client) {
         Set<Client> communicators = new LinkedHashSet<>(this.communications);
         for(Client client1 : client)
             communicators.remove(client1);
@@ -140,13 +140,13 @@ public class Server implements NetworkManager
             client_0.sendMessage(new BlockMessage(block, false));
     }
 
-    private synchronized void establishConnections()
+    private void establishConnections()
     {
         for(String ipAddress : ipAddresses)
             connectToIp(ipAddress);
     }
 
-    private synchronized void connectToIp(String ip)
+    private void connectToIp(String ip)
     {
         try{
             SocketConnection connection = new SocketConnection(ip, context.getConfig().getPort());
@@ -163,12 +163,12 @@ public class Server implements NetworkManager
         }
     }
 
-    private synchronized void addSavedIps()
+    private void addSavedIps()
     {
         ipAddresses.addAll(getList());
     }
 
-    private synchronized void addSeedIPs() throws Exception
+    private void addSeedIPs() throws Exception
     {
         Connection connection = Jsoup.connect(seedNodeUrl);
         Document doc = connection.get();
@@ -180,7 +180,7 @@ public class Server implements NetworkManager
             ipAddresses.add(string);
     }
 
-    public synchronized Set<String> getList()
+    public Set<String> getList()
     {
         Set<String> ips = new HashSet<>();
 
@@ -198,7 +198,7 @@ public class Server implements NetworkManager
         return ips;
     }
 
-    public synchronized void terminate()
+    public void terminate()
     {
         for(Client peer : communications) try{peer.closeConnection();} catch (Exception e) {}
 

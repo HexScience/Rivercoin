@@ -24,17 +24,17 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Client implements Runnable
 {
-    private volatile SocketConnection          connection;
-    private volatile ContextI                  context;
+    private volatile SocketConnection           connection;
+    private volatile ContextI                   context;
 
-    private volatile Map<String, BasicMessage> cache;
-    private volatile Set<BasicMessage>         toSend;
-    private volatile String             lock;
-    private volatile AtomicBoolean         relay;
-    private volatile AtomicLong            version;
-    private volatile AtomicLong            chainSize;
-    private volatile AtomicBoolean         greeted;
-    private volatile AtomicBoolean         blocked;
+    private volatile Map<String, BasicMessage>  cache;
+    private volatile Set<BasicMessage>          toSend;
+    private volatile String                     lock;
+    private volatile AtomicBoolean              relay;
+    private volatile AtomicLong                 version;
+    private volatile AtomicLong                 chainSize;
+    private volatile AtomicBoolean              greeted;
+    private volatile AtomicBoolean              blocked;
 
     public Client(SocketConnection connection, ContextI context)
     {
