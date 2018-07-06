@@ -98,7 +98,10 @@ public class BlockChain implements BlockChainI
             else return 1;
         });
 
-        if(nodes.size() == 0) return;
+        if(nodes.size() == 0) {
+            Logger.alert("no nodes found.");
+            return;
+        }
 
         long startingPoint = currentBlock();
 
@@ -253,6 +256,8 @@ public class BlockChain implements BlockChainI
         else block = block.getHeader().continueChain(context);
 
 //        System.exit(0);
+
+        Logger.alert("finished processes.");
 
         Set<FullBlock> delete = new LinkedHashSet<>();
         List<FullBlock> blockList = new ArrayList<>();
