@@ -48,7 +48,7 @@ public abstract class BasicMessage
     private int timesSent;
     private long timeStamp;
 
-    public BasicMessage(String hashCodee)
+    public BasicMessage(String hashCode)
     {
         this.hashCode = hashCode;
         this.timeStamp= System.currentTimeMillis();

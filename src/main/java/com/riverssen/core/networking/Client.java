@@ -15,6 +15,7 @@ package com.riverssen.core.networking;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.networking.messages.BasicMessage;
 import com.riverssen.core.networking.messages.GoodByeMessage;
+import com.riverssen.core.system.Logger;
 
 import java.io.IOException;
 import java.util.*;
@@ -75,6 +76,9 @@ public class Client implements Runnable
         while (connection.getInputStream().available() > 0)
         {
             BasicMessage message = safeNext();
+
+            Logger.alert("--------MSG---------");
+            Logger.alert(message + "");
 
             if(message != null)
                 message.onReceive(this, connection, context);
