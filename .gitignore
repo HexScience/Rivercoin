@@ -25,3 +25,11 @@ hs_err_pid*
 Rivercoin.iml
 target/*
 structure/*
+structure/chain/*
+structure/db_tx/*
+structure/chain/block[0]
+structure/chain/block[0]
+structure/chain/block[0]
+structure/chain/block[1]
+structure/chain/latestblock
+structure/db_tx/ledger/1NwxDTT8gywVMmALW3n98sWTCoWyBNWZhQ
