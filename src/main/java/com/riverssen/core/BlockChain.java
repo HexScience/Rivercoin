@@ -85,7 +85,7 @@ public class BlockChain implements BlockChainI
         final long totalNodes = context.getNetworkManager().amountNodesConnected();
         @Constant Set<Client> communicators = context.getNetworkManager().getCommunicators();
 
-        context.getNetworkManager().downloadLongestChain();
+//        context.getNetworkManager().downloadLongestChain();
         List<Client> nodes = new ArrayList<>();
 
         for(Client communicator : communicators)
@@ -106,6 +106,7 @@ public class BlockChain implements BlockChainI
 
         client_iterator :
             for(Client node : nodes) {
+                if(node.isBlocked()) continue;
                 String lock = ByteUtil.defaultEncoder().encode58((System.currentTimeMillis() + " BlockChainLock: " + node).getBytes());
 
                 //Wait for node to unlock.

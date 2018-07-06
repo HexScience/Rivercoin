@@ -60,7 +60,9 @@ public class Server implements NetworkManager
             {
                 try{
                     SocketConnection connection = new SocketConnection(socket);
-                    communications.add(new Client(connection, context));
+                    Client client = new Client(connection, context);
+                    context.getExecutorService().execute(client);
+                    communications.add(client);
 
                     Thread.sleep(12L);
                 } catch (Exception e)
@@ -122,6 +124,16 @@ public class Server implements NetworkManager
     public void sendMessage(GoodByeMessage message) {
         for (Client client : communications)
             client.sendMessage(message);
+    }
+
+    @Override
+    public void sendBlock(FullBlock block, Client... client) {
+        Set<Client> communicators = new LinkedHashSet<>(this.communications);
+        for(Client client1 : client)
+            communicators.remove(client1);
+
+        for(Client client_0 : communicators)
+            client_0.sendMessage(new BlockMessage(block, false));
     }
 
     private void establishConnections()

@@ -33,4 +33,6 @@ public interface NetworkManager
     void sendBlock(FullBlock block);
 
     void sendMessage(GoodByeMessage goodByeMessage);
+
+    void sendBlock(FullBlock block, Client... client);
 }
