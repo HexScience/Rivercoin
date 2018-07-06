@@ -27,7 +27,6 @@ import com.riverssen.core.networking.Server;
 import com.riverssen.core.networking.messages.GoodByeMessage;
 import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.security.Wallet;
-import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.TimeUtil;
 import com.riverssen.riverssen.RiverFlowMap;
 import com.riverssen.riverssen.UTXOMap;
@@ -179,7 +178,7 @@ public class MiningContext implements ContextI
         {
             if (System.currentTimeMillis() - timer >= 1000)
             {
-                Logger.prt(Logger.COLOUR_BLUE, TimeUtil.getPretty("[H:M:S]: " + "info"));
+                Logger.prt(Logger.COLOUR_BLUE, TimeUtil.getPretty("[H:M:S]: " + "info{peers:"+networkManager.getCommunicators().size()+"}"));
                 timer = System.currentTimeMillis();
             }
         }

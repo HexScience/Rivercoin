@@ -161,7 +161,7 @@ public class Config
     public long getAverageBlockTime()
     {
         /** two minutes **/
-        return 120_000L;
+        return 10_000; //120_000L
     }
 
     /** calculate the cost of a contract **/
@@ -221,7 +221,7 @@ public class Config
         long latestBlock =  info.getLatestBlock() + 1L;
         long halfEvery   =  getHalfEvery();
 
-        if(latestBlock <= 0) return new RiverCoin("50.0").toRiverCoinString();
+        if(latestBlock <= 0) return new RiverCoin(getFirstReward()).toRiverCoinString();
 
         BigDecimal decimal = new BigDecimal(getFirstReward());
 
@@ -239,7 +239,7 @@ public class Config
     }
 
 //    private static final BigInteger MINIMUM_TARGET_DIFFICULTY = new BigDecimal  ("225269536353234632640832032722171634457188848844000484574312395358531977087").toBigInteger();
-    private static final BigInteger MINIMUM_TARGET_DIFFICULTY = new BigDecimal("26959535291011309493156476344723991336010898738574164086137773096960000000").toBigInteger();
+    private static final BigInteger MINIMUM_TARGET_DIFFICULTY = new BigDecimal("26959535291011309493156476344723991336010898738574164086137773096960000000000").toBigInteger();
     private static final BigInteger MAXIMUM_TARGET_DIFFICULTY = new BigDecimal("269595352910113094931564763447239913360").toBigInteger();
 
     public PublicAddress getMinerAddress() {
@@ -263,9 +263,6 @@ public class Config
 
     public BigInteger getCurrentDifficulty(BlockHeader lastBlock, BlockHeader lastOneHundred) {
         if(lastBlock == null) return MINIMUM_TARGET_DIFFICULTY;
-        BigInteger min = MINIMUM_TARGET_DIFFICULTY;
-        BigInteger cur = lastBlock.getDifficultyAsInt();
-
         BigDecimal tdf = new BigDecimal((lastBlock.getTimeStampAsLong() - lastOneHundred.getTimeStampAsLong()));
         if(tdf.compareTo(BigDecimal.ZERO) == 0) tdf = BigDecimal.ONE;
         BigDecimal tph = tdf.divide(new BigDecimal(Math.max(lastBlock.getNonce(), 1)), 200, RoundingMode.HALF_UP);
@@ -276,25 +273,9 @@ public class Config
 
         BigInteger target = new BigDecimal(Config.getMinimumDifficulty()).divide(difficulty, 200, BigDecimal.ROUND_HALF_UP).toBigInteger();
 
-        //        BigDecimal correctTimePerBlock = new BigDecimal(getAverageBlockTime()).multiply(new BigDecimal(0.25));
-//
-//        BigDecimal adjustedTimePerBlock= tdf.divide(correctTimePerBlock, 200, RoundingMode.HALF_DOWN);
-//
-//        BigDecimal adjustedHashPerBlock= tph.multiply(adjustedTimePerBlock).multiply(new BigDecimal(10.0));
-//
-//        BigInteger result = cur;
-//
-////        System.out.println(adjustedHashPerBlock);
-//
-//        try{
-//            result = new BigDecimal(cur).divide(new BigDecimal("7.5").multiply(adjustedHashPerBlock), 200, RoundingMode.HALF_UP).toBigInteger();
-//        } catch (Exception e)
-//        {
-//        }
-//
         if(target.compareTo(MINIMUM_TARGET_DIFFICULTY) > 0)
             return MINIMUM_TARGET_DIFFICULTY;
-//
+
         if(target.compareTo(MAXIMUM_TARGET_DIFFICULTY) < 0)
             return MAXIMUM_TARGET_DIFFICULTY;
 

@@ -217,7 +217,7 @@ public class BlockChain implements BlockChainI
     }
 
     @Override
-    public long currentBlock()
+    public synchronized long currentBlock()
     {
         if(block == null) return -1;
 
