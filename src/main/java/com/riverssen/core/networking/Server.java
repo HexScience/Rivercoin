@@ -118,7 +118,7 @@ public class Server implements NetworkManager
     public void sendBlock(FullBlock block)
     {
         for(Client communicator : communications)
-            (communicator)
+            synchronized (communicator)
             {
                 communicator.sendMessage(new BlockMessage(block, false));
             }
