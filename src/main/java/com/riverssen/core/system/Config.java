@@ -206,6 +206,20 @@ public class Config
         return 500_000L;
     }
 
+    public static String getReward(long block)
+    {
+        long halfEvery   =  getHalfEvery();
+
+        BigDecimal decimal = new BigDecimal(getFirstReward());
+
+        long numDivisions = Math.max(1, block) / halfEvery;
+
+        for(int i = 0; i < numDivisions; i ++)
+            decimal = decimal.divide(new BigDecimal(2), 200, RoundingMode.HALF_UP);
+
+        return new RiverCoin(decimal).toRiverCoinString();
+    }
+
     public static String getReward()
     {
         LatestBlockInfo info = new LatestBlockInfo(self);
@@ -218,19 +232,11 @@ public class Config
         }
 
         /** blocks start at 0 **/
-        long latestBlock =  info.getLatestBlock() + 1L;
-        long halfEvery   =  getHalfEvery();
+        long latestBlock =  info.getLatestBlock();
 
         if(latestBlock <= 0) return new RiverCoin(getFirstReward()).toRiverCoinString();
 
-        BigDecimal decimal = new BigDecimal(getFirstReward());
-
-        long numDivisions = latestBlock / halfEvery;
-
-        for(int i = 0; i < numDivisions; i ++)
-            decimal = decimal.divide(new BigDecimal(2), 200, RoundingMode.HALF_UP);
-
-        return new RiverCoin(decimal).toRiverCoinString();
+        return getReward(latestBlock);
     }
 
     public static BigInteger getMinimumDifficulty()

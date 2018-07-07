@@ -33,12 +33,14 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     public static int err_not_valid = 1;
     public static int err_mrkl = 2;
     public static int err_transactions = 3;
-    public static int err_timestamp = 4;
+    public static int err_timestampa = 4;
+    public static int err_timestampb = 5;
+    public static int err_timestampc = 6;
 
     /** parent header file **/
     private volatile BlockHeader parent;
     /** this blocks hash **/
-    private volatile String      hash;
+    private volatile byte[]      hash;
     /** this blocks header **/
     private volatile BlockHeader header;
     /** this blocks body **/
@@ -53,7 +55,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         this.header             = header;
         this.body               = data;
         this.parent             = parent;
-        this.map                = new RiverFlowMap(context);
+        this.map                = new RiverFlowMap(getBlockID(), context);
         this.context            = context;
         this.validateBody();
     }
@@ -64,7 +66,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         this.body           = new BlockData();
         this.parent         = parent;
         this.header.setBlockID(lastBlock + 1);
-        this.map            = new RiverFlowMap(context);
+        this.map            = new RiverFlowMap(getBlockID(), context);
         this.context        = context;
     }
 
@@ -73,7 +75,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         this.header             = new BlockHeader(in);
         this.body               = new BlockData(in, context);
         if(header.getBlockID() > 0) this.parent = new BlockHeader(header.getBlockID() - 1, context);
-        this.map                = new RiverFlowMap(context);
+        this.map                = new RiverFlowMap(getBlockID(), context);
         this.context            = context;
         this.validateBody();
     }
@@ -114,7 +116,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         if(parent == null && getBlockID() > 0) return err_not_valid;
 
         /** validate merkle root **/
-        if (!body.getMerkleTree().hash().equals(header.getMerkleRootAsString())) return err_mrkl;
+        if (!ByteUtil.equals(body.getMerkleTree().encode(ByteUtil.defaultEncoder()), header.getMerkleRoot())) return err_mrkl;
 
         /** validate transactions **/
         if (!body.transactionsValid()) return err_transactions;
@@ -126,21 +128,22 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         if(parent != null)
             timeDifference = getHeader().getTimeStampAsLong() - parent.getTimeStampAsLong();
 
-        if(timeDifference >= (context.getConfig().getAverageBlockTime() * 10)) return err_timestamp;
+        if(timeDifference >= (context.getConfig().getAverageBlockTime() * 10)) return err_timestampa;
 
-        if(timeDifference < 0) return err_timestamp;
+        if(timeDifference < 0) return err_timestampb;
 
         /** verify block started mining at least lastblock_time + blocktime/5 after **/
-        if (body.getTimeStamp() <= (header.getTimeStampAsLong() + (context.getConfig().getAverageBlockTime() / 5))) return err_timestamp;
+//        if (body.getTimeStamp() <= (header.getTimeStampAsLong() + (context.getConfig().getAverageBlockTime() / 5))) return err_timestampc;
 
         /** verify nonce **/
         HashAlgorithm algorithm = context.getHashAlgorithm(pHash);
         ByteBuffer data = getBodyAsByteBuffer();
         data.putLong(data.capacity() - 8, header.getNonceAsInt());
-        String hash = algorithm.encode16(data.array());
+        byte hash[] = algorithm.encode(data.array());
 
-        if(!this.hash.equals(hash)) return 5;
-        if(new BigInteger(hash, 16).compareTo(header.getDifficultyAsInt()) > 0) return 6;
+        if(!ByteUtil.equals(this.header.getHash(), hash)) return 7;
+
+        if(new BigInteger(hash).compareTo(header.getDifficultyAsInt()) > 0) return 8;
 
         return 0;
     }
@@ -189,13 +192,12 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         ByteBuffer data = getBodyAsByteBuffer();
 
         long nonce = 0;
-        this.hash = algorithm.encode16(data.array());
+        this.hash = algorithm.encode(data.array());
 
-        while (new BigInteger(hash, 16).compareTo(difficulty) >= 0) { data.putLong(data.capacity() - 8, ++nonce); this.hash = algorithm.encode16(data.array()); }
+        while (new BigInteger(hash).compareTo(difficulty) >= 0) { data.putLong(data.capacity() - 8, ++nonce); this.hash = algorithm.encode(data.array()); }
 
-        header.setHash(algorithm.encode(data.array()));
+        header.setHash(hash);
         header.setNonce(nonce);
-        this.hash = header.getHashAsString();
 
         double time = (System.currentTimeMillis() - this.body.getTimeStamp()) / 1000.0;
         Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: hashing took '" + time + "s' '" + this.hash + "'");

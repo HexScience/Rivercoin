@@ -40,4 +40,6 @@ public interface UTXOMap {
     Set<TransactionOutput> get(String address);
 
     void removeAll(List<TransactionOutput> utxos);
+
+    long block();
 }

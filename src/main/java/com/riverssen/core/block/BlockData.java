@@ -187,7 +187,13 @@ public class BlockData implements Encodeable, Exportable
     {
         if(validation == 1)
         {
-            for(TransactionI transaction : merkleTree.flatten())
+            ArrayList<TransactionI> copy = new ArrayList<>();
+            synchronized (merkleTree)
+            {
+                copy.addAll(merkleTree.flatten());
+            }
+
+            for(TransactionI transaction : copy)
                 add(transaction, map, context);
         }
     }

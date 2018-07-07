@@ -32,8 +32,9 @@ public class RiverFlowMap implements UTXOMap
 {
     private HashMap<String, Set<TransactionOutput>> data;
     private ContextI                                context;
+    private long                                    block;
 
-    public RiverFlowMap(ContextI context)
+    public RiverFlowMap(long block, ContextI context)
     {
         this.data = new HashMap<>();
         this.context = context;
@@ -179,5 +180,10 @@ public class RiverFlowMap implements UTXOMap
     {
         for(TransactionOutput transactionOutput : utxos)
             remove(transactionOutput.getOwner().toString(), transactionOutput);
+    }
+
+    @Override
+    public long block() {
+        return block;
     }
 }

@@ -176,9 +176,10 @@ public class BlockChain implements Runnable
 
                             if(next != null)
                             {
-                                if(next.validate(context) != 0)
+                                int reason = 0;
+                                if((reason = next.validate(context)) != 0)
                                 {
-                                    Logger.err(next + " rejected.");
+                                    Logger.err(next + " rejected '"+reason+"'.");
                                     node.block();
 
                                     for(long i = startingPoint; i < currentBlock(); i ++)

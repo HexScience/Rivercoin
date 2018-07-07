@@ -56,7 +56,7 @@ public class RewardTransaction implements TransactionI
     @Override
     public boolean valid(UTXOMap map, ContextI context)
     {
-        return txids.getInputAmount(context).equals(new BigInteger(Config.getReward()));
+        return txids.getInputAmount(context).equals(new RiverCoin(Config.getReward(map.block())).toBigInteger());
     }
 
     @Override

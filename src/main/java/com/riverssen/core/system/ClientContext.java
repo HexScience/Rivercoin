@@ -58,7 +58,7 @@ public class ClientContext implements ContextI
         this.networkManager = new Server(this);
         this.blockPool = new BlockPool(this);
         this.transactionPool = new TransactionPool(this);
-        this.utxoManager = new RiverFlowMap(this);
+        this.utxoManager = new RiverFlowMap(0, this);
         this.miner = this.config.getMinerAddress();
         this.wallet = this.config.getWallet();
         this.provider = new Provider();
