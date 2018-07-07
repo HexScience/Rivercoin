@@ -14,7 +14,7 @@ package com.riverssen.core.utils;
 
 public class Handler<I>
 {
-    private I i;
+    private volatile I i;
 
     public Handler(I i)
     {

@@ -37,17 +37,17 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     public static int err_timestamp = 4;
 
     /** parent header file **/
-    private BlockHeader parent;
+    private volatile BlockHeader parent;
     /** this blocks hash **/
-    private String      hash;
+    private volatile String      hash;
     /** this blocks header **/
-    private BlockHeader header;
+    private volatile BlockHeader header;
     /** this blocks body **/
-    private BlockData   body;
+    private volatile BlockData   body;
     /** the context of the program **/
-    private ContextI    context;
+    private volatile ContextI    context;
 
-    private RiverFlowMap map;
+    private volatile RiverFlowMap map;
 
     public FullBlock(BlockHeader header, BlockData data, BlockHeader parent, ContextI context)
     {
@@ -79,32 +79,32 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         this.validateBody();
     }
 
-    public synchronized String getHashAsString()
+    public String getHashAsString()
     {
         return header.getHashAsString();
     }
 
-    public synchronized long getBlockID()
+    public long getBlockID()
     {
         return header.getBlockID();
     }
 
-    public synchronized void validateBody()
+    public void validateBody()
     {
         this.body.validate(map, context);
     }
 
-    public synchronized int validate(ContextI context)
+    public int validate(ContextI context)
     {
         return validate(getBlockID() > 0 ? new BlockHeader(getBlockID() - 1, context) : null, context);
     }
 
-    public synchronized void undoUTXOChanges(ContextI context)
+    public void undoUTXOChanges(ContextI context)
     {
         body.revertOutputs(map, context);
     }
 
-    public synchronized int validate(BlockHeader parent, ContextI context)
+    public int validate(BlockHeader parent, ContextI context)
     {
         byte pHash[] = null;
 
@@ -146,7 +146,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         return 0;
     }
 
-    public synchronized void add(TransactionI token, ContextI context)
+    public void add(TransactionI token, ContextI context)
     {
         body.add(token, map, context);
     }
@@ -154,7 +154,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     /**
      * mine the block
      **/
-    public synchronized void mine(ContextI context)
+    public void mine(ContextI context)
     {
         byte parentHash[] = this.parent != null ? this.parent.getHash() : new byte[32];
 
@@ -202,7 +202,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: hashing took '" + time + "s' '" + this.hash + "'");
     }
 
-    public synchronized BlockHeader getHeader()
+    public BlockHeader getHeader()
     {
         return header;
     }
@@ -213,12 +213,12 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         return ByteUtil.concatenate(this.parent != null ? this.parent.getHash() : new byte[32], body.getBytes());
     }
 
-    public synchronized BlockData getBody()
+    public BlockData getBody()
     {
         return body;
     }
 
-    private synchronized ByteBuffer getBodyAsByteBuffer()
+    private ByteBuffer getBodyAsByteBuffer()
     {
         byte bodydata[] = getBytes();
         ByteBuffer data = ByteBuffer.allocate(32 + 32 + PublicAddress.SIZE + 32 + 8 + 8 + 32 + RiverCoin.SIZE + bodydata.length + 8);
@@ -236,7 +236,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         return data;
     }
 
-    public synchronized void serialize(ContextI context)
+    public void serialize(ContextI context)
     {
         File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "block["+getBlockID()+"]");
 
@@ -261,7 +261,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         }
     }
 
-    public synchronized FullBlock getParent(ContextI context)
+    public FullBlock getParent(ContextI context)
     {
         return BlockHeader.FullBlock(getBlockID()-1, context);
     }

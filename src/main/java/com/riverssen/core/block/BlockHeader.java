@@ -28,26 +28,26 @@ public class BlockHeader implements Encodeable, Exportable
 {
     public static long SIZE = 8 + 32 + 32 + 32 + 32 + 8 + 32 + PublicAddress.SIZE + 8 + 8 + 13;
     /** 2 byte version information **/
-    private long version;
+    private volatile long version;
     /** 32 byte hash of **/
-    private byte hash[] = new byte[32];
+    private volatile byte hash[] = new byte[32];
     /** 32 byte hash of the block **/
-    private byte parentHash[] = new byte[32];
+    private volatile byte parentHash[] = new byte[32];
     /** 32 byte hash of the merkle root **/
-    private byte merkleRoot[] = new byte[32];
+    private volatile byte merkleRoot[] = new byte[32];
     /** 32 byte hash of the UTXOChainmerkle root **/
-    private byte riverMerkleRoot[] = new byte[32];
+    private volatile byte riverMerkleRoot[] = new byte[32];
     /** 8 byte integer of the blocks timestamp **/
-    private long timeStamp;
+    private volatile long timeStamp;
     /** 32 byte integer of the difficulty **/
-    private byte difficulty[] = new byte[32];
+    private volatile byte difficulty[] = new byte[32];
     /** 20 byte hash of the miners public address **/
-    private byte minerAddress[] = new byte[PublicAddress.SIZE];
+    private volatile byte minerAddress[] = new byte[PublicAddress.SIZE];
     /** 8 byte integer solution **/
-    private long nonce;
+    private volatile long nonce;
     /** 8 byte integer referencing the block id **/
-    private long blockID;
-    private byte reward[] = new byte[RiverCoin.SIZE];
+    private volatile long blockID;
+    private volatile byte reward[] = new byte[RiverCoin.SIZE];
 
     public BlockHeader(String hash, String parentHash, String merkleRoot, MerkleTree tree, long timeStamp, BigInteger difficulty, PublicAddress minerAddress, long nonce)
     {

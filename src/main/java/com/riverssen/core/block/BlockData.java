@@ -30,11 +30,11 @@ import java.util.*;
 public class BlockData implements Encodeable, Exportable
 {
     public static final int MAX_BLOCK_SIZE = 4_000_000;
-    @Write private MerkleTree merkleTree;
-    @Write private Set<TransactionOutput> outputs;
-    @Write private long time;
-    private long dataSize;
-    private int validation;
+    @Write private volatile MerkleTree merkleTree;
+    @Write private volatile Set<TransactionOutput> outputs;
+    @Write private volatile long time;
+    private volatile long dataSize;
+    private volatile int validation;
 
     public BlockData()
     {

@@ -26,6 +26,7 @@ import com.riverssen.core.utils.Handler;
 import com.riverssen.riverssen.Constant;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class BlockChain implements BlockChainI
@@ -33,11 +34,12 @@ public class BlockChain implements BlockChainI
     private volatile Set<FullBlock>                  orphanedBlocks;
 //    private Map<Client, Set<FullBlock>>     downloadedBlocks;
     private volatile Set<FullBlock>                  downloadedBlocks;
-    private volatile Handler<FullBlock>              block;
+    private volatile Handler<FullBlock>                 block;
     private volatile ContextI                        context;
     private volatile long                            lastvalidated;
     private volatile ReentrantLock                   lock;
-    private volatile boolean                          mlock;
+    private volatile boolean                         mlock;
+    private volatile AtomicLong                      current;
 
     public BlockChain(ContextI context)
     {
@@ -46,6 +48,7 @@ public class BlockChain implements BlockChainI
         this.downloadedBlocks= Collections.synchronizedSet(new LinkedHashSet<>());
         this.lock           = new ReentrantLock();
         this.block          = new Handler<>(null);
+        this.current        = new AtomicLong(0);
     }
 
     @Override
@@ -237,14 +240,15 @@ public class BlockChain implements BlockChainI
     @Override
     public long currentBlock()
     {
-        lock.lock();
-        try{
-            if(block == null) return -1;
-
-            return block.get().getHeader().getBlockID();
-        } finally {
-            lock.unlock();
-        }
+//        lock.lock();
+//        try{
+//            if(block == null) return -1;
+//
+//            return block.get().getHeader().getBlockID();
+//        } finally {
+//            lock.unlock();
+//        }
+        return block.get().getBlockID();
     }
 
     @Override
@@ -290,6 +294,8 @@ public class BlockChain implements BlockChainI
 
         while(context.isRunning())
         {
+            current.set(block.get().getBlockID());
+
             for (FullBlock block : orphanedBlocks)
                 if(block.getBlockID() < currentBlock() - 1)
                     delete.add(block);
@@ -396,6 +402,7 @@ public class BlockChain implements BlockChainI
                     }
                 }
             }
+            current.set(block.get().getBlockID());
         }
     }
 
