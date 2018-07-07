@@ -107,7 +107,6 @@ public class BlockData implements Encodeable, Exportable
 
     public void setTime(long time)
     {
-        this.time = time;
     }
 
     public long getTimeStamp()
