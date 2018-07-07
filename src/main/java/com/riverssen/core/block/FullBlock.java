@@ -115,8 +115,8 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
 
         if(parent == null && getBlockID() > 0) return err_not_valid;
 
-        /** validate merkle root **/
-        if (!ByteUtil.equals(body.getMerkleTree().encode(ByteUtil.defaultEncoder()), header.getMerkleRoot())) return err_mrkl;
+//        /** validate merkle root **/
+//        if (!ByteUtil.equals(body.getMerkleTree().encode(ByteUtil.defaultEncoder()), header.getMerkleRoot())) return err_mrkl;
 
         /** validate transactions **/
         if (!body.transactionsValid()) return err_transactions;
@@ -189,7 +189,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         header.setTimeStamp(time_stamp);
         header.setDifficulty(difficulty);
         header.setMiner(context.getMiner());
-        header.setReward(new RiverCoin(Config.getReward()));
+        header.setReward(new RiverCoin(Config.getReward(getBlockID())));
 
         ByteBuffer data = getBodyAsByteBuffer();
 
@@ -225,15 +225,15 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     {
         byte bodydata[] = getBytes();
         ByteBuffer data = ByteBuffer.allocate(32 + 32 + PublicAddress.SIZE + 32 + 8 + 8 + 32 + RiverCoin.SIZE + bodydata.length + 16);
-        data.put(header.getParentHash());
-        data.put(header.getDifficulty());
-        data.put(header.getMinerAddress());
-        data.put(header.getMerkleRoot());
-        data.putLong(header.getBlockID());
+
         data.putLong(header.getVersion());
-        data.put(header.getrvcRoot());
-        data.put(header.getReward());
+        data.put(header.getParentHash());
+        data.put(header.getMerkleRoot());
         data.putLong(header.getTimeStamp());
+        data.put(header.getMinerAddress());
+        data.put(header.getReward());
+        data.putLong(header.getBlockID());
+//        data.put(header.getrvcRoot());
         data.put(bodydata);
         data.putLong(0);
         data.flip();

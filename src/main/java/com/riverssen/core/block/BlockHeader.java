@@ -62,8 +62,7 @@ public class BlockHeader implements Encodeable, Exportable
     {
     }
 
-    private void read(DataInputStream stream) throws IOException
-    {
+    private void read(DataInputStream stream) throws IOException {
         version = stream.readLong();
         stream.read(hash);
         stream.read(parentHash);
