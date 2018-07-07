@@ -55,14 +55,15 @@ public class Client implements Runnable {
     }
 
     public final void sendMessage(BasicMessage message, String key) {
-        threadlock.lock();
-        try {
-            if (keyMatch(key))
-                forceSendMessage(message);
-            else toSend.add(message);
-        } finally {
-            threadlock.unlock();
-        }
+        toSend.add(message);
+//        threadlock.lock();
+//        try {
+//            if (keyMatch(key))
+//                forceSendMessage(message);
+//            else toSend.add(message);
+//        } finally {
+//            threadlock.unlock();
+//        }
     }
 
     private void forceSendMessage(BasicMessage message) {
