@@ -83,12 +83,12 @@ public class BlockChain implements BlockChainI
 
     public synchronized void download(FullBlock block)
     {
-//        lock.lock();
-//        try{
+        lock.lock();
+        try{
             this.downloadedBlocks.add(block);
-//        } finally {
-//            lock.unlock();
-//        }
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
@@ -239,15 +239,25 @@ public class BlockChain implements BlockChainI
     @Override
     public synchronized long currentBlock()
     {
-        if(block == null) return -1;
+        lock.lock();
+        try{
+            if(block == null) return -1;
 
-        return block.getHeader().getBlockID();
+            return block.getHeader().getBlockID();
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public synchronized void queueBlock(FullBlock block)
     {
-        orphanedBlocks.add(block);
+        lock.unlock();
+        try{
+            orphanedBlocks.add(block);
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override

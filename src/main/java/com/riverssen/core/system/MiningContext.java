@@ -178,7 +178,7 @@ public class MiningContext implements ContextI
         {
             if (System.currentTimeMillis() - timer >= 1000)
             {
-                Logger.prt(Logger.COLOUR_BLUE, TimeUtil.getPretty("[H:M:S]: " + "info{peers:"+networkManager.getCommunicators().size()+"}"));
+                Logger.prt(Logger.COLOUR_BLUE, TimeUtil.getPretty("[H:M:S]: " + "info{peers: "+networkManager.getCommunicators().size()+" block: " + blockChain.currentBlock() + "}"));
                 timer = System.currentTimeMillis();
             }
         }
