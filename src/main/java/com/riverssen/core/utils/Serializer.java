@@ -15,7 +15,7 @@ package com.riverssen.core.utils;
 import java.io.*;
 import java.math.BigInteger;
 
-public class Serializer implements Closeable
+public class Serializer implements AutoCloseable
 {
     private OutputStream          baos;
     private DataOutputStream      dos;

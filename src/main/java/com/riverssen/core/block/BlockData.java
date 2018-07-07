@@ -16,7 +16,6 @@ import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.Write;
 import com.riverssen.core.headers.ContextI;
-import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.core.utils.Serializer;
 import com.riverssen.core.headers.Encodeable;
@@ -33,7 +32,6 @@ public class BlockData implements Encodeable, Exportable
     public static final int MAX_BLOCK_SIZE = 4_000_000;
     @Write private volatile MerkleTree merkleTree;
 //    @Write private volatile Set<TransactionOutput> outputs;
-    @Write private volatile long time;
     private volatile long dataSize;
     private volatile int validation;
 
@@ -92,7 +90,6 @@ public class BlockData implements Encodeable, Exportable
         try (Serializer serializer = new Serializer())
         {
             getMerkleTree().serialize(serializer.asDataOutputStream());
-            serializer.writeLong(time);
 
             serializer.flush();
             bytes = serializer.getBytes();

@@ -141,6 +141,8 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         data.putLong(data.capacity() - 8, header.getNonceAsInt());
         byte hash[] = algorithm.encode(data.array());
 
+        System.out.println(Base58.encode(hash) + " " + Base58.encode(this.header.getHash()));
+
         if(!ByteUtil.equals(this.header.getHash(), hash)) return 7;
 
         if(new BigInteger(hash).compareTo(header.getDifficultyAsInt()) > 0) return 8;
