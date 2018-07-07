@@ -161,7 +161,7 @@ public class Config
     public long getAverageBlockTime()
     {
         /** two minutes **/
-        return 120_000L;
+        return 2_000L;
     }
 
     /** calculate the cost of a contract **/
@@ -245,7 +245,11 @@ public class Config
     }
 
 //    private static final BigInteger MINIMUM_TARGET_DIFFICULTY = new BigDecimal  ("225269536353234632640832032722171634457188848844000484574312395358531977087").toBigInteger();
-    private static final BigInteger MINIMUM_TARGET_DIFFICULTY = new BigDecimal("26959535291011309493156476344723991336010898738574164086137773096960000000000").toBigInteger();
+<<<<<<< HEAD
+    private static final BigInteger MINIMUM_TARGET_DIFFICULTY = new BigDecimal("2595953529101130949315647634472399133601089873857416408613777309696000000000").toBigInteger();
+=======
+    private static final BigInteger MINIMUM_TARGET_DIFFICULTY = new BigDecimal("2695953529101130949315647634472399133601089873857416408613777309696000000000").toBigInteger();
+>>>>>>> e7bac39e75a0f2bfd8f3166c24514868a137a7c9
     private static final BigInteger MAXIMUM_TARGET_DIFFICULTY = new BigDecimal("269595352910113094931564763447239913360").toBigInteger();
 
     public PublicAddress getMinerAddress() {

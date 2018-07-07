@@ -16,20 +16,17 @@ import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.transactions.Transaction;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
 
 public class TransactionPool
 {
-    private Set<TransactionI>   pool;
-    private ContextI            context;
-    private long                lastTransactionTime;
+    private volatile Set<TransactionI>   pool;
+    private volatile ContextI            context;
+    private volatile long                lastTransactionTime;
 
     public TransactionPool(ContextI network)
     {
-        pool = new LinkedHashSet<>();
+        pool = Collections.synchronizedSet(new LinkedHashSet<>());
         context = network;
         lastTransactionTime = System.currentTimeMillis();
     }

@@ -12,6 +12,7 @@
 
 package com.riverssen.core.block;
 
+import com.riverssen.core.miningalgorithm.BufferedMiner;
 import com.riverssen.core.system.Logger;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.*;
@@ -164,8 +165,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     /**
      * mine the block
      **/
-    public void mine(ContextI context)
-    {
+    public void mine(ContextI context) throws Exception {
         byte parentHash[] = this.parent != null ? this.parent.getHash() : new byte[32];
 
         HashAlgorithm algorithm     = context.getHashAlgorithm(parentHash);
@@ -199,16 +199,26 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
 
         ByteBuffer data = getBodyAsByteBuffer();
 
-        long nonce = 0;
-        this.hash = algorithm.encode(data.array());
+//        long nonce = 0;
+//        this.hash = algorithm.encode(data.array());
 
-        while (new BigInteger(hash).compareTo(difficulty) >= 0) { data.putLong(data.capacity() - 8, ++nonce); this.hash = algorithm.encode(data.array()); }
+//        while (new BigInteger(hash).compareTo(difficulty) >= 0) { data.putLong(data.capacity() - 8, ++nonce); this.hash = algorithm.encode(data.array()); }
 
-        header.setHash(hash);
-        header.setNonce(nonce);
+        BufferedMiner mining_algorithm = new BufferedMiner(context);
+
+        Tuple<byte[], Long> mine = mining_algorithm.mine(data.array(), difficulty, context);
+
+//        BufferedMiner miner1 = new BufferedMiner(context);
+//
+//        System.out.println(ByteUtil.equals(miner1.verify(data.array(), mine.getJ(), context), mine.getI()));
+
+        header.setHash(mine.getI());
+        header.setNonce(mine.getJ());
+
+        this.hash = mine.getI();
 
         double time = (System.currentTimeMillis() - time_stamp) / 1000.0;
-        Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: hashing took '" + time + "s' '" + HashUtil.hashToStringBase16(hash) + "'");
+        Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: hashing took '" + time + "s' '" + HashUtil.hashToStringBase16(hash) + "'\ntotal transactions: " + body.getMerkleTree().flatten().size());
     }
 
     public BlockHeader getHeader()

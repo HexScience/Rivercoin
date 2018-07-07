@@ -216,4 +216,12 @@ public class ByteUtil
 
         return true;
     }
+
+    public static byte[] xor(byte[] hash_, byte[] prng) {
+        byte bytes[] = new byte[hash_.length];
+
+        for(int i = 0; i < hash_.length; i ++)
+            bytes[i] = (byte) (hash_[i] ^ prng[i]);
+        return bytes;
+    }
 }

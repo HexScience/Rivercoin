@@ -384,7 +384,12 @@ public class BlockChain implements Runnable
 
                 if(block.get().getBody().mine(context))
                 {
-                    block.get().mine(context);
+                    try{
+                        block.get().mine(context);
+                    } catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
 
                     boolean continueBlock = true;
 

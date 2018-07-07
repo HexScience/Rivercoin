@@ -33,6 +33,16 @@ public class AdvancedEncryptionStandard
      */
     public byte[] encrypt(byte[] plainText) throws Exception
     {
+        return encrypt(key, plainText);
+    }
+
+    /**
+     * Encrypts the given plain text
+     *
+     * @param plainText The plain text to encrypt
+     */
+    public static byte[] encrypt(byte key[], byte plainText[]) throws Exception
+    {
         SecretKeySpec secretKey = new SecretKeySpec(key, ALGORITHM);
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
