@@ -202,7 +202,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         header.setNonce(nonce);
 
         double time = (System.currentTimeMillis() - time_stamp) / 1000.0;
-        Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: hashing took '" + time + "s' '" + Base58.encode(hash) + "'");
+        Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: hashing took '" + time + "s' '" + HashUtil.hashToStringBase16(hash) + "'");
     }
 
     public BlockHeader getHeader()
@@ -224,7 +224,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     private ByteBuffer getBodyAsByteBuffer()
     {
         byte bodydata[] = getBytes();
-        ByteBuffer data = ByteBuffer.allocate(32 + 32 + PublicAddress.SIZE + 8 + 8 + 32 + RiverCoin.SIZE + bodydata.length + 16);
+        ByteBuffer data = ByteBuffer.allocate(8 + 32 + 32 + 8 + PublicAddress.SIZE + RiverCoin.SIZE + 8 + bodydata.length + 8);
 
         data.putLong(header.getVersion());
         data.put(header.getParentHash());
