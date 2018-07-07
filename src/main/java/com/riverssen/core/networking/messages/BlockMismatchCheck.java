@@ -12,6 +12,7 @@
 
 package com.riverssen.core.networking.messages;
 
+import com.riverssen.core.block.BlockDownloadService;
 import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.networking.Client;
@@ -50,13 +51,8 @@ public class BlockMismatchCheck extends BasicMessage
         String hashCode = connection.getInputStream().readUTF();
 
         try{
-            FullBlock block = new FullBlock(connection.getInputStream(), context);
-            if(block.validate(context) > 0)
-            {
-                client.sendMessage(new SuccessMessage(hashCode));
-                client.block();
-                return;
-            }
+            BlockDownloadService block = new BlockDownloadService(connection.getInputStream());
+
             context.getBlockChain().queueBlock(block);
             client.sendMessage(new SuccessMessage(hashCode));
             client.setChainSize(Math.max(client.getChainSize(), block.getBlockID()));
