@@ -12,6 +12,7 @@
 
 package com.riverssen.core.networking;
 
+import com.riverssen.core.block.BlockDownload;
 import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.messages.GoodByeMessage;
@@ -30,9 +31,9 @@ public interface NetworkManager
 
     void downloadLongestChain();
 
-    void sendBlock(FullBlock block);
+    void sendBlock(BlockDownload block);
 
     void sendMessage(GoodByeMessage goodByeMessage);
 
-    void sendBlock(FullBlock block, Client... client);
+    void sendBlock(BlockDownload block, Client... client);
 }

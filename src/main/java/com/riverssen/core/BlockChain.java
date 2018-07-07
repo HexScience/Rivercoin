@@ -395,7 +395,7 @@ public class BlockChain
                     {
                         /** Send Solution To Nodes **/
 
-                        context.getNetworkManager().sendBlock(block.get());
+                        context.getNetworkManager().sendBlock(BlockDownload.prepare(block.get()));
 
                         block.get().serialize(context);
 

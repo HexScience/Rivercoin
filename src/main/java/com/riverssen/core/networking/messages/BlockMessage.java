@@ -12,6 +12,7 @@
 
 package com.riverssen.core.networking.messages;
 
+import com.riverssen.core.block.BlockDownload;
 import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.networking.Client;
@@ -55,13 +56,7 @@ public class BlockMessage extends BasicMessage
             hashCode = connection.getInputStream().readUTF();
             boolean requested = connection.getInputStream().readBoolean();
 
-            FullBlock block = new FullBlock(connection.getInputStream(), context);
-            if(block.validate(context) != 0)
-            {
-                client.sendMessage(new SuccessMessage(hashCode));
-                client.block();
-                return;
-            }
+            BlockDownload block = new BlockDownload(connection.getInputStream());
 
             if(requested)
                 context.getBlockChain().download(block);
@@ -70,8 +65,6 @@ public class BlockMessage extends BasicMessage
                 context.getBlockChain().queueBlock(block);
                 context.getNetworkManager().sendBlock(block, client);
             }
-
-            System.out.println("blockID: " + block.getBlockID());
 
             client.sendMessage(new SuccessMessage(hashCode));
             client.setChainSize(Math.max(client.getChainSize(), block.getBlockID()));

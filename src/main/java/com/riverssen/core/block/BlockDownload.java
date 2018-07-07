@@ -19,36 +19,55 @@ import java.util.zip.InflaterInputStream;
 public class BlockDownload implements Comparable<BlockDownload>
 {
     private volatile long blockID;
-    private volatile DataInputStream blockData;
+    private volatile byte data[];
 
     public BlockDownload(DataInputStream stream) throws IOException {
         this.blockID    = stream.readLong();
         int size        = stream.readInt();
-        byte data[]     = new byte[size];
+        this.data       = new byte[size];
         stream.read(data);
-        this.blockData  = new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)));
     }
 
-    public static void upload(FullBlock block, DataOutputStream stream) throws IOException {
+    private BlockDownload(FullBlock block) throws IOException {
+        ByteArrayOutputStream stream1   = new ByteArrayOutputStream();
+        DataOutputStream      stream    = new DataOutputStream(stream1);
+
+        byte data[] = getData(block);
+
         stream.writeLong(block.getBlockID());
-        ByteArrayOutputStream stream2 = new ByteArrayOutputStream();
-        DeflaterOutputStream stream1 = new DeflaterOutputStream(stream2);
+        stream.writeInt(data.length);
+        stream.write(data);
 
-        DataOutputStream  blockStream = new DataOutputStream(stream1);
+        stream.flush();
+        stream.close();
 
+        this.data = stream1.toByteArray();
+    }
+
+    private byte[] getData(FullBlock block) throws IOException {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream      blockStream = new DataOutputStream(new DeflaterOutputStream(stream));
         block.export(blockStream);
         blockStream.flush();
         blockStream.close();
 
-        byte data[] = stream2.toByteArray();
+        blockStream.flush();
+        blockStream.close();
 
-        stream.writeInt(data.length);
-        stream.write(data);
+        return stream.toByteArray();
+    }
+
+    public static BlockDownload prepare(FullBlock block) {
+        return null;
     }
 
     public DataInputStream decompressedInputStream()
     {
-        return blockData;
+        return new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)));
+    }
+
+    public byte[] getData() {
+        return data;
     }
 
     public long getBlockID() {
