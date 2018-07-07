@@ -21,239 +21,307 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.ReentrantLock;
 
-public class Client implements Runnable
-{
-    private volatile SocketConnection           connection;
-    private volatile ContextI                   context;
+public class Client implements Runnable {
+    private volatile SocketConnection connection;
+    private volatile ContextI context;
 
-    private volatile Map<String, BasicMessage>  cache;
-    private volatile Set<BasicMessage>          toSend;
-    private volatile String                     lock;
-    private volatile AtomicBoolean              relay;
-    private volatile AtomicLong                 version;
-    private volatile AtomicLong                 chainSize;
-    private volatile AtomicBoolean              greeted;
-    private volatile AtomicBoolean              blocked;
+    private volatile Map<String, BasicMessage> cache;
+    private volatile Set<BasicMessage> toSend;
+    private volatile String lock;
+    private volatile AtomicBoolean relay;
+    private volatile AtomicLong version;
+    private volatile AtomicLong chainSize;
+    private volatile AtomicBoolean greeted;
+    private volatile AtomicBoolean blocked;
+    private volatile ReentrantLock threadlock;
 
-    public Client(SocketConnection connection, ContextI context)
-    {
+    public Client(SocketConnection connection, ContextI context) {
         this.connection = connection;
-        this.context    = context;
-        this.cache      = Collections.synchronizedMap(new LinkedHashMap<>());
-        this.toSend     = Collections.synchronizedSet(new LinkedHashSet<>());
-        this.version    = new AtomicLong(0);
-        this.chainSize  = new AtomicLong(0);
-        this.greeted    = new AtomicBoolean(false);
-        this.relay      = new AtomicBoolean(false);
-        this.blocked    = new AtomicBoolean(false);
+        this.context = context;
+        this.cache = Collections.synchronizedMap(new LinkedHashMap<>());
+        this.toSend = Collections.synchronizedSet(new LinkedHashSet<>());
+        this.version = new AtomicLong(0);
+        this.chainSize = new AtomicLong(0);
+        this.greeted = new AtomicBoolean(false);
+        this.relay = new AtomicBoolean(false);
+        this.blocked = new AtomicBoolean(false);
     }
 
-    public final void sendMessage(BasicMessage message)
-    {
+    public final void sendMessage(BasicMessage message) {
         this.sendMessage(message, "");
     }
 
-    public final void sendMessage(BasicMessage message, String key)
-    {
-        if(keyMatch(key))
-            forceSendMessage(message);
-         else toSend.add(message);
+    public final void sendMessage(BasicMessage message, String key) {
+        threadlock.lock();
+        try {
+            if (keyMatch(key))
+                forceSendMessage(message);
+            else toSend.add(message);
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    private synchronized void forceSendMessage(BasicMessage message)
-    {
-        if(!cache.containsKey(message.getHashCode()))
+    private void forceSendMessage(BasicMessage message) {
+        if (!cache.containsKey(message.getHashCode()))
             cache.put(message.getHashCode(), message);
 
-        try{
+        try {
             message.sendMessage(connection, context);
             connection.getOutputStream().flush();
             message.send();
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             message.send();
         }
 
-        if(message.stopAttemptingToSend())
+        if (message.stopAttemptingToSend())
             cache.remove(message.getHashCode());
     }
 
-    public synchronized void update() throws IOException
-    {
-        while (connection.getInputStream().available() > 0)
-        {
+    public void update() throws IOException {
+        while (connection.getInputStream().available() > 0) {
             BasicMessage message = safeNext();
 
             Logger.alert("--------MSG---------");
             Logger.alert(message + "");
 
-            if(message != null)
+            if (message != null)
                 message.onReceive(this, connection, context);
         }
 
-        for(BasicMessage message : toSend)
+        for (BasicMessage message : toSend)
             forceSendMessage(message);
 
         Set<String> toRemove = new HashSet<>();
 
-        for(String message : cache.keySet())
-            if(cache.get(message).stopAttemptingToSend())
+        for (String message : cache.keySet())
+            if (cache.get(message).stopAttemptingToSend())
                 toRemove.add(message);
 
-        for(String message : toRemove)
+        for (String message : toRemove)
             cache.remove(message);
 
         toSend.clear();
     }
 
-    public final boolean keyMatch(String key)
-    {
-        if(lock == null) return true;
+    public final boolean keyMatch(String key) {
+        threadlock.lock();
+        try {
+            if (lock == null) return true;
 
-        return lock.equals(key);
+            return lock.equals(key);
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    public synchronized boolean lock(String key)
-    {
-        if(lock != null)
-            return false;
+    public boolean lock(String key) {
+        threadlock.lock();
+        try {
+            if (lock != null)
+                return false;
 
-        lock = key;
+            lock = key;
 
-        return true;
+            return true;
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    public synchronized boolean unlock(String key)
-    {
-        if(lock == null) return true;
+    public boolean unlock(String key) {
+        if (lock == null) return true;
 
-        if(lock.equals(key))
+        if (lock.equals(key))
             lock = null;
 
         return lock == null;
     }
 
-    public synchronized boolean isLocked()
-    {
-        return lock != null;
+    public boolean isLocked() {
+        threadlock.lock();
+        try {
+            return lock != null;
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    public boolean isRelay()
-    {
-        return relay.get();
+    public boolean isRelay() {
+        threadlock.lock();
+        try {
+            return relay.get();
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    public synchronized void setVersion(long l)
-    {
-        this.version.set(l);
+    public void setVersion(long l) {
+        threadlock.lock();
+        try {
+            this.version.set(l);
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    public void setChainSize(long l)
-    {
-        System.out.println("CHAINSIZE ");
-        this.chainSize.set(l);
+    public void setChainSize(long l) {
+        threadlock.lock();
+        try {
+            System.out.println("CHAINSIZE ");
+            this.chainSize.set(l);
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    public synchronized void setIsRelay(boolean r)
-    {
-        this.relay.set(r);
+    public void setIsRelay(boolean r) {
+        threadlock.lock();
+        try {
+            this.relay.set(r);
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    public synchronized void setGreeted(boolean g)
-    {
-        this.greeted.set(g);
+    public void setGreeted(boolean g) {
+        threadlock.lock();
+        try {
+            this.greeted.set(g);
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    public synchronized boolean isGreeted()
-    {
-        return greeted.get();
+    public boolean isGreeted() {
+        threadlock.lock();
+        try {
+            return greeted.get();
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    public synchronized void removeMessage(String s)
-    {
-        cache.remove(s);
+    public void removeMessage(String s) {
+        threadlock.lock();
+        try {
+            cache.remove(s);
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    public synchronized void resend(String s)
-    {
-        if(cache.containsKey(s))
-            sendMessage(cache.get(s));
+    public void resend(String s) {
+        threadlock.lock();
+        try {
+            if (cache.containsKey(s))
+                sendMessage(cache.get(s));
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    public long getChainSize()
-    {
-        return chainSize.get();
+    public long getChainSize() {
+        threadlock.lock();
+        try {
+            return chainSize.get();
+        } finally {
+            threadlock.unlock();
+        }
     }
 
     @Override
-    public void run()
-    {
-        while (context.isRunning() && connection.isConnected())
-        {
-            try
-            {
+    public void run() {
+        while (context.isRunning() && connection.isConnected()) {
+            try {
                 update();
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            try
-            {
+            try {
                 Thread.sleep(12L);
-            } catch (InterruptedException e)
-            {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public synchronized void closeConnection() throws IOException
-    {
-        sendMessage(new GoodByeMessage());
-        connection.closeConnection();
+    public void closeConnection() throws IOException {
+        threadlock.lock();
+        try {
+            sendMessage(new GoodByeMessage());
+            connection.closeConnection();
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    private synchronized BasicMessage safeNext() throws IOException
-    {
+    private BasicMessage safeNext() throws IOException {
         int type = connection.getInputStream().readInt();
 
         return BasicMessage.decipher(type, this);
     }
 
-    public synchronized BasicMessage next() throws IOException
-    {
-        long now = System.currentTimeMillis();
-        while (connection.getInputStream().available() == 0) {
-            if(System.currentTimeMillis() - now >= 230_000L) return null;
+    public BasicMessage next() throws IOException {
+        threadlock.lock();
+        try {
+            long now = System.currentTimeMillis();
+            while (connection.getInputStream().available() == 0) {
+                if (System.currentTimeMillis() - now >= 230_000L) return null;
+            }
+
+            return safeNext();
+        } finally {
+            threadlock.unlock();
         }
-
-        return safeNext();
     }
 
-    public synchronized void block()
-    {
-        this.blocked.set(true);
+    public void block() {
+        threadlock.lock();
+        try {
+            this.blocked.set(true);
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    public synchronized void unblock()
-    {
-        this.blocked.set(false);
+    public void unblock() {
+        threadlock.lock();
+        try {
+            this.blocked.set(false);
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    public synchronized boolean isBlocked()
-    {
-        return blocked.get();
+    public boolean isBlocked() {
+        threadlock.lock();
+        try {
+            return blocked.get();
+        } finally {
+            threadlock.unlock();
+        }
     }
 
-    public synchronized BasicMessage getReply(String digest)
-    {
-        return null;
+    public BasicMessage getReply(String digest) {
+        threadlock.lock();
+        try {
+            return null;
+        } finally {
+            threadlock.unlock();
+        }
     }
 
     @Override
-    public synchronized String toString() {
-        return "client{ip: " + connection.getIP() + " relay: " + relay + " chain: " + chainSize + "}";
+    public String toString() {
+        threadlock.lock();
+        try {
+            return "client{ip: " + connection.getIP() + " relay: " + relay + " chain: " + chainSize + "}";
+        } finally {
+            threadlock.unlock();
+        }
     }
 }
