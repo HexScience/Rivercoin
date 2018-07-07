@@ -22,7 +22,6 @@ import com.riverssen.core.transactions.RewardTransaction;
 import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.core.utils.*;
 import com.riverssen.riverssen.RiverFlowMap;
-import com.riverssen.riverssen.UTXOMap;
 
 import java.io.*;
 import java.math.BigInteger;

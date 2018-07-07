@@ -25,6 +25,7 @@ import com.riverssen.core.utils.FileUtils;
 import com.riverssen.core.utils.Handler;
 import com.riverssen.riverssen.Constant;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
@@ -394,7 +395,11 @@ public class BlockChain implements Runnable
                     {
                         /** Send Solution To Nodes **/
 
-                        context.getNetworkManager().sendBlock(BlockDownloadService.prepare(block.get()));
+                        try {
+                            context.getNetworkManager().sendBlock(new BlockDownloadService(block.get()));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
                         block.get().serialize(context);
 

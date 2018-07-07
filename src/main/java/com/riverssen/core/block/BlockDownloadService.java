@@ -57,10 +57,6 @@ public class BlockDownloadService implements Comparable<BlockDownloadService>
         return stream.toByteArray();
     }
 
-    public static BlockDownloadService prepare(FullBlock block) {
-        return null;
-    }
-
     public DataInputStream decompressedInputStream()
     {
         return new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)));
