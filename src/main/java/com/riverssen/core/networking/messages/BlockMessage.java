@@ -50,13 +50,13 @@ public class BlockMessage extends BasicMessage
     @Override
     public void onReceive(Client client, SocketConnection connection, ContextI context) throws IOException
     {
-        String hashCode = connection.getInputStream().readUTF();
-
+        String hashCode = null;
         try{
+            hashCode = connection.getInputStream().readUTF();
             boolean requested = connection.getInputStream().readBoolean();
 
             FullBlock block = new FullBlock(connection.getInputStream(), context);
-            if(block.validate(context) > 0)
+            if(block.validate(context) != 0)
             {
                 client.sendMessage(new SuccessMessage(hashCode));
                 client.block();
@@ -71,13 +71,14 @@ public class BlockMessage extends BasicMessage
                 context.getNetworkManager().sendBlock(block, client);
             }
 
-            System.out.println(block.getBlockID());
+            System.out.println("blockID: " + block.getBlockID());
 
             client.sendMessage(new SuccessMessage(hashCode));
             client.setChainSize(Math.max(client.getChainSize(), block.getBlockID()));
         } catch (Exception e)
         {
-            client.sendMessage(new FailedMessage(hashCode));
+            if(hashCode != null)
+                client.sendMessage(new FailedMessage(hashCode));
         }
     }
 }

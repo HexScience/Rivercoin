@@ -244,8 +244,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         {
             DataOutputStream stream = new DataOutputStream(new DeflaterOutputStream(new FileOutputStream(file)));
 
-            header.export(stream);
-            body.export(stream);
+            export(stream);
 
             stream.flush();
             stream.close();
@@ -272,7 +271,9 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     }
 
     @Override
-    public void export(DataOutputStream dost) {
+    public void export(DataOutputStream dost) throws IOException {
+        header.export(dost);
+        body.export(dost);
     }
 
     @Override

@@ -38,11 +38,15 @@ public class GreetMessage extends BasicMessage
     @Override
     public void onReceive(Client client, SocketConnection connection, ContextI context) throws IOException
     {
-        client.setGreeted(true);
-        client.setVersion(connection.getInputStream().readLong());
-        client.setChainSize(connection.getInputStream().readLong());
-        client.setIsRelay(connection.getInputStream().readBoolean());
-
-        client.sendMessage(new GreetReplyMessage());
+        try{
+            client.setGreeted(true);
+            client.setVersion(connection.getInputStream().readLong());
+            client.setChainSize(connection.getInputStream().readLong());
+            client.setIsRelay(connection.getInputStream().readBoolean());
+            client.sendMessage(new GreetReplyMessage());
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

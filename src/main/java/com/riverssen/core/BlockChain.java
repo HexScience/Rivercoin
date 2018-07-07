@@ -29,6 +29,7 @@ import com.riverssen.core.utils.FileUtils;
 import com.riverssen.riverssen.Constant;
 
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class BlockChain implements BlockChainI
 {
@@ -38,13 +39,15 @@ public class BlockChain implements BlockChainI
     private FullBlock                       block;
     private ContextI                        context;
     private long                            lastvalidated;
-    private boolean                         lock;
+    private volatile ReentrantLock                   lock;
+    private volatile boolean                          mlock;
 
     public BlockChain(ContextI context)
     {
         this.context        = context;
         this.orphanedBlocks = new LinkedHashSet<>();
         this.downloadedBlocks= new LinkedHashSet<>();
+        this.lock           = new ReentrantLock();
     }
 
     @Override
@@ -69,13 +72,23 @@ public class BlockChain implements BlockChainI
 
     public synchronized BlockHeader lastBlockHeader()
     {
-        if(currentBlock() == 0) return null;
-        return new BlockHeader(currentBlock() - 1, context);
+        lock.lock();
+        try{
+            if(currentBlock() == 0) return null;
+            return new BlockHeader(currentBlock() - 1, context);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public synchronized void download(FullBlock block)
     {
-        this.downloadedBlocks.add(block);
+//        lock.lock();
+//        try{
+            this.downloadedBlocks.add(block);
+//        } finally {
+//            lock.unlock();
+//        }
     }
 
     @Override
@@ -289,15 +302,16 @@ public class BlockChain implements BlockChainI
 
                     orphanedBlocks.removeAll(blockList);
 
-                    blockList.sort((a, b)->{
-                        if          (a.getBlockID() == b.getBlockID()) return 0;
-                        else if     (a.getBlockID() > b.getBlockID()) return 1;
-
-                        return -1;
-                    });
+//                    blockList.sort((a, b)->{
+//                        if          (a.getBlockID() == b.getBlockID()) return 0;
+//                        else if     (a.getBlockID() > b.getBlockID()) return 1;
+//
+//                        return -1;
+//                    });
 
                     /** This function should choose the biggest block in queue at the current level **/
-                    this.block = blockList.get(blockList.size() - 1);
+                    /** first block downloaded **/
+                    this.block = blockList.get(0);
 
                     this.block.serialize(context);
                     this.block = this.block.getHeader().continueChain(context);
@@ -310,7 +324,7 @@ public class BlockChain implements BlockChainI
             delete.clear();
             blockList.clear();
 
-            if(lock)
+            if(mlock)
             {
             } else {
                 while (context.getTransactionPool().available()) {

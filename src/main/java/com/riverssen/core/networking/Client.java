@@ -47,6 +47,7 @@ public class Client implements Runnable {
         this.greeted = new AtomicBoolean(false);
         this.relay = new AtomicBoolean(false);
         this.blocked = new AtomicBoolean(false);
+        threadlock = new ReentrantLock();
     }
 
     public final void sendMessage(BasicMessage message) {
@@ -170,7 +171,6 @@ public class Client implements Runnable {
     public void setChainSize(long l) {
         threadlock.lock();
         try {
-            System.out.println("CHAINSIZE ");
             this.chainSize.set(l);
         } finally {
             threadlock.unlock();
