@@ -42,7 +42,7 @@ public class MerkleTree implements Serialisable, Encodeable
     @Override
     public void serialize(DataOutputStream stream) throws Exception
     {
-        stream.writeInt(this.size);
+        stream.writeInt(list.size());
 
         for (TransactionI token : list)
             token.export(stream);
@@ -52,6 +52,8 @@ public class MerkleTree implements Serialisable, Encodeable
     public void deserialize(DataInputStream stream, String version) throws Exception
     {
         int i = stream.readInt();
+
+        ArrayList<TransactionI> list = new ArrayList<>();
 
         for (int j = 0; j < i; j++)
             list.add(TransactionI.read(stream));
@@ -101,8 +103,6 @@ public class MerkleTree implements Serialisable, Encodeable
 
         this.root = elements.poll();
         this.size = list.size();
-
-        System.out.println(root + " sejofjsoefjosejfoes");
     }
 
     public MerkleTree()
@@ -168,6 +168,8 @@ public class MerkleTree implements Serialisable, Encodeable
     public void add(TransactionI token)
     {
         list.add(token);
+
+        load(new ArrayList<>(list));
     }
 
     private class TreeElement implements Comparable<TreeElement>, Serialisable, Encodeable

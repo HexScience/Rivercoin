@@ -47,7 +47,6 @@ public class Server implements NetworkManager
         addSavedIps();
         addSeedIPs();
         createListener();
-        ipAddresses.add("192.168.178.41");
 
         if(ipAddresses.size() == 0)
             throw new Exception("no seed ip address found.");

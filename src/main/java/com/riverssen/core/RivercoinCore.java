@@ -13,6 +13,8 @@
 package com.riverssen.core;
 
 import com.riverssen.core.algorithms.RiverHash;
+import com.riverssen.core.block.BlockHeader;
+import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.exceptions.FeatureUnavailableException;
 import com.riverssen.core.miningalgorithm.BufferedMiner;
 import com.riverssen.core.system.*;
@@ -73,6 +75,10 @@ public class RivercoinCore
                 context = new ClientContext(config);
                 break;
         }
+
+        System.out.println(BlockHeader.FullBlock(1, context).getBody().getMerkleTree().flatten());
+
+        System.exit(0);
 
 //        BufferedMiner miner = new BufferedMiner(context);
 
