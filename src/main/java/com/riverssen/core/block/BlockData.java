@@ -16,6 +16,7 @@ import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.headers.Write;
 import com.riverssen.core.headers.ContextI;
+import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.core.utils.Serializer;
 import com.riverssen.core.headers.Encodeable;
@@ -31,14 +32,14 @@ public class BlockData implements Encodeable, Exportable
 {
     public static final int MAX_BLOCK_SIZE = 4_000_000;
     @Write private volatile MerkleTree merkleTree;
-    @Write private volatile Set<TransactionOutput> outputs;
+//    @Write private volatile Set<TransactionOutput> outputs;
     @Write private volatile long time;
     private volatile long dataSize;
     private volatile int validation;
 
     public BlockData()
     {
-        this.outputs = new LinkedHashSet<>();
+//        this.outputs = new LinkedHashSet<>();
         this.merkleTree = new MerkleTree();
         this.validation = 1;
     }
@@ -52,13 +53,13 @@ public class BlockData implements Encodeable, Exportable
     {
         merkleTree      = new MerkleTree();
         this.validation = 1;
-        this.outputs    = new LinkedHashSet<>();
+//        this.outputs    = new LinkedHashSet<>();
 
         try
         {
             merkleTree.deserialize(stream, null);
-            for(TransactionI transaction : merkleTree.flatten())
-                outputs.addAll(transaction.getOutputs(context.getMiner(), context));
+//            for(TransactionI transaction : merkleTree.flatten())
+//                outputs.addAll(transaction.getOutputs(miner, context));
         } catch (Exception e)
         {
             e.printStackTrace();
@@ -127,7 +128,7 @@ public class BlockData implements Encodeable, Exportable
         List<TransactionOutput> outputs = token.generateOutputs(context.getMiner(), map, context);
 
         context.getUtxoManager().addAll(outputs);
-        this.outputs.addAll(outputs);
+//        this.outputs.addAll(outputs);
 
         merkleTree.add(token);
         dataSize += token.toJSON().getBytes().length;
@@ -142,7 +143,7 @@ public class BlockData implements Encodeable, Exportable
 
         context.getUtxoManager().addAll(outputs);
 
-        this.outputs.addAll(outputs);
+//        this.outputs.addAll(outputs);
         dataSize += token.toJSON().getBytes().length;
     }
 
@@ -179,7 +180,7 @@ public class BlockData implements Encodeable, Exportable
     }
 
     public Set<TransactionOutput> getOutputs() {
-       return outputs;
+       return null;
     }
 
     public void validate(RiverFlowMap map, ContextI context)

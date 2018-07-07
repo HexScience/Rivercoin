@@ -79,14 +79,14 @@ public class BlockChain implements Runnable
         }
     }
 
-    public synchronized void download(BlockDownloadService block)
+    public void download(BlockDownloadService block)
     {
-        lock.lock();
-        try{
+//        lock.lock();
+//        try{
             this.downloadedBlocks.add(block);
-        } finally {
-            lock.unlock();
-        }
+//        } finally {
+//            lock.unlock();
+//        }
     }
 
     public synchronized void FetchBlockChainFromPeers()
@@ -161,7 +161,13 @@ public class BlockChain implements Runnable
                     {
                         FullBlock next  = null;
 
-                        for(BlockDownloadService fullBlock : downloadedBlocks)
+                        Set<BlockDownloadService> downloadServices = new LinkedHashSet<>();
+                        synchronized (downloadedBlocks)
+                        {
+                            downloadServices.addAll(downloadedBlocks);
+                        }
+
+                        for(BlockDownloadService fullBlock : downloadServices)
                             if(fullBlock.getBlockID() == (currentBlock() + 1))
                             {
                                 next = new FullBlock(fullBlock.decompressedInputStream(), context);
@@ -170,8 +176,9 @@ public class BlockChain implements Runnable
 
                             if(next != null)
                             {
-                                if(block.get().validate(context) != 0)
+                                if(next.validate(context) != 0)
                                 {
+                                    Logger.err(next + " rejected.");
                                     node.block();
 
                                     for(long i = startingPoint; i < currentBlock(); i ++)
@@ -181,6 +188,7 @@ public class BlockChain implements Runnable
                                 }
 
                                 this.block.set(next);
+                                this.block.get().serialize(context);
                                 downloadedBlocks.remove(next);
                             }
                     }

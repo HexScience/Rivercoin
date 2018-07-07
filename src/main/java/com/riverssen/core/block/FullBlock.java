@@ -285,8 +285,8 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     private String outputsAsJSON() {
         String data = "";
 
-        for(TransactionOutput output : getBody().getOutputs())
-            data += output.toString() + ", ";
+//        for(TransactionOutput output : getBody().getOutputs())
+//            data += output.toString() + ", ";
 
         if (data.length() == 0) return "";
 

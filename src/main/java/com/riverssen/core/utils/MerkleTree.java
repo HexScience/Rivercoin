@@ -101,6 +101,8 @@ public class MerkleTree implements Serialisable, Encodeable
 
         this.root = elements.poll();
         this.size = list.size();
+
+        System.out.println(root + " sejofjsoefjosejfoes");
     }
 
     public MerkleTree()

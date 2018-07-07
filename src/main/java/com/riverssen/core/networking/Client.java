@@ -71,6 +71,9 @@ public class Client implements Runnable {
             cache.put(message.getHashCode(), message);
 
         try {
+//            Logger.alert("--------MSGS---------");
+//            Logger.alert(message + "");
+
             message.sendMessage(connection, context);
             connection.getOutputStream().flush();
             message.send();
@@ -86,14 +89,20 @@ public class Client implements Runnable {
         while (connection.getInputStream().available() > 0) {
             BasicMessage message = safeNext();
 
-            Logger.alert("--------MSG---------");
-            Logger.alert(message + "");
+//            Logger.alert("--------MSGR---------");
+//            Logger.alert(message + "");
 
             if (message != null)
                 message.onReceive(this, connection, context);
         }
 
-        for (BasicMessage message : toSend)
+        Set<BasicMessage> messages = new LinkedHashSet<>();
+        synchronized (toSend)
+        {
+            messages.addAll(toSend);
+        }
+
+        for (BasicMessage message : messages)
             forceSendMessage(message);
 
         Set<String> toRemove = new HashSet<>();
