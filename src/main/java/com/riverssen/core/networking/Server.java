@@ -28,10 +28,10 @@ public class Server implements NetworkManager
 {
     public static final String  seedNodeUrl = "http://www.rivercoin.net/developers/api/seednodes.php";
 
-    private Set<String>         ipAddresses;
-    private Set<Client>         communications;
-    private ContextI            context;
-    private ServerSocket        socket;
+    private volatile Set<String>         ipAddresses;
+    private volatile Set<Client>         communications;
+    private volatile ContextI            context;
+    private volatile ServerSocket        socket;
 
     public Server(ContextI context) throws Exception
     {

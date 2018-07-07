@@ -46,22 +46,22 @@ public class SocketConnection
         this.outputStream   = new DataOutputStream(this.socket.getOutputStream());
     }
 
-    public synchronized DataInputStream getInputStream()
+    public DataInputStream getInputStream()
     {
         return inputStream;
     }
 
-    public synchronized DataOutputStream getOutputStream()
+    public DataOutputStream getOutputStream()
     {
         return outputStream;
     }
 
-    public synchronized boolean isConnected()
+    public boolean isConnected()
     {
         return socket.isConnected() && !closed;
     }
 
-    public synchronized void closeConnection() throws IOException
+    public void closeConnection() throws IOException
     {
         inputStream.close();
         outputStream.close();
@@ -69,23 +69,23 @@ public class SocketConnection
         closed = true;
     }
 
-    public synchronized String getIP()
+    public String getIP()
     {
         return ip;
     }
 
-    public synchronized int    getType()
+    public int    getType()
     {
         return type;
     }
 
-    public synchronized void   setType(int type)
+    public void   setType(int type)
     {
         this.type = type;
     }
 
     @Override
-    public synchronized String toString()
+    public String toString()
     {
         return ip + port;
     }
