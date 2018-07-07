@@ -115,7 +115,9 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
 
         if(parent == null && getBlockID() > 0) return err_not_valid;
 
-//        /** validate merkle root **/
+//        getBody().getMerkleTree().buildTree();
+//
+        /** validate merkle root **/
 //        if (!ByteUtil.equals(body.getMerkleTree().encode(ByteUtil.defaultEncoder()), header.getMerkleRoot())) return err_mrkl;
 
         /** validate transactions **/
@@ -135,17 +137,21 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         /** verify block started mining at least lastblock_time + blocktime/5 after **/
 //        if (body.getTimeStamp() <= (header.getTimeStampAsLong() + (context.getConfig().getAverageBlockTime() / 5))) return err_timestampc;
 
+                getBody().getMerkleTree().buildTree();
+
         /** verify nonce **/
         HashAlgorithm algorithm = context.getHashAlgorithm(pHash);
         ByteBuffer data = getBodyAsByteBuffer();
         data.putLong(data.capacity() - 8, header.getNonceAsInt());
         byte hash[] = algorithm.encode(data.array());
 
-        System.out.println(Base58.encode(hash) + " " + Base58.encode(this.header.getHash()));
+        System.out.println(Base58.encode(header.getMinerAddress()));
 
         if(!ByteUtil.equals(this.header.getHash(), hash)) return 7;
 
-        if(new BigInteger(hash).compareTo(header.getDifficultyAsInt()) > 0) return 8;
+        if(new BigInteger(hash).compareTo(header.getDifficultyAsInt()) >= 0) return 8;
+
+        if(!PublicAddress.isPublicAddressValid(Base58.encode(header.getMinerAddress()))) return 9;
 
         return 0;
     }
@@ -224,15 +230,15 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     private ByteBuffer getBodyAsByteBuffer()
     {
         byte bodydata[] = getBytes();
-        ByteBuffer data = ByteBuffer.allocate(8 + 32 + 32 + 8 + PublicAddress.SIZE + RiverCoin.SIZE + 8 + bodydata.length + 8);
+        ByteBuffer data = ByteBuffer.allocate(bodydata.length + 8);
 
-        data.putLong(header.getVersion());
-        data.put(header.getParentHash());
-        data.put(header.getMerkleRoot());
-        data.putLong(header.getTimeStamp());
-        data.put(header.getMinerAddress());
-        data.put(header.getReward());
-        data.putLong(header.getBlockID());
+//        data.putLong(header.getVersion());
+//        data.put(header.getParentHash());
+//        data.put(header.getMerkleRoot());
+//        data.putLong(header.getTimeStamp());
+//        data.put(header.getMinerAddress());
+//        data.put(header.getReward());
+//        data.putLong(header.getBlockID());
 //        data.put(header.getrvcRoot());
         data.put(bodydata);
         data.putLong(0);

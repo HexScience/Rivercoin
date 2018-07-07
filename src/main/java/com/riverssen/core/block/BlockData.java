@@ -85,20 +85,19 @@ public class BlockData implements Encodeable, Exportable
     @Override
     public byte[] getBytes()
     {
-        byte bytes[] = null;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        DataOutputStream stream = new DataOutputStream(outputStream);
 
-        try (Serializer serializer = new Serializer())
-        {
-            getMerkleTree().serialize(serializer.asDataOutputStream());
+        try {
+            getMerkleTree().serialize(stream);
 
-            serializer.flush();
-            bytes = serializer.getBytes();
-        } catch (Exception e)
-        {
+            stream.flush();
+            stream.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return bytes;
+        return outputStream.toByteArray();
     }
 
     public void set(BlockData body)
