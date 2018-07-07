@@ -76,4 +76,9 @@ public class BlockDownloadService implements Comparable<BlockDownloadService>
         else if(getBlockID() == o.getBlockID()) return 0;
         return -1;
     }
+
+    @Override
+    public String toString() {
+        return "downloadservice{"+blockID + " " + data +"}";
+    }
 }

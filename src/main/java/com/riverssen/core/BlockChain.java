@@ -132,11 +132,12 @@ public class BlockChain implements Runnable
                     if (i >= 0) node.sendMessage(new RequestBlockMessage(i));
 
                 long required = node.getChainSize() - Math.max(currentBlock(), 0);
+                Logger.alert("required: " + required);
 
                 long lastChange = System.currentTimeMillis();
                 long lastChainS = startingPoint;
 
-                while (currentBlock() < required)
+                while (currentBlock() < currentBlock()+required)
                 {
                     if(lastChainS != currentBlock())
                     {
@@ -159,6 +160,7 @@ public class BlockChain implements Runnable
 
                     if(downloadedBlocks.size() > 0)
                     {
+                        Logger.alert("acquired: " + currentBlock() + "/" + (currentBlock()+required) + " remaining: " + downloadedBlocks.size());
                         FullBlock next  = null;
 
                         Set<BlockDownloadService> downloadServices = new LinkedHashSet<>();
@@ -191,7 +193,10 @@ public class BlockChain implements Runnable
                                 this.block.set(next);
                                 this.block.get().serialize(context);
                                 downloadedBlocks.remove(next);
+                                node.sendMessage(new RequestBlockMessage(currentBlock() + 1));
                             }
+
+                        node.sendMessage(new RequestBlockMessage(currentBlock() + 1));
                     }
                 }
 

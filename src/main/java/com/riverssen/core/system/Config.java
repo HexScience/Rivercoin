@@ -161,7 +161,7 @@ public class Config
     public long getAverageBlockTime()
     {
         /** two minutes **/
-        return 10_000; //120_000L
+        return 120_000L;
     }
 
     /** calculate the cost of a contract **/

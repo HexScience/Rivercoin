@@ -130,9 +130,9 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         if(parent != null)
             timeDifference = getHeader().getTimeStampAsLong() - parent.getTimeStampAsLong();
 
-        if(timeDifference >= (context.getConfig().getAverageBlockTime() * 10)) return err_timestampa;
+        if(timeDifference >= (context.getConfig().getAverageBlockTime() * 50)) return err_timestampa;
 
-        if(timeDifference < 0) return err_timestampb;
+        if(timeDifference < (context.getConfig().getAverageBlockTime() * -50)) return err_timestampb;
 
         /** verify block started mining at least lastblock_time + blocktime/5 after **/
 //        if (body.getTimeStamp() <= (header.getTimeStampAsLong() + (context.getConfig().getAverageBlockTime() / 5))) return err_timestampc;
