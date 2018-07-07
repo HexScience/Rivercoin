@@ -21,12 +21,12 @@ public class Handler<I>
         this.i = i;
     }
 
-    public synchronized I getI()
+    public I get()
     {
         return i;
     }
 
-    public synchronized void setI(I i)
+    public void set(I i)
     {
         this.i = i;
     }

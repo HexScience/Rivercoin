@@ -18,12 +18,8 @@ import com.riverssen.core.headers.BlockChainI;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.networking.Client;
 import com.riverssen.core.networking.messages.RequestBlockMessage;
-import com.riverssen.core.security.Wallet;
 import com.riverssen.core.system.LatestBlockInfo;
 import com.riverssen.core.system.Logger;
-import com.riverssen.core.transactions.TXIList;
-import com.riverssen.core.transactions.Transaction;
-import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.FileUtils;
 import com.riverssen.core.utils.Handler;
@@ -175,7 +171,7 @@ public class BlockChain implements BlockChainI
 
                             if(next != null)
                             {
-                                if(block.getI().validate(context) != 0)
+                                if(block.get().validate(context) != 0)
                                 {
                                     node.block();
 
@@ -185,7 +181,7 @@ public class BlockChain implements BlockChainI
                                     break client_iterator;
                                 }
 
-                                this.block.setI(next);
+                                this.block.set(next);
                                 downloadedBlocks.remove(next);
                             }
                     }
@@ -213,7 +209,7 @@ public class BlockChain implements BlockChainI
 
         if(latestblock < 0) return;
 
-        this.block.setI(BlockHeader.FullBlock(latestblock, context));
+        this.block.set(BlockHeader.FullBlock(latestblock, context));
 
         Logger.alert("block loaded successfully");
     }
@@ -245,7 +241,7 @@ public class BlockChain implements BlockChainI
         try{
             if(block == null) return -1;
 
-            return block.getI().getHeader().getBlockID();
+            return block.get().getHeader().getBlockID();
         } finally {
             lock.unlock();
         }
@@ -279,9 +275,9 @@ public class BlockChain implements BlockChainI
 
 //        System.out.println(block.toJSON());
 
-        if(block.getI() == null)
-            block.setI(new FullBlock(-1, null, context));
-        else block.setI(block.getI().getHeader().continueChain(context));
+        if(block.get() == null)
+            block.set(new FullBlock(-1, null, context));
+        else block.set(block.get().getHeader().continueChain(context));
 
 //        System.exit(0);
 
@@ -323,10 +319,10 @@ public class BlockChain implements BlockChainI
 
                     /** This function should choose the biggest block in queue at the current level **/
                     /** first block downloaded **/
-                    this.block.setI(blockList.get(0));
+                    this.block.set(blockList.get(0));
 
-                    this.block.getI().serialize(context);
-                    this.block.setI(this.block.getI().getHeader().continueChain(context));
+                    this.block.get().serialize(context);
+                    this.block.set(this.block.get().getHeader().continueChain(context));
                     lastBlockWas = System.currentTimeMillis();
 
                     blockList.clear();
@@ -340,8 +336,8 @@ public class BlockChain implements BlockChainI
             {
             } else {
                 while (context.getTransactionPool().available()) {
-                    block.getI().add(context.getTransactionPool().next(), context);
-                    if (block.getI().getBody().mine(context))
+                    block.get().add(context.getTransactionPool().next(), context);
+                    if (block.get().getBody().mine(context))
                         break;
                 }
 
@@ -355,18 +351,18 @@ public class BlockChain implements BlockChainI
 
                         if(orphaned.getBlockID() == currentBlock() && orphaned.validate(context) == 0)
                         {
-                            this.block.getI().free(context);
+                            this.block.get().free(context);
 
-                            this.block.setI(orphaned);
-                            this.block.getI().serialize(context);
-                            this.block.setI(this.block.getI().getHeader().continueChain(context));
+                            this.block.set(orphaned);
+                            this.block.get().serialize(context);
+                            this.block.set(this.block.get().getHeader().continueChain(context));
                         }
                     }
                 }
 
-                if(block.getI().getBody().mine(context))
+                if(block.get().getBody().mine(context))
                 {
-                    block.getI().mine(context);
+                    block.get().mine(context);
 
                     boolean continueBlock = true;
 
@@ -376,13 +372,13 @@ public class BlockChain implements BlockChainI
 
                         orphanedBlocks.remove(orphaned);
 
-                        if(orphaned.getBlockID() == currentBlock() && orphaned.validate(context) == 0 && orphaned.getHeader().getTimeStampAsLong() <= block.getI().getHeader().getTimeStampAsLong())
+                        if(orphaned.getBlockID() == currentBlock() && orphaned.validate(context) == 0 && orphaned.getHeader().getTimeStampAsLong() <= block.get().getHeader().getTimeStampAsLong())
                         {
-                            this.block.getI().free(context);
+                            this.block.get().free(context);
 
-                            this.block.setI(orphaned);
-                            this.block.getI().serialize(context);
-                            this.block.setI(this.block.getI().getHeader().continueChain(context));
+                            this.block.set(orphaned);
+                            this.block.get().serialize(context);
+                            this.block.set(this.block.get().getHeader().continueChain(context));
                             continueBlock = false;
                         }
                     }
@@ -391,11 +387,11 @@ public class BlockChain implements BlockChainI
                     {
                         /** Send Solution To Nodes **/
 
-                        context.getNetworkManager().sendBlock(block.getI());
+                        context.getNetworkManager().sendBlock(block.get());
 
-                        block.getI().serialize(context);
+                        block.get().serialize(context);
 
-                        block.setI(block.getI().getHeader().continueChain(context));
+                        block.set(block.get().getHeader().continueChain(context));
                         lastBlockWas = System.currentTimeMillis();
                     }
                 }
@@ -408,8 +404,8 @@ public class BlockChain implements BlockChainI
         if(currentBlock() + 1 == block.getBlockID())
         {
             if(this.block != null)
-                this.block.getI().serialize(context);
-                this.block.setI(block);
+                this.block.get().serialize(context);
+                this.block.set(block);
         }
     }
 }
