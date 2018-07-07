@@ -136,6 +136,23 @@ public class RiverFlowMap implements UTXOMap
         }
     }
 
+    @Override
+    public byte[] hash() throws IOException {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream      dataOutputStream = new DataOutputStream(stream);
+
+        for(String address : data.keySet())
+        {
+            Set<TransactionOutput> set = get(address);
+            dataOutputStream.writeInt(set.size());
+            for(TransactionOutput output : set)
+                output.export(dataOutputStream);
+            stream.flush();
+            stream.close();
+        }
+        return new byte[0];
+    }
+
     private boolean deserialize(String name)
     {
         File address = new File(context.getConfig().getBlockChainTransactionDirectory() + File.separator + "ledger" + File.separator + name);

@@ -173,14 +173,14 @@ public class BlockData implements Encodeable, Exportable
     {
         if(validation == 1)
         {
-            ArrayList<TransactionI> copy = new ArrayList<>();
-            synchronized (merkleTree)
-            {
-                copy.addAll(merkleTree.flatten());
-            }
+            MerkleTree old = merkleTree;
+            merkleTree = new MerkleTree();
 
-            for(TransactionI transaction : copy)
+            for(TransactionI transaction : old.flatten())
                 add(transaction, map, context);
+
+            merkleTree.buildTree();
+            System.out.println(merkleTree.flatten());
         }
     }
 }

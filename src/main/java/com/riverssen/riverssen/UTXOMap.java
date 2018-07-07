@@ -36,6 +36,7 @@ public interface UTXOMap {
     public void addAll(UTXOMap map);
 
     public void serialize(ContextI context) throws IOException;
+    public byte[] hash() throws IOException;
 
     Set<TransactionOutput> get(String address);
 
