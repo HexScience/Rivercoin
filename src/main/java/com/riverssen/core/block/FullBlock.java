@@ -172,7 +172,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         Logger.alert("--------------------------------");
         Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: new job {"+ algorithm.getClass().getSimpleName() + "{" + algorithm.toString() + "}:" + (difficultyHash) + "}");
 
-        this.body.setTime(System.currentTimeMillis());
+        long time_stamp = System.currentTimeMillis();
         body.getMerkleTree().buildTree();
 
         //System.out.println(new RewardTransaction(miner).toJSON());
@@ -186,7 +186,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         header.setParentHash(parentHash);
         header.setMerkleRoot(body.getMerkleTree().encode(ByteUtil.defaultEncoder()));
         header.setRiverMerkleRoot(body.getMerkleTree().encode(ByteUtil.defaultEncoder()));
-        header.setTimeStamp(body.getTimeStamp());
+        header.setTimeStamp(time_stamp);
         header.setDifficulty(difficulty);
         header.setMiner(context.getMiner());
         header.setReward(new RiverCoin(Config.getReward()));
@@ -201,7 +201,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         header.setHash(hash);
         header.setNonce(nonce);
 
-        double time = (System.currentTimeMillis() - this.body.getTimeStamp()) / 1000.0;
+        double time = (System.currentTimeMillis() - time_stamp) / 1000.0;
         Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: hashing took '" + time + "s' '" + this.hash + "'");
     }
 
@@ -224,7 +224,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     private ByteBuffer getBodyAsByteBuffer()
     {
         byte bodydata[] = getBytes();
-        ByteBuffer data = ByteBuffer.allocate(32 + 32 + PublicAddress.SIZE + 32 + 8 + 8 + 32 + RiverCoin.SIZE + bodydata.length + 8);
+        ByteBuffer data = ByteBuffer.allocate(32 + 32 + PublicAddress.SIZE + 32 + 8 + 8 + 32 + RiverCoin.SIZE + bodydata.length + 16);
         data.put(header.getParentHash());
         data.put(header.getDifficulty());
         data.put(header.getMinerAddress());
@@ -233,6 +233,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         data.putLong(header.getVersion());
         data.put(header.getrvcRoot());
         data.put(header.getReward());
+        data.putLong(header.getTimeStamp());
         data.put(bodydata);
         data.putLong(0);
         data.flip();

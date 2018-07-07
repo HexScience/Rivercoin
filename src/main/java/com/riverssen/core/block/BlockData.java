@@ -105,15 +105,6 @@ public class BlockData implements Encodeable, Exportable
     {
     }
 
-    public void setTime(long time)
-    {
-    }
-
-    public long getTimeStamp()
-    {
-        return time;
-    }
-
     public boolean add(TransactionI token, UTXOMap map, ContextI context)
     {
         if (!token.valid(map, context)) {
