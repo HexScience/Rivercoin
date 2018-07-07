@@ -26,6 +26,7 @@ import com.riverssen.core.transactions.Transaction;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.FileUtils;
+import com.riverssen.core.utils.Handler;
 import com.riverssen.riverssen.Constant;
 
 import java.util.*;
@@ -33,21 +34,22 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class BlockChain implements BlockChainI
 {
-    private Set<FullBlock>                  orphanedBlocks;
+    private volatile Set<FullBlock>                  orphanedBlocks;
 //    private Map<Client, Set<FullBlock>>     downloadedBlocks;
-    private Set<FullBlock>                  downloadedBlocks;
-    private FullBlock                       block;
-    private ContextI                        context;
-    private long                            lastvalidated;
+    private volatile Set<FullBlock>                  downloadedBlocks;
+    private volatile Handler<FullBlock>              block;
+    private volatile ContextI                        context;
+    private volatile long                            lastvalidated;
     private volatile ReentrantLock                   lock;
     private volatile boolean                          mlock;
 
     public BlockChain(ContextI context)
     {
         this.context        = context;
-        this.orphanedBlocks = new LinkedHashSet<>();
-        this.downloadedBlocks= new LinkedHashSet<>();
+        this.orphanedBlocks = Collections.synchronizedSet(new LinkedHashSet<>());
+        this.downloadedBlocks= Collections.synchronizedSet(new LinkedHashSet<>());
         this.lock           = new ReentrantLock();
+        this.block          = new Handler<>(null);
     }
 
     @Override
@@ -173,7 +175,7 @@ public class BlockChain implements BlockChainI
 
                             if(next != null)
                             {
-                                if(block.validate(context) != 0)
+                                if(block.getI().validate(context) != 0)
                                 {
                                     node.block();
 
@@ -183,7 +185,7 @@ public class BlockChain implements BlockChainI
                                     break client_iterator;
                                 }
 
-                                this.block = next;
+                                this.block.setI(next);
                                 downloadedBlocks.remove(next);
                             }
                     }
@@ -211,7 +213,7 @@ public class BlockChain implements BlockChainI
 
         if(latestblock < 0) return;
 
-        this.block = BlockHeader.FullBlock(latestblock, context);
+        this.block.setI(BlockHeader.FullBlock(latestblock, context));
 
         Logger.alert("block loaded successfully");
     }
@@ -237,20 +239,20 @@ public class BlockChain implements BlockChainI
     }
 
     @Override
-    public synchronized long currentBlock()
+    public long currentBlock()
     {
         lock.lock();
         try{
             if(block == null) return -1;
 
-            return block.getHeader().getBlockID();
+            return block.getI().getHeader().getBlockID();
         } finally {
             lock.unlock();
         }
     }
 
     @Override
-    public synchronized void queueBlock(FullBlock block)
+    public void queueBlock(FullBlock block)
     {
         lock.unlock();
         try{
@@ -277,9 +279,9 @@ public class BlockChain implements BlockChainI
 
 //        System.out.println(block.toJSON());
 
-        if(block == null)
-            block = new FullBlock(-1, null, context);
-        else block = block.getHeader().continueChain(context);
+        if(block.getI() == null)
+            block.setI(new FullBlock(-1, null, context));
+        else block.setI(block.getI().getHeader().continueChain(context));
 
 //        System.exit(0);
 
@@ -321,10 +323,10 @@ public class BlockChain implements BlockChainI
 
                     /** This function should choose the biggest block in queue at the current level **/
                     /** first block downloaded **/
-                    this.block = blockList.get(0);
+                    this.block.setI(blockList.get(0));
 
-                    this.block.serialize(context);
-                    this.block = this.block.getHeader().continueChain(context);
+                    this.block.getI().serialize(context);
+                    this.block.setI(this.block.getI().getHeader().continueChain(context));
                     lastBlockWas = System.currentTimeMillis();
 
                     blockList.clear();
@@ -338,8 +340,8 @@ public class BlockChain implements BlockChainI
             {
             } else {
                 while (context.getTransactionPool().available()) {
-                    block.add(context.getTransactionPool().next(), context);
-                    if (block.getBody().mine(context))
+                    block.getI().add(context.getTransactionPool().next(), context);
+                    if (block.getI().getBody().mine(context))
                         break;
                 }
 
@@ -353,18 +355,18 @@ public class BlockChain implements BlockChainI
 
                         if(orphaned.getBlockID() == currentBlock() && orphaned.validate(context) == 0)
                         {
-                            this.block.free(context);
+                            this.block.getI().free(context);
 
-                            this.block = orphaned;
-                            this.block.serialize(context);
-                            this.block = this.block.getHeader().continueChain(context);
+                            this.block.setI(orphaned);
+                            this.block.getI().serialize(context);
+                            this.block.setI(this.block.getI().getHeader().continueChain(context));
                         }
                     }
                 }
 
-                if(block.getBody().mine(context))
+                if(block.getI().getBody().mine(context))
                 {
-                    block.mine(context);
+                    block.getI().mine(context);
 
                     boolean continueBlock = true;
 
@@ -374,13 +376,13 @@ public class BlockChain implements BlockChainI
 
                         orphanedBlocks.remove(orphaned);
 
-                        if(orphaned.getBlockID() == currentBlock() && orphaned.validate(context) == 0 && orphaned.getHeader().getTimeStampAsLong() <= block.getHeader().getTimeStampAsLong())
+                        if(orphaned.getBlockID() == currentBlock() && orphaned.validate(context) == 0 && orphaned.getHeader().getTimeStampAsLong() <= block.getI().getHeader().getTimeStampAsLong())
                         {
-                            this.block.free(context);
+                            this.block.getI().free(context);
 
-                            this.block = orphaned;
-                            this.block.serialize(context);
-                            this.block = this.block.getHeader().continueChain(context);
+                            this.block.setI(orphaned);
+                            this.block.getI().serialize(context);
+                            this.block.setI(this.block.getI().getHeader().continueChain(context));
                             continueBlock = false;
                         }
                     }
@@ -389,11 +391,11 @@ public class BlockChain implements BlockChainI
                     {
                         /** Send Solution To Nodes **/
 
-                        context.getNetworkManager().sendBlock(block);
+                        context.getNetworkManager().sendBlock(block.getI());
 
-                        block.serialize(context);
+                        block.getI().serialize(context);
 
-                        block = block.getHeader().continueChain(context);
+                        block.setI(block.getI().getHeader().continueChain(context));
                         lastBlockWas = System.currentTimeMillis();
                     }
                 }
@@ -401,13 +403,13 @@ public class BlockChain implements BlockChainI
         }
     }
 
-    public synchronized void insertBlock(FullBlock block)
+    public void insertBlock(FullBlock block)
     {
         if(currentBlock() + 1 == block.getBlockID())
         {
             if(this.block != null)
-                this.block.serialize(context);
-                this.block = block;
+                this.block.getI().serialize(context);
+                this.block.setI(block);
         }
     }
 }
