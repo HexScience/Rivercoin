@@ -12,6 +12,7 @@
 
 package com.riverssen.core.networking;
 
+import com.riverssen.core.block.BlockDownloadService;
 import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.TransactionI;
@@ -115,7 +116,7 @@ public class Server implements NetworkManager
     }
 
     @Override
-    public void sendBlock(FullBlock block)
+    public void sendBlock(BlockDownloadService block)
     {
         for(Client communicator : communications)
             synchronized (communicator)
@@ -131,7 +132,7 @@ public class Server implements NetworkManager
     }
 
     @Override
-    public void sendBlock(FullBlock block, Client... client) {
+    public void sendBlock(BlockDownloadService block, Client... client) {
         Set<Client> communicators = new LinkedHashSet<>(this.communications);
         for(Client client1 : client)
             communicators.remove(client1);

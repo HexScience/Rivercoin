@@ -23,7 +23,7 @@ import java.io.IOException;
 
 public class BlockMessage extends BasicMessage
 {
-    private FullBlock   block;
+    private BlockDownloadService   block;
     private boolean     requested;
 
     public BlockMessage()
@@ -31,9 +31,9 @@ public class BlockMessage extends BasicMessage
         super(ByteUtil.defaultEncoder().encode58(("block message" + System.currentTimeMillis()).getBytes()));
     }
 
-    public BlockMessage(FullBlock block, boolean requested)
+    public BlockMessage(BlockDownloadService block, boolean requested)
     {
-        super(block.encode58(ByteUtil.defaultEncoder()));
+        super(ByteUtil.defaultEncoder().encode58(block.getData()));
         this.block = block;
         this.requested = requested;
     }
@@ -44,7 +44,7 @@ public class BlockMessage extends BasicMessage
         connection.getOutputStream().writeInt(OP_BLK);
         connection.getOutputStream().writeUTF(getHashCode());
         connection.getOutputStream().writeBoolean(requested);
-        block.export(connection.getOutputStream());
+        connection.getOutputStream().write(block.getData());
     }
 
     @Override
