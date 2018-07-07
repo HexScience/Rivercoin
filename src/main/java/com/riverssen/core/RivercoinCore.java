@@ -76,10 +76,6 @@ public class RivercoinCore
                 break;
         }
 
-        System.out.println(BlockHeader.FullBlock(1, context).getBody().getMerkleTree().flatten());
-
-        System.exit(0);
-
 //        BufferedMiner miner = new BufferedMiner(context);
 
 //        RiverHash     hash  = new RiverHash();
