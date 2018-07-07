@@ -240,6 +240,7 @@ public class BlockChain implements Runnable
 //        } finally {
 //            lock.unlock();
 //        }
+        if(block.get() == null) return -1;
         return block.get().getBlockID();
     }
 
