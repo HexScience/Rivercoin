@@ -12,7 +12,7 @@
 
 package com.riverssen.core.networking.messages;
 
-import com.riverssen.core.block.BlockDownload;
+import com.riverssen.core.block.BlockDownloadService;
 import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.networking.Client;
@@ -20,7 +20,6 @@ import com.riverssen.core.networking.SocketConnection;
 import com.riverssen.core.utils.ByteUtil;
 
 import java.io.IOException;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class BlockMessage extends BasicMessage
 {
@@ -56,7 +55,7 @@ public class BlockMessage extends BasicMessage
             hashCode = connection.getInputStream().readUTF();
             boolean requested = connection.getInputStream().readBoolean();
 
-            BlockDownload block = new BlockDownload(connection.getInputStream());
+            BlockDownloadService block = new BlockDownloadService(connection.getInputStream());
 
             if(requested)
                 context.getBlockChain().download(block);

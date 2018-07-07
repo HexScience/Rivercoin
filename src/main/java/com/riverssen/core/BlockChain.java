@@ -12,10 +12,9 @@
 
 package com.riverssen.core;
 
-import com.riverssen.core.block.BlockDownload;
+import com.riverssen.core.block.BlockDownloadService;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.block.FullBlock;
-import com.riverssen.core.headers.BlockChainI;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.networking.Client;
 import com.riverssen.core.networking.messages.RequestBlockMessage;
@@ -32,9 +31,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class BlockChain
 {
-    private volatile Set<BlockDownload>                  orphanedBlocks;
+    private volatile Set<BlockDownloadService>                  orphanedBlocks;
 //    private Map<Client, Set<FullBlock>>     downloadedBlocks;
-    private volatile Set<BlockDownload>              downloadedBlocks;
+    private volatile Set<BlockDownloadService>              downloadedBlocks;
     private volatile Handler<FullBlock>              block;
     private volatile ContextI                        context;
     private volatile long                            lastvalidated;
@@ -79,7 +78,7 @@ public class BlockChain
         }
     }
 
-    public synchronized void download(BlockDownload block)
+    public synchronized void download(BlockDownloadService block)
     {
         lock.lock();
         try{
@@ -161,7 +160,7 @@ public class BlockChain
                     {
                         FullBlock next  = null;
 
-                        for(BlockDownload fullBlock : downloadedBlocks)
+                        for(BlockDownloadService fullBlock : downloadedBlocks)
                             if(fullBlock.getBlockID() == (currentBlock() + 1))
                             {
                                 next = new FullBlock(fullBlock.decompressedInputStream(), context);
@@ -244,7 +243,7 @@ public class BlockChain
         return block.get().getBlockID();
     }
 
-    public void queueBlock(BlockDownload block)
+    public void queueBlock(BlockDownloadService block)
     {
         lock.unlock();
         try{
@@ -278,8 +277,8 @@ public class BlockChain
 
         Logger.alert("finished processes.");
 
-        Set<BlockDownload> delete = new LinkedHashSet<>();
-        List<BlockDownload> blockList = new ArrayList<>();
+        Set<BlockDownloadService> delete = new LinkedHashSet<>();
+        List<BlockDownloadService> blockList = new ArrayList<>();
 
         long lastBlockWas = 1L;
 
@@ -287,7 +286,7 @@ public class BlockChain
         {
             current.set(block.get().getBlockID());
 
-            for (BlockDownload block : orphanedBlocks)
+            for (BlockDownloadService block : orphanedBlocks)
                 if(block.getBlockID() < currentBlock() - 1)
                     delete.add(block);
 
@@ -301,7 +300,7 @@ public class BlockChain
                 {
                     long current = currentBlock() - 1;
 
-                    for(BlockDownload block : orphanedBlocks)
+                    for(BlockDownloadService block : orphanedBlocks)
                         if(block.getBlockID() == current)
                             blockList.add(block);
 
@@ -316,7 +315,7 @@ public class BlockChain
 //                        return -1;
 //                    });
 
-                    for(BlockDownload download : blockList)
+                    for(BlockDownloadService download : blockList)
                     {
                         FullBlock block = new FullBlock(download.decompressedInputStream(), context);
                         if(block.validate(context) == 0)
@@ -351,7 +350,7 @@ public class BlockChain
                 {
                     while (orphanedBlocks.size() > 0)
                     {
-                        BlockDownload orphan = orphanedBlocks.iterator().next();
+                        BlockDownloadService orphan = orphanedBlocks.iterator().next();
                         FullBlock orphaned = new FullBlock(orphan.decompressedInputStream(), context);
 
                         orphanedBlocks.remove(orphan);
@@ -375,7 +374,7 @@ public class BlockChain
 
                     while (orphanedBlocks.size() > 0)
                     {
-                        BlockDownload orphan = orphanedBlocks.iterator().next();
+                        BlockDownloadService orphan = orphanedBlocks.iterator().next();
                         FullBlock orphaned = new FullBlock(orphan.decompressedInputStream(), context);
 
                         orphanedBlocks.remove(orphan);
@@ -395,7 +394,7 @@ public class BlockChain
                     {
                         /** Send Solution To Nodes **/
 
-                        context.getNetworkManager().sendBlock(BlockDownload.prepare(block.get()));
+                        context.getNetworkManager().sendBlock(BlockDownloadService.prepare(block.get()));
 
                         block.get().serialize(context);
 
