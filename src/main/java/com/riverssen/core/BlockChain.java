@@ -12,6 +12,7 @@
 
 package com.riverssen.core;
 
+import com.riverssen.core.block.BlockDownload;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.headers.BlockChainI;
@@ -29,12 +30,12 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class BlockChain implements BlockChainI
+public class BlockChain
 {
-    private volatile Set<FullBlock>                  orphanedBlocks;
+    private volatile Set<BlockDownload>                  orphanedBlocks;
 //    private Map<Client, Set<FullBlock>>     downloadedBlocks;
-    private volatile Set<FullBlock>                  downloadedBlocks;
-    private volatile Handler<FullBlock>                 block;
+    private volatile Set<BlockDownload>              downloadedBlocks;
+    private volatile Handler<FullBlock>              block;
     private volatile ContextI                        context;
     private volatile long                            lastvalidated;
     private volatile ReentrantLock                   lock;
@@ -51,22 +52,18 @@ public class BlockChain implements BlockChainI
         this.current        = new AtomicLong(0);
     }
 
-    @Override
     public synchronized void FetchTransactions()
     {
     }
 
-    @Override
     public synchronized void ValidateTransactions()
     {
     }
 
-    @Override
     public synchronized void RemoveDoubleSpends()
     {
     }
 
-    @Override
     public synchronized void LoadBlockChain()
     {
     }
@@ -82,7 +79,7 @@ public class BlockChain implements BlockChainI
         }
     }
 
-    public synchronized void download(FullBlock block)
+    public synchronized void download(BlockDownload block)
     {
         lock.lock();
         try{
@@ -92,7 +89,6 @@ public class BlockChain implements BlockChainI
         }
     }
 
-    @Override
     public synchronized void FetchBlockChainFromPeers()
     {
         Logger.alert("attempting to download block(s) from peers");
@@ -165,10 +161,10 @@ public class BlockChain implements BlockChainI
                     {
                         FullBlock next  = null;
 
-                        for(FullBlock fullBlock : downloadedBlocks)
+                        for(BlockDownload fullBlock : downloadedBlocks)
                             if(fullBlock.getBlockID() == (currentBlock() + 1))
                             {
-                                next = fullBlock;
+                                next = new FullBlock(fullBlock.decompressedInputStream(), context);
                                 break;
                             }
 
@@ -194,7 +190,6 @@ public class BlockChain implements BlockChainI
             }
     }
 
-    @Override
     public synchronized void FetchBlockChainFromDisk()
     {
         Logger.alert("attempting to load the blockchain from disk");
@@ -217,7 +212,6 @@ public class BlockChain implements BlockChainI
         Logger.alert("block loaded successfully");
     }
 
-    @Override
     public synchronized void Validate()
     {
         /** check (25 minutes) time passed since last validation **/
@@ -237,7 +231,6 @@ public class BlockChain implements BlockChainI
 //            FetchBlockChainFromPeers();
     }
 
-    @Override
     public long currentBlock()
     {
 //        lock.lock();
@@ -251,8 +244,7 @@ public class BlockChain implements BlockChainI
         return block.get().getBlockID();
     }
 
-    @Override
-    public void queueBlock(FullBlock block)
+    public void queueBlock(BlockDownload block)
     {
         lock.unlock();
         try{
@@ -262,7 +254,6 @@ public class BlockChain implements BlockChainI
         }
     }
 
-    @Override
     public void run()
     {
 //        Wallet wallet = new Wallet("test", "test");
@@ -287,8 +278,8 @@ public class BlockChain implements BlockChainI
 
         Logger.alert("finished processes.");
 
-        Set<FullBlock> delete = new LinkedHashSet<>();
-        List<FullBlock> blockList = new ArrayList<>();
+        Set<BlockDownload> delete = new LinkedHashSet<>();
+        List<BlockDownload> blockList = new ArrayList<>();
 
         long lastBlockWas = 1L;
 
@@ -296,7 +287,7 @@ public class BlockChain implements BlockChainI
         {
             current.set(block.get().getBlockID());
 
-            for (FullBlock block : orphanedBlocks)
+            for (BlockDownload block : orphanedBlocks)
                 if(block.getBlockID() < currentBlock() - 1)
                     delete.add(block);
 
@@ -306,15 +297,17 @@ public class BlockChain implements BlockChainI
 
             if(System.currentTimeMillis() - lastBlockWas >= context.getConfig().getAverageBlockTime())
             {
-                while (orphanedBlocks.size() > 0)
+                orphancheck : while (orphanedBlocks.size() > 0)
                 {
                     long current = currentBlock() - 1;
 
-                    for(FullBlock block : orphanedBlocks)
+                    for(BlockDownload block : orphanedBlocks)
                         if(block.getBlockID() == current)
                             blockList.add(block);
 
                     orphanedBlocks.removeAll(blockList);
+
+                    if(blockList.size() == 0) break orphancheck;
 
 //                    blockList.sort((a, b)->{
 //                        if          (a.getBlockID() == b.getBlockID()) return 0;
@@ -323,15 +316,22 @@ public class BlockChain implements BlockChainI
 //                        return -1;
 //                    });
 
-                    /** This function should choose the biggest block in queue at the current level **/
-                    /** first block downloaded **/
-                    this.block.set(blockList.get(0));
+                    for(BlockDownload download : blockList)
+                    {
+                        FullBlock block = new FullBlock(download.decompressedInputStream(), context);
+                        if(block.validate(context) == 0)
+                        {
+                            /** This function should choose the biggest block in queue at the current level **/
+                            /** first block downloaded **/
+                            this.block.set(block);
 
-                    this.block.get().serialize(context);
-                    this.block.set(this.block.get().getHeader().continueChain(context));
-                    lastBlockWas = System.currentTimeMillis();
+                            this.block.get().serialize(context);
+                            this.block.set(this.block.get().getHeader().continueChain(context));
+                            lastBlockWas = System.currentTimeMillis();
 
-                    blockList.clear();
+                            break orphancheck;
+                        }
+                    }
                 }
             }
 
@@ -351,9 +351,10 @@ public class BlockChain implements BlockChainI
                 {
                     while (orphanedBlocks.size() > 0)
                     {
-                        FullBlock orphaned = orphanedBlocks.iterator().next();
+                        BlockDownload orphan = orphanedBlocks.iterator().next();
+                        FullBlock orphaned = new FullBlock(orphan.decompressedInputStream(), context);
 
-                        orphanedBlocks.remove(orphaned);
+                        orphanedBlocks.remove(orphan);
 
                         if(orphaned.getBlockID() == currentBlock() && orphaned.validate(context) == 0)
                         {
@@ -374,9 +375,10 @@ public class BlockChain implements BlockChainI
 
                     while (orphanedBlocks.size() > 0)
                     {
-                        FullBlock orphaned = orphanedBlocks.iterator().next();
+                        BlockDownload orphan = orphanedBlocks.iterator().next();
+                        FullBlock orphaned = new FullBlock(orphan.decompressedInputStream(), context);
 
-                        orphanedBlocks.remove(orphaned);
+                        orphanedBlocks.remove(orphan);
 
                         if(orphaned.getBlockID() == currentBlock() && orphaned.validate(context) == 0 && orphaned.getHeader().getTimeStampAsLong() <= block.get().getHeader().getTimeStampAsLong())
                         {
