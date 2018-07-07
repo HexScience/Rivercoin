@@ -219,7 +219,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     @Override
     public byte[] getBytes()
     {
-        return ByteUtil.concatenate(this.parent != null ? this.parent.getHash() : new byte[32], body.getBytes());
+        return body.getBytes();
     }
 
     public BlockData getBody()
@@ -230,17 +230,18 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     private ByteBuffer getBodyAsByteBuffer()
     {
         byte bodydata[] = getBytes();
-        ByteBuffer data = ByteBuffer.allocate(bodydata.length + 8);
+//        8 + 32 + 32 + 8 + PublicAddress.SIZE + RiverCoin.SIZE + 8 +
+        ByteBuffer data = ByteBuffer.allocate(24 + 64 + PublicAddress.SIZE + RiverCoin.SIZE + 8);
 
-//        data.putLong(header.getVersion());
-//        data.put(header.getParentHash());
-//        data.put(header.getMerkleRoot());
-//        data.putLong(header.getTimeStamp());
-//        data.put(header.getMinerAddress());
-//        data.put(header.getReward());
-//        data.putLong(header.getBlockID());
+        data.putLong(header.getVersion());
+        data.put(header.getParentHash());
+        data.put(header.getMerkleRoot());
+        data.putLong(header.getTimeStamp());
+        data.put(header.getMinerAddress());
+        data.put(header.getReward());
+        data.putLong(header.getBlockID());
 //        data.put(header.getrvcRoot());
-        data.put(bodydata);
+//        data.put(bodydata);
         data.putLong(0);
         data.flip();
         return data;
