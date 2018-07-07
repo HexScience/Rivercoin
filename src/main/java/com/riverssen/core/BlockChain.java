@@ -29,7 +29,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class BlockChain
+public class BlockChain implements Runnable
 {
     private volatile Set<BlockDownloadService>                  orphanedBlocks;
 //    private Map<Client, Set<FullBlock>>     downloadedBlocks;
