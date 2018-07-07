@@ -16,19 +16,19 @@ import java.io.*;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
-public class BlockDownload implements Comparable<BlockDownload>
+public class BlockDownloadService implements Comparable<BlockDownloadService>
 {
     private volatile long blockID;
     private volatile byte data[];
 
-    public BlockDownload(DataInputStream stream) throws IOException {
+    public BlockDownloadService(DataInputStream stream) throws IOException {
         this.blockID    = stream.readLong();
         int size        = stream.readInt();
         this.data       = new byte[size];
         stream.read(data);
     }
 
-    private BlockDownload(FullBlock block) throws IOException {
+    private BlockDownloadService(FullBlock block) throws IOException {
         ByteArrayOutputStream stream1   = new ByteArrayOutputStream();
         DataOutputStream      stream    = new DataOutputStream(stream1);
 
@@ -57,7 +57,7 @@ public class BlockDownload implements Comparable<BlockDownload>
         return stream.toByteArray();
     }
 
-    public static BlockDownload prepare(FullBlock block) {
+    public static BlockDownloadService prepare(FullBlock block) {
         return null;
     }
 
@@ -75,7 +75,7 @@ public class BlockDownload implements Comparable<BlockDownload>
     }
 
     @Override
-    public int compareTo(BlockDownload o) {
+    public int compareTo(BlockDownloadService o) {
         if(getBlockID() > o.getBlockID()) return 1;
         else if(getBlockID() == o.getBlockID()) return 0;
         return -1;
