@@ -231,7 +231,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
     {
         byte bodydata[] = getBytes();
 //        8 + 32 + 32 + 8 + PublicAddress.SIZE + RiverCoin.SIZE + 8 +
-        ByteBuffer data = ByteBuffer.allocate(32 + 32 + 8 + 8 + PublicAddress.SIZE + RiverCoin.SIZE + 8);
+        ByteBuffer data = ByteBuffer.allocate(32 + 32 + 8 + 8 + PublicAddress.SIZE + RiverCoin.SIZE + bodydata.length + 8);
 
 //        data.putLong(header.getVersion());
         data.put(header.getParentHash());
@@ -241,7 +241,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         data.put(header.getReward());
         data.putLong(header.getBlockID());
 //        data.put(header.getrvcRoot());
-//        data.put(bodydata);
+        data.put(bodydata);
         data.putLong(0);
         data.flip();
         return data;
