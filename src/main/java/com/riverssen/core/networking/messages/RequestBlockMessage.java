@@ -12,6 +12,7 @@
 
 package com.riverssen.core.networking.messages;
 
+import com.riverssen.core.block.BlockDownloadService;
 import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.block.BlockHeader;
 import com.riverssen.core.headers.ContextI;
@@ -52,7 +53,7 @@ public class RequestBlockMessage extends BasicMessage
         try{
             FullBlock block = BlockHeader.FullBlock(connection.getInputStream().readLong(), context);
             client.sendMessage(new SuccessMessage(hashCode));
-            client.sendMessage(new BlockMessage(block, true));
+            client.sendMessage(new BlockMessage(new BlockDownloadService(block), true));
         } catch (Exception e)
         {
             client.sendMessage(new FailedMessage(hashCode));

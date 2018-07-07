@@ -28,7 +28,7 @@ public class BlockDownloadService implements Comparable<BlockDownloadService>
         stream.read(data);
     }
 
-    private BlockDownloadService(FullBlock block) throws IOException {
+    public BlockDownloadService(FullBlock block) throws IOException {
         ByteArrayOutputStream stream1   = new ByteArrayOutputStream();
         DataOutputStream      stream    = new DataOutputStream(stream1);
 
