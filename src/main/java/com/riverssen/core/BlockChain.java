@@ -256,12 +256,12 @@ public class BlockChain implements Runnable
 
     public void queueBlock(BlockDownloadService block)
     {
-        lock.unlock();
-        try{
+//        lock.unlock();
+//        try{
             orphanedBlocks.add(block);
-        } finally {
-            lock.unlock();
-        }
+//        } finally {
+//            lock.unlock();
+//        }
     }
 
     public void run()

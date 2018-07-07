@@ -180,7 +180,6 @@ public class BlockData implements Encodeable, Exportable
                 add(transaction, map, context);
 
             merkleTree.buildTree();
-            System.out.println(merkleTree.flatten());
         }
     }
 }
