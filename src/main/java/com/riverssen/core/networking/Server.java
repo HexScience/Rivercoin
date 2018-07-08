@@ -168,7 +168,7 @@ public class Server implements NetworkManager
             }
         } catch (Exception e)
         {
-            Logger.err("failed to connect.");
+            Logger.err("failed to connect to '" + ip + "'.");
             Logger.err(e.getMessage());
         }
     }
