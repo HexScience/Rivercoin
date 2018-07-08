@@ -183,7 +183,7 @@ public class Server implements NetworkManager
         Document doc = connection.get();
         String text = doc.body().text();
 
-        String ips[] = text.split("\n");
+        String ips[] = text.split(" ");
 
         for(String string : ips)
             ipAddresses.add(string);
