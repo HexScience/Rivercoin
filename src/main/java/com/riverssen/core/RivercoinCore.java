@@ -23,6 +23,7 @@ import java.security.Security;
 
 public class RivercoinCore
 {
+    /** main method takes two arguments String(type[CLIENT/MINER)) String(PathToConfigDirectory) **/
     public static void main(String args[]) throws Exception
     {
         /**

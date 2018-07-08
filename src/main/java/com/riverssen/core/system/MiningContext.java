@@ -71,6 +71,7 @@ public class MiningContext implements ContextI
 
         try
         {
+            /** attempt to establish connections **/
             this.getNetworkManager().establishConnection();
         } catch (Exception e)
         {

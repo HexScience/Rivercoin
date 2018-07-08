@@ -203,7 +203,7 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
 
 //        while (new BigInteger(hash).compareTo(difficulty) >= 0) { data.putLong(data.capacity() - 8, ++nonce); this.hash = algorithm.encode(data.array()); }
 
-        Riv3rH4sh mining_algorithm = new Riv3rH4sh(context);
+        Riv3rH4sh mining_algorithm = new Riv3rH4sh(getBlockID(), context);
 
         Tuple<byte[], Long> mine = mining_algorithm.mine(data.array(), difficulty, context);
 
