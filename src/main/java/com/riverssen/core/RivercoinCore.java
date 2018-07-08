@@ -76,6 +76,12 @@ public class RivercoinCore
                 break;
         }
 
+        BufferedMiner miner = new BufferedMiner(context);
+
+        System.out.println(HashUtil.hashToStringBase16(miner.verify_v3("hello world my name jeff 1 ds sd fsd f ds f dsf ds f ds f dsf ds f sd".getBytes(), 120)));
+
+        System.exit(0);
+
 //        BufferedMiner miner = new BufferedMiner(context);
 
 //        RiverHash     hash  = new RiverHash();

@@ -15,18 +15,23 @@ package com.riverssen.core.miningalgorithm;
 import com.riverssen.core.algorithms.*;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
+import com.riverssen.core.mpp.objects.RSA;
 import com.riverssen.core.security.AdvancedEncryptionStandard;
 import com.riverssen.core.system.FileSpec;
+import com.riverssen.core.utils.Base58;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.HashUtil;
 import com.riverssen.core.utils.Tuple;
 
+import javax.crypto.Cipher;
 import java.io.*;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 
 public class BufferedMiner
 {
     private static final HashAlgorithm   hash = new RiverHash();
+    private static final HashAlgorithm   skein= new Skein_1024_1024();
     private final long                   buffer;
     private volatile long                nonce;
     private volatile byte[]              hash_;
@@ -70,10 +75,10 @@ public class BufferedMiner
     {
         nonce ++;
 
-        verify(input, nonce, context);
+        verify_v3(input, nonce);
     }
 
-    public byte[] verify(byte input[], long nonce, ContextI context) throws Exception
+    private byte[] verify(byte input[], long nonce, ContextI context) throws Exception
     {
         int nonce_ = 0;
 
@@ -134,43 +139,131 @@ public class BufferedMiner
         return data;
     }
 
+    public byte[] verify_v3(byte input[], long nonce) throws Exception
+    {
+        byte encoded[] = generate_random(input, nonce);
+        byte aes_key[] = custom_hash(encoded);
+
+        hash_ = AdvancedEncryptionStandard.encrypt(aes_key, ByteUtil.xor(input, encoded));
+
+        while (encoded.length < buffer)
+        {
+            byte olde[] = encoded;
+            long seed = ByteUtil.decode(ByteUtil.xor(ByteUtil.xor(aes_key, ByteUtil.xor(input, encoded)), custom_hash(hash_)));
+
+            encoded = ByteUtil.concatenate(generate_random(encoded, seed), encoded);
+            aes_key = custom_hash(encoded);
+
+            hash_   = AdvancedEncryptionStandard.encrypt(aes_key, ByteUtil.xor(olde, encoded));
+        }
+
+        ByteBuffer _32i_ = ByteBuffer.wrap(skein.encode(hash_));
+        ByteBuffer _enc_ = ByteBuffer.wrap(AdvancedEncryptionStandard.encrypt(custom_hash(_32i_.array()), ByteUtil.concatenate(encoded, hash_, aes_key)));
+        byte[][]   _blk_ = new byte[256][2048];
+        int        _inx_ = 0;
+
+        while (_32i_.remaining() > 0)
+        {
+            int i = Math.abs(_32i_.getInt())/(_enc_.capacity() - 2048);
+            int j = _inx_ ++;
+
+            _enc_.position(i);
+
+            _enc_.get(_blk_[j]);
+        }
+
+        int max = 256;
+
+        while (max > 1)
+        {
+            _blk_[max - 2] = ByteUtil.xor(_blk_[max - 2], _blk_[max - 1]);
+            max -= 1;
+        }
+
+        ByteBuffer _fnl_ = ByteBuffer.wrap(_blk_[0]);
+        byte[][]   _bck_ = new byte[64][32];
+
+        _inx_            = 0;
+
+
+        while (_fnl_.remaining() > 0)
+            _fnl_.get(_bck_[_inx_ ++]);
+
+        max = 64;
+
+        while (max > 1)
+        {
+            _bck_[max - 2] = custom_hash(ByteUtil.xor(_bck_[max - 2], _bck_[max - 1]));
+            max -= 1;
+        }
+
+        return _bck_[0];
+    }
+
+    public byte[] verify_v2(byte input[], long nonce, ContextI context) throws Exception
+    {
+        byte input_hash[] = custom_hash(ByteUtil.concatenate(input, custom_hash(ByteUtil.encode(nonce))));
+        AdvancedEncryptionStandard aes = new AdvancedEncryptionStandard(input_hash);
+
+        byte encrypted_input[] = aes.encrypt(input);
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byteArrayOutputStream.write(input);
+        byteArrayOutputStream.write(encrypted_input);
+
+        while (byteArrayOutputStream.size() < buffer) {
+            input_hash = custom_hash(byteArrayOutputStream.toByteArray());
+            byteArrayOutputStream.write(input_hash);
+            encrypted_input = aes.encrypt(input_hash, byteArrayOutputStream.toByteArray());
+
+            byteArrayOutputStream.write(encrypted_input);
+        }
+
+        byteArrayOutputStream.flush();
+        byteArrayOutputStream.close();
+
+        hash_ = custom_hash(byteArrayOutputStream.toByteArray());
+
+//        byte random[]       = generate_random(input, nonce);
 //
-//    int nonce_ = 0;
-//    nonce ++;
+//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 //
-//    byte input_hash[]               = custom_hash(ByteUtil.concatenate(input, custom_hash(ByteUtil.encode(nonce))));
-//    AdvancedEncryptionStandard aes  = new AdvancedEncryptionStandard(input_hash);
-//
-//    byte encrypted_input[]          = aes.encrypt(input);
-//
-//    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//        byteArrayOutputStream.write(ByteUtil.encode(nonce));
 //        byteArrayOutputStream.write(input);
-//        byteArrayOutputStream.write(encrypted_input);
+//        byteArrayOutputStream.write(random);
 //
-//        while(byteArrayOutputStream.size() < buffer)
-//    {
-////            input = ByteUtil.concatenate(
-//////                    getInput(new BigInteger(custom_hash(ByteUtil.concatenate(input_hash, custom_hash(ByteUtil.encode(nonce_ ++ * nonce))))).mod(new BigInteger(Math.max(1, context.getBlockChain().currentBlock()) + "")).longValue(), context),
-////                    byteArrayOutputStream.toByteArray(),
-////                    encrypted_input,
-////                    input_hash);
+//        while (byteArrayOutputStream.size() < buffer)
+//        {
+//            long new_seed   = new BigInteger(custom_hash(byteArrayOutputStream.toByteArray())).divide(BigInteger.valueOf(Long.MAX_VALUE)).longValue();
 //
-//        input_hash                        = custom_hash(byteArrayOutputStream.toByteArray());
-//        byteArrayOutputStream.write(input_hash);
-//        byteArrayOutputStream.write(custom_hash(byteArrayOutputStream.toByteArray()));
-////                    ByteUtil.concatenate(input_hash,
-////                            input,
-////                            custom_hash(ByteUtil.encode(nonce))));
+//            random          = generate_random(input, new_seed);
+//            byteArrayOutputStream.write(random);
 //
-//        encrypted_input                   = aes.encrypt(input_hash, byteArrayOutputStream.toByteArray());
+//            byte data[]     = byteArrayOutputStream.toByteArray();
 //
-//        byteArrayOutputStream.write(encrypted_input);
-//    }
+//            byteArrayOutputStream.reset();
+//
+//            byteArrayOutputStream.write(AdvancedEncryptionStandard.encrypt(custom_hash(data), data));
+//            System.out.println(byteArrayOutputStream.size());
+//        }
 //
 //        byteArrayOutputStream.flush();
 //        byteArrayOutputStream.close();
 //
-//    hash_ = custom_hash(byteArrayOutputStream.toByteArray());
+//        hash_ = custom_hash(byteArrayOutputStream.toByteArray());
+
+        return hash_;
+    }
+
+    private byte[] generate_random(byte input[], long seed) throws Exception
+    {
+        byte input_hash[] = custom_hash(input);
+        byte iseed_hash[] = custom_hash(ByteUtil.concatenate(ByteUtil.encode(seed), input_hash, input));
+
+        byte aesky_pblk[] = ByteUtil.xor(input_hash, iseed_hash);
+
+        return AdvancedEncryptionStandard.encrypt(custom_hash(aesky_pblk), input);
+    }
 
     private byte[] getInput(long l, ContextI context) throws IOException
     {
