@@ -19,7 +19,7 @@ public class AdvancedEncryptionStandard
 {
     private byte[] key;
 
-    private static final String ALGORITHM = "AES";
+    private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
 
     public AdvancedEncryptionStandard(byte[] key)
     {

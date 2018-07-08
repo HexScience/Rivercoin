@@ -12,7 +12,7 @@
 
 package com.riverssen.core.block;
 
-import com.riverssen.core.miningalgorithm.BufferedMiner;
+import com.riverssen.core.miningalgorithm.Riv3rH4sh;
 import com.riverssen.core.system.Logger;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.*;
@@ -20,7 +20,6 @@ import com.riverssen.core.security.PublicAddress;
 import com.riverssen.core.system.Config;
 import com.riverssen.core.system.LatestBlockInfo;
 import com.riverssen.core.transactions.RewardTransaction;
-import com.riverssen.core.transactions.TransactionOutput;
 import com.riverssen.core.utils.*;
 import com.riverssen.riverssen.RiverFlowMap;
 
@@ -204,11 +203,11 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
 
 //        while (new BigInteger(hash).compareTo(difficulty) >= 0) { data.putLong(data.capacity() - 8, ++nonce); this.hash = algorithm.encode(data.array()); }
 
-        BufferedMiner mining_algorithm = new BufferedMiner(context);
+        Riv3rH4sh mining_algorithm = new Riv3rH4sh(context);
 
         Tuple<byte[], Long> mine = mining_algorithm.mine(data.array(), difficulty, context);
 
-//        BufferedMiner miner1 = new BufferedMiner(context);
+//        Riv3rH4sh miner1 = new Riv3rH4sh(context);
 //
 //        System.out.println(ByteUtil.equals(miner1.verify(data.array(), mine.getJ(), context), mine.getI()));
 

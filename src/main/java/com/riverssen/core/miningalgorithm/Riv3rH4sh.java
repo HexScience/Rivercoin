@@ -28,7 +28,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
-public class BufferedMiner
+public class Riv3rH4sh
 {
     private static final HashAlgorithm   hash = new RiverHash();
     private static final HashAlgorithm   skein= new Skein_1024_1024();
@@ -36,11 +36,11 @@ public class BufferedMiner
     private volatile long                nonce;
     private volatile byte[]              hash_;
 
-    public BufferedMiner(ContextI context)
+    public Riv3rH4sh(long blockID, ContextI context)
     {
         long bph = (60_000L * 60L) / context.getConfig().getAverageBlockTime();
 
-        int mod = Math.max(1, (int)(context.getBlockChain().currentBlock() / (182.5 * 24 * bph)));
+        int mod = Math.max(1, (int)(blockID / (182.5 * 24 * bph)));
 
         //0.5 Gb buffer / 262800 blocks. (every half a year an incease of 0.5Gb) memory is needed.
         buffer = 524_288 * mod;
@@ -118,8 +118,6 @@ public class BufferedMiner
 
         inputStream.close();
 
-
-//        hash_ = custom_hash(byteArrayOutputStream.toByteArray());
         String hash = HashUtil.hashToStringBase16(hash_);
 
         while (hash.length() < 64) hash = '0' + hash;
@@ -141,11 +139,15 @@ public class BufferedMiner
 
     public byte[] verify_v3(byte input[], long nonce) throws Exception
     {
+        /** generate an encoded version of input, using nonce as a seed for the AES key **/
         byte encoded[] = generate_random(input, nonce);
+        /** generate a 32byte hash key from the encoded bytes **/
         byte aes_key[] = custom_hash(encoded);
 
+        /** set the hash to the encoded version of input xor encoded using the previous aes key **/
         hash_ = AdvancedEncryptionStandard.encrypt(aes_key, ByteUtil.xor(input, encoded));
 
+        /** keep repeating the operations sequentially until the buffer limit is reached **/
         while (encoded.length < buffer)
         {
             byte olde[] = encoded;
@@ -157,11 +159,15 @@ public class BufferedMiner
             hash_   = AdvancedEncryptionStandard.encrypt(aes_key, ByteUtil.xor(olde, encoded));
         }
 
+        /** encode the hash using skein-1024-1024 giving us 32 integers **/
         ByteBuffer _32i_ = ByteBuffer.wrap(skein.encode(hash_));
+        /** encode the data one last time into a bytebuffer **/
         ByteBuffer _enc_ = ByteBuffer.wrap(AdvancedEncryptionStandard.encrypt(custom_hash(_32i_.array()), ByteUtil.concatenate(encoded, hash_, aes_key)));
-        byte[][]   _blk_ = new byte[256][2048];
+        /** create 32 2048 byte blocks **/
+        byte[][]   _blk_ = new byte[32][2048];
         int        _inx_ = 0;
 
+        /** loop 32i until all the random integers are used to fill the _blk_ from _enc_ **/
         while (_32i_.remaining() > 0)
         {
             int i = Math.abs(_32i_.getInt())/(_enc_.capacity() - 2048);
@@ -172,7 +178,9 @@ public class BufferedMiner
             _enc_.get(_blk_[j]);
         }
 
-        int max = 256;
+        int max = 32;
+
+        /** stack operation push pop xor pop **/
 
         while (max > 1)
         {
@@ -180,24 +188,30 @@ public class BufferedMiner
             max -= 1;
         }
 
+        /** put the last xor value in a buffer **/
         ByteBuffer _fnl_ = ByteBuffer.wrap(_blk_[0]);
         byte[][]   _bck_ = new byte[64][32];
 
         _inx_            = 0;
 
 
+        /** unwrap the 2048 bits into 64 32 byte integers **/
         while (_fnl_.remaining() > 0)
             _fnl_.get(_bck_[_inx_ ++]);
 
         max = 64;
 
+        /** xor stack operation hashed **/
         while (max > 1)
         {
             _bck_[max - 2] = custom_hash(ByteUtil.xor(_bck_[max - 2], _bck_[max - 1]));
             max -= 1;
         }
 
-        return _bck_[0];
+        /** return 256bit hash result **/
+        hash_ = _bck_[0];
+
+        return hash_;
     }
 
     public byte[] verify_v2(byte input[], long nonce, ContextI context) throws Exception
@@ -286,9 +300,23 @@ public class BufferedMiner
     {
         mine(input, context);
 
+        /** check resulting UNSIGNED hash is less than difficulty **/
         while (new BigInteger(hash_).abs().compareTo(difficulty) >= 0)
             mine(input, context);
 
+        /** unsign the hash as a final operation **/
+        hash_ = new BigInteger(hash_).abs().toByteArray();
+
+        String hash = HashUtil.hashToStringBase16(hash_);
+
+        /** add leading zeros (BigInteger removes them) **/
+        while (hash.length() < 64)
+            hash = '0' + hash;
+
+        /** convert it back to a byte array **/
+        hash_ = hexStringToByteArray(hash);
+
+        /** return it in a pointer **/
         return new Tuple<>(hash_, nonce);
     }
 }
