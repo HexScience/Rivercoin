@@ -329,7 +329,7 @@ public class Client implements Runnable {
     public String toString() {
         threadlock.lock();
         try {
-            return "client{ip: " + connection.getIP() + " relay: " + relay + " chain: " + chainSize + "}";
+            return "client{ip: " + connection.toString() + " relay: " + relay + " chain: " + chainSize + "}";
         } finally {
             threadlock.unlock();
         }

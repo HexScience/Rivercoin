@@ -120,7 +120,7 @@ public class BlockChain implements Runnable
 
         client_iterator :
             for(Client node : nodes) {
-                Logger.alert("attempting: " + node);
+                Logger.alert("attempting: " + node.toString());
 
                 if(node.isBlocked()) continue;
                 String lock = ByteUtil.defaultEncoder().encode58((System.currentTimeMillis() + " BlockChainLock: " + node).getBytes());

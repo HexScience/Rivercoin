@@ -87,6 +87,6 @@ public class SocketConnection
     @Override
     public String toString()
     {
-        return ip + port;
+        return ip + ":" + port;
     }
 }
