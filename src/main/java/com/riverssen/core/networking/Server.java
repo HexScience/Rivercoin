@@ -21,6 +21,7 @@ import com.riverssen.core.system.Logger;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import sun.rmi.runtime.Log;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -52,7 +53,6 @@ public class Server implements NetworkManager
         addSeedIPs();
         createListener();
         ipAddresses.add("77.22.250.86");
-//        ipAddresses.add("192.168.178.41");
 
         if(ipAddresses.size() == 0)
             throw new Exception("no seed ip address found.");
@@ -159,6 +159,7 @@ public class Server implements NetworkManager
             SocketConnection connection = new SocketConnection(ip, context.getConfig().getPort());
             if(connection.isConnected())
             {
+                Logger.alert("'" + ip + "' connected.");
                 Client client = new Client(connection, context);
                 client.sendMessage(new GreetMessage());
 
@@ -167,8 +168,8 @@ public class Server implements NetworkManager
             }
         } catch (Exception e)
         {
-            e.printStackTrace();
             Logger.err("failed to connect.");
+            Logger.err(e.getMessage());
         }
     }
 
