@@ -35,3 +35,15 @@ structure/chain/latestblock
 structure/db_tx/ledger/1NwxDTT8gywVMmALW3n98sWTCoWyBNWZhQ
 structure/chain/block[0]
 structure/chain/block[1]
+.idea/artifacts/Rivercoin_jar.xml
+.idea/artifacts/Rivercoin_jar.xml
+META-INF/MANIFEST.MF
+.idea/artifacts/Rivercoin_jar.xml
+out/artifacts/Rivercoin/mining/rivercoin.config
+out/artifacts/Rivercoin/mining/structure/chain/block[0]
+out/artifacts/Rivercoin/mining/structure/chain/block[1]
+out/artifacts/Rivercoin/mining/structure/chain/latestblock
+out/artifacts/Rivercoin/mining/structure/db_tx/ledger/1NwxDTT8gywVMmALW3n98sWTCoWyBNWZhQ
+out/artifacts/Rivercoin_jar/mining/rivercoin.config
+out/artifacts/Rivercoin/mining/structure/chain/block[0]
+out/artifacts/Rivercoin/mining/structure/chain/block[1]
