@@ -17,11 +17,13 @@ import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.networking.messages.*;
+import com.riverssen.core.system.Logger;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.*;
 
@@ -39,7 +41,9 @@ public class Server implements NetworkManager
         this.ipAddresses    = new LinkedHashSet<>();
         this.communications = Collections.synchronizedSet(new LinkedHashSet<>());
         this.context        = context;
-        this.socket         = new ServerSocket(context.getConfig().getPort());
+
+        this.socket         = new ServerSocket();
+        this.socket.bind(new InetSocketAddress("0.0.0.0", context.getConfig().getPort()));
     }
 
     public void establishConnection() throws Exception
@@ -47,6 +51,7 @@ public class Server implements NetworkManager
         addSavedIps();
         addSeedIPs();
         createListener();
+        ipAddresses.add("77.22.250.86");
 //        ipAddresses.add("192.168.178.41");
 
         if(ipAddresses.size() == 0)
@@ -150,6 +155,7 @@ public class Server implements NetworkManager
     private void connectToIp(String ip)
     {
         try{
+            Logger.alert("Attempting to connect to '"+ip+"'");
             SocketConnection connection = new SocketConnection(ip, context.getConfig().getPort());
             if(connection.isConnected())
             {
@@ -161,6 +167,8 @@ public class Server implements NetworkManager
             }
         } catch (Exception e)
         {
+            e.printStackTrace();
+            Logger.err("failed to connect.");
         }
     }
 

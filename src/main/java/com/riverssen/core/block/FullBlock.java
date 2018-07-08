@@ -24,7 +24,9 @@ import com.riverssen.core.utils.*;
 import com.riverssen.riverssen.RiverFlowMap;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.util.zip.DeflaterOutputStream;
 
@@ -217,7 +219,10 @@ public class FullBlock implements Encodeable, JSONFormattable, Exportable
         this.hash = mine.getI();
 
         double time = (System.currentTimeMillis() - time_stamp) / 1000.0;
+
+        BigDecimal hashRate = new BigDecimal(mine.getJ()).divide(new BigDecimal(time).divide(new BigDecimal(1000.0), 10, RoundingMode.HALF_UP), 10, RoundingMode.HALF_UP);
         Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: hashing took '" + time + "s' '" + HashUtil.hashToStringBase16(hash) + "'\ntotal transactions: " + body.getMerkleTree().flatten().size());
+        Logger.alert("[" + TimeUtil.getPretty("H:M:S") + "][" + header.getBlockID() + "]: hashrate of '"+hashRate.toPlainString()+"h/s'}");
     }
 
     public BlockHeader getHeader()
