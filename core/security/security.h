@@ -7,6 +7,7 @@
 
 #include <cstring>
 #include "../math/math.h"
+#include <vector>
 
 #define MAIN_NETWORK_HEADER 0
 #define TEST_NETWORK_HEADER 1
@@ -69,6 +70,24 @@ public:
     {
         return asuint256() >= a.asuint256();
     }
+};
+
+class PublicKey{
+public:
+    Address asAddress();
+    CompressedPublicKey getCompressed();
+    template <typename T> std::vector sign(T& o);
+};
+
+class PrivateKey{
+};
+
+class Keypair{
+private:
+    PublicKey publicKey;
+    PrivateKey privateKey;
+public:
+    Keypair(PrivateKey a, PublicKey b) : publicKey(b), privateKey(a) {}
 };
 
 class Wallet{
