@@ -6,7 +6,7 @@
 #define RIVERCOIN_CPP_SECURITY_H
 
 #include <cstring>
-#include "../../external/uint256_t.h"
+#include "../math/math.h"
 
 #define MAIN_NETWORK_HEADER 0
 #define TEST_NETWORK_HEADER 1
@@ -40,13 +40,9 @@ public:
         return true;
     }
 
-    uint256_t asuint256() const
+    u_int256 asuint256() const
     {
-        uint256_t self = address_[0];
-
-        for(int i = 1; i < ADDRESS_SIZE; i ++)
-            self *= address_[i];
-        return self;
+        return uint256::fromBytes256(address_, ADDRESS_SIZE);
     }
 
     bool operator< (const Address& a)

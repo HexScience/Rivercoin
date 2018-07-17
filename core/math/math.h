@@ -63,6 +63,27 @@ struct uint256{
 
         return t;
     }
+
+    static boost::multiprecision::uint256_t fromBytes256(const char* array, unsigned char length)
+    {
+        if(length > 32) return u_int256(0);
+
+        char empty[32] = {
+                0,0,0,0,
+                0,0,0,0,
+                0,0,0,0,
+                0,0,0,0,
+                0,0,0,0,
+                0,0,0,0,
+                0,0,0,0,
+                0,0,0,0,
+        };
+
+        for(int i = 0; i < length; i ++)
+            empty[i] = array[i];
+
+        return fromBytes256(empty);
+    }
 };
 
 //struct uint256{
