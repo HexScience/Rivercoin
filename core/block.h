@@ -24,6 +24,15 @@ struct BlockHeader {
 
 struct StoredBlock{
     BlockHeader header;
+
+    StoredBlock(BlockHeader h) : header(h)
+    {
+    }
+
+    StoredBlock(const StoredBlock& o)
+            : header(o.header)
+    {
+    }
 };
 
 class Block{
@@ -39,26 +48,34 @@ public:
         header.__parent_hash__  = parentHash;
         header.__block_time__   = time;
     }
+    Block(const StoredBlock& s, Context& c)
+            : header(s.header), context(c)
+    {
+    }
     bool add(Transaction& transaction)
     {
         if (transaction.valid(context))
             tree.add(transaction);
     }
-
     bool full()
     {
         return tree.length() >= BLOCK_MAX_TRANSACTIONS;
     }
-
     bool ready()
     {
         return full() || context.lastTransactionWas((long)(BLOCK_INTERVAL * 0.75));
     }
+    void mine()
+    {
+    }
 
-    void mine();
-
-    bool valid();
-    StoredBlock* toStoredBlock();
+    bool valid()
+    {
+    }
+    StoredBlock* toStoredBlock()
+    {
+        return new StoredBlock(header);
+    }
     ~Block() {}
 };
 
