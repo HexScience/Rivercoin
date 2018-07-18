@@ -77,9 +77,30 @@ public:
     void checkForValidSolutions()
     {
         if (orphanedBlocks.size() == 0) return;
+        typedef std::vector<u_int256>   subchainclient;
+        typedef std::vector<Block*>     subchain;
 
+        /** formulate temporary chains and choose the longest one **/
+        std::vector<subchainclient> subchainClients;
 
-        
+        for(unsigned long i = 0; i < orphanedBlocks.size(); i ++)
+            if (std::find(subchainClients.begin(), subchainClients.end(), orphanedBlocks[i]->getMiner() != subchainClients.end()))
+                subchainClients.push_back(orphanedBlocks[i]->getMiner());
+
+        std::vector<subchain> subchains;
+
+        for(unsigned long i = 0; i < subchainClients.size(); i ++)
+        {
+            u_int256 miner = subchainClients[i];
+
+            for(unsigned long j = 0; j < orphanedBlocks.size(); j ++)
+                if (orphanedBlocks[j]-getMiner() == miner)
+                    subchains[i].push_back(orphanedBlocks[j]);
+            /** we could insteade add the above code into the erase code but it COULD have some undefined or unexpected behaviour so instead to loops should suffice **/
+
+            orphanedBlocks.erase(std::remove_if(orphanedBlocks.begin(), orphanedBlocks.end(), [](Block* b) { return !b->checkSolutionValid(); }), orphanedBlocks.end());
+        }
+
 
         /** recursively add any valid blocks that might have came after this one **/
 
