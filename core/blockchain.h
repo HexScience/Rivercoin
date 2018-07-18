@@ -75,6 +75,16 @@ public:
         orphanedBlocks.erase(std::remove_if(orphanedBlocks.begin(), orphanedBlocks.end(), [](Block* b) { return !b->checkSolutionValid(); }), orphanedBlocks.end());
     }
 
+    std::vector<Block*> getLongest(std::vector<std::vector<Block*>> subchains)
+    {
+        std::vector<Block*> longest;
+        return longest;
+    }
+
+    void updateChain(std::vector<Block*> longChain)
+    {
+    }
+
     void checkForValidSolutions()
     {
         if (orphanedBlocks.size() == 0) return;
@@ -84,13 +94,13 @@ public:
         /** formulate temporary chains and choose the longest one **/
         std::vector<subchainclient> subchainClients;
 
-        for(unsigned long i = 0; i < orphanedBlocks.size(); i ++)
+        for (unsigned long i = 0; i < orphanedBlocks.size(); i ++)
             if (std::find(subchainClients.begin(), subchainClients.end(), orphanedBlocks[i]->getMiner() != subchainClients.end()))
                 subchainClients.push_back(orphanedBlocks[i]->getMiner());
 
         std::vector<subchain> subchains;
 
-        for(unsigned long i = 0; i < subchainClients.size(); i ++)
+        for (unsigned long i = 0; i < subchainClients.size(); i ++)
         {
             u_int256 miner = subchainClients[i];
 
@@ -102,15 +112,7 @@ public:
             orphanedBlocks.erase(std::remove_if(orphanedBlocks.begin(), orphanedBlocks.end(), [](Block* b) { return !b->checkSolutionValid(); }), orphanedBlocks.end());
         }
 
-
-        /** recursively add any valid blocks that might have came after this one **/
-
-        /** remove any blocks that are too old to be added to the chain **/
-        removeOldOrphandedBlocks();
-        /** remove any blocks that have invalid solutions or unacceptable behaviour **/
-        removeInvalidOrphandedBlocks();
-        /** check the remaining blocks for any valid solutions and add them to the chain **/
-        checkForValidSolutions();
+        updateChain(getLongest(subchains));
     }
 
     void execute()
