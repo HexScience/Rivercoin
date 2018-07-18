@@ -93,6 +93,11 @@ public:
     bool checkSolutionValid() {
         return false;
     }
+
+    Address getMiner()
+    {
+        return header.__miner__;
+    }
 };
 
 #endif //RIVERCOIN_CPP_BLOCK_H

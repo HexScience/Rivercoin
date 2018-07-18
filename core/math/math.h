@@ -14,7 +14,7 @@
 typedef boost::multiprecision::uint256_t u_int256;
 
 struct uint256{
-    static char* reverse(const char* array, char reversed[32])
+    static void reverse(const char* array, char reversed[32])
     {
         reversed[0] = array[31];
         reversed[1] = array[30];
