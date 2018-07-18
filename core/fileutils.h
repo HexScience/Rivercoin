@@ -93,7 +93,9 @@ public:
 
         vector<char> data = read(file, ERROR);
 
-        if (magic_header == ((const short *)(char[2] {data[0], data[1]}))[0])
+        char header[2] = {data[0], data[1]};
+
+        if (magic_header == ((const short *)(header))[0])
             memcpy(o, data.data(), sizeof(T));
 
         else ERROR = ERR_IN_MAGIC_HEADER;

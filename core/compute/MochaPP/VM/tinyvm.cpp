@@ -371,16 +371,20 @@ template <typename T> void stack::i_add(MochaVM *vm, T a, type b, unsigned char 
             i = (unsigned long)(pop<unsigned long>(vm) OP a);
             break;
         case int128_:
-            i = (boost::multiprecision::int128_t)(pop<(boost::multiprecision::int128_t)>(vm) OP a);
+//            i = (boost::multiprecision::int128_t)(pop<boost::multiprecision::int128_t>(vm) OP a);
+            vm->terminate("UnsupportedOperation: <T>+int128");
             break;
         case uint128_:
-            i = (boost::multiprecision::uint128_t)(pop<(boost::multiprecision::uint128_t)>(vm) OP a);
+//            i = (boost::multiprecision::uint128_t)(pop<boost::multiprecision::uint128_t>(vm) OP a);
+            vm->terminate("UnsupportedOperation: <T>+uint128");
             break;
         case int256_:
-            i = (boost::multiprecision::int256_t)(pop<(boost::multiprecision::int256_t)>(vm) OP a);
+//            i = (boost::multiprecision::int256_t)(pop<boost::multiprecision::int256_t>(vm) OP a);
+            vm->terminate("UnsupportedOperation: <T>+int256");
             break;
         case uint256_:
-            i = (boost::multiprecision::uint256_t)(pop<(boost::multiprecision::uint256_t)>(vm) OP a);
+//            i = (boost::multiprecision::uint256_t)(pop<boost::multiprecision::uint256_t>(vm) OP a);
+            vm->terminate("UnsupportedOperation: <T>+uint256");
             break;
         case float8_:
             vm->terminate("UnsupportedOperation: <T>+float8");
@@ -389,10 +393,10 @@ template <typename T> void stack::i_add(MochaVM *vm, T a, type b, unsigned char 
             vm->terminate("UnsupportedOperation: <T>+float16");
             break;
         case float32_:
-            i = (long long)(pop<float>(vm) OP a);
+            i = (long long)(pop<float>(vm) OP (float)a);
             break;
         case float64_:
-            i = (long long)(pop<double>(vm) OP a);
+            i = (long long)(pop<double>(vm) OP (double)a);
             break;
         case float128_:
             vm->terminate("UnsupportedOperation: <T>+float128");
