@@ -9,7 +9,10 @@
 void BlockChain::loadAllBlocks() {}
 void BlockChain::downloadAllMissingBlocks() {}
 void BlockChain::queOrphaned(Block *block) {}
-void BlockChain::download(Block *block) {}
+void BlockChain::download(Block *block)
+{
+    downloadedBlocks.push_back(block);
+}
 
 void BlockChain::continueChain()
 {
