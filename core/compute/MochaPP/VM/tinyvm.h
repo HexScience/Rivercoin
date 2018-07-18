@@ -36,9 +36,6 @@ enum type{
 
 class MochaVM;
 
-struct stack_blob{
-};
-
 class stack
 {
 private:

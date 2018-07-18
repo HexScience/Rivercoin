@@ -10,9 +10,14 @@
 #include <sstream>
 #include <vector>
 
+#define ERR_NO_SUCH_FILE_EXISTS 1
+#define ERR_IN_MAGIC_HEADER 2
+#define ERR_NO_EXPORT 3
+#define ERR_NO_ISTREAM 4
+
 class file{
 public:
-    static std::string readUTF(std::string file)
+    static std::string readUTF(std::string file, unsigned char& ERROR)
     {
         using std::string;
         using std::ifstream;
@@ -31,6 +36,8 @@ public:
             return stringStream.str();
         }
 
+        ERROR = ERR_NO_ISTREAM;
+
         return "null";
     }
 
@@ -47,7 +54,7 @@ public:
         return exist;
     }
 
-    static std::vector<char> read(const std::string file)
+    static std::vector<char> read(const std::string file, unsigned char& ERROR)
     {
         using std::ifstream;
         using std::ios;
@@ -58,22 +65,41 @@ public:
 
         std::vector<char>  result(pos);
 
-        ifs.seekg(0, ios::beg);
-        ifs.read(&result[0], pos);
+        if (ifs.good())
+        {
+            ifs.seekg(0, ios::beg);
+            ifs.read(&result[0], pos);
+
+            return result;
+        }
+
+        ERROR = ERR_NO_SUCH_FILE_EXISTS;
 
         return result;
     }
 
-    template <typename T> static void read(const std::string file, T* o)
+    template <typename T> static void read(const std::string file, T* o, unsigned char& ERROR)
     {
         using std::vector;
 
-        vector<char> data = read(file);
+        vector<char> data = read(file, ERROR);
 
         memcpy(o, data.data(), sizeof(T));
     }
 
-    template <typename T> static void write(const std::string file, const T& o)
+    template <typename T> static void read(const std::string file, const short magic_header, T* o, unsigned char& ERROR)
+    {
+        using std::vector;
+
+        vector<char> data = read(file, ERROR);
+
+        if (magic_header == ((const short *)(char[2] {data[0], data[1]}))[0])
+            memcpy(o, data.data(), sizeof(T));
+
+        else ERROR = ERR_IN_MAGIC_HEADER;
+    }
+
+    template <typename T> static void write(const std::string file, const T& o, unsigned char& ERROR)
     {
         using std::ofstream;
         using std::ios;
@@ -82,9 +108,13 @@ public:
         ofstream fout;
         fout.open(file, ios::binary | ios::out);
 
-        fout.write((char*) &o, sizeof(o));
+        if (fout.good())
+        {
+            fout.write((char*) &o, sizeof(o));
 
-        fout.close();
+            fout.close();
+        }
+        else ERROR = ERR_NO_SUCH_FILE_EXISTS;
     }
 };
 

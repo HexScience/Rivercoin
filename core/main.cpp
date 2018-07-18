@@ -106,8 +106,10 @@ int main(int arg_l, const char* args[]) {
 
 //    logger::alert(std::to_string(ack(8, 3)).c_str());
 
+    unsigned char ERROR = 0;
+
     ptree pTree;
-    std::istringstream istringstream(file::readUTF(std::string(".") + PATH_SEPARATOR + "structure" + PATH_SEPARATOR + "config.xml"));
+    std::istringstream istringstream(file::readUTF(std::string(".") + PATH_SEPARATOR + "structure" + PATH_SEPARATOR + "config.xml", ERROR));
 
     boost::property_tree::read_xml(istringstream, pTree);
 
