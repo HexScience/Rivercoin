@@ -77,6 +77,18 @@ public:
     void checkForValidSolutions()
     {
         if (orphanedBlocks.size() == 0) return;
+
+
+        
+
+        /** recursively add any valid blocks that might have came after this one **/
+
+        /** remove any blocks that are too old to be added to the chain **/
+        removeOldOrphandedBlocks();
+        /** remove any blocks that have invalid solutions or unacceptable behaviour **/
+        removeInvalidOrphandedBlocks();
+        /** check the remaining blocks for any valid solutions and add them to the chain **/
+        checkForValidSolutions();
     }
 
     void execute()
