@@ -99,4 +99,9 @@ public:
     }
 };
 
+struct BlockPacket{
+    Block block;
+    long long timeStamp;
+};
+
 #endif //RIVERCOIN_CPP_BLOCK_H
