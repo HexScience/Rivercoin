@@ -22,14 +22,15 @@ struct BlockHeader {
 };
 
 struct StoredBlock{
-    BlockHeader header;
+    BlockHeader     header;
+    TransactionTree tree;
 
-    StoredBlock(BlockHeader h) : header(h)
+    StoredBlock(BlockHeader h, TransactionTree t) : header(h), tree(t)
     {
     }
 
     StoredBlock(const StoredBlock& o)
-            : header(o.header)
+            : header(o.header), tree(o.tree)
     {
     }
 };
@@ -85,7 +86,7 @@ public:
     }
     StoredBlock* toStoredBlock()
     {
-        return new StoredBlock(header);
+        return new StoredBlock(header, tree);
     }
     ~Block() {}
 
@@ -96,6 +97,11 @@ public:
     Address getMiner()
     {
         return header.__miner__;
+    }
+
+    bool finished()
+    {
+        return false;
     }
 };
 

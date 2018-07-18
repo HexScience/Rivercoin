@@ -133,5 +133,13 @@ void BlockChain::execute()
         /** check to mine the block **/
         if (current->ready() && !context.getMiner().busy())
             context.getMiner().mine(current);
+
+        if (current->finished())
+        {
+            sendSolution();
+            logger::alert("finished mining block[" + std::to_string(current->getIndex()) + "].");
+            serialize();
+            continueChain();
+        }
     }
 }
