@@ -11,6 +11,7 @@
 #include "serializeable.h"
 #include "fileutils.h"
 #include <string>
+#include "security/security.h"
 
 #define GENESIS 1
 #define NO_CHAIN 0
@@ -77,7 +78,7 @@ public:
     void checkForValidSolutions()
     {
         if (orphanedBlocks.size() == 0) return;
-        typedef std::vector<u_int256>   subchainclient;
+        typedef std::vector<Address>    subchainclient;
         typedef std::vector<Block*>     subchain;
 
         /** formulate temporary chains and choose the longest one **/
