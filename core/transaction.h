@@ -12,6 +12,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include "math/math.h"
 
 #define TRANSACTION_TRANSACTION 0
 #define REWARD_TRANSACTION 1
@@ -21,9 +22,9 @@
 struct Output{
     const Address owner;
     const rvc     amount;
-    const uint256_t hash;
+    const uint256 hash;
 
-    Output(const Address o, const rvc a, uint256_t h) : owner(o), amount(a), hash(h) {}
+    Output(const Address o, const rvc a, uint256 h) : owner(o), amount(a), hash(h) {}
     Output(const Output& o) : owner(o.owner), amount(o.amount), hash(o.hash) {}
 
     bool compare(const Output& output) const

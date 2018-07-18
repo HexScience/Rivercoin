@@ -13,13 +13,12 @@
 #include "security/security.h"
 
 struct BlockHeader {
-    using boost::multiprecision::uint256_t;
-    unsigned long long            __block_number__;
-    uint256_t                     __parent_hash__;
-    uint256_t                     __block_hash__;
-    Address                       __miner__;
-    unsigned long long            __block_time__;
-    unsigned long long            __nonce__;
+    BlockIndex                      __block_number__;
+    uint256                         __parent_hash__;
+    uint256                         __block_hash__;
+    Address                         __miner__;
+    unsigned long long              __block_time__;
+    unsigned long long              __nonce__;
 };
 
 struct StoredBlock{
@@ -37,12 +36,11 @@ struct StoredBlock{
 
 class Block{
 private:
-    using boost::multiprecision::uint256_t;
     BlockHeader              header;
     TransactionTree          tree;
     Context                  context;
 public:
-    Block(unsigned long long index, unsigned long long time, uint256_t parentHash, Context& c) : context(c)
+    Block(unsigned long long index, unsigned long long time, uint256 parentHash, Context& c) : context(c)
     {
         header.__block_number__ = index;
         header.__parent_hash__  = parentHash;
@@ -52,7 +50,7 @@ public:
             : header(s.header), context(c)
     {
     }
-    bool add(Transaction& transaction)
+    void add(Transaction& transaction)
     {
         if (transaction.valid(context))
             tree.add(transaction);
@@ -68,21 +66,22 @@ public:
     void mine()
     {
     }
-    unsigned long long getIndex()
+    BlockIndex getIndex()
     {
         return header.__block_number__;
     }
-    uint256_t getHash()
+    uint256 getHash()
     {
         return header.__block_hash__;
     }
-    uint256_t getParentHash()
+    uint256 getParentHash()
     {
         return header.__parent_hash__;
     }
 
     bool valid()
     {
+        return false;
     }
     StoredBlock* toStoredBlock()
     {

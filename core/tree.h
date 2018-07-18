@@ -17,11 +17,12 @@ struct TransactionTreeElement{
     TransactionTreeElement(Transaction* c) : child_a(0), child_b(0), elemt(c) {}
     TransactionTreeElement(TransactionTreeElement* a, TransactionTreeElement* b) : child_a(a), child_b(b), elemt(0) {}
 
-    uint256_t hash()
+    uint256 hash()
     {
-        if(elemt)
-            return sha_256((const char *) elemt);
-        else return uint256_t(20);
+//        if(elemt)
+//            return sha_256((const char *) elemt);
+//        else return uint256_t(20);
+        return uint256(0);
     }
 
     ~TransactionTreeElement()

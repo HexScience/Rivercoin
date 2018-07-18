@@ -25,52 +25,16 @@ public:
     {
     }
     Address(const char* address) : address_(address) {}
-    Address(CompressedPublicKey key) : address_("0xC")
-    {
-    }
+    Address(CompressedPublicKey key) : address_("0xC") {}
     Address(const Address& o) : address_(o.address_) {}
-    static bool __check_address_valid(const char* addr_)
-    {
-        return false;
-    }
-
-    bool compare(const Address& o) const
-    {
-        for (int i = 0; i < ADDRESS_SIZE; i ++)
-            if(address_[i] != o.address_[i]) return false;
-
-        return true;
-    }
-
-    u_int256 asuint256() const
-    {
-        return uint256::fromBytes256(address_, ADDRESS_SIZE);
-    }
-
-    bool operator< (const Address& a)
-    {
-        return asuint256() < a.asuint256();
-    }
-
-    bool operator> (const Address& a)
-    {
-        return asuint256() > a.asuint256();
-    }
-
-    bool operator== (const Address& a)
-    {
-        return asuint256() == a.asuint256();
-    }
-
-    bool operator<= (const Address& a)
-    {
-        return asuint256() <= a.asuint256();
-    }
-
-    bool operator>= (const Address& a)
-    {
-        return asuint256() >= a.asuint256();
-    }
+    static bool __check_address_valid(const char* addr_);
+    bool compare(const Address& o) const;
+    uint256 asuint256() const;
+    bool operator< (const Address& a) const;
+    bool operator> (const Address& a) const;
+    bool operator== (const Address& a) const;
+    bool operator<= (const Address& a) const;
+    bool operator>= (const Address& a) const;
 };
 
 //class PublicKey{

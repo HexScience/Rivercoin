@@ -11,9 +11,13 @@
 #define _pi_ 3.14159265359
 #define MathtoRadians(x) (2*_pi_ * (x / 360))
 
-typedef boost::multiprecision::uint256_t u_int256;
+#define subtractUnsigned(x, y) ((x - y) > x ? 0 : (x - y))
 
-struct uint256{
+typedef boost::multiprecision::uint256_t u_int256;
+typedef boost::multiprecision::uint256_t uint256;
+typedef unsigned long long BlockIndex;
+
+struct ByteUtil{
     static void reverse(const char* array, char reversed[32])
     {
         reversed[0] = array[31];
