@@ -93,7 +93,6 @@ int main(int arg_l, const char* args[]) {
 //    logger::alert("if address is incorrect, please restart the client.");
 //
 
-
     /* Load the human readable error strings for libcrypto */
     ERR_load_crypto_strings();
 

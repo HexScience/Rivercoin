@@ -13,14 +13,18 @@ void MochaVM::execute(unsigned char *prgrm, unsigned int size, unsigned int& ind
 
         switch (current)
         {
-            case push_i_8:  vm_stack.push((char) prgrm[index ++], this); break;
-            case push_i_8u: vm_stack.push((unsigned char) prgrm[index ++], this); break;
-            case push_i_16: vm_stack.push(((short*) ((unsigned char[2]){prgrm[index], prgrm[index + 1]}))[0], this); index += 2; break;
-            case push_i_16u: vm_stack.push(((unsigned short*) ((unsigned char[2]){prgrm[index], prgrm[index + 1]}))[0], this); index += 2; break;
-            case push_i_32: vm_stack.push(((int*) ((unsigned char[4]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3]}))[0], this); index += 4; break;
-            case push_i_32u: vm_stack.push(((unsigned int*) ((unsigned char[4]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3]}))[0], this); index += 4; break;
-            case push_i_64: vm_stack.push(((int*) ((unsigned char[8]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7]}))[0], this); index += 8; break;
-            case push_i_64u: vm_stack.push(((unsigned int*) ((unsigned char[8]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7]}))[0], this); index += 8; break;
+            case push_i_8:      vm_stack.push((char) prgrm[index ++], this); break;
+            case push_i_8u:     vm_stack.push((unsigned char) prgrm[index ++], this); break;
+            case push_i_16:     vm_stack.push(((short*) ((unsigned char[2]){prgrm[index], prgrm[index + 1]}))[0], this); index += 2; break;
+            case push_i_16u:    vm_stack.push(((unsigned short*) ((unsigned char[2]){prgrm[index], prgrm[index + 1]}))[0], this); index += 2; break;
+            case push_i_32:     vm_stack.push(((int*) ((unsigned char[4]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3]}))[0], this); index += 4; break;
+            case push_i_32u:    vm_stack.push(((unsigned int*) ((unsigned char[4]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3]}))[0], this); index += 4; break;
+            case push_i_64:     vm_stack.push(((int*) ((unsigned char[8]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7]}))[0], this); index += 8; break;
+            case push_i_64u:    vm_stack.push(((unsigned int*) ((unsigned char[8]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7]}))[0], this); index += 8; break;
+            case push_i_128:    vm_stack.push(((boost::multiprecision::int128_t*) ((unsigned char[16]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7], prgrm[index + 8], prgrm[index + 9], prgrm[index + 10], prgrm[index + 11], prgrm[index + 12], prgrm[index + 13], prgrm[index + 14], prgrm[index + 15]}))[0], this); index += 8; break;
+            case push_i_128u:   vm_stack.push(((boost::multiprecision::uint128_t*) ((unsigned char[16]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7], prgrm[index + 8], prgrm[index + 9], prgrm[index + 10], prgrm[index + 11], prgrm[index + 12], prgrm[index + 13], prgrm[index + 14], prgrm[index + 15]}))[0], this); index += 8; break;
+            case push_i_256:    vm_stack.push(((boost::multiprecision::int256_t*) ((unsigned char[32]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7], prgrm[index + 8], prgrm[index + 9], prgrm[index + 10], prgrm[index + 11], prgrm[index + 12], prgrm[index + 13], prgrm[index + 14], prgrm[index + 15], prgrm[index + 16], prgrm[index + 17], prgrm[index + 18], prgrm[index + 19], prgrm[index + 20], prgrm[index + 21], prgrm[index + 22], prgrm[index + 23], prgrm[index + 24], prgrm[index + 25], prgrm[index + 26], prgrm[index + 27], prgrm[index + 28], prgrm[index + 29], prgrm[index + 30], prgrm[index + 31]}))[0], this); index += 8; break;
+            case push_i_256u:   vm_stack.push(((boost::multiprecision::uint256_t*) ((unsigned char[32]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7], prgrm[index + 8], prgrm[index + 9], prgrm[index + 10], prgrm[index + 11], prgrm[index + 12], prgrm[index + 13], prgrm[index + 14], prgrm[index + 15], prgrm[index + 16], prgrm[index + 17], prgrm[index + 18], prgrm[index + 19], prgrm[index + 20], prgrm[index + 21], prgrm[index + 22], prgrm[index + 23], prgrm[index + 24], prgrm[index + 25], prgrm[index + 26], prgrm[index + 27], prgrm[index + 28], prgrm[index + 29], prgrm[index + 30], prgrm[index + 31]}))[0], this); index += 8; break;
 
             case pop_i_8:
             case pop_i_8u:
@@ -37,6 +41,15 @@ void MochaVM::execute(unsigned char *prgrm, unsigned int size, unsigned int& ind
             case pop_i_64:
             case pop_i_64u:
                 vm_stack.pop<long>(this);
+                break;
+
+            case pop_i_128:
+            case pop_i_128u:
+                vm_stack.pop<boost::multiprecision::int128_t>(this);
+                break;
+            case pop_i_256:
+            case pop_i_256u:
+                vm_stack.pop<boost::multiprecision::int128_t>(this);
                 break;
 
             case push_s:
@@ -271,16 +284,16 @@ void stack::iadd(MochaVM *vm, type a, type b, unsigned char length)
             i_add<unsigned long>(vm, pop<unsigned long>(vm), b, length);
             break;
         case int128_:
-            vm->terminate("UnsupportedOperation: int128+<T>");
+            i_add<boost::multiprecision::int128_t>(vm, pop<boost::multiprecision::int128_t>(vm), b, length);
             break;
         case uint128_:
-            vm->terminate("UnsupportedOperation: uint128+<T>");
+            i_add<boost::multiprecision::uint128_t>(vm, pop<boost::multiprecision::uint128_t>(vm), b, length);
             break;
         case int256_:
-            vm->terminate("UnsupportedOperation: int256+<T>");
+            i_add<boost::multiprecision::int256_t>(vm, pop<boost::multiprecision::int256_t>(vm), b, length);
             break;
         case uint256_:
-            vm->terminate("UnsupportedOperation: uint256+<T>");
+            i_add<boost::multiprecision::uint256_t>(vm, pop<boost::multiprecision::uint256_t>(vm), b, length);
             break;
         case float8_:
             vm->terminate("UnsupportedOperation: float8+<T>");
@@ -339,16 +352,16 @@ template <typename T> void stack::i_add(MochaVM *vm, T a, type b, unsigned char 
             i = (unsigned long)(pop<unsigned long>(vm) OP a);
             break;
         case int128_:
-            vm->terminate("UnsupportedOperation: <T>+int128");
+            i = (boost::multiprecision::int128_t)(pop<(boost::multiprecision::int128_t)>(vm) OP a);
             break;
         case uint128_:
-            vm->terminate("UnsupportedOperation: <T>+uint128");
+            i = (boost::multiprecision::uint128_t)(pop<(boost::multiprecision::uint128_t)>(vm) OP a);
             break;
         case int256_:
-            vm->terminate("UnsupportedOperation: <T>+int256");
+            i = (boost::multiprecision::int256_t)(pop<(boost::multiprecision::int256_t)>(vm) OP a);
             break;
         case uint256_:
-            vm->terminate("UnsupportedOperation: <T>+uint256");
+            i = (boost::multiprecision::uint256_t)(pop<(boost::multiprecision::uint256_t)>(vm) OP a);
             break;
         case float8_:
             vm->terminate("UnsupportedOperation: <T>+float8");
