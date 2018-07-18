@@ -6,19 +6,20 @@
 #define RIVERCOIN_CPP_BLOCK_H
 
 #include "transaction.h"
-#include "../external/uint256_t.h"
+#include "math/math.h"
 #include "tree.h"
 #include "config.h"
 #include "context.h"
 #include "security/security.h"
 
 struct BlockHeader {
-    const unsigned long long            __block_number__;
-    const uint256_t                     __parent_hash__;
-    const uint256_t                     __block_hash__;
-    const Address                       __miner__;
-    const unsigned long long            __block_time__;
-    const unsigned long long            __nonce__;
+    using boost::multiprecision::uint256_t;
+    unsigned long long            __block_number__;
+    uint256_t                     __parent_hash__;
+    uint256_t                     __block_hash__;
+    Address                       __miner__;
+    unsigned long long            __block_time__;
+    unsigned long long            __nonce__;
 };
 
 struct StoredBlock{
@@ -27,14 +28,17 @@ struct StoredBlock{
 
 class Block{
 private:
-    const unsigned long long index;
-    const unsigned long long times;
-    const Address            miner;
-    const uint256_t          parent;
+    using boost::multiprecision::uint256_t;
+    BlockHeader              header;
     TransactionTree          tree;
     Context                  context;
 public:
-    Block(unsigned long long i, unsigned long long t, Address m, uint256_t p, Context& c) : index(i), times(t), miner(m), parent(p), context(c) {}
+    Block(unsigned long long index, unsigned long long time, uint256_t parentHash, Context& c) : context(c)
+    {
+        header.__block_number__ = index;
+        header.__parent_hash__  = parentHash;
+        header.__block_time__   = time;
+    }
     bool add(Transaction& transaction)
     {
         if (transaction.valid(context))
