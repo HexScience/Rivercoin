@@ -89,6 +89,10 @@ public:
         return new StoredBlock(header);
     }
     ~Block() {}
+
+    bool checkSolutionValid() {
+        return false;
+    }
 };
 
 #endif //RIVERCOIN_CPP_BLOCK_H

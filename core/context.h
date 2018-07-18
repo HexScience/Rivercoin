@@ -18,6 +18,7 @@
 class Context {
 private:
     config _config;
+    bool    _keepAlive;
 public:
     Context(boost::property_tree::ptree& tree) : _config(tree)
     {
@@ -28,6 +29,8 @@ public:
     long long timestamp();
     virtual void run();
 //    u_int256 getDifficulty();
+
+    bool keepAlive();
 };
 
 

@@ -55,10 +55,44 @@ public:
         }
     }
 
+    void sendSolution()
+    {
+    }
+
+    unsigned long long activeBlock()
+    {
+        return current->getIndex();
+    }
+
+    void removeOldOrphandedBlocks()
+    {
+        orphanedBlocks.erase(std::remove_if(orphanedBlocks.begin(), orphanedBlocks.end(), [](Block* b) { return b->getIndex() < (activeBlock() - 1); }), orphanedBlocks.end());
+    }
+
+    void removeInvalidOrphandedBlocks()
+    {
+        orphanedBlocks.erase(std::remove_if(orphanedBlocks.begin(), orphanedBlocks.end(), [](Block* b) { return !b->checkSolutionValid(); }), orphanedBlocks.end());
+    }
+
+    void checkForValidSolutions()
+    {
+        if (orphanedBlocks.size() == 0) return;
+    }
+
     void execute()
     {
         loadAllBlocks();
         downloadAllMissingBlocks();
+
+        while (context.keepAlive())
+        {
+            /** remove any blocks that are too old to be added to the chain **/
+            removeOldOrphandedBlocks();
+            /** remove any blocks that have invalid solutions or unacceptable behaviour **/
+            removeInvalidOrphandedBlocks();
+            /** check the remaining blocks for any valid solutions and add them to the chain **/
+            checkForValidSolutions();
+        }
     }
 };
 
