@@ -8,6 +8,7 @@
 #include <cstring>
 #include "../math/math.h"
 #include <vector>
+#include <openssl/ecdsa.h>
 
 #define MAIN_NETWORK_HEADER 0
 #define TEST_NETWORK_HEADER 1
@@ -72,25 +73,45 @@ public:
     }
 };
 
-class PublicKey{
-public:
-    Address asAddress();
-    CompressedPublicKey getCompressed();
-    template <typename T> std::vector sign(T& o);
-};
-
-class PrivateKey{
-};
-
-class Keypair{
-private:
-    PublicKey publicKey;
-    PrivateKey privateKey;
-public:
-    Keypair(PrivateKey a, PublicKey b) : publicKey(b), privateKey(a) {}
-};
+//class PublicKey{
+//private:
+//    EC_KEY* key;
+//public:
+//    Address asAddress();
+//    CompressedPublicKey getCompressed();
+//    template <typename T> std::vector sign(T& o);
+//
+//    ~PublicKey()
+//    {
+//        delete key;
+//    }
+//};
+//
+//class PrivateKey{
+//private:
+//    EC_KEY* key;
+//public:
+//};
+//
+//class Keypair{
+//private:
+//    PublicKey publicKey;
+//    PrivateKey privateKey;
+//public:
+//    Keypair(PrivateKey a, PublicKey b) : publicKey(b), privateKey(a) {}
+//    Keypair(const char* prng)
+//    {
+//    }
+//};
 
 class Wallet{
+private:
+    EC_KEY* publicKey;
+    EC_KEY* privateKey;
+public:
+    Wallet()
+    {
+    }
 };
 
 #endif //RIVERCOIN_CPP_SECURITY_H

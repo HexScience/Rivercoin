@@ -14,6 +14,9 @@
 #include "base58.h"
 #include "compute/MochaPP/VM/instructions.h"
 #include <ctype.h>
+#include <openssl/conf.h>
+#include <openssl/evp.h>
+#include <openssl/err.h>
 
 #include "compute/MochaPP/VM/tinyvm.h"
 //#include "network.h"
@@ -89,6 +92,17 @@ int main(int arg_l, const char* args[]) {
 //    logger::alert(std::string(std::string("Mining Address: ") + mining_address).c_str());
 //    logger::alert("if address is incorrect, please restart the client.");
 //
+
+
+    /* Load the human readable error strings for libcrypto */
+    ERR_load_crypto_strings();
+
+    /* Load all digest and cipher algorithms */
+    OpenSSL_add_all_algorithms();
+
+    /* Load config file, and other important initialisation */
+    OPENSSL_config(NULL);
+
     using boost::property_tree::ptree;
 
 //    logger::alert(std::to_string(ack(8, 3)).c_str());
@@ -138,6 +152,22 @@ int main(int arg_l, const char* args[]) {
 //
 //    std::cout << i256 << "\n" << i2562 << "\n" << (i256 > i2562) << std::endl;
 //    std::cout << (uint256::fromBytes256(context->getConfig().BASE_TARGET_DIFFICULTY) > i256) << std::endl;
+
+
+
+
+
+
+    /* Clean up */
+
+    /* Removes all digests and ciphers */
+    EVP_cleanup();
+
+    /* if you omit the next, a small leak may be left when you make use of the BIO (low level API) for e.g. base64 transformations */
+    CRYPTO_cleanup_all_ex_data();
+
+    /* Remove error strings */
+    ERR_free_strings();
 
     return 0;
 }
