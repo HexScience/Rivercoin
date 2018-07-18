@@ -190,8 +190,6 @@ void MochaVM::execute(unsigned char *prgrm, unsigned int size, unsigned int& ind
                         break;
                 }
 
-
-
                 terminate((std::string("UnsupportedInstruction: ") + instruction_name).c_str());
                 break;
         }
@@ -247,6 +245,27 @@ template <typename T> T stack::peek(MochaVM* vm)
         unsigned char my_object[size];
         for(int i = 0; i < size; i ++)
             my_object[i] = _stack[i + (_index - size)];
+
+        t = ((T*) my_object)[0];
+    }
+    else vm->terminate("StackUnderFlow exception (stack.peek).");
+
+    return t;
+}
+
+/**
+ * This implementation is actually slow, if we want to optimize the vm, stacks should have peek_<type> functions.
+ */
+template <typename T> T stack::peek(unsigned long p, MochaVM* vm)
+{
+    T t;
+    long size = sizeof(T);
+
+    if(p - size >= 0)
+    {
+        unsigned char my_object[size];
+        for(int i = 0; i < size; i ++)
+            my_object[i] = _stack[i + (p - size)];
 
         t = ((T*) my_object)[0];
     }

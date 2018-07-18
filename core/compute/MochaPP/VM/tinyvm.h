@@ -60,6 +60,7 @@ public:
     template <typename T> void  push(T v, MochaVM* vm);
     template <typename T> T     pop(MochaVM* vm);
     template <typename T> T     peek(MochaVM* vm);
+    template <typename T> T     peek(unsigned long p, MochaVM* vm);
 
     void cast_by_type(type t)
     {
