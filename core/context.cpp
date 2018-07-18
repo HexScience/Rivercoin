@@ -17,6 +17,15 @@ bool Context::lastTransactionWas(long i)
     return false;
 }
 
+bool Context::keepAlive()
+{
+    return _keepAlive;
+}
+
+void Context::run()
+{
+}
+
 //u_int256 Context::getDifficulty()
 //{
 //    return uint256::fromBytes256("11111111111111111111111111111111111111");
