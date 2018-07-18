@@ -68,6 +68,18 @@ public:
     void mine()
     {
     }
+    unsigned long long getIndex()
+    {
+        return header.__block_number__;
+    }
+    uint256_t getHash()
+    {
+        return header.__block_hash__;
+    }
+    uint256_t getParentHash()
+    {
+        return header.__parent_hash__;
+    }
 
     bool valid()
     {

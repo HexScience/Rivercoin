@@ -29,9 +29,11 @@
 
 namespace logger
 {
-    void msg(unsigned int color, const char* msg);
-    void alert(const char* msg_);
-    void err(const char* msg_);
+    void msg(unsigned int color, const std::string& msg);
+
+    void alert(const std::string& msg_);
+
+    void err(const std::string& msg_);
 }
 
 #endif //RIVERCOIN_CPP_LOGGER_H

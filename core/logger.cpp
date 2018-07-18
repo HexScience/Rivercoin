@@ -4,8 +4,9 @@
 
 #include "logger.h"
 #include "defines.h"
+#include <string>
 
-void logger::msg(unsigned int color, const char *msg)
+void logger::msg(unsigned int color, const std::string& msg)
 {
     #ifdef WINDOWS_PLATFORM
         std::cout << msg << std::endl;
@@ -34,12 +35,12 @@ void logger::msg(unsigned int color, const char *msg)
     #endif
 }
 
-void logger::alert(const char *msg_)
+void logger::alert(const std::string& msg_)
 {
     msg(COLOR_GRN, msg_);
 }
 
-void logger::err(const char *msg_)
+void logger::err(const std::string& msg_)
 {
     msg(COLOR_RED, msg_);
 }

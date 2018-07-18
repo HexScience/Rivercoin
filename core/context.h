@@ -25,9 +25,8 @@ public:
     const config& getConfig() const;
 //    Server& getServer() const;
     bool lastTransactionWas(long i);
-
     long long timestamp();
-
+    virtual void run();
 //    u_int256 getDifficulty();
 };
 

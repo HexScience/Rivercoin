@@ -18,6 +18,6 @@ message("OPENSSL_SSL_LIBRARY is "  ${OPENSSL_SSL_LIBRARY})
 message("OPENSSL_LIBRARIES is "  ${OPENSSL_LIBRARIES})
 message("OPENSSL_VERSION is "  ${OPENSSL_VERSION})
 
-add_executable(RiverCoin_cpp core/main.cpp core/network.cpp core/network.h core/block.h core/security/security.h core/transaction.h core/protocol.h core/hash.h core/logger.h core/tcp.h core/tree.h core/base58.h core/base58.cpp core/config.h core/context.cpp core/context.h core/compute/MochaPP/VM/instructions.h core/compute/MochaPP/VM/tinyvm.h core/compute/MochaPP/VM/tinyvm.cpp core/logger.cpp core/fileutils.h core/defines.h core/math/math.h core/math/riverhash.h core/math/hashutil.h core/serializeable.h)
+add_executable(RiverCoin_cpp core/main.cpp core/network.cpp core/network.h core/block.h core/security/security.h core/transaction.h core/protocol.h core/hash.h core/logger.h core/tcp.h core/tree.h core/base58.h core/base58.cpp core/config.h core/context.cpp core/context.h core/compute/MochaPP/VM/instructions.h core/compute/MochaPP/VM/tinyvm.h core/compute/MochaPP/VM/tinyvm.cpp core/logger.cpp core/fileutils.h core/defines.h core/math/math.h core/math/riverhash.h core/math/hashutil.h core/serializeable.h core/blockchain.h)
 target_link_libraries(RiverCoin_cpp LINK_PUBLIC ${Boost_LIBRARIES})
 target_link_libraries(RiverCoin_cpp LINK_PUBLIC ${OPENSSL_LIBRARIES})

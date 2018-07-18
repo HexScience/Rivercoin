@@ -5,6 +5,8 @@
 #ifndef RIVERCOIN_CPP_SERIALIZEABLE_H
 #define RIVERCOIN_CPP_SERIALIZEABLE_H
 
+#define BLOCK_MAGIC_HEADER 0
+
 template <typename T> struct serializeable{
     const short magic_header;
     const T serializeable_data;
