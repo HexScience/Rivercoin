@@ -27,7 +27,7 @@ public:
 //    Server& getServer() const;
     bool lastTransactionWas(long i);
     long long timestamp();
-    virtual void run();
+    virtual void execute();
 //    u_int256 getDifficulty();
 
     bool keepAlive();

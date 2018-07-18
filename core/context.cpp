@@ -22,7 +22,7 @@ bool Context::keepAlive()
     return _keepAlive;
 }
 
-void Context::run()
+void Context::execute()
 {
 }
 
