@@ -37,6 +37,7 @@
 struct config{
     char BASE_TARGET_DIFFICULTY[32] = {15, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127};
     char MIN[32] = {0, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127};
+    char CURRENT[32];
     Address address;
     bool    mining_allowed;
     bool    use_gpu;
@@ -72,6 +73,11 @@ struct config{
                 memdump_interval                = v.second.get<unsigned long>("MemoryDumpInterval");
             }
         }
+    }
+
+    const char * calculateDifficulty()
+    {
+        return BASE_TARGET_DIFFICULTY;
     }
 };
 

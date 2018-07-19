@@ -26,13 +26,13 @@ public:
     Context(boost::property_tree::ptree& tree) : _config(tree)
     {
     }
-    const config& getConfig() const;
+    config& getConfig();
 //    Server& getServer() const;
     bool lastTransactionWas(long i);
     long long timestamp();
     virtual void execute();
     RiverMiner* getMiner();
-//    u_int256 getDifficulty();
+    uint256 getDifficulty();
 
     bool keepAlive();
 };

@@ -6,7 +6,7 @@
 #include <chrono>
 #include "miner.h"
 
-const config& Context::getConfig() const { return _config; }
+config& Context::getConfig() { return _config; }
 
 long long Context::timestamp()
 {
@@ -30,6 +30,11 @@ void Context::execute()
 RiverMiner* Context::getMiner()
 {
     return nullptr;
+}
+
+uint256 Context::getDifficulty()
+{
+    return ByteUtil::fromBytes256(getConfig().calculateDifficulty());
 }
 
 //u_int256 Context::getDifficulty()
