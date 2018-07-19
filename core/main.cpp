@@ -157,13 +157,12 @@ int main(int arg_l, const char* args[]) {
 
 
 
-        Block block(0,0, context->getDifficulty(), *context);
-        unsigned long long nonce = 0;
+        const char* test = "hello world";
+        Block block(150,125124, context->getDifficulty(), *context);
+        unsigned long long nonce = 2;
         char out[32];
 
-        RiverHash::mine(0, (char* )(block.toStoredBlock()), nonce, sizeof(StoredBlock), out, context->getDifficulty());
-
-        std::cout << nonce << " " << toHex(out, 32).c_str() << "\n" << ByteUtil::fromBytes256(out, 32) << std::endl;
+        RiverHash::mine(0, (char* )(&block.toStoredBlock()->header), nonce, sizeof(BlockHeader), out, context->getDifficulty());
 
     /* Clean up */
 

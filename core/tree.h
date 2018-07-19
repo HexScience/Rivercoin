@@ -35,8 +35,8 @@ struct TransactionTreeElement{
 
 class TransactionTree{
 private:
-    TransactionTreeElement* root;
-    std::vector<Transaction> list;
+    TransactionTreeElement*     root = nullptr;
+    std::vector<Transaction>    list;
 public:
     TransactionTree() : root(0)
     {

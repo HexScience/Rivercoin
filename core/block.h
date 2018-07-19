@@ -19,6 +19,24 @@ struct BlockHeader {
     Address                         __miner__;
     unsigned long long              __block_time__;
     unsigned long long              __nonce__;
+
+    BlockHeader(BlockIndex number, uint256 parentHash, uint256 hash, Address miner, unsigned long long time, unsigned long long nonce)
+            : __block_number__(number),
+              __parent_hash__(parentHash),
+              __block_hash__(hash),
+
+    {
+    }
+
+    BlockHeader(const BlockHeader& o)
+            : __block_number__(o.__block_number__),
+              __parent_hash__(o.__parent_hash__),
+              __block_hash__(o.__block_hash__),
+              __miner__(o.__miner__),
+              __block_time__(o.__block_time__),
+              __nonce__(o.__nonce__)
+    {
+    }
 };
 
 struct StoredBlock{
@@ -44,12 +62,19 @@ public:
     Block(unsigned long long index, unsigned long long time, uint256 parentHash, Context& c) : context(c)
     {
         header.__block_number__ = index;
+        header.__block_hash__   = uint256(0);
         header.__parent_hash__  = parentHash;
         header.__block_time__   = time;
+        header.__nonce__        = 0;
+        header.__miner__        = Address();
     }
     Block(const StoredBlock& s, Context& c)
             : header(s.header), context(c)
     {
+    }
+    void setMiner(const Address address)
+    {
+        header.__miner__ = address;
     }
     void add(Transaction& transaction)
     {

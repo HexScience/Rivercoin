@@ -24,13 +24,13 @@ namespace memory{
         buffer(const buffer& o) : specific_length(o.specific_length), index(o.index), data(new T[o.specific_length]) { memcpy(data, o.data, sizeof(T) * specific_length); }
         ~buffer() { delete data; }
 
-        void put(T byte)
+        void put(const T byte)
         {
             if(specific_length > index)
                 data[index ++] = byte;
         }
 
-        void put(T* bytes, unsigned int length)
+        void put(const T* bytes, unsigned int length)
         {
             unsigned int i = 0;
 
@@ -88,7 +88,7 @@ public:
 
     static void mine(int algorithm, const char* input, unsigned long long& nonce, unsigned int length, char* output, uint256 difficulty)
     {
-        void (*fun) (const char*, unsigned long long, unsigned int, char*);
+        void (*fun) (const char*, const unsigned long long, unsigned int, char*);
 
         switch (algorithm)
         {
@@ -99,10 +99,7 @@ public:
                     fun = riverhash_13_v4;
                 break;
             default:
-                logger::alert("mining with RiverHash x13 v1.4");
-                logger::alert("difficulty set to: ");
-                std::cout << difficulty << " and nonce starting at: " << nonce << std::endl;
-                fun = riverhash_13_v4;
+                fun = sha256;
                 break;
         }
 
@@ -118,11 +115,26 @@ public:
             fun(input, nonce, length, output);
             result = ByteUtil::fromBytes256(output);
         }
+
+        std::cout << "hash  found: " << HashUtil::toHex(output, 32) << std::endl;
+        std::cout << "nonce found: " << nonce << std::endl;
+    }
+
+    static void sha256(const char* input, const unsigned long long nonce, unsigned int length, char* output)
+    {
+        const char *nonce_ = (const char *) (&nonce);
+        memory::buffer<char> buffer(length + 8);
+
+        buffer.put(input, length);
+        buffer.put((char *) (&nonce), 8);
+
+        sha256_digest(buffer.data, output, length + 8);
     }
 
     static void riverhash_13_v4(const char* input, const unsigned long long nonce, unsigned int length, char* output)
     {
-        const unsigned long long REQUIRED_SIZE = 2000000;
+//        std::cout << nonce << std::endl;
+        const unsigned long long REQUIRED_SIZE = 256;
         const char *nonce_ = (const char *) (&nonce);
         char *buffer = new char[length + 8];
         memcpy(buffer, input, length);
@@ -163,7 +175,7 @@ public:
 
         buf.rewind();
 
-        while (indexer >= 32)
+        while (indexer > 64)
         {
             char tempA[indexer];
             char tempB[indexer];
@@ -177,14 +189,16 @@ public:
             buf.rewind();
             buf.put(tempC, indexer);
 
+            digest(buf.data, tempOut, indexer);
+
+            buf.put(tempOut, 64);
+
             indexer = buf.index / 2;
         }
 
-        digest(buf.data, tempOut, 32);
-
         char temp[32];
 
-        xor_(tempOut, tempOut + 32, temp, 32);
+        xor_(buf.data, buf.data + 32, temp, 32);
 
         sha256_digest(temp, output, 32);
     }

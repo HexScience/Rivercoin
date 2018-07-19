@@ -14,6 +14,7 @@
 #define TEST_NETWORK_HEADER 1
 #define ADDRESS_SIZE 25
 #define CONTRACT_ADDRESS_SIZE 37
+#define DEFAULT_ADDRESS "1NwxDTT8gywVMmALW3n98sWTCoWyBNWZhQ"
 
 class CompressedPublicKey{
 };
@@ -22,11 +23,11 @@ class Address{
 private:
     const char* address_;
 public:
-    Address() : address_("0xC")
+    Address() : address_(DEFAULT_ADDRESS)
     {
     }
     Address(const char* address) : address_(address) {}
-    Address(CompressedPublicKey key) : address_("0xC") {}
+    Address(CompressedPublicKey key) : address_(DEFAULT_ADDRESS) {}
     Address(const Address& o) : address_(o.address_) {}
     static bool __check_address_valid(const char* addr_);
     bool compare(const Address& o) const;
