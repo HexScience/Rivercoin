@@ -7,7 +7,6 @@
 
 #include "math.h"
 #include <openssl/sha.h>
-#include <openssl/aes.h>
 #include <vector>
 #include <boost/algorithm/hex.hpp>
 #include <algorithm>
@@ -69,6 +68,11 @@ private:
         SHA512((unsigned char *)i, length, (unsigned char *)buf);
     }
 
+    static void sha256_digest(const char* i, char* buf, long length)
+    {
+        SHA256((unsigned char *)i, length, (unsigned char *)buf);
+    }
+
     static void fill_mat(mat4& m, char buf[64])
     {
         float* data = (float*)buf;
@@ -107,7 +111,7 @@ public:
 
         if (result < difficulty) return;
 
-        while (difficulty >= result)
+        while (difficulty <= result)
         {
             nonce ++;
 
@@ -155,7 +159,7 @@ public:
             buf.put(tempOut, 64);
         }
 
-        int indexer = buf.index / 2;
+        unsigned long long indexer = buf.index / 2;
 
         buf.rewind();
 
@@ -178,7 +182,11 @@ public:
 
         digest(buf.data, tempOut, 32);
 
-        xor_(buf.data, buf.data + 32, output, 32);
+        char temp[32];
+
+        xor_(tempOut, tempOut + 32, temp, 32);
+
+        sha256_digest(temp, output, 32);
     }
 
     static void mine_cpu_variant(const char* input, unsigned long long& nonce, unsigned int length,

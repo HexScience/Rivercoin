@@ -163,7 +163,7 @@ int main(int arg_l, const char* args[]) {
 
         RiverHash::mine(0, (char* )(block.toStoredBlock()), nonce, sizeof(StoredBlock), out, context->getDifficulty());
 
-        std::cout << toHex(out, 32).c_str() << std::endl;
+        std::cout << nonce << " " << toHex(out, 32).c_str() << "\n" << ByteUtil::fromBytes256(out, 32) << std::endl;
 
     /* Clean up */
 
