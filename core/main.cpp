@@ -19,6 +19,7 @@
 #include <openssl/err.h>
 
 #include "compute/MochaPP/VM/tinyvm.h"
+#include "block.h"
 //#include "network.h"
 
 int ack(int m, int n)
@@ -115,17 +116,17 @@ int main(int arg_l, const char* args[]) {
 
     Context* context = new Context(pTree);
 
-    char buf[32];
-    char dta[] = "hello world test";
-
-    unsigned long long nonce = 1000000;
-
-    unsigned long long now = context->timestamp();
-
-    RiverHash::apply_cpu_variant(dta, nonce, sizeof(dta), buf);
-
-    unsigned long long time = context->timestamp() - now;
-
+//    char buf[32];
+//    char dta[] = "hello world test";
+//
+//    unsigned long long nonce = 1000000;
+//
+//    unsigned long long now = context->timestamp();
+//
+//    RiverHash::apply_cpu_variant(dta, nonce, sizeof(dta), buf);
+//
+//    unsigned long long time = context->timestamp() - now;
+//
 //    unsigned char program[] = {push_i_8, 15, push_i_8, 50, op_add, char_, char_, int_, stack_load, int_, print, int_, inc, int_, goto_, 0};
 //    unsigned char program[] = {push_i_32, 15, 0, 0, 0, stack_load, int_, print, int_, inc, int_, goto_, 5};
 //
@@ -156,8 +157,13 @@ int main(int arg_l, const char* args[]) {
 
 
 
+        Block block(0,0, context->getDifficulty(), *context);
+        unsigned long long nonce = 0;
+        char out[32];
 
+        RiverHash::mine(0, (char* )(block.toStoredBlock()), nonce, sizeof(StoredBlock), out, context->getDifficulty());
 
+        std::cout << toHex(out, 32).c_str() << std::endl;
 
     /* Clean up */
 

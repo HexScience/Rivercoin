@@ -12,6 +12,7 @@
 #include <boost/algorithm/hex.hpp>
 #include <algorithm>
 #include "../context.h"
+#include "hashutil.h"
 
 namespace memory{
     template <typename T>
@@ -138,7 +139,7 @@ public:
 
         buf.put(tempOut, 64);
 
-        while (buf.index < REQUIRED_SIZE)
+        while (buf.remaining())
         {
             unsigned long index = buf.index;
             unsigned long halfindex = index / 2;
@@ -155,7 +156,6 @@ public:
         }
 
         int indexer = buf.index / 2;
-        char tempC[indexer];
 
         buf.rewind();
 
@@ -163,6 +163,7 @@ public:
         {
             char tempA[indexer];
             char tempB[indexer];
+            char tempC[indexer];
 
             buf.next(tempA, indexer);
             buf.next(tempB, indexer);
