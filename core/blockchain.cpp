@@ -52,7 +52,8 @@ void BlockChain::sendSolution()
 
 BlockIndex BlockChain::activeBlock()
 {
-    return current->getIndex();
+    if (current) return current->getIndex();
+    else return 0;
 }
 
 void BlockChain::removeOldOrphandedBlocks()
@@ -121,10 +122,19 @@ void BlockChain::checkForValidSolutions()
     updateChain(getLongest(subchains));
 }
 
+void BlockChain::createGenesisBlock()
+{
+    char PARENT_HASH[32] = GENESIS_HASH;
+    current = new Block(GENESIS, context->timestamp(), ByteUtil::fromBytes256(PARENT_HASH), *context);
+}
+
 void BlockChain::execute()
 {
     loadAllBlocks();
     downloadAllMissingBlocks();
+
+    if (activeBlock() == 0)
+        createGenesisBlock();
 
     while (context->keepAlive())
     {

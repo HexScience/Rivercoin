@@ -15,6 +15,7 @@
 #define GENESIS 1
 #define NO_CHAIN 0
 #define INVALID_CHAIN 2
+#define GENESIS_HASH {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 class Block;
 class Context;
@@ -27,29 +28,20 @@ private:
     Block*                  current;
 public:
     BlockChain(Context* c);
-
     void loadAllBlocks();
     void downloadAllMissingBlocks();
     void queOrphaned(Block* block);
     void download(Block* block);
     void continueChain();
-
     void serialize();
-
     void sendSolution();
-
     BlockIndex activeBlock();
-
     void removeOldOrphandedBlocks();
-
     void removeInvalidOrphandedBlocks();
-
     std::vector<Block*> getLongest(std::vector<std::vector<Block*>> subchains);
-
     void updateChain(std::vector<Block*> longChain);
-
     void checkForValidSolutions();
-
+    void createGenesisBlock();
     void execute();
 };
 
