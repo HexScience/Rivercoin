@@ -5,8 +5,7 @@
 #ifndef RIVERCOIN_CPP_MINER_H
 #define RIVERCOIN_CPP_MINER_H
 
-
-#include "block.h"
+class Block;
 
 class RiverMiner {
 public:

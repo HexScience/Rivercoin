@@ -7,7 +7,6 @@
 
 #include <vector>
 #include <map>
-#include "block.h"
 #include "serializeable.h"
 #include "fileutils.h"
 #include <string>
@@ -17,16 +16,17 @@
 #define NO_CHAIN 0
 #define INVALID_CHAIN 2
 
+class Block;
+class Context;
+
 class BlockChain{
 private:
     std::vector<Block*>     orphanedBlocks;
     std::vector<Block*>     downloadedBlocks;
-    Context                 context;
+    Context*                context;
     Block*                  current;
 public:
-    BlockChain(Context& c) : context(c)
-    {
-    }
+    BlockChain(Context* c);
 
     void loadAllBlocks();
     void downloadAllMissingBlocks();

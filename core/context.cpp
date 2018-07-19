@@ -4,6 +4,7 @@
 
 #include "context.h"
 #include <chrono>
+#include "miner.h"
 
 const config& Context::getConfig() const { return _config; }
 
@@ -24,6 +25,11 @@ bool Context::keepAlive()
 
 void Context::execute()
 {
+}
+
+RiverMiner* Context::getMiner()
+{
+    return nullptr;
 }
 
 //u_int256 Context::getDifficulty()

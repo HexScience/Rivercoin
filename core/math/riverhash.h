@@ -11,6 +11,7 @@
 #include <vector>
 #include <boost/algorithm/hex.hpp>
 #include <algorithm>
+#include "../context.h"
 
 namespace memory{
     template <typename T>
@@ -94,7 +95,7 @@ public:
 
         fun(input, nonce, length, output);
 
-        u_int256 result(4);
+        uint256 result(4);
     }
 
     static void riverhash_13_v4(const char* input, unsigned long long& nonce, unsigned int length, char* output)

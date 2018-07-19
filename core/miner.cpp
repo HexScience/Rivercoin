@@ -3,3 +3,17 @@
 //
 
 #include "miner.h"
+#include "block.h"
+
+void RiverMiner::mine(Block* block)
+{
+}
+
+bool RiverMiner::busy()
+{
+    return false;
+}
+
+void RiverMiner::interrupt()
+{
+}

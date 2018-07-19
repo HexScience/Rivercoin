@@ -5,7 +5,12 @@
 #include "blockchain.h"
 #include <vector>
 #include "math/math.h"
-
+#include "miner.h"
+#include "block.h"
+#include "context.h"
+BlockChain::BlockChain(Context *c) : context(c)
+{
+}
 void BlockChain::loadAllBlocks() {}
 void BlockChain::downloadAllMissingBlocks() {}
 void BlockChain::queOrphaned(Block *block)
@@ -21,7 +26,7 @@ void BlockChain::continueChain()
 {
     Block* temp = current;
 
-    current = new Block(temp->getIndex() + 1, context.timestamp(), temp->getHash(), context);
+    current = new Block(temp->getIndex() + 1, context->timestamp(), temp->getHash(), *context);
 
     delete(temp);
 }
@@ -68,8 +73,8 @@ std::vector<Block*> BlockChain::getLongest(std::vector<std::vector<Block* >> sub
 
 void BlockChain::updateChain(std::vector<Block *> longChain)
 {
-    if (context.getMiner().busy())
-        context.getMiner().interrupt();
+    if (context->getMiner()->busy())
+        context->getMiner()->interrupt();
 
     /** might want to check if our block is done mining but that's sort of useless? **/
 //    else {
@@ -121,7 +126,7 @@ void BlockChain::execute()
     loadAllBlocks();
     downloadAllMissingBlocks();
 
-    while (context.keepAlive())
+    while (context->keepAlive())
     {
         /** remove any blocks that are too old to be added to the chain **/
         removeOldOrphandedBlocks();
@@ -131,8 +136,8 @@ void BlockChain::execute()
         checkForValidSolutions();
 
         /** check to mine the block **/
-        if (current->ready() && !context.getMiner().busy())
-            context.getMiner().mine(current);
+        if (current->ready() && !context->getMiner()->busy())
+            context->getMiner()->mine(current);
 
         if (current->finished())
         {

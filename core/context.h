@@ -14,14 +14,14 @@
 #include <string>
 #include "logger.h"
 #include "math/math.h"
-#include "math/riverhash.h"
-#include "miner.h"
+
+class RiverMiner;
 
 class Context {
 private:
     config          _config;
     bool            _keepAlive;
-    RiverHash       miner;
+    RiverMiner*     miner;
 public:
     Context(boost::property_tree::ptree& tree) : _config(tree)
     {
@@ -31,7 +31,7 @@ public:
     bool lastTransactionWas(long i);
     long long timestamp();
     virtual void execute();
-    RiverMiner getMiner();
+    RiverMiner* getMiner();
 //    u_int256 getDifficulty();
 
     bool keepAlive();

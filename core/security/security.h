@@ -13,6 +13,7 @@
 #define MAIN_NETWORK_HEADER 0
 #define TEST_NETWORK_HEADER 1
 #define ADDRESS_SIZE 25
+#define CONTRACT_ADDRESS_SIZE 37
 
 class CompressedPublicKey{
 };
