@@ -33,7 +33,6 @@ public:
     virtual void execute();
     RiverMiner* getMiner();
     uint256 getDifficulty();
-
     bool keepAlive();
 };
 

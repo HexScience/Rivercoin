@@ -38,6 +38,11 @@ namespace memory{
                 put(bytes[i ++]);
         }
 
+        void next(T* bytes, unsigned int length)
+        {
+            memcpy(bytes, data, length);
+        }
+
         bool remaining()
         {
             return specific_length > index;
@@ -60,11 +65,7 @@ private:
 
     static void digest(const char* i, char* buf, long length)
     {
-        char skein[128];
-
         SHA512((unsigned char *)i, length, (unsigned char *)buf);
-//        digestpp::skein1024().absorb(i).digest(skein, sizeof(skein));
-//        digestpp::sha512().absorb(buf).digest(buf, sizeof(buf));
     }
 
     static void fill_mat(mat4& m, char buf[64])
@@ -80,26 +81,103 @@ private:
 public:
     enum{RiverHash_CPU, RiverHash_13v1, RiverHash_13_v2, RiverHash_13_v3, RiverHash_13_v4, RiverHash_GPU_v1, RiverHash_ProgPoW, RiverHash_PouW};
 
-    static void mine(int algorithm, const char* input, unsigned long long& nonce, unsigned int length, char* output, Context& context)
+    static void mine(int algorithm, const char* input, unsigned long long& nonce, unsigned int length, char* output, uint256 difficulty)
     {
-        void (*fun) (const char*, unsigned long long&, unsigned int, char*);
+        void (*fun) (const char*, unsigned long long, unsigned int, char*);
 
         switch (algorithm)
         {
             case RiverHash_13_v4:
                     logger::alert("mining with RiverHash x13 v1.4");
                     logger::alert("difficulty set to: ");
+                    std::cout << difficulty << " and nonce starting at: " << nonce << std::endl;
                     fun = riverhash_13_v4;
+                break;
+            default:
+                logger::alert("mining with RiverHash x13 v1.4");
+                logger::alert("difficulty set to: ");
+                std::cout << difficulty << " and nonce starting at: " << nonce << std::endl;
+                fun = riverhash_13_v4;
                 break;
         }
 
         fun(input, nonce, length, output);
+        uint256 result = ByteUtil::fromBytes256(output);
 
-        uint256 result(4);
+        if (result < difficulty) return;
+
+        while (difficulty >= result)
+        {
+            nonce ++;
+
+            fun(input, nonce, length, output);
+            result = ByteUtil::fromBytes256(output);
+        }
     }
 
-    static void riverhash_13_v4(const char* input, unsigned long long& nonce, unsigned int length, char* output)
+    static void riverhash_13_v4(const char* input, const unsigned long long nonce, unsigned int length, char* output)
     {
+        const unsigned long long REQUIRED_SIZE = 2000000;
+        const char *nonce_ = (const char *) (&nonce);
+        char *buffer = new char[length + 8];
+        memcpy(buffer, input, length);
+        buffer[length - 8] = nonce_[0];
+        buffer[length - 7] = nonce_[1];
+        buffer[length - 6] = nonce_[2];
+        buffer[length - 5] = nonce_[3];
+        buffer[length - 4] = nonce_[4];
+        buffer[length - 3] = nonce_[5];
+        buffer[length - 2] = nonce_[6];
+        buffer[length - 1] = nonce_[7];
+
+        memory::buffer<char> buf(REQUIRED_SIZE);
+        char tempOut[64] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+        /** get the digest of input + nonce **/
+        digest(buffer, tempOut, length + 8);
+
+        buf.put(tempOut, 64);
+
+        while (buf.index < REQUIRED_SIZE)
+        {
+            unsigned long index = buf.index;
+            unsigned long halfindex = index / 2;
+
+            char temp[halfindex];
+
+            xor_(buf.data, buf.data + halfindex, temp, halfindex);
+
+            buf.put(temp, halfindex);
+
+            digest(buf.data, tempOut, buf.index);
+
+            buf.put(tempOut, 64);
+        }
+
+        int indexer = buf.index / 2;
+        char tempC[indexer];
+
+        buf.rewind();
+
+        while (indexer >= 32)
+        {
+            char tempA[indexer];
+            char tempB[indexer];
+
+            buf.next(tempA, indexer);
+            buf.next(tempB, indexer);
+
+            xor_(tempA, tempB, tempC, indexer);
+
+            buf.rewind();
+            buf.put(tempC, indexer);
+
+            indexer = buf.index / 2;
+        }
+
+        digest(buf.data, tempOut, 32);
+
+        xor_(buf.data, buf.data + 32, output, 32);
     }
 
     static void mine_cpu_variant(const char* input, unsigned long long& nonce, unsigned int length,

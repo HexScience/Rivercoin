@@ -5,8 +5,15 @@
 #ifndef RIVERCOIN_CPP_ASYNC_H
 #define RIVERCOIN_CPP_ASYNC_H
 
+#include <boost/thread.hpp>
+#include <boost/bind.hpp>
+
 class Async{
-    static void performTask(void*());
+private:
+public:
+    Async(){
+        boost::thread thread;
+    }
 };
 
 #endif //RIVERCOIN_CPP_ASYNC_H

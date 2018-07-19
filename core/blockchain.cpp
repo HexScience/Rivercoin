@@ -147,7 +147,7 @@ void BlockChain::execute()
 
         /** check to mine the block **/
         if (current->ready() && !context->getMiner()->busy())
-            context->getMiner()->mine(current);
+            context->getMiner()->mine(current, uint256(context->getDifficulty()));
 
         if (current->finished())
         {
