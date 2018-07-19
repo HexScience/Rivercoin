@@ -162,7 +162,19 @@ int main(int arg_l, const char* args[]) {
         unsigned long long nonce = 2;
         char out[32];
 
-        RiverHash::mine(0, (char* )(&block.toStoredBlock()->header), nonce, sizeof(BlockHeader), out, context->getDifficulty());
+        BlockHeader header = block.toStoredBlock()->header;
+
+        std::cout <<
+                    header.__block_number__ << "\nhash:" <<
+                    header.__block_hash__ << "\nparent:" <<
+                    header.__parent_hash__ << "\nminer:" <<
+                    header.__miner__.addr() << "\ntime:" <<
+                    header.__block_time__ << "\nnonce:" <<
+                    header.__nonce__ << "\n" <<
+
+                  std::endl;
+
+        RiverHash::mine(0, test, nonce, sizeof(test), out, context->getDifficulty());
 
     /* Clean up */
 

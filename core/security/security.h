@@ -37,6 +37,7 @@ public:
     bool operator== (const Address& a) const;
     bool operator<= (const Address& a) const;
     bool operator>= (const Address& a) const;
+    const char* addr();
 };
 
 //class PublicKey{

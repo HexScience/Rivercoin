@@ -12,10 +12,8 @@
 #include <string>
 #include "security/security.h"
 
-#define GENESIS 1
 #define NO_CHAIN 0
 #define INVALID_CHAIN 2
-#define GENESIS_HASH {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 class Block;
 class Context;

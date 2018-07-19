@@ -24,7 +24,9 @@ struct BlockHeader {
             : __block_number__(number),
               __parent_hash__(parentHash),
               __block_hash__(hash),
-
+              __miner__(miner),
+              __block_time__(time),
+              __nonce__(nonce)
     {
     }
 
@@ -53,20 +55,25 @@ struct StoredBlock{
     }
 };
 
+#define GENESIS 1
+#define GENESIS_HASH {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
 class Block{
 private:
+    char EMPTY_HASH[32] = GENESIS_HASH;
     BlockHeader              header;
     TransactionTree          tree;
     Context                  context;
 public:
-    Block(unsigned long long index, unsigned long long time, uint256 parentHash, Context& c) : context(c)
+    Block(unsigned long long index, unsigned long long time, uint256 parentHash, Context& c)
+            : header(index, parentHash, ByteUtil::fromBytes256(EMPTY_HASH), Address(), time, 0), context(c)
     {
-        header.__block_number__ = index;
-        header.__block_hash__   = uint256(0);
-        header.__parent_hash__  = parentHash;
-        header.__block_time__   = time;
-        header.__nonce__        = 0;
-        header.__miner__        = Address();
+//        header.__block_number__ = index;
+//        header.__block_hash__   = uint256(0);
+//        header.__parent_hash__  = parentHash;
+//        header.__block_time__   = time;
+//        header.__nonce__        = 0;
+//        header.__miner__        = Address();
     }
     Block(const StoredBlock& s, Context& c)
             : header(s.header), context(c)

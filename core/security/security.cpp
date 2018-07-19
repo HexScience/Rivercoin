@@ -47,3 +47,8 @@ bool Address::__check_address_valid(const char *addr_)
 {
     return false;
 }
+
+const char* Address::addr()
+{
+    return address_;
+}
