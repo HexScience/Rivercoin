@@ -52,3 +52,9 @@ const char* Address::addr()
 {
     return address_;
 }
+
+void Address::setAddress(const char *address)
+{
+    for (int i = 0; i < ADDRESS_SIZE; i ++)
+        address_[i] = address[i];
+}

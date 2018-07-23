@@ -12,6 +12,7 @@
 #include <algorithm>
 #include "../context.h"
 #include "hashutil.h"
+#include "../block.h"
 
 namespace memory{
     template <typename T>
@@ -86,49 +87,46 @@ private:
 public:
     enum{RiverHash_CPU, RiverHash_13v1, RiverHash_13_v2, RiverHash_13_v3, RiverHash_13_v4, RiverHash_GPU_v1, RiverHash_ProgPoW, RiverHash_PouW};
 
-    static void mine(int algorithm, const char* input, unsigned long long& nonce, unsigned int length, char* output, uint256 difficulty)
+    static void mine(int algorithm, StoredBlock* block, unsigned int length, char* output, uint256 difficulty)
     {
-        void (*fun) (const char*, const unsigned long long, unsigned int, char*);
+        void (*fun) (const char*, unsigned int, char*);
 
         switch (algorithm)
         {
             case RiverHash_13_v4:
                     logger::alert("mining with RiverHash x13 v1.4");
                     logger::alert("difficulty set to: ");
-                    std::cout << difficulty << " and nonce starting at: " << nonce << std::endl;
-                    fun = riverhash_13_v4;
+                    std::cout << difficulty << " and nonce starting at: " << block->header.__nonce__ << std::endl;
+//                    fun = riverhash_13_v4;
+                    fun = sha256;
                 break;
             default:
                 fun = sha256;
                 break;
         }
 
-        fun(input, nonce, length, output);
+        fun((char *) block, length, output);
         uint256 result = ByteUtil::fromBytes256(output);
 
         if (result < difficulty) return;
 
         while (difficulty <= result)
         {
-            nonce ++;
+            block->header.__nonce__ ++;
 
-            fun(input, nonce, length, output);
+            fun((char *) block, length, output);
             result = ByteUtil::fromBytes256(output);
         }
 
         std::cout << "hash  found: " << HashUtil::toHex(output, 32) << std::endl;
-        std::cout << "nonce found: " << nonce << std::endl;
+        std::cout << "nonce found: " << block->header.__nonce__ << std::endl;
+
+        block->header.__block_hash__ = ByteUtil::fromBytes256(output);
     }
 
-    static void sha256(const char* input, const unsigned long long nonce, unsigned int length, char* output)
+    static void sha256(const char* input, unsigned int length, char* output)
     {
-        const char *nonce_ = (const char *) (&nonce);
-        memory::buffer<char> buffer(length + 8);
-
-        buffer.put(input, length);
-        buffer.put((char *) (&nonce), 8);
-
-        sha256_digest(buffer.data, output, length + 8);
+        sha256_digest(input, output, length);
     }
 
     static void riverhash_13_v4(const char* input, const unsigned long long nonce, unsigned int length, char* output)

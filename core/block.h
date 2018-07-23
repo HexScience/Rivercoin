@@ -13,11 +13,11 @@
 #include "security/security.h"
 
 struct BlockHeader {
-    BlockIndex                      __block_number__;
-    uint256                         __parent_hash__;
-    uint256                         __block_hash__;
-    Address                         __miner__;
-    unsigned long long              __block_time__;
+    const BlockIndex                      __block_number__;
+    const uint256                         __parent_hash__;
+    uint256                               __block_hash__;
+    const Address                         __miner__;
+    const unsigned long long              __block_time__;
     unsigned long long              __nonce__;
 
     BlockHeader(BlockIndex number, uint256 parentHash, uint256 hash, Address miner, unsigned long long time, unsigned long long nonce)
@@ -81,7 +81,7 @@ public:
     }
     void setMiner(const Address address)
     {
-        header.__miner__ = address;
+//        header.__miner__.setAddress(address);
     }
     void add(Transaction& transaction)
     {

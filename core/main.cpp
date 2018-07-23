@@ -61,7 +61,7 @@ std::string toHex(const char * data, int length)
     return string;
 }
 
-int char2int(char input)
+static int char2int(char input)
 {
     if(input >= '0' && input <= '9')
         return input - '0';
@@ -74,7 +74,7 @@ int char2int(char input)
 
 // This function assumes src to be a zero terminated sanitized string with
 // an even number of [0-9a-f] characters, and target to be sufficiently large
-void hexToBytes(const char* src, char* target)
+static void hexToBytes(const char* src, char* target)
 {
     while(*src && src[1])
     {
@@ -155,26 +155,25 @@ int main(int arg_l, const char* args[]) {
 //    std::cout << i256 << "\n" << i2562 << "\n" << (i256 > i2562) << std::endl;
 //    std::cout << (uint256::fromBytes256(context->getConfig().BASE_TARGET_DIFFICULTY) > i256) << std::endl;
 
-
-
         const char* test = "hello world";
-        Block block(150,125124, context->getDifficulty(), *context);
-        unsigned long long nonce = 2;
+        Block block(150, 125124, context->getDifficulty(), *context);
+//        unsigned long long nonce = 2;
         char out[32];
 
-        BlockHeader header = block.toStoredBlock()->header;
+//        std::cout <<
+//                    header.__block_number__ <<  "\nhash:" <<
+//                    header.__block_hash__ <<    "\nparent:" <<
+//                    header.__parent_hash__ <<   "\nminer:" <<
+//                    header.__miner__.addr() <<  "\ntime:" <<
+//                    header.__block_time__ <<    "\nnonce:" <<
+//                    header.__nonce__ <<         "\n" <<
+//                  std::endl;
 
-        std::cout <<
-                    header.__block_number__ << "\nhash:" <<
-                    header.__block_hash__ << "\nparent:" <<
-                    header.__parent_hash__ << "\nminer:" <<
-                    header.__miner__.addr() << "\ntime:" <<
-                    header.__block_time__ << "\nnonce:" <<
-                    header.__nonce__ << "\n" <<
+//        std::cout << sizeof(header) << std::endl;
 
-                  std::endl;
+        hexToBytes("000033334EAADBD5513E67397611CE4D22D434577161FC6EDBA6F3E6DA8ECCCD", out);
 
-        RiverHash::mine(0, test, nonce, sizeof(test), out, context->getDifficulty());
+        RiverHash::mine(0, block.toStoredBlock(), sizeof(StoredBlock), out, ByteUtil::fromBytes256(out));
 
     /* Clean up */
 

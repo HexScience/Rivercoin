@@ -21,14 +21,15 @@ class CompressedPublicKey{
 
 class Address{
 private:
-    const char* address_;
+     char address_[ADDRESS_SIZE];
 public:
-    Address() : address_(DEFAULT_ADDRESS)
+    Address()
     {
+        setAddress(DEFAULT_ADDRESS);
     }
-    Address(const char* address) : address_(address) {}
-    Address(CompressedPublicKey key) : address_(DEFAULT_ADDRESS) {}
-    Address(const Address& o) : address_(o.address_) {}
+    Address(const char* address) {setAddress(address);}
+    Address(CompressedPublicKey key) {setAddress(DEFAULT_ADDRESS);}
+    Address(const Address& o) {setAddress(o.address_);}
     static bool __check_address_valid(const char* addr_);
     bool compare(const Address& o) const;
     uint256 asuint256() const;
@@ -38,6 +39,7 @@ public:
     bool operator<= (const Address& a) const;
     bool operator>= (const Address& a) const;
     const char* addr();
+    void setAddress(const char address[ADDRESS_SIZE]);
 };
 
 //class PublicKey{
