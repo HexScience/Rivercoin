@@ -11,6 +11,8 @@
 #include "config.h"
 #include "context.h"
 #include "security/security.h"
+#include <memory>
+#include <algorithm>
 
 struct BlockHeader {
     const BlockIndex                      __block_number__;
@@ -116,9 +118,9 @@ public:
     {
         return false;
     }
-    StoredBlock* toStoredBlock()
+    std::shared_ptr<StoredBlock> toStoredBlock()
     {
-        return new StoredBlock(header, tree);
+        return std::shared_ptr<StoredBlock>(new StoredBlock(header, tree));
     }
     ~Block() {}
 
@@ -134,6 +136,17 @@ public:
     bool finished()
     {
         return false;
+    }
+
+    void removeTransactions(std::vector<Transaction> &vector)
+    {
+        for (auto transaction : tree.get())
+        {
+            std::vector<Transaction>::iterator i = std::find(vector.begin(), vector.end(), transaction);
+
+            if (i != vector.end())
+                vector.erase(i);
+        }
     }
 };
 

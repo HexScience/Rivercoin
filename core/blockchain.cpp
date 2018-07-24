@@ -8,6 +8,8 @@
 #include "miner.h"
 #include "block.h"
 #include "context.h"
+#include <memory>
+
 BlockChain::BlockChain(Context *c) : context(c)
 {
 }
@@ -17,6 +19,10 @@ void BlockChain::queOrphaned(Block *block)
 {
     orphanedBlocks.push_back(block);
 }
+void BlockChain::queTransaction(Transaction transaction)
+{
+    transactionStream.push_back(transaction);
+}
 void BlockChain::download(Block *block)
 {
     downloadedBlocks.push_back(block);
@@ -25,6 +31,8 @@ void BlockChain::download(Block *block)
 void BlockChain::continueChain()
 {
     Block* temp = current;
+
+    temp->removeTransactions(transactionStream);
 
     current = new Block(temp->getIndex() + 1, context->timestamp(), temp->getHash(), *context);
 
@@ -48,6 +56,11 @@ void BlockChain::serialize()
 
 void BlockChain::sendSolution()
 {
+    std::shared_ptr<StoredBlock> block = current->toStoredBlock();
+
+    Message msg(BLOCK_MAGIC_HEADER, (char *) block.get());
+
+    context->sendMessageToNetwork(msg);
 }
 
 BlockIndex BlockChain::activeBlock()

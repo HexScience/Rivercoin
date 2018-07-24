@@ -11,6 +11,7 @@
 #include "fileutils.h"
 #include <string>
 #include "security/security.h"
+#include "transaction.h"
 
 #define NO_CHAIN 0
 #define INVALID_CHAIN 2
@@ -22,6 +23,7 @@ class BlockChain{
 private:
     std::vector<Block*>     orphanedBlocks;
     std::vector<Block*>     downloadedBlocks;
+    std::vector<Transaction>transactionStream;
     Context*                context;
     Block*                  current;
 public:
@@ -29,6 +31,7 @@ public:
     void loadAllBlocks();
     void downloadAllMissingBlocks();
     void queOrphaned(Block* block);
+    void queTransaction(Transaction transaction);
     void download(Block* block);
     void continueChain();
     void serialize();

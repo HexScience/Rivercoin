@@ -97,8 +97,7 @@ public:
                     logger::alert("mining with RiverHash x13 v1.4");
                     logger::alert("difficulty set to: ");
                     std::cout << difficulty << " and nonce starting at: " << block->header.__nonce__ << std::endl;
-//                    fun = riverhash_13_v4;
-                    fun = sha256;
+                    fun = riverhash_13_v4;
                 break;
             default:
                 fun = sha256;
@@ -129,27 +128,16 @@ public:
         sha256_digest(input, output, length);
     }
 
-    static void riverhash_13_v4(const char* input, const unsigned long long nonce, unsigned int length, char* output)
+    static void riverhash_13_v4(const char* input, unsigned int length, char* output)
     {
 //        std::cout << nonce << std::endl;
         const unsigned long long REQUIRED_SIZE = 256;
-        const char *nonce_ = (const char *) (&nonce);
-        char *buffer = new char[length + 8];
-        memcpy(buffer, input, length);
-        buffer[length - 8] = nonce_[0];
-        buffer[length - 7] = nonce_[1];
-        buffer[length - 6] = nonce_[2];
-        buffer[length - 5] = nonce_[3];
-        buffer[length - 4] = nonce_[4];
-        buffer[length - 3] = nonce_[5];
-        buffer[length - 2] = nonce_[6];
-        buffer[length - 1] = nonce_[7];
 
         memory::buffer<char> buf(REQUIRED_SIZE);
         char tempOut[64] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
         /** get the digest of input + nonce **/
-        digest(buffer, tempOut, length + 8);
+        digest(input, tempOut, length + 8);
 
         buf.put(tempOut, 64);
 

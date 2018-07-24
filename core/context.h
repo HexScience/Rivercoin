@@ -34,6 +34,7 @@ public:
     RiverMiner* getMiner();
     uint256 getDifficulty();
     bool keepAlive();
+    void sendMessageToNetwork(const Message& msg) const;
 };
 
 

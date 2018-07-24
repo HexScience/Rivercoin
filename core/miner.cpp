@@ -8,10 +8,11 @@
 //#include <boost/thread.hpp>
 //#include <boost/thread/future.hpp>
 //#include <boost/thread/tss.hpp>
+#include <memory>
 
 void RiverMiner::mine(Block* block, const uint256& difficulty)
 {
-    StoredBlock* storedBlock = block->toStoredBlock();
+    std::shared_ptr<StoredBlock> storedBlock = block->toStoredBlock();
     const char* in = (char* ) storedBlock;
     unsigned long long nonce = 0;
     char out[32];

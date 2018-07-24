@@ -55,6 +55,11 @@ public:
     void build()
     {
     }
+
+    std::vector<Transaction> get()
+    {
+        return list;
+    }
 };
 
 #endif //RIVERCOIN_CPP_TREE_H

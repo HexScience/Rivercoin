@@ -37,6 +37,10 @@ uint256 Context::getDifficulty()
     return ByteUtil::fromBytes256(getConfig().calculateDifficulty());
 }
 
+void Context::sendMessageToNetwork(const Message& msg) const
+{
+}
+
 //u_int256 Context::getDifficulty()
 //{
 //    return uint256::fromBytes256("11111111111111111111111111111111111111");

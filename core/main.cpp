@@ -171,9 +171,9 @@ int main(int arg_l, const char* args[]) {
 
 //        std::cout << sizeof(header) << std::endl;
 
-        hexToBytes("000033334EAADBD5513E67397611CE4D22D434577161FC6EDBA6F3E6DA8ECCCD", out);
+        hexToBytes("033113334EAADBD5513E67397611CE4D22D434577161FC6EDBA6F3E6DA8ECCCD", out);
 
-        RiverHash::mine(0, block.toStoredBlock(), sizeof(StoredBlock), out, ByteUtil::fromBytes256(out));
+        RiverHash::mine(RiverHash::RiverHash_ProgPoW, block.toStoredBlock().get(), sizeof(StoredBlock), out, ByteUtil::fromBytes256(out));
 
     /* Clean up */
 

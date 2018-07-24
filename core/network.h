@@ -43,14 +43,12 @@
 #define MSG_GOODBYE 8
 #define MSG_FULL_BLOCK_SET 9
 
-struct Message{
-    serializeable<char*> s;
-};
+typedef serializeable<char*> Message;
 
 class Client{
 private:
 public:
-    void send(Message msg);
+    void send(serializeable<char*> msg);
     void connect();
     void disconnect();
 };
