@@ -19,6 +19,15 @@
 class Block;
 class Context;
 
+struct BlockInfo{
+    std::vector<char> data;
+    BlockInfo();
+    BlockInfo(const BlockInfo& o);
+    bool read();
+    bool dump();
+    BlockIndex getLatestBlock();
+};
+
 class BlockChain{
 private:
     std::vector<Block*>     orphanedBlocks;

@@ -20,7 +20,7 @@ struct BlockHeader {
     uint256                               __block_hash__;
     const Address                         __miner__;
     const unsigned long long              __block_time__;
-    unsigned long long              __nonce__;
+    unsigned long long                    __nonce__;
 
     BlockHeader(BlockIndex number, uint256 parentHash, uint256 hash, Address miner, unsigned long long time, unsigned long long nonce)
             : __block_number__(number),
@@ -43,9 +43,15 @@ struct BlockHeader {
     }
 };
 
+class Block;
+
 struct StoredBlock{
     BlockHeader     header;
     TransactionTree tree;
+
+//    StoredBlock() : header(0, ByteUtil::fromBytes256(EMPTY_HASH), ByteUtil::fromBytes256(EMPTY_HASH), Address(), 0, 0)
+//    {
+//    }
 
     StoredBlock(BlockHeader h, TransactionTree t) : header(h), tree(t)
     {
@@ -77,6 +83,8 @@ public:
 //        header.__nonce__        = 0;
 //        header.__miner__        = Address();
     }
+
+    Block(StoredBlock& block, Context& c) : header(block.header), tree(block.tree), context(c) {}
     Block(const StoredBlock& s, Context& c)
             : header(s.header), context(c)
     {

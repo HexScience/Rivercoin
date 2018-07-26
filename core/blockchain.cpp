@@ -10,10 +10,50 @@
 #include "context.h"
 #include <memory>
 
+BlockInfo::BlockInfo(const BlockInfo &o) : data(o.data) {}
+
+bool BlockInfo::read()
+{
+    unsigned char ERROR = 0;
+    data = file::read(std::string(".") + PATH_SEPARATOR + "structure" + PATH_SEPARATOR + "config.xml", ERROR);
+
+    return ERROR == 0;
+}
+
+bool BlockInfo::dump()
+{
+    unsigned char ERROR = 0;
+    file::write<const char*>(std::string(".") + PATH_SEPARATOR + "structure" + PATH_SEPARATOR + "config.xml", data.data(), ERROR);
+
+    return ERROR == 0;
+}
+
+BlockIndex BlockInfo::getLatestBlock()
+{
+    if (data.size() == 0) return 0;
+    return ((BlockIndex *)data.data())[0];
+}
+
 BlockChain::BlockChain(Context *c) : context(c)
 {
 }
-void BlockChain::loadAllBlocks() {}
+void BlockChain::loadAllBlocks()
+{
+    BlockInfo info;
+    if (info.read())
+    {
+        BlockIndex i = info.getLatestBlock();
+        unsigned char ERROR = 0;
+        std::vector<char> data = file::read(std::string(".") + PATH_SEPARATOR + "structure" + PATH_SEPARATOR + "config.xml", ERROR);
+
+        if (ERROR != 0)
+        {
+            serializeable<StoredBlock> serialized = ((serializeable<StoredBlock> *) data.data())[0];
+
+            current = new Block(serialized.serializeable_data, *context);
+        }
+    }
+}
 void BlockChain::downloadAllMissingBlocks() {}
 void BlockChain::queOrphaned(Block *block)
 {
@@ -42,11 +82,12 @@ void BlockChain::continueChain()
 void BlockChain::serialize()
 {
     using std::string;
-    serializeable<Block> s(BLOCK_MAGIC_HEADER, *current);
+    StoredBlock block = *(current->toStoredBlock().get());
+    serializeable<StoredBlock> s(BLOCK_MAGIC_HEADER, block);
 
     unsigned char ERROR = 0;
 
-    file::write((string(STRUCTURE_DB_NAME) + string(BLOCKCHAIN_DB_NAME) + string("block[") + std::to_string(current->getIndex()) + string("].blk")).c_str(), s, ERROR);
+    file::write<StoredBlock>((string(STRUCTURE_DB_NAME) + string(BLOCKCHAIN_DB_NAME) + string("block[") + std::to_string(current->getIndex()) + string("].blk")).c_str(), s, ERROR);
 
     if(ERROR != 0)
     {
