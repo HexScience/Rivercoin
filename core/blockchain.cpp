@@ -112,9 +112,14 @@ void BlockChain::serialize()
             info.setLatestBlock(current->getIndex());
 
             if (!info.dump())
-                logger::err(string(string("couldn't export block info '") + std::to_string(current->getIndex()) + string("'.")));
+                logger::err(string(string("couldn't dump block info '") + std::to_string(current->getIndex()) + string("'.")));
         } else {
             info.allocate();
+
+            info.setLatestBlock(current->getIndex());
+
+            if (!info.dump())
+                logger::err(string(string("couldn't dump block info '") + std::to_string(current->getIndex()) + string("'.")));
         }
     }
 }
