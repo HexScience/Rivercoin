@@ -29,6 +29,12 @@ bool BlockInfo::dump()
     return ERROR == 0;
 }
 
+void BlockInfo::allocate()
+{
+    for (int i = 0; i < BLOCKINFO_SIZE; i ++)
+        data.push_back(0);
+}
+
 void BlockInfo::setLatestBlock(BlockIndex i)
 {
     if (data.size() == 0) return;
@@ -107,6 +113,8 @@ void BlockChain::serialize()
 
             if (!info.dump())
                 logger::err(string(string("couldn't export block info '") + std::to_string(current->getIndex()) + string("'.")));
+        } else {
+            info.allocate();
         }
     }
 }

@@ -20,11 +20,13 @@ class Block;
 class Context;
 
 struct BlockInfo{
+#define BLOCKINFO_SIZE sizeof(BlockIndex)
     std::vector<char> data;
     BlockInfo();
     BlockInfo(const BlockInfo& o);
     bool read();
     bool dump();
+    void allocate();
     void setLatestBlock(BlockIndex i);
     BlockIndex getLatestBlock();
 };
