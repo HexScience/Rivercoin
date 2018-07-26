@@ -127,7 +127,7 @@ void BlockChain::checkForValidSolutions()
         for(unsigned long j = 0; j < orphanedBlocks.size(); j ++)
             if (orphanedBlocks[j]->getMiner() == miner)
                 subchains[i].push_back(orphanedBlocks[j]);
-        /** we could insteade add the above code into the erase code but it COULD have some undefined or unexpected behaviour so instead to loops should suffice **/
+        /** we could insteade add the above code into the erase code but it COULD have some undefined or unexpected behaviour so instead two loops should suffice **/
 
         orphanedBlocks.erase(std::remove_if(orphanedBlocks.begin(), orphanedBlocks.end(), [](Block* b) { return !b->checkSolutionValid(); }), orphanedBlocks.end());
     }
