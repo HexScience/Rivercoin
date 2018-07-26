@@ -17,6 +17,16 @@
 #define DEFAULT_ADDRESS "1NwxDTT8gywVMmALW3n98sWTCoWyBNWZhQ"
 
 class CompressedPublicKey{
+public:
+    bool operator== (const CompressedPublicKey& o)
+    {
+        return false;
+    }
+
+    bool operator!= (const CompressedPublicKey& o)
+    {
+        return !(*this == o);
+    }
 };
 
 class Address{

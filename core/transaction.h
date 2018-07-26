@@ -5,6 +5,7 @@
 #ifndef RIVERCOIN_CPP_TRANSACTION_H
 #define RIVERCOIN_CPP_TRANSACTION_H
 
+#include "defines.h"
 #include "hash.h"
 #include "rivercoin.h"
 #include "security/security.h"
@@ -58,19 +59,68 @@ public:
 
 class Transaction{
 private:
+    enum {FUND_TRANSFER, REWARD, CONTRACT, CONTRACT_INVOKE};
     unsigned char type;
     CompressedPublicKey sender;
     Address             receiver;
-    unsigned char       transactionData[96];
-    unsigned char       transactionInputs[256];
+    unsigned char       transactionData[256];
 public:
+    Transaction() {}
     Transaction(unsigned char t,
                 CompressedPublicKey s,
                 Address r) : type(t), sender(s), receiver(r) {}
 
     bool valid(Context& context)
     {
+        if (type != FUND_TRANSFER && type != REWARD && type != CONTRACT && type != CONTRACT_INVOKE) return false;
+
         return false;
+    }
+
+    bool operator== (const Transaction& o)
+    {
+        if (type != o.type) return false;
+
+        if (sender != o.sender) return false;
+
+        for (unsigned int i = 0; i < 256; i ++)
+            if (transactionData[i] != o.transactionData[i]) return false;
+
+//        for (unsigned int i = 0; i < 256; i ++)
+//            if (transactionInputs[i] != o.transactionInputs[i]) return false;
+    }
+
+    CompressedPublicKey getSender()
+    {
+        return sender;
+    }
+
+    Address getReceiver()
+    {
+        return receiver;
+    }
+
+    unsigned char* getTransactionData()
+    {
+        return transactionData;
+    }
+};
+
+class FundTransfer {
+private:
+public:
+    virtual void createOutputs(Transaction& t, std::vector<Output>& out)
+    {
+        rvc amount = ((rvc *)t.getTransactionData())[0];
+        unsigned long long nonce = ((unsigned long long *) t.getTransactionData() + sizeof(rvc))[0];
+    }
+
+    virtual void generateOutputs(Transaction& t, Ledger& ledger)
+    {
+    }
+
+    virtual void undoGenerateOutputs(Transaction& t, Ledger& ledger)
+    {
     }
 };
 

@@ -7,6 +7,7 @@
 
 #include "math.h"
 #include <openssl/sha.h>
+#include <openssl/ripemd.h>
 #include <vector>
 #include <boost/algorithm/hex.hpp>
 #include <algorithm>
@@ -74,6 +75,16 @@ private:
         SHA256((unsigned char *)i, length, (unsigned char *)buf);
     }
 
+    static void sha512_digest(const char* i, char* buf, long length)
+    {
+        SHA512((unsigned char *)i, length, (unsigned char *)buf);
+    }
+
+    static void rmd160_digest(const char* i, char* buf, long length)
+    {
+        RIPEMD160((unsigned char *)i, length, (unsigned char *)buf);
+    }
+
     static void fill_mat(mat4& m, char buf[64])
     {
         float* data = (float*)buf;
@@ -85,22 +96,29 @@ private:
     {
     }
 public:
-    enum{RiverHash_CPU, RiverHash_13v1, RiverHash_13_v2, RiverHash_13_v3, RiverHash_13_v4, RiverHash_GPU_v1, RiverHash_ProgPoW, RiverHash_PouW};
+    enum{RiverHash_CPU, RiverHash_13v1, RiverHash_13_v2, RiverHash_13_v3, RiverHash_13_v4, RiverHash_GPU_v1, RiverHash_ProgPoW, RiverHash_PouW, RiverHash_256_variant};
 
     static void mine(int algorithm, StoredBlock* block, unsigned int length, char* output, uint256 difficulty)
     {
         void (*fun) (const char*, unsigned int, char*);
 
+        char rev[32];
+
+        logger::alert("");
+        ByteUtil::reverse((char *) &difficulty, rev);
+        std::cout << "difficulty set to: " << HashUtil::toHex(rev, 32)/** << " and nonce starting at: " **/<< block->header.__nonce__ << std::endl;
+
         switch (algorithm)
         {
             case RiverHash_13_v4:
-                    logger::alert("mining with RiverHash x13 v1.4");
-                    logger::alert("difficulty set to: ");
-                    std::cout << difficulty << " and nonce starting at: " << block->header.__nonce__ << std::endl;
-                    fun = riverhash_13_v4;
+                logger::alert("mining with RiverHash x13 v1.4");
+                fun = riverhash_13_v4;
+                break;
+            case RiverHash_256_variant:
+                    fun = sha256;
                 break;
             default:
-                fun = sha256;
+                    fun = sha256;
                 break;
         }
 
@@ -117,15 +135,19 @@ public:
             result = ByteUtil::fromBytes256(output);
         }
 
-        std::cout << "hash  found: " << HashUtil::toHex(output, 32) << std::endl;
-        std::cout << "nonce found: " << block->header.__nonce__ << std::endl;
+        std::cout << "hash  found:       " << HashUtil::toHex(output, 32) << std::endl;
+        std::cout << "nonce found:       " << block->header.__nonce__ << std::endl;
 
         block->header.__block_hash__ = ByteUtil::fromBytes256(output);
     }
 
     static void sha256(const char* input, unsigned int length, char* output)
     {
-        sha256_digest(input, output, length);
+        char out[64];
+        sha512_digest(input, out, length);
+        sha256_digest(out, output, 64);
+        rmd160_digest(output, output, 32);
+        sha256_digest(output, output, 20);
     }
 
     static void riverhash_13_v4(const char* input, unsigned int length, char* output)

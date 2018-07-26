@@ -31,6 +31,9 @@
 //
 
 #include "serializeable.h"
+#include <string>
+#include <vector>
+#include <set>
 
 #define MSG_RECEIVED_SUCCESSFULLY 0
 #define MSG_CORRUPTED 1
@@ -45,12 +48,37 @@
 
 typedef serializeable<char*> Message;
 
+struct SocketConnection{
+    const std::string       ip;
+    const unsigned short    port;
+    bool                    connected;
+    SocketConnection(const std::string _ip_, unsigned short _port_) : ip(_ip_), port(_port_) {}
+    void makeConnection();
+    bool isConnected();
+    void disconnect();
+};
+
 class Client{
 private:
+    static Message interpretMessage(unsigned char msg);
 public:
     void send(serializeable<char*> msg);
+    void receive();
     void connect();
     void disconnect();
+};
+
+class Server{
+private:
+    std::set<Client>        clients;
+    std::set<std::string>   ipAddresses;
+    void makeConnection(const std::string& ip);
+    void acceptConnections();
+    void readAllIpAddresses();
+    void writeAllIpAddresses();
+public:
+    void send(Message msg);
+    void close();
 };
 
 #endif //RIVERCOIN_CPP_NETWORK_H

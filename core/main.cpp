@@ -88,11 +88,7 @@ static void hexStringToByteArray(std::string s, const char* data)
 }
 
 int main(int arg_l, const char* args[]) {
-//    logger::alert("----------------------------------------");
-//    rvc my_balance = rvc(50.05020102);
-//    logger::alert(std::string(std::string("Mining Address: ") + mining_address).c_str());
-//    logger::alert("if address is incorrect, please restart the client.");
-//
+    logger::alert("----------------------------------------");
 
     /* Load the human readable error strings for libcrypto */
     ERR_load_crypto_strings();
@@ -116,64 +112,12 @@ int main(int arg_l, const char* args[]) {
 
     Context* context = new Context(pTree);
 
-//    char buf[32];
-//    char dta[] = "hello world test";
-//
-//    unsigned long long nonce = 1000000;
-//
-//    unsigned long long now = context->timestamp();
-//
-//    RiverHash::apply_cpu_variant(dta, nonce, sizeof(dta), buf);
-//
-//    unsigned long long time = context->timestamp() - now;
-//
-//    unsigned char program[] = {push_i_8, 15, push_i_8, 50, op_add, char_, char_, int_, stack_load, int_, print, int_, inc, int_, goto_, 0};
-//    unsigned char program[] = {push_i_32, 15, 0, 0, 0, stack_load, int_, print, int_, inc, int_, goto_, 5};
-//
-//    MochaVM vm;
-//
-//    unsigned int index = 0;
-//    vm.execute(program, sizeof(program), index);
-
-
-//    boost::multiprecision::uint256_t t("7009962265102230458240694435574978735234727012846377283761280208322191916927");
-//    boost::multiprecision::uint256_t b = uint256::fromBytes256(context->getConfig().BASE_TARGET_DIFFICULTY);
-//
-//    std::cout << t << std::endl;
-//    std::cout << b << std::endl;
-//    std::cout << (t>b) << std::endl;
-//
-//    std::string difficulty = "000000004EAADBD5513E67397611CE4D22D434577161FC6EDBA6F3E6DA8ECCCD";
-//    const char difficulty_bytes[32]     = {0, 0, 0, 0, 78, -86, -37, -43, 81, 62, 103, 57, 118, 17, -50, 77, 34, -44, 52, 87, 113, 97, -4, 110, -37, -90, -13, -26, -38, -114, -52, -51};
-//    const char difficulty_bytes2[32]    = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, -44, 52, 87, 113, 97, -4, 110, -37, -90, -13, -26, -38, -114, -52, -51};
-//
-//    u_int256 i256   = uint256::fromBytes256(difficulty_bytes);
-//    u_int256 i2562  = uint256::fromBytes256(difficulty_bytes2);
-//
-//    std::cout << toHex(difficulty_bytes2, 32) << std::endl;
-//
-//    std::cout << i256 << "\n" << i2562 << "\n" << (i256 > i2562) << std::endl;
-//    std::cout << (uint256::fromBytes256(context->getConfig().BASE_TARGET_DIFFICULTY) > i256) << std::endl;
-
-        const char* test = "hello world";
         Block block(150, 125124, context->getDifficulty(), *context);
-//        unsigned long long nonce = 2;
         char out[32];
 
-//        std::cout <<
-//                    header.__block_number__ <<  "\nhash:" <<
-//                    header.__block_hash__ <<    "\nparent:" <<
-//                    header.__parent_hash__ <<   "\nminer:" <<
-//                    header.__miner__.addr() <<  "\ntime:" <<
-//                    header.__block_time__ <<    "\nnonce:" <<
-//                    header.__nonce__ <<         "\n" <<
-//                  std::endl;
+        hexToBytes("000A13334EAADBD5513E67397611CE4D22D434577161FC6EDBA6F3E6DA8ECCCD", out);
 
-//        std::cout << sizeof(header) << std::endl;
-
-        hexToBytes("033113334EAADBD5513E67397611CE4D22D434577161FC6EDBA6F3E6DA8ECCCD", out);
-
-        RiverHash::mine(RiverHash::RiverHash_ProgPoW, block.toStoredBlock().get(), sizeof(StoredBlock), out, ByteUtil::fromBytes256(out));
+        RiverHash::mine(RiverHash::RiverHash_256_variant, block.toStoredBlock().get(), sizeof(StoredBlock), out, ByteUtil::fromBytes256(out));
 
     /* Clean up */
 
