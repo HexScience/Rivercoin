@@ -22,25 +22,8 @@ struct BlockHeader {
     const unsigned long long              __block_time__;
     unsigned long long                    __nonce__;
 
-    BlockHeader(BlockIndex number, uint256 parentHash, uint256 hash, Address miner, unsigned long long time, unsigned long long nonce)
-            : __block_number__(number),
-              __parent_hash__(parentHash),
-              __block_hash__(hash),
-              __miner__(miner),
-              __block_time__(time),
-              __nonce__(nonce)
-    {
-    }
-
-    BlockHeader(const BlockHeader& o)
-            : __block_number__(o.__block_number__),
-              __parent_hash__(o.__parent_hash__),
-              __block_hash__(o.__block_hash__),
-              __miner__(o.__miner__),
-              __block_time__(o.__block_time__),
-              __nonce__(o.__nonce__)
-    {
-    }
+    BlockHeader(BlockIndex number, uint256 parentHash, uint256 hash, Address miner, unsigned long long time, unsigned long long nonce);
+    BlockHeader(const BlockHeader& o);
 };
 
 class Block;
@@ -48,19 +31,11 @@ class Block;
 struct StoredBlock{
     BlockHeader     header;
     TransactionTree tree;
-
 //    StoredBlock() : header(0, ByteUtil::fromBytes256(EMPTY_HASH), ByteUtil::fromBytes256(EMPTY_HASH), Address(), 0, 0)
 //    {
 //    }
-
-    StoredBlock(BlockHeader h, TransactionTree t) : header(h), tree(t)
-    {
-    }
-
-    StoredBlock(const StoredBlock& o)
-            : header(o.header), tree(o.tree)
-    {
-    }
+    StoredBlock(BlockHeader h, TransactionTree t);
+    StoredBlock(const StoredBlock& o);
 };
 
 #define GENESIS 1
@@ -73,89 +48,22 @@ private:
     TransactionTree          tree;
     Context                  context;
 public:
-    Block(unsigned long long index, unsigned long long time, uint256 parentHash, Context& c)
-            : header(index, parentHash, ByteUtil::fromBytes256(EMPTY_HASH), Address(), time, 0), context(c)
-    {
-//        header.__block_number__ = index;
-//        header.__block_hash__   = uint256(0);
-//        header.__parent_hash__  = parentHash;
-//        header.__block_time__   = time;
-//        header.__nonce__        = 0;
-//        header.__miner__        = Address();
-    }
-
-    Block(StoredBlock& block, Context& c) : header(block.header), tree(block.tree), context(c) {}
-    Block(const StoredBlock& s, Context& c)
-            : header(s.header), context(c)
-    {
-    }
-    void setMiner(const Address address)
-    {
-//        header.__miner__.setAddress(address);
-    }
-    void add(Transaction& transaction)
-    {
-        if (transaction.valid(context))
-            tree.add(transaction);
-    }
-    bool full()
-    {
-        return tree.length() >= BLOCK_MAX_TRANSACTIONS;
-    }
-    bool ready()
-    {
-        return full() || context.lastTransactionWas((long)(BLOCK_INTERVAL * 0.75));
-    }
-    void mine()
-    {
-    }
-    BlockIndex getIndex()
-    {
-        return header.__block_number__;
-    }
-    uint256 getHash()
-    {
-        return header.__block_hash__;
-    }
-    uint256 getParentHash()
-    {
-        return header.__parent_hash__;
-    }
-
-    bool valid()
-    {
-        return false;
-    }
-    std::shared_ptr<StoredBlock> toStoredBlock()
-    {
-        return std::shared_ptr<StoredBlock>(new StoredBlock(header, tree));
-    }
-    ~Block() {}
-
-    bool checkSolutionValid() {
-        return false;
-    }
-
-    Address getMiner()
-    {
-        return header.__miner__;
-    }
-
-    bool finished()
-    {
-        return false;
-    }
-
-    void removeTransactions(std::vector<Transaction> &vector)
-    {
-        for (auto transaction : tree.get())
-        {
-            std::vector<Transaction>::iterator i = std::find(vector.begin(), vector.end(), transaction);
-
-            if (i != vector.end())
-                vector.erase(i);
-        }
-    }
+    Block(unsigned long long index, unsigned long long time, uint256 parentHash, Context& c);
+    Block(const StoredBlock& block, Context& c);
+    void setMiner(const Address address);
+    void add(Transaction& transaction);
+    bool full();
+    bool ready();
+    BlockIndex getIndex();
+    uint256 getHash();
+    uint256 getParentHash();
+    bool valid();
+    std::shared_ptr<StoredBlock> toStoredBlock();
+    bool checkSolutionValid();
+    Address getMiner();
+    bool finished();
+    void removeTransactions(std::vector<Transaction> &vector);
+    ~Block();
 };
 
 struct BlockPacket{
