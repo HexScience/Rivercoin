@@ -87,7 +87,7 @@ void BlockChain::serialize()
 
     unsigned char ERROR = 0;
 
-    file::write<StoredBlock>((string(STRUCTURE_DB_NAME) + string(BLOCKCHAIN_DB_NAME) + string("block[") + std::to_string(current->getIndex()) + string("].blk")).c_str(), s, ERROR);
+    file::write<serializeable<StoredBlock>>((string(STRUCTURE_DB_NAME) + string(BLOCKCHAIN_DB_NAME) + string("block[") + std::to_string(current->getIndex()) + string("].blk")).c_str(), s, ERROR);
 
     if(ERROR != 0)
     {

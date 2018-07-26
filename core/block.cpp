@@ -45,7 +45,7 @@ Block::Block(unsigned long long index, unsigned long long time, uint256 parentHa
 //        header.__miner__        = Address();
 }
 
-Block::Block(const StoredBlock &s, Context &c) : header(block.header), tree(block.tree), context(c) {}
+Block::Block(const StoredBlock &block, Context &c) : header(block.header), tree(block.tree), context(c) {}
 
 void Block::setMiner(const Address address) {}
 void Block::add(Transaction &transaction)

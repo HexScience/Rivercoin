@@ -23,6 +23,8 @@ bool Transaction::operator==(const Transaction &o)
 
 //        for (unsigned int i = 0; i < 256; i ++)
 //            if (transactionInputs[i] != o.transactionInputs[i]) return false;
+
+    return true;
 }
 CompressedPublicKey Transaction::getSender()
 {
