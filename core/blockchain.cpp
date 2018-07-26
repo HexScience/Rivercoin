@@ -29,6 +29,12 @@ bool BlockInfo::dump()
     return ERROR == 0;
 }
 
+void BlockInfo::setLatestBlock(BlockIndex i)
+{
+    if (data.size() == 0) return;
+    ((BlockIndex *)data.data())[0] = i;
+}
+
 BlockIndex BlockInfo::getLatestBlock()
 {
     if (data.size() == 0) return 0;
@@ -93,6 +99,15 @@ void BlockChain::serialize()
     if(ERROR != 0)
     {
         logger::err(string(string("couldn't export block '") + std::to_string(current->getIndex()) + string("'.")));
+    } else {
+        BlockInfo info;
+        if (info.read())
+        {
+            info.setLatestBlock(current->getIndex());
+
+            if (!info.dump())
+                logger::err(string(string("couldn't export block info '") + std::to_string(current->getIndex()) + string("'.")));
+        }
     }
 }
 

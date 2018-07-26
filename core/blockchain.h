@@ -25,6 +25,7 @@ struct BlockInfo{
     BlockInfo(const BlockInfo& o);
     bool read();
     bool dump();
+    void setLatestBlock(BlockIndex i);
     BlockIndex getLatestBlock();
 };
 
