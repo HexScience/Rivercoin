@@ -10,6 +10,7 @@
 #include "context.h"
 #include <memory>
 
+BlockInfo::BlockInfo() {}
 BlockInfo::BlockInfo(const BlockInfo &o) : data(o.data) {}
 
 bool BlockInfo::read()
