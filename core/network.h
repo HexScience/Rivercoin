@@ -58,13 +58,15 @@ struct SocketConnection{
     const std::string               ip;
     const unsigned short            port;
     bool                            connected;
+    boost::asio::io_service         ios;
     boost::asio::ip::tcp::socket    socket;
+    std::vector<Message>            messages;
     SocketConnection(const std::string _ip_, unsigned short _port_);// : ip(_ip_), port(_port_) {}
     void makeConnection();
     bool isConnected();
     void disconnect();
     void send(const std::string& msg, boost::system::error_code& error);
-    void receive(char*out, const unsigned long& length);
+    void receive();
 };
 
 /** this class should handle a single TCPConnectionSocket to send and receive high level data (Messages) **/

@@ -10,22 +10,13 @@
 #include <boost/array.hpp>
 #include <iostream>
 
-#ifndef BOOST_IOS
-#define BOOST_IOS
-boost::asio::io_service ios;
-#endif
-
 SocketConnection::SocketConnection(const std::string _ip_, unsigned short _port_) : ip(_ip_), port(_port_), socket(ios)
 {
 }
 
 void SocketConnection::makeConnection()
 {
-    boost::asio::io_service ios;
-
     boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string(ip), port);
-
-    socket = boost::asio::ip::tcp::socket(ios);
 
     socket.connect(endpoint);
 }
@@ -48,8 +39,9 @@ void SocketConnection::send(const std::string& msg, boost::system::error_code& e
     socket.async_write_some(boost::asio::buffer(buf, msg.size()), error);
 }
 
-void SocketConnection::receive(char *out, const unsigned long &length)
+void SocketConnection::receive()
 {
+//    socket.read_some(out);
 }
 
 
