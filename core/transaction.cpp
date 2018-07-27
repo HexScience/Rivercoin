@@ -3,6 +3,7 @@
 //
 
 #include "transaction.h"
+#include "math/math.h"
 
 Transaction::Transaction() {}
 Transaction::Transaction(unsigned char t, CompressedPublicKey s, Address r) : type(t), sender(s), receiver(r) {}
@@ -12,7 +13,7 @@ bool Transaction::valid(Context &context)
 
     return false;
 }
-bool Transaction::operator==(const Transaction &o)
+bool Transaction::operator==(const Transaction &o) const
 {
     if (type != o.type) return false;
 
@@ -37,4 +38,9 @@ Address Transaction::getReceiver()
 unsigned char* Transaction::getTransactionData()
 {
     return transactionData;
+}
+
+bool Transaction::operator<(const Transaction &o) const
+{
+    return (Address(sender) < receiver) && (type < o.type) && (((uint256* ) transactionData)[0] < ((uint256* ) o.transactionData)[0]);
 }

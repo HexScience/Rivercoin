@@ -70,10 +70,11 @@ public:
                 CompressedPublicKey s,
                 Address r);
     bool valid(Context& context);
-    bool operator== (const Transaction& o);
+    bool operator== (const Transaction& o) const;
     CompressedPublicKey getSender();
     Address getReceiver();
     unsigned char* getTransactionData();
+    bool operator< (const Transaction& o) const;
 };
 
 class FundTransfer {

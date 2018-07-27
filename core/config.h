@@ -27,6 +27,7 @@
 
 #define STRUCTURE_DB_NAME "structure"
 #define BLOCKCHAIN_DB_NAME "blockchain"
+#define DEFAULT_PORT 5110
 #define CONFIG_DB_NAME "config"
 #ifdef WINDOWS_PLATFORM
 #define PATH_SEPARATOR '\\'

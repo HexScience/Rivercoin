@@ -35,6 +35,10 @@
 #include <vector>
 #include <set>
 
+#include <boost/asio.hpp>
+#include <boost/array.hpp>
+#include <iostream>
+
 #define MSG_RECEIVED_SUCCESSFULLY 0
 #define MSG_CORRUPTED 1
 #define MSG_BLOCK_SOLUTION 2
@@ -47,47 +51,49 @@
 #define MSG_FULL_BLOCK_SET 9
 
 typedef serializeable<char*> Message;
+class Context;
 
-///** this is a container for all the TCP socket code **/
-//struct SocketConnection{
-//    const std::string       ip;
-//    const unsigned short    port;
-//    bool                    connected;
-//    SocketConnection(const std::string _ip_, unsigned short _port_);// : ip(_ip_), port(_port_) {}
-//    void makeConnection();
-//    bool isConnected();
-//    void disconnect();
-//    void send(char* data, const unsigned long& length);
-//    void receive(char*out, const unsigned long& length);
-//};
-//
-///** this class should handle a single TCPConnectionSocket to send and receive high level data (Messages) **/
-//class Client{
-//private:
-//    SocketConnection connection;
-//    static Message interpretMessage(unsigned char msg);
-//public:
-//    void send(serializeable<char*> msg);
-//    void receive(Context& context);
-//    void connect();
-//    void disconnect();
-//    void execute();
-//};
-//
-///** this class should handle multiple clients by sending and receiving data to and from the client set **/
-//class Server{
-//private:
-//    std::set<Client>        clients;
-//    std::set<std::string>   ipAddresses;
-//    Context                 context;
-//    void makeConnection(const std::string& ip);
-//    void acceptConnections();
-//    void readAllIpAddresses();
-//    void writeAllIpAddresses();
-//public:
-//    Server(Context& context);
-//    void send(Message msg);
-//    void close();
-//};
+/** this is a container for all the TCP socket code **/
+struct SocketConnection{
+    const std::string               ip;
+    const unsigned short            port;
+    bool                            connected;
+    boost::asio::ip::tcp::socket    socket;
+    SocketConnection(const std::string _ip_, unsigned short _port_);// : ip(_ip_), port(_port_) {}
+    void makeConnection();
+    bool isConnected();
+    void disconnect();
+    void send(const std::string& msg, boost::system::error_code& error);
+    void receive(char*out, const unsigned long& length);
+};
+
+/** this class should handle a single TCPConnectionSocket to send and receive high level data (Messages) **/
+class Client{
+private:
+    SocketConnection connection;
+    static Message interpretMessage(unsigned char msg);
+public:
+    void send(serializeable<char*> msg);
+    void receive(Context* context);
+    void connect();
+    void disconnect();
+    void execute();
+};
+
+/** this class should handle multiple clients by sending and receiving data to and from the client set **/
+class Server{
+private:
+    std::set<Client>        clients;
+    std::set<std::string>   ipAddresses;
+    Context*                context;
+    void makeConnection(const std::string& ip);
+    void acceptConnections();
+    void readAllIpAddresses();
+    void writeAllIpAddresses();
+public:
+    Server(Context* context);
+    void send(Message msg);
+    void close();
+};
 
 #endif //RIVERCOIN_CPP_NETWORK_H

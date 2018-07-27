@@ -20,10 +20,13 @@ void TransactionPool::introduce(Transaction& transaction)
 }
 Transaction TransactionPool::fetch()
 {
+    return Transaction();
 }
 unsigned long TransactionPool::size()
 {
+    transactions.size();
 }
 unsigned long long TransactionPool::lastTransactionTimestamp()
 {
+    timestamp;
 }

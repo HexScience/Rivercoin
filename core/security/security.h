@@ -18,12 +18,12 @@
 
 class CompressedPublicKey{
 public:
-    bool operator== (const CompressedPublicKey& o)
+    bool operator== (const CompressedPublicKey& o) const
     {
         return false;
     }
 
-    bool operator!= (const CompressedPublicKey& o)
+    bool operator!= (const CompressedPublicKey& o) const
     {
         return !(*this == o);
     }
