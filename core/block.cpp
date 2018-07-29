@@ -3,6 +3,7 @@
 //
 
 #include "block.h"
+#include "context.h"
 
 BlockHeader::BlockHeader(BlockIndex number, uint256 parentHash, uint256 hash, Address miner, unsigned long long time,
                          unsigned long long nonce)
@@ -34,7 +35,7 @@ StoredBlock::StoredBlock(const StoredBlock &o)
 {
 }
 
-Block::Block(unsigned long long index, unsigned long long time, uint256 parentHash, Context &c)
+Block::Block(unsigned long long index, unsigned long long time, uint256 parentHash, Context* c)
         : header(index, parentHash, ByteUtil::fromBytes256(EMPTY_HASH), Address(), time, 0), context(c)
 {
 //        header.__block_number__ = index;
@@ -45,7 +46,7 @@ Block::Block(unsigned long long index, unsigned long long time, uint256 parentHa
 //        header.__miner__        = Address();
 }
 
-Block::Block(const StoredBlock &block, Context &c) : header(block.header), tree(block.tree), context(c) {}
+Block::Block(const StoredBlock &block, Context* c) : header(block.header), tree(block.tree), context(c) {}
 
 void Block::setMiner(const Address address) {}
 void Block::add(Transaction &transaction)
@@ -59,7 +60,7 @@ bool Block::full()
 }
 bool Block::ready()
 {
-    return full() || context.lastTransactionWas((long)(BLOCK_INTERVAL * 0.75));
+    return full() || context->lastTransactionWas((long)(BLOCK_INTERVAL * 0.75));
 }
 BlockIndex Block::getIndex()
 {

@@ -9,7 +9,6 @@
 #include "math/math.h"
 #include "tree.h"
 #include "config.h"
-#include "context.h"
 #include "security/security.h"
 #include <memory>
 #include <algorithm>
@@ -41,15 +40,17 @@ struct StoredBlock{
 #define GENESIS 1
 #define GENESIS_HASH {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
+class Context;
+
 class Block{
 private:
     char EMPTY_HASH[32] = GENESIS_HASH;
     BlockHeader              header;
     TransactionTree          tree;
-    Context                  context;
+    Context*                 context;
 public:
-    Block(unsigned long long index, unsigned long long time, uint256 parentHash, Context& c);
-    Block(const StoredBlock& block, Context& c);
+    Block(unsigned long long index, unsigned long long time, uint256 parentHash, Context* c);
+    Block(const StoredBlock& block, Context* c);
     void setMiner(const Address address);
     void add(Transaction& transaction);
     bool full();

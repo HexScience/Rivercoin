@@ -4,10 +4,11 @@
 
 #include "transaction.h"
 #include "math/math.h"
+#include "context.h"
 
 Transaction::Transaction() {}
 Transaction::Transaction(unsigned char t, CompressedPublicKey s, Address r) : type(t), sender(s), receiver(r) {}
-bool Transaction::valid(Context &context)
+bool Transaction::valid(Context* context)
 {
     if (type != FUND_TRANSFER && type != REWARD && type != CONTRACT && type != CONTRACT_INVOKE) return false;
 

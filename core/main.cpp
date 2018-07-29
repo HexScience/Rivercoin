@@ -112,7 +112,7 @@ int main(int arg_l, const char* args[]) {
 
     Context* context = new Context(pTree);
 
-        Block block(150, 125124, context->getDifficulty(), *context);
+        Block block(150, 125124, context->getDifficulty(), context);
         char out[32];
 
         hexToBytes("000A13334EAADBD5513E67397611CE4D22D434577161FC6EDBA6F3E6DA8ECCCD", out);

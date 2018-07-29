@@ -63,7 +63,7 @@ void BlockChain::loadAllBlocks()
         {
             serializeable<StoredBlock> serialized = ((serializeable<StoredBlock> *) data.data())[0];
 
-            current = new Block(serialized.serializeable_data, *context);
+            current = new Block(serialized.serializeable_data, context);
         }
     }
 }
@@ -87,7 +87,7 @@ void BlockChain::continueChain()
 
     temp->removeTransactions(transactionStream);
 
-    current = new Block(temp->getIndex() + 1, context->timestamp(), temp->getHash(), *context);
+    current = new Block(temp->getIndex() + 1, context->timestamp(), temp->getHash(), context);
 
     delete(temp);
 }
@@ -208,7 +208,7 @@ void BlockChain::checkForValidSolutions()
 void BlockChain::createGenesisBlock()
 {
     char PARENT_HASH[32] = GENESIS_HASH;
-    current = new Block(GENESIS, context->timestamp(), ByteUtil::fromBytes256(PARENT_HASH), *context);
+    current = new Block(GENESIS, context->timestamp(), ByteUtil::fromBytes256(PARENT_HASH), context);
 }
 
 void BlockChain::execute()

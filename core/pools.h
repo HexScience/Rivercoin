@@ -10,14 +10,15 @@
 #include <set>
 #include "transaction.h"
 
+class Context;
 
 class TransactionPool{
 private:
-    Context                 context;
+    Context*                context;
     std::set<Transaction>   transactions;
     unsigned long long      timestamp;
 public:
-    TransactionPool(Context& context);
+    TransactionPool(Context* context);
     void insert(Transaction& transaction);
     void relay(Transaction& transaction);
     void introduce(Transaction& transaction);

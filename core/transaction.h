@@ -6,10 +6,8 @@
 #define RIVERCOIN_CPP_TRANSACTION_H
 
 #include "defines.h"
-#include "hash.h"
 #include "rivercoin.h"
 #include "security/security.h"
-#include "context.h"
 #include <vector>
 #include <map>
 #include <set>
@@ -57,6 +55,8 @@ public:
     }
 };
 
+class Context;
+
 class Transaction{
 private:
     enum {FUND_TRANSFER, REWARD, CONTRACT, CONTRACT_INVOKE};
@@ -69,7 +69,7 @@ public:
     Transaction(unsigned char t,
                 CompressedPublicKey s,
                 Address r);
-    bool valid(Context& context);
+    bool valid(Context* context);
     bool operator== (const Transaction& o) const;
     CompressedPublicKey getSender();
     Address getReceiver();

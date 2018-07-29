@@ -3,14 +3,15 @@
 //
 
 #include "pools.h"
+#include "context.h"
 
-TransactionPool::TransactionPool(Context& c) : context(c)
+TransactionPool::TransactionPool(Context* c) : context(c)
 {
 }
 void TransactionPool::insert(Transaction &transaction)
 {
     transactions.insert(transaction);
-    timestamp = context.timestamp();
+    timestamp = context->timestamp();
 }
 void TransactionPool::relay(Transaction& transaction)
 {
