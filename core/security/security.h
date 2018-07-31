@@ -8,18 +8,12 @@
 #include <cstring>
 #include "../math/math.h"
 #include <vector>
-#include <openssl/ecdsa.h>
 
 #define MAIN_NETWORK_HEADER 0
 #define TEST_NETWORK_HEADER 1
 #define ADDRESS_SIZE 25
 #define CONTRACT_ADDRESS_SIZE 37
 #define DEFAULT_ADDRESS "1NwxDTT8gywVMmALW3n98sWTCoWyBNWZhQ"
-
-class ECDSA{
-public:
-    void generate_private();
-};
 
 class CompressedPublicKey{
 public:
@@ -57,46 +51,38 @@ public:
     void setAddress(const char address[ADDRESS_SIZE]);
 };
 
-//class PublicKey{
-//private:
-//    EC_KEY* key;
-//public:
-//    Address asAddress();
-//    CompressedPublicKey getCompressed();
-//    template <typename T> std::vector sign(T& o);
-//
-//    ~PublicKey()
-//    {
-//        delete key;
-//    }
-//};
-//
-//class PrivateKey{
-//private:
-//    EC_KEY* key;
-//public:
-//};
-//
-//class Keypair{
-//private:
-//    PublicKey publicKey;
-//    PrivateKey privateKey;
-//public:
-//    Keypair(PrivateKey a, PublicKey b) : publicKey(b), privateKey(a) {}
-//    Keypair(const char* prng)
-//    {
-//    }
-//};
+template <unsigned char T> struct Key{
+    char key[T];
+    Key();
+    void set(char m[T]);
+    bool empty();
+    bool verify(char* signature, unsigned int length, char* data, unsigned int dlength);
+    void sign(char* data, unsigned int length, char* out);
+    void derivePublic();
+};
+
+#define EC_KEY_SIZE 64
+
+class Keypair{
+private:
+    Key<EC_KEY_SIZE> priv;
+    Key<EC_KEY_SIZE> publ;
+public:
+    Keypair();
+    Keypair(char priv[EC_KEY_SIZE]);
+    Key<EC_KEY_SIZE> getPublic();
+    Key<EC_KEY_SIZE> getPrivate();
+};
 
 class Wallet{
 private:
-    unsigned char message[32] = "p1assword";
-    unsigned char address[64];
-    unsigned char priv_key[64];
+    Keypair     keypair;
+    Address     address;
 public:
-    Wallet()
-    {
-    }
+    Wallet();
+    bool genKeyPair(char* seed);
+    Keypair getPair();
+    Address getAddress();
 };
 
 #endif //RIVERCOIN_CPP_SECURITY_H

@@ -96,17 +96,23 @@ static void hexStringToByteArray(std::string s, const char* data)
 
 static void address_test()
 {
-    unsigned char message[32] = "p1assword";
-    unsigned char address[64];
-    unsigned char priv_key[64];
+//    unsigned char message[32] = "p1assword";
+//    unsigned char address[64];
+//    unsigned char priv_key[64];
+//
+//    if (create_address_from_string(message, address, priv_key, true, false, NULL) == 1)
+//    {
+//        printf("address: %s\n", address);
+//        printf("private key: %s\n", priv_key);
+//    }
+//    else {
+//        printf("Something went wront :(\n");
+//    }
 
-    if (create_address_from_string(message, address, priv_key, true, false, NULL) == 1) {
-        printf("address: %s\n", address);
-        printf("private key: %s\n", priv_key);
-    }
-    else {
-        printf("Something went wront :(\n");
-    }
+    Wallet wallet;
+
+    wallet.genKeyPair("hello world");
+    wallet.getPair().getPrivate().derivePublic();
 }
 
 int main(int arg_l, const char* args[]) {
@@ -121,11 +127,11 @@ int main(int arg_l, const char* args[]) {
     /* Load config file, and other important initialisation */
     OPENSSL_config(NULL);
 
-    address_test();
-
     using boost::property_tree::ptree;
 
 //    logger::alert(std::to_string(ack(8, 3)).c_str());
+
+    address_test();
 
     unsigned char ERROR = 0;
 

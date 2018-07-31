@@ -6,6 +6,14 @@
 #include "../base58.h"
 #include <openssl/sha.h>
 
+#include <iomanip>
+#include <string>
+#include <string.h>
+#include <iostream>
+#include <openssl/pem.h>
+#include <openssl/x509.h>
+#include "ecad.h"
+
 bool Address::operator< (const Address& a) const
 {
     return asuint256() < a.asuint256();
@@ -78,25 +86,140 @@ void Address::setAddress(const char *address)
         address_[i] = address[i];
 }
 
-#include <iomanip>
-#include <string>
-#include <string.h>
-#include <iostream>
-#include <openssl/pem.h>
-#include <openssl/x509.h>
+//void ECDSA::generate_private()
+//{
+//    EC_KEY* key;
+//
+//    if(NULL == (key = EC_KEY_new_by_curve_name(NID_secp256k1)))
+//        return;
+//
+//    BIGNUM *prv;
+//    EC_POINT *pub;
+//
+//    if(1 != EC_KEY_set_private_key(key, prv)) return;
+//    if(1 != EC_KEY_set_public_key(key, pub)) return;
+//}
 
-void ECDSA::generate_private()
+bool Wallet::genKeyPair(char *seed)
 {
-    EC_KEY* key;
+    char priv_key[64];
+    char address[64];
 
-    if(NULL == (key = EC_KEY_new_by_curve_name(NID_secp256k1)))
-        return;
+    if (create_address_from_string((unsigned char *) seed, (unsigned char *) address, (unsigned char *) priv_key, true, false, NULL) == 1)
+    {
+        printf("address: %s\n", address);
+        printf("private key: %s\n", priv_key);
 
-    BIGNUM *prv;
-    EC_POINT *pub;
+        this->address = Address(address);
+        this->keypair = Keypair(priv_key);
+        return true;
+    }
+    else
+        printf("Something went wrong :(\n");
 
-    if(1 != EC_KEY_set_private_key(key, prv)) return;
-    if(1 != EC_KEY_set_public_key(key, pub)) return;
+    return false;
+}
 
-    std::ostream s();
+Keypair Wallet::getPair()
+{
+    return keypair;
+}
+
+Address Wallet::getAddress()
+{
+    return address;
+}
+
+Wallet::Wallet()
+{
+}
+
+Key<EC_KEY_SIZE> Keypair::getPrivate()
+{
+    return priv;
+}
+
+Key<EC_KEY_SIZE> Keypair::getPublic()
+{
+    return publ;
+}
+
+Keypair::Keypair(char *priv)
+{
+    this->priv.set(priv);
+}
+
+Keypair::Keypair()
+{
+}
+
+
+
+template<unsigned char T>
+void Key<T>::derivePublic()
+{
+    BIGNUM* bignum = BN_new();
+
+    char debased[64];
+
+    Base58::decode((unsigned char *) key, 64, (unsigned char *) debased);
+
+    BN_bin2bn((unsigned char *) debased + 1, 32, bignum);
+    EC_POINT* pub_key;
+
+    EC_GROUP* pgroup = EC_GROUP_new_by_curve_name(NID_secp256k1);
+
+    if (!EC_POINT_mul(pgroup, pub_key, bignum, NULL, NULL, NULL));
+
+    unsigned int bufsize = EC_POINT_point2oct (pgroup, pub_key, POINT_CONVERSION_UNCOMPRESSED, NULL, 0, NULL);
+    u_int8_t * buffer = (u_int8_t *) malloc(bufsize);
+    //then we place the data in the buffer
+    int len = EC_POINT_point2oct (pgroup, pub_key, POINT_CONVERSION_UNCOMPRESSED, buffer, bufsize, NULL);
+    if (len == 0) {
+        printf("ERROR: Couldn't convert point to octet string.");
+    }
+
+    Key<64> pub;
+
+    std::cout << bufsize << " " << T << std::endl;
+
+    pub.set((char *) buffer);
+
+    BN_free(bignum);
+    EC_POINT_free(pub_key);
+    EC_GROUP_free(pgroup);
+    delete(buffer);
+
+//    return pub;
+}
+
+template<unsigned char T>
+void Key<T>::sign(char *data, unsigned int length, char *out)
+{
+}
+
+template<unsigned char T>
+bool Key<T>::verify(char *signature, unsigned int length, char *data, unsigned int dlength) {
+    return false;
+}
+
+template<unsigned char T>
+bool Key<T>::empty()
+{
+    for (int i = 0; i < T; i ++)
+        if (key[i] != 0) return false;
+
+    return true;
+}
+
+template<unsigned char T>
+void Key<T>::set(char *m)
+{
+    memcpy(key, m, T);
+}
+
+template<unsigned char T>
+Key<T>::Key()
+{
+    for (int i = 0; i < T; i++) key[i] = 0;
 }
