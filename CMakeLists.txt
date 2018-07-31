@@ -29,6 +29,6 @@ add_executable(RiverCoin_cpp core/main.cpp
         core/blockchain.h core/blockchain.cpp
         core/async.h
         core/miner.h core/miner.cpp
-        core/math/progpow.h core/math/progpow.cpp core/pools.cpp core/pools.h core/utils.cpp core/utils.h core/security/ecad.cpp core/security/ecad.h)
+        core/math/progpow.h core/math/progpow.cpp core/pools.cpp core/pools.h core/utils.cpp core/utils.h core/security/ecad.h core/security/ecad.cpp)
 target_link_libraries(RiverCoin_cpp LINK_PUBLIC ${Boost_LIBRARIES})
 target_link_libraries(RiverCoin_cpp LINK_PUBLIC ${OPENSSL_LIBRARIES})
