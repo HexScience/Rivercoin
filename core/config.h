@@ -57,10 +57,13 @@ struct config{
                 const char* mining_address_string = (v.second.get<std::string>("Address").c_str());
 
                 if(Address::__check_address_valid(mining_address_string))
+                {
                     address = Address(mining_address_string);
+                    logger::alert((std::string("mining address: '") + std::string(mining_address_string) + std::string("' found.")).c_str());
+                }
                 else{
-                    logger::err((std::string("mining address '") + std::string(mining_address_string) + std::string("' incorrect.")).c_str());
-//                    exit(0);
+                    logger::err((std::string("mining address: '") + std::string(mining_address_string) + std::string("' incorrect.")).c_str());
+                    exit(0);
                 }
                 mining_allowed = v.second.get<bool>("Enabled");
                 use_gpu        = v.second.get<bool>("GPUMining");

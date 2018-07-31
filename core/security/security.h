@@ -16,6 +16,11 @@
 #define CONTRACT_ADDRESS_SIZE 37
 #define DEFAULT_ADDRESS "1NwxDTT8gywVMmALW3n98sWTCoWyBNWZhQ"
 
+class ECDSA{
+public:
+    void generate_private();
+};
+
 class CompressedPublicKey{
 public:
     bool operator== (const CompressedPublicKey& o) const
@@ -40,7 +45,7 @@ public:
     Address(const char* address) {setAddress(address);}
     Address(CompressedPublicKey key) {setAddress(DEFAULT_ADDRESS);}
     Address(const Address& o) {setAddress(o.address_);}
-    static bool __check_address_valid(const char* addr_);
+    static bool __check_address_valid(const char* addr_, bool DECODE_B58 = true);
     bool compare(const Address& o) const;
     uint256 asuint256() const;
     bool operator< (const Address& a) const;
@@ -85,8 +90,9 @@ public:
 
 class Wallet{
 private:
-    EC_KEY* publicKey;
-    EC_KEY* privateKey;
+    unsigned char message[32] = "p1assword";
+    unsigned char address[64];
+    unsigned char priv_key[64];
 public:
     Wallet()
     {
