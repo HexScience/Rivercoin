@@ -51,27 +51,28 @@ public:
     void setAddress(const char address[ADDRESS_SIZE]);
 };
 
-template <unsigned char T> struct Key{
-    char key[T];
+#define EC_KEY_SIZE 65
+
+//template <unsigned char T>
+struct Key{
+    char key[EC_KEY_SIZE];
     Key();
-    void set(char m[T]);
+    void set(char m[EC_KEY_SIZE]);
     bool empty();
     bool verify(char* signature, unsigned int length, char* data, unsigned int dlength);
     void sign(char* data, unsigned int length, char* out);
     void derivePublic();
 };
 
-#define EC_KEY_SIZE 64
-
 class Keypair{
 private:
-    Key<EC_KEY_SIZE> priv;
-    Key<EC_KEY_SIZE> publ;
+    Key priv;
+    Key publ;
 public:
     Keypair();
     Keypair(char priv[EC_KEY_SIZE]);
-    Key<EC_KEY_SIZE> getPublic();
-    Key<EC_KEY_SIZE> getPrivate();
+    Key getPublic();
+    Key getPrivate();
 };
 
 class Wallet{

@@ -134,12 +134,12 @@ Wallet::Wallet()
 {
 }
 
-Key<EC_KEY_SIZE> Keypair::getPrivate()
+Key Keypair::getPrivate()
 {
     return priv;
 }
 
-Key<EC_KEY_SIZE> Keypair::getPublic()
+Key Keypair::getPublic()
 {
     return publ;
 }
@@ -153,21 +153,25 @@ Keypair::Keypair()
 {
 }
 
-template<unsigned char T>
-void Key<T>::derivePublic()
+
+void Key::derivePublic()
 {
     BIGNUM* bignum = BN_new();
 
-    char debased[64];
+    char debased[EC_KEY_SIZE];
 
-    Base58::decode((unsigned char *) key, 64, (unsigned char *) debased);
+    Base58::decode((unsigned char *) key, EC_KEY_SIZE, (unsigned char *) debased);
 
     BN_bin2bn((unsigned char *) debased + 1, 32, bignum);
-    EC_POINT* pub_key;
 
     EC_GROUP* pgroup = EC_GROUP_new_by_curve_name(NID_secp256k1);
+    EC_POINT* pub_key = EC_POINT_new(pgroup);
 
-    if (!EC_POINT_mul(pgroup, pub_key, bignum, NULL, NULL, NULL));
+    if (!EC_POINT_mul(pgroup, pub_key, bignum, NULL, NULL, NULL))
+    {
+        return;
+    } else {
+    }
 
     unsigned int bufsize = EC_POINT_point2oct (pgroup, pub_key, POINT_CONVERSION_UNCOMPRESSED, NULL, 0, NULL);
     u_int8_t * buffer = (u_int8_t *) malloc(bufsize);
@@ -177,9 +181,9 @@ void Key<T>::derivePublic()
         printf("ERROR: Couldn't convert point to octet string.");
     }
 
-    Key<64> pub;
+    Key pub;
 
-    std::cout << bufsize << " " << T << std::endl;
+    std::cout << bufsize << " " << EC_KEY_SIZE << std::endl;
 
     pub.set((char *) buffer);
 
@@ -191,33 +195,33 @@ void Key<T>::derivePublic()
 //    return pub;
 }
 
-template<unsigned char T>
-void Key<T>::sign(char *data, unsigned int length, char *out)
+
+void Key::sign(char *data, unsigned int length, char *out)
 {
 }
 
-template<unsigned char T>
-bool Key<T>::verify(char *signature, unsigned int length, char *data, unsigned int dlength) {
+
+bool Key::verify(char *signature, unsigned int length, char *data, unsigned int dlength) {
     return false;
 }
 
-template<unsigned char T>
-bool Key<T>::empty()
+
+bool Key::empty()
 {
-    for (int i = 0; i < T; i ++)
+    for (int i = 0; i < EC_KEY_SIZE; i ++)
         if (key[i] != 0) return false;
 
     return true;
 }
 
-template<unsigned char T>
-void Key<T>::set(char *m)
+
+void Key::set(char *m)
 {
-    memcpy(key, m, T);
+    memcpy(key, m, EC_KEY_SIZE);
 }
 
-template<unsigned char T>
-Key<T>::Key()
+
+Key::Key()
 {
-    for (int i = 0; i < T; i++) key[i] = 0;
+    for (int i = 0; i < EC_KEY_SIZE; i++) key[i] = 0;
 }
