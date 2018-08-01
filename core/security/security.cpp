@@ -153,8 +153,6 @@ Keypair::Keypair()
 {
 }
 
-
-
 template<unsigned char T>
 void Key<T>::derivePublic()
 {
