@@ -15,18 +15,13 @@
 #include <openssl/conf.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
-
-#include <openssl/ecdsa.h>
-#include <openssl/ec.h>
-#include <openssl/engine.h>
-#include <openssl/asn1.h>
-#include <openssl/crypto.h>
 #include <iostream>
 
 #include "compute/MochaPP/VM/tinyvm.h"
 #include "block.h"
 //#include "security/ecad.h"
 #include "security/ecdsa.h"
+#include <boost/filesystem.hpp>
 //#include "network.h"
 
 int ack(int m, int n)
@@ -115,6 +110,17 @@ static void address_test()
 //    wallet.getPair().getPrivate().derivePublic();
 }
 
+static std::string getPath(const std::string& arg)
+{
+    std::string path = arg;
+
+    int sub = path.find_last_of(PATH_SEPARATOR, path.length());
+
+    std::string PATH = path.substr(1, sub).c_str();
+
+    return std::string("") + PATH_SEPARATOR + PATH;
+}
+
 int main(int arg_l, const char* args[]) {
     logger::alert("----------------------------------------");
 
@@ -129,18 +135,37 @@ int main(int arg_l, const char* args[]) {
 
     using boost::property_tree::ptree;
 
+    std::string PATH = getPath(args[0]);
+    std::string CONFIG = PATH + std::string("structure") + PATH_SEPARATOR + "config.xml";
+
+    logger::alert(std::string("found path: ") + PATH);
+    logger::alert(std::string("found config: ") + CONFIG);
+
+//    logger::alert("press any key to continue...");
+//    std::cin.get();
+
 //    logger::alert(std::to_string(ack(8, 3)).c_str());
 
 //    address_test();
 
-    ECDSA::Keypair* pair = ECDSA::ecdsa_new("hello world");
+    eckeypair_t pair = ECDSA::ecdsa_new("hellpo world");
 
-//    std::cout << Base58::quick_encode((char *) pair->(), 25) << std::endl;
+    std::cout << pair->getAddress().get()->base58() << std::endl;
 
     unsigned char ERROR = 0;
 
     ptree pTree;
-    std::istringstream istringstream(file::readUTF(std::string(".") + PATH_SEPARATOR + "structure" + PATH_SEPARATOR + "config.xml", ERROR));
+
+    std::string file_read = file::readUTF(CONFIG, ERROR);
+
+    if (file_read == "null")
+    {
+        std::string file = std::string("structure") + PATH_SEPARATOR + "config.xml";
+
+        logger::err("file '" + file + "' not found!");
+    }
+
+    std::istringstream istringstream(file_read);
 
     boost::property_tree::read_xml(istringstream, pTree);
 

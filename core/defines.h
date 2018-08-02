@@ -12,4 +12,8 @@
 //#define LEDGER_USE_BULLETPROOFS
 //#define WINDOWS_PLATFORM
 
+#ifdef UNIX_PLATFORM
+#define LIB_PATH "~/Library/Riverssen/RiverCoin/"
+#endif
+
 #endif //RIVERCOIN_CPP_DEFINES_H

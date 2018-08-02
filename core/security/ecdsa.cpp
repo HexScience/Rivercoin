@@ -25,6 +25,15 @@ ECDSA::Keypair::~Keypair()
 {
 }
 
+std::shared_ptr<ECDSA::ecbtcaddr_t> ECDSA::Keypair::getAddress()
+{
+    ECDSA::ecbtcaddr_t* ecbtcaddr = ECDSA::bitcoin_address(&_public_, NETWORK_ADDRESS_PREFIX);
+
+    if (ecbtcaddr) return std::shared_ptr<ECDSA::ecbtcaddr_t>(ecbtcaddr);
+
+    return std::shared_ptr<ECDSA::ecbtcaddr_t>(new ECDSA::ecbtcaddr_t);
+}
+
 ECDSA::ecbtcaddr_t* ECDSA::bitcoin_address(eckeypubl_t *_public_, unsigned char PREFIX)
 {
     ecbtcaddr_t* address = 0;
