@@ -21,6 +21,10 @@ ECDSA::Keypair::Keypair(const ECDSA::Keypair &o) : _private_(o._private_), _publ
 {
 }
 
+ECDSA::Keypair::~Keypair()
+{
+}
+
 ECDSA::ecbtcaddr_t* ECDSA::bitcoin_address(eckeypubl_t *_public_, unsigned char PREFIX)
 {
     ecbtcaddr_t* address = 0;
@@ -91,8 +95,15 @@ ECDSA::ecbtcaddr_t* ECDSA::bitcoin_address(eckeypubl_t *_public_, unsigned char 
 ECDSA::Keypair* ECDSA::ecdsa_new(const std::string &seed)
 {
     eckeypriv_t* priv = derive_private(seed);
+    eckeypubl_t* publ = derive_public(priv);
 
-    return new ECDSA::Keypair(priv, derive_public(priv));
+    eckeypriv_t key_a = eckeypriv_t(*priv);
+    eckeypubl_t key_b = eckeypubl_t(*publ);
+
+    delete (priv);
+    delete (publ);
+
+    return new ECDSA::Keypair(key_a, key_b);
 }
 
 ECDSA::eckeypubl_t* ECDSA::derive_public(eckeypriv_t *_private_)

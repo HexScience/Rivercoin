@@ -133,11 +133,9 @@ int main(int arg_l, const char* args[]) {
 
 //    address_test();
 
-    ECDSA::eckeypriv_t* p = ECDSA::derive_private("h21312313123i");
-    ECDSA::eckeypubl_t* publ = ECDSA::derive_public(p);
-    ECDSA::ecbtcaddr_t* addr = ECDSA::bitcoin_address(publ, NETWORK_ADDRESS_PREFIX);
+    ECDSA::Keypair* pair = ECDSA::ecdsa_new("hello world");
 
-    std::cout << Base58::quick_encode((char *) addr->key, 25) << std::endl;
+//    std::cout << Base58::quick_encode((char *) pair->(), 25) << std::endl;
 
     unsigned char ERROR = 0;
 
