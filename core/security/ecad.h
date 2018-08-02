@@ -5,7 +5,6 @@
 #ifndef RIVERCOIN_CPP_ECAD_H
 #define RIVERCOIN_CPP_ECAD_H
 
-
 //
 // Created by Ragnarr Ivarssen on 31.07.18.
 //

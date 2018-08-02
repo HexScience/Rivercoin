@@ -26,7 +26,7 @@
 #include "compute/MochaPP/VM/tinyvm.h"
 #include "block.h"
 //#include "security/ecad.h"
-//#include "security/ecdsa.h"
+#include "security/ecdsa.h"
 //#include "network.h"
 
 int ack(int m, int n)
@@ -133,7 +133,11 @@ int main(int arg_l, const char* args[]) {
 
 //    address_test();
 
-//    ECDSA::derive_private("hi");
+    ECDSA::eckeypriv_t* p = ECDSA::derive_private("h21312313123i");
+    ECDSA::eckeypubl_t* publ = ECDSA::derive_public(p);
+    ECDSA::ecbtcaddr_t* addr = ECDSA::bitcoin_address(publ, NETWORK_ADDRESS_PREFIX);
+
+    std::cout << Base58::quick_encode((char *) addr->key, 25) << std::endl;
 
     unsigned char ERROR = 0;
 

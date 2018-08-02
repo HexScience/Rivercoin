@@ -51,6 +51,8 @@ out/artifacts/Rivercoin/mining/structure/chain/block[1]
 .idea/artifacts/Rivercoin_jar.xml
 .idea/codeStyles/codeStyleConfig.xml
 .idea/copyright/MIT.xml
+cmake-build-debug/*
+Cmake-build-release/*
 cmake-build-debug/cmake_install.cmake
 cmake-build-debug/CMakeFiles/3.10.3/CMakeCCompiler.cmake
 cmake-build-debug/CMakeFiles/3.10.3/CMakeCXXCompiler.cmake

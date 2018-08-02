@@ -5,10 +5,13 @@
 #ifndef RIVERCOIN_CPP_BASE58_H
 #define RIVERCOIN_CPP_BASE58_H
 
+#include <string>
+
 class Base58 {
     static const char *ALPHABET;
     static const char ALPHABET_MAP[128];
 public:
+    static std::string quick_encode(char* data, int length);
 // result must be declared: char result[len * 137 / 100];
     static int encode(const unsigned char *bytes, int len, unsigned char result[]);
 

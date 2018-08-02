@@ -74,3 +74,10 @@ int Base58::decode(const unsigned char *str, int len, unsigned char *result)
     }
     return resultlen;
 }
+
+std::string Base58::quick_encode(char *data, int length)
+{
+    char _return_[512];
+    encode((unsigned char *) data, length, (unsigned char *) _return_);
+    return std::string(_return_);
+}
