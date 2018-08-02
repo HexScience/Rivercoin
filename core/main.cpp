@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "defines.h"
 #include "logger.h"
 #include "rivercoin.h"
@@ -23,10 +21,12 @@
 #include <openssl/engine.h>
 #include <openssl/asn1.h>
 #include <openssl/crypto.h>
+#include <iostream>
 
 #include "compute/MochaPP/VM/tinyvm.h"
 #include "block.h"
-#include "security/ecad.h"
+//#include "security/ecad.h"
+//#include "security/ecdsa.h"
 //#include "network.h"
 
 int ack(int m, int n)
@@ -109,10 +109,10 @@ static void address_test()
 //        printf("Something went wront :(\n");
 //    }
 
-    Wallet wallet;
-
-    wallet.genKeyPair("hello world");
-    wallet.getPair().getPrivate().derivePublic();
+//    Wallet wallet;
+//
+//    wallet.genKeyPair("hello world");
+//    wallet.getPair().getPrivate().derivePublic();
 }
 
 int main(int arg_l, const char* args[]) {
@@ -131,7 +131,9 @@ int main(int arg_l, const char* args[]) {
 
 //    logger::alert(std::to_string(ack(8, 3)).c_str());
 
-    address_test();
+//    address_test();
+
+//    ECDSA::derive_private("hi");
 
     unsigned char ERROR = 0;
 

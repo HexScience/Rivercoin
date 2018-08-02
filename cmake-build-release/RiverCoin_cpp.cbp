@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="RiverCoin_cpp"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="RiverCoin_cpp">
+				<Option output="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/RiverCoin_cpp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/local/Cellar/boost/1.67.0_1/include"/>
+					<Add directory="/usr/local/Cellar/openssl/1.0.2o_2/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 RiverCoin_cpp"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="RiverCoin_cpp/fast">
+				<Option output="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/RiverCoin_cpp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/local/Cellar/boost/1.67.0_1/include"/>
+					<Add directory="/usr/local/Cellar/openssl/1.0.2o_2/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 RiverCoin_cpp/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/async.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/base58.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/base58.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/block.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/block.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/blockchain.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/blockchain.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/compute/MochaPP/VM/instructions.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/compute/MochaPP/VM/tinyvm.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/compute/MochaPP/VM/tinyvm.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/config.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/context.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/context.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/defines.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/fileutils.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/hash.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/logger.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/logger.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/main.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/math/hashutil.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/math/math.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/math/progpow.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/math/progpow.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/math/riverhash.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/miner.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/miner.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/network.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/network.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/pools.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/pools.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/protocol.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/security/ecad.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/security/ecad.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/security/ecdsa.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/security/ecdsa.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/security/security.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/security/security.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/serializeable.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/tcp.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/transaction.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/transaction.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/tree.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/utils.cpp">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/core/utils.h">
+			<Option target="RiverCoin_cpp"/>
+		</Unit>
+		<Unit filename="/Users/abdullahfadhil/Documents/GitHub/Rivercoin-cpp/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
