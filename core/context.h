@@ -23,7 +23,7 @@ private:
     bool            _keepAlive;
     RiverMiner*     miner;
 public:
-    Context(boost::property_tree::ptree& tree) : _config(tree)
+    Context(boost::property_tree::ptree& tree, std::string PATH) : _config(tree, PATH)
     {
     }
     config& getConfig();

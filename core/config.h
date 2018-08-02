@@ -47,7 +47,8 @@ struct config{
     unsigned short max_inbound_connections;
     bool           enable_crash_logs;
     unsigned long  memdump_interval;
-    config(boost::property_tree::ptree& tree)
+    const std::string     PATH;
+    config(boost::property_tree::ptree& tree, std::string path) : PATH(path)
     {
         using boost::property_tree::ptree;
 
@@ -82,6 +83,11 @@ struct config{
     const char * calculateDifficulty()
     {
         return BASE_TARGET_DIFFICULTY;
+    }
+
+    const std::string getPath()
+    {
+        return PATH;
     }
 };
 

@@ -141,14 +141,7 @@ int main(int arg_l, const char* args[]) {
     logger::alert(std::string("found path: ") + PATH);
     logger::alert(std::string("found config: ") + CONFIG);
 
-//    logger::alert("press any key to continue...");
-//    std::cin.get();
-
-//    logger::alert(std::to_string(ack(8, 3)).c_str());
-
-//    address_test();
-
-    eckeypair_t pair = ECDSA::ecdsa_new("hellpo world");
+    eckeypair_t pair = ECDSA::ecdsa_new("hell1o world");
 
     std::cout << pair->getAddress().get()->base58() << std::endl;
 
@@ -158,25 +151,24 @@ int main(int arg_l, const char* args[]) {
 
     std::string file_read = file::readUTF(CONFIG, ERROR);
 
-    if (file_read == "null")
+    if (ERROR == ERR_NO_SUCH_FILE_EXISTS)
     {
-        std::string file = std::string("structure") + PATH_SEPARATOR + "config.xml";
-
-        logger::err("file '" + file + "' not found!");
+        logger::err("file '" + CONFIG + "' not found!");
+        exit(0);
     }
 
     std::istringstream istringstream(file_read);
 
     boost::property_tree::read_xml(istringstream, pTree);
 
-    Context* context = new Context(pTree);
+    Context* context = new Context(pTree, PATH);
 
-        Block block(150, 125124, context->getDifficulty(), context);
-        char out[32];
-
-        hexToBytes("000A13334EAADBD5513E67397611CE4D22D434577161FC6EDBA6F3E6DA8ECCCD", out);
-
-        RiverHash::mine(RiverHash::RiverHash_256_variant, block.toStoredBlock().get(), sizeof(StoredBlock), out, ByteUtil::fromBytes256(out));
+//        Block block(150, 125124, context->getDifficulty(), context);
+//        char out[32];
+//
+//        hexToBytes("000A13334EAADBD5513E67397611CE4D22D434577161FC6EDBA6F3E6DA8ECCCD", out);
+//
+//        RiverHash::mine(RiverHash::RiverHash_256_variant, block.toStoredBlock().get(), sizeof(StoredBlock), out, ByteUtil::fromBytes256(out));
 
     /* Clean up */
 
