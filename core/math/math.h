@@ -143,6 +143,25 @@ struct ByteUtil{
 //    }
 //};
 
+template <typename T, unsigned int L> struct Array{
+    T array[L];
+
+    Array() {}
+    Array(const T* t) { memcpy(array, t, L); }
+    Array(const Array& o) { memcpy(array, o.array, L); }
+    unsigned int length() { return L; }
+
+    Array<char, L * sizeof(T)> toCharArray()
+    {
+        return Array<char, L * sizeof(T)>((char *) array);
+    }
+
+    static Array<T, L> pack(const T* t)
+    {
+        return Array<T, L>(t);
+    }
+};
+
 struct vec3{
     float x, y, z;
 
