@@ -53,7 +53,7 @@ BlockChain::BlockChain(Context *c) : context(c)
 void BlockChain::loadAllBlocks()
 {
     BlockInfo info;
-    if (info.read())
+    if (info.read(context))
     {
         BlockIndex i = info.getLatestBlock();
         unsigned char ERROR = 0;
@@ -111,14 +111,14 @@ void BlockChain::serialize()
         {
             info.setLatestBlock(current->getIndex());
 
-            if (!info.dump())
+            if (!info.dump(context))
                 logger::err(string(string("couldn't dump block info '") + std::to_string(current->getIndex()) + string("'.")));
         } else {
             info.allocate();
 
             info.setLatestBlock(current->getIndex());
 
-            if (!info.dump())
+            if (!info.dump(context))
                 logger::err(string(string("couldn't dump block info '") + std::to_string(current->getIndex()) + string("'.")));
         }
     }

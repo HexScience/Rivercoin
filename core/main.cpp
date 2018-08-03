@@ -149,6 +149,8 @@ int main(int arg_l, const char* args[]) {
 
     std::cout << pair->getAddress().get()->base58() << std::endl;
 
+    std::cout << algorithms::ripemd160::base58<5>(Array<char, 5>("hello")) << std::endl;
+
     unsigned char ERROR = 0;
 
     ptree pTree;
