@@ -50,7 +50,7 @@ static std::string toHex(const char * data, int length)
 
 #endif
 
-template <typename T, unsigned int L>
+template <unsigned int L>
 std::string algorithms::sha256::base32(const Array<T, L> &a)
 {
     char _32b[32];
@@ -62,7 +62,7 @@ std::string algorithms::sha256::base32(const Array<T, L> &a)
     return toHex(_32b, len);
 }
 
-template <typename T, unsigned int L>
+template <unsigned int L>
 std::string algorithms::sha256::base58(const Array<T, L> &a)
 {
     char _32b[32];
@@ -74,7 +74,7 @@ std::string algorithms::sha256::base58(const Array<T, L> &a)
     return Base58::quick_encode(_32b, len);
 }
 
-template <typename T, unsigned int L>
+template <unsigned int L>
 std::string algorithms::base32(const Array<T, L> &a)
 {
     Array<char, L * sizeof(T)> ca = a.toCharArray().array;
@@ -82,7 +82,7 @@ std::string algorithms::base32(const Array<T, L> &a)
     return toHex(ca.array, ca.length());
 }
 
-template <typename T, unsigned int L>
+template <unsigned int L>
 std::string algorithms::base58(const Array<T, L> &a)
 {
     return std::string();
