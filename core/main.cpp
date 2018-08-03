@@ -141,6 +141,8 @@ int main(int arg_l, const char* args[]) {
     logger::alert(std::string("found path: ") + PATH);
     logger::alert(std::string("found config: ") + CONFIG);
 
+    logger::alert("----------------------------------------");
+
     eckeypair_t pair = ECDSA::ecdsa_new("hell1o world");
 
     std::cout << pair->getAddress().get()->base58() << std::endl;

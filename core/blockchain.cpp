@@ -57,7 +57,7 @@ void BlockChain::loadAllBlocks()
     {
         BlockIndex i = info.getLatestBlock();
         unsigned char ERROR = 0;
-        std::vector<char> data = file::read(std::string(".") + PATH_SEPARATOR + "structure" + PATH_SEPARATOR + "config.xml", ERROR);
+        std::vector<char> data = file::read(context->getConfig().getPath() + (std::string(STRUCTURE_DB_NAME) + PATH_SEPARATOR + std::string(BLOCKCHAIN_DB_NAME) + std::string("block[") + std::to_string(i) + std::string("].blk")).c_str(), ERROR);
 
         if (ERROR != 0)
         {
@@ -100,7 +100,7 @@ void BlockChain::serialize()
 
     unsigned char ERROR = 0;
 
-    file::write<serializeable<StoredBlock>>((string(STRUCTURE_DB_NAME) + string(BLOCKCHAIN_DB_NAME) + string("block[") + std::to_string(current->getIndex()) + string("].blk")).c_str(), s, ERROR);
+    file::write<serializeable<StoredBlock>>(context->getConfig().getPath() + (string(STRUCTURE_DB_NAME) + PATH_SEPARATOR + string(BLOCKCHAIN_DB_NAME) + string("block[") + std::to_string(current->getIndex()) + string("].blk")).c_str(), s, ERROR);
 
     if(ERROR != 0)
     {
