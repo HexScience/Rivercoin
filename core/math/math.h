@@ -149,7 +149,7 @@ template <typename T, unsigned int L> struct Array{
     Array() {}
     Array(const T* t) { memcpy(array, t, L); }
     Array(const Array& o) { memcpy(array, o.array, L); }
-    unsigned int length() { return L; }
+    unsigned int length() const { return L; }
 
     Array<char, L * sizeof(T)> toCharArray()
     {
