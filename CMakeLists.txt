@@ -11,7 +11,7 @@ IF(APPLE)
 #    set(Boost_LIBRARIES "/usr/local/Cellar/boost/1.67.0_1/lib/")
 #    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 
-    FIND_PACKAGE(Boost REQUIRED COMPONENTS filesystem)
+    FIND_PACKAGE(Boost REQUIRED COMPONENTS filesystem system)
     INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 ELSEIF(WIN32)
     FIND_PACKAGE(Boost REQUIRED)
