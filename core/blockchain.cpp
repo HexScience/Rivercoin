@@ -107,7 +107,7 @@ void BlockChain::serialize()
         logger::err(string(string("couldn't export block '") + std::to_string(current->getIndex()) + string("'.")));
     } else {
         BlockInfo info;
-        if (info.read())
+        if (info.read(context))
         {
             info.setLatestBlock(current->getIndex());
 
