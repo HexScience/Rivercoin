@@ -51,39 +51,73 @@ static std::string toHex(const char * data, int length)
 #endif
 
 template <unsigned int L>
-std::string algorithms::sha256::base32(const Array<T, L> &a)
+std::string algorithms::sha256::base32(const Array<char, L> &a)
 {
     char _32b[32];
 
-    Array<char, L * sizeof(T)> ca = a.toCharArray().array;
-
-    unsigned char len = SHA256(ca.array, ca.length(), _32b);
+    unsigned char len = SHA256(a.array, a.length(), _32b);
 
     return toHex(_32b, len);
 }
 
 template <unsigned int L>
-std::string algorithms::sha256::base58(const Array<T, L> &a)
+std::string algorithms::sha256::base58(const Array<char, L> &a)
 {
     char _32b[32];
 
-    Array<char, L * sizeof(T)> ca = a.toCharArray().array;
-
-    unsigned char len = SHA256(ca.array, ca.length(), _32b);
+    unsigned char len = SHA256(a.array, a.length(), _32b);
 
     return Base58::quick_encode(_32b, len);
 }
 
 template <unsigned int L>
-std::string algorithms::base32(const Array<T, L> &a)
+std::string algorithms::base32(const Array<char, L> &a)
 {
-    Array<char, L * sizeof(T)> ca = a.toCharArray().array;
-
-    return toHex(ca.array, ca.length());
+    return toHex(a.array, a.length());
 }
 
 template <unsigned int L>
-std::string algorithms::base58(const Array<T, L> &a)
+std::string algorithms::base58(const Array<char, L> &a)
 {
-    return std::string();
+    return Base58::quick_encode(a.array, a.length());
+}
+
+template <unsigned int L>
+std::string algorithms::sha512::base32(const Array<char, L> &a)
+{
+    char _64b[64];
+
+    unsigned char len = SHA256(a.array, a.length(), _64b);
+
+    return toHex(_64b, len);
+}
+
+template <unsigned int L>
+std::string algorithms::sha512::base58(const Array<char, L> &a)
+{
+    char _64b[64];
+
+    unsigned char len = SHA512(a.array, a.length(), _64b);
+
+    return Base58::quick_encode(_64b, len);
+}
+
+template <unsigned int L>
+std::string algorithms::ripemd160::base32(const Array<char, L> &a)
+{
+    char _20b[20];
+
+    unsigned char len = RIPEMD160(a.array, a.length(), _20b);
+
+    return toHex(_20b, len);
+}
+
+template <unsigned int L>
+std::string algorithms::ripemd160::base58(const Array<char, L> &a)
+{
+    char _20b[20];
+
+    unsigned char len = RIPEMD160(a.array, a.length(), _20b);
+
+    return Base58::quick_encode(_20b, len);
 }

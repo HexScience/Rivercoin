@@ -24,6 +24,8 @@
 #include <boost/filesystem.hpp>
 //#include "network.h"
 
+#include "math/hashalgorithm.h"
+
 int ack(int m, int n)
 {
     if (m == 0) return n+1;
