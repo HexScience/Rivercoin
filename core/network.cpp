@@ -32,30 +32,29 @@ SocketConnection::SocketConnection(const std::string _ip_, unsigned short _port_
 
 void SocketConnection::makeConnection()
 {
-//    boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string(ip), port);
-//
-//    socket->socket.connect(endpoint);
+    boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string(ip), port);
+
+    socket->socket.connect(endpoint);
 }
 
 bool SocketConnection::isConnected()
 {
-//    return socket->socket.is_open();
-    return false;
+    return socket->socket.is_open();
 }
 
 void SocketConnection::disconnect()
 {
-//    socket->socket.close();
+    socket->socket.close();
 }
 
 void SocketConnection::send(const std::string& msg)
 {
-//    boost::array<char, 4> buf;
-//    std::copy(msg.begin(), msg.end(), buf);
-//
-//    boost::system::error_code e;
-//
-//    socket->socket.async_write_some(boost::asio::buffer(buf, msg.size()), e);
+    boost::array<char, 4> buf;
+    std::copy(msg.begin(), msg.end(), buf);
+
+    boost::system::error_code e;
+
+    socket->socket.async_write_some(boost::asio::buffer(buf, msg.size()), e);
 }
 
 void SocketConnection::receive()
