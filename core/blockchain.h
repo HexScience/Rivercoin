@@ -24,8 +24,8 @@ struct BlockInfo{
     std::vector<char> data;
     BlockInfo();
     BlockInfo(const BlockInfo& o);
-    bool read();
-    bool dump();
+    bool read(Context* context);
+    bool dump(Context* context);
     void allocate();
     void setLatestBlock(BlockIndex i);
     BlockIndex getLatestBlock();

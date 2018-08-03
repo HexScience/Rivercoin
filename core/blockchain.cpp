@@ -13,18 +13,18 @@
 BlockInfo::BlockInfo() {}
 BlockInfo::BlockInfo(const BlockInfo &o) : data(o.data) {}
 
-bool BlockInfo::read()
+bool BlockInfo::read(Context* context)
 {
     unsigned char ERROR = 0;
-    data = file::read(std::string(".") + PATH_SEPARATOR + "structure" + PATH_SEPARATOR + "config.xml", ERROR);
+    data = file::read(context->getConfig().getPath() + std::string(STRUCTURE_DB_NAME) + PATH_SEPARATOR + "blockinfo.rf", ERROR);
 
     return ERROR == 0;
 }
 
-bool BlockInfo::dump()
+bool BlockInfo::dump(Context* context)
 {
     unsigned char ERROR = 0;
-    file::write<const char*>(std::string(".") + PATH_SEPARATOR + "structure" + PATH_SEPARATOR + "config.xml", data.data(), ERROR);
+    file::write<const char*>(context->getConfig().getPath() + std::string(STRUCTURE_DB_NAME) + PATH_SEPARATOR + "blockinfo.rf", data.data(), ERROR);
 
     return ERROR == 0;
 }
