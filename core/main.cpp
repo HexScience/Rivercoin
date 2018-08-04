@@ -169,8 +169,6 @@ int main(int arg_l, const char* args[]) {
 
     Context* context = new Context(pTree, PATH);
 
-    Netwo
-
 //        Block block(150, 125124, context->getDifficulty(), context);
 //        char out[32];
 //

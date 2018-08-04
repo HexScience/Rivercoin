@@ -5,7 +5,7 @@
 #include "tinyvm.h"
 #include <boost/multiprecision/cpp_int.hpp>
 
-void MochaVM::execute(unsigned char *prgrm, unsigned int size, unsigned int& index)
+void MochaVM::execute(const unsigned char* prgrm, const executable& program, unsigned int size, unsigned int& index)
 {
     while (index < size && execute_)
     {
@@ -19,13 +19,12 @@ void MochaVM::execute(unsigned char *prgrm, unsigned int size, unsigned int& ind
             case push_i_16u:    vm_stack.push(((unsigned short*) ((unsigned char[2]){prgrm[index], prgrm[index + 1]}))[0], this); index += 2; break;
             case push_i_32:     vm_stack.push(((int*) ((unsigned char[4]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3]}))[0], this); index += 4; break;
             case push_i_32u:    vm_stack.push(((unsigned int*) ((unsigned char[4]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3]}))[0], this); index += 4; break;
-            case push_i_64:     vm_stack.push(((int*) ((unsigned char[8]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7]}))[0], this); index += 8; break;
-            case push_i_64u:    vm_stack.push(((unsigned int*) ((unsigned char[8]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7]}))[0], this); index += 8; break;
+            case push_i_64:     vm_stack.push(((long long*) ((unsigned char[8]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7]}))[0], this); index += 8; break;
+            case push_i_64u:    vm_stack.push(((unsigned long long*) ((unsigned char[8]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7]}))[0], this); index += 8; break;
             case push_i_128:    vm_stack.push(((boost::multiprecision::int128_t*) ((unsigned char[16]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7], prgrm[index + 8], prgrm[index + 9], prgrm[index + 10], prgrm[index + 11], prgrm[index + 12], prgrm[index + 13], prgrm[index + 14], prgrm[index + 15]}))[0], this); index += 8; break;
             case push_i_128u:   vm_stack.push(((boost::multiprecision::uint128_t*) ((unsigned char[16]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7], prgrm[index + 8], prgrm[index + 9], prgrm[index + 10], prgrm[index + 11], prgrm[index + 12], prgrm[index + 13], prgrm[index + 14], prgrm[index + 15]}))[0], this); index += 8; break;
             case push_i_256:    vm_stack.push(((boost::multiprecision::int256_t*) ((unsigned char[32]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7], prgrm[index + 8], prgrm[index + 9], prgrm[index + 10], prgrm[index + 11], prgrm[index + 12], prgrm[index + 13], prgrm[index + 14], prgrm[index + 15], prgrm[index + 16], prgrm[index + 17], prgrm[index + 18], prgrm[index + 19], prgrm[index + 20], prgrm[index + 21], prgrm[index + 22], prgrm[index + 23], prgrm[index + 24], prgrm[index + 25], prgrm[index + 26], prgrm[index + 27], prgrm[index + 28], prgrm[index + 29], prgrm[index + 30], prgrm[index + 31]}))[0], this); index += 8; break;
             case push_i_256u:   vm_stack.push(((boost::multiprecision::uint256_t*) ((unsigned char[32]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7], prgrm[index + 8], prgrm[index + 9], prgrm[index + 10], prgrm[index + 11], prgrm[index + 12], prgrm[index + 13], prgrm[index + 14], prgrm[index + 15], prgrm[index + 16], prgrm[index + 17], prgrm[index + 18], prgrm[index + 19], prgrm[index + 20], prgrm[index + 21], prgrm[index + 22], prgrm[index + 23], prgrm[index + 24], prgrm[index + 25], prgrm[index + 26], prgrm[index + 27], prgrm[index + 28], prgrm[index + 29], prgrm[index + 30], prgrm[index + 31]}))[0], this); index += 8; break;
-
             case pop_i_8:
             case pop_i_8u:
                     vm_stack.pop<char>(this);
@@ -93,6 +92,33 @@ void MochaVM::execute(unsigned char *prgrm, unsigned int size, unsigned int& ind
 
             case inc:
                     vm_stack.inc(this, static_cast<type>(prgrm[index ++]));
+                break;
+
+            case call_:
+                {
+                    unsigned long long func_id = ((long long*) ((unsigned char[8]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7]}))[0];
+                    index += 8;
+
+                    if (func_id >= program.functions__.size())
+                        terminate(std::string(std::string("function call to __") + std::to_string(func_id)).c_str());
+                    std::vector<instruction> func__ = program.functions__[func_id];
+                    unsigned int __index__ = 0;
+                    execute((const unsigned char *) func__.data(), program, func__.size(), __index__);
+                }
+                break;
+
+            case call_native:
+            {
+                terminate(std::string(std::string("native function call to __undefined")).c_str());
+//                unsigned long long func_id = ((long long*) ((unsigned char[8]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7]}))[0];
+//                index += 8;
+//
+//                if (func_id >= program.functions__.size())
+//                    terminate(std::string(std::string("function call to __") + std::to_string(func_id)).c_str());
+//                std::vector<instruction> func__ = program.functions__[func_id];
+//                unsigned int __index__ = 0;
+//                execute((const unsigned char *) func__.data(), program, func__.size(), __index__);
+            }
                 break;
 
             default:
@@ -185,6 +211,8 @@ void MochaVM::execute(unsigned char *prgrm, unsigned int size, unsigned int& ind
                     case fprint: instruction_name = "fprint"; break;
                     case print: instruction_name = "print"; break;
                     case goto_: instruction_name = "goto_"; break;
+                    case start_func: instruction_name = "start_func (function in-executable)"; break;
+                    case end_func: instruction_name = "end_func (function in-executable)"; break;
 
                     default: instruction_name = "unknown";
                         break;
@@ -670,4 +698,248 @@ void stack::inc(MochaVM* vm, type t)
             vm->terminate("UnsupportedOperation: print_<?>");
             break;
     }
+}
+
+void stack::pop_register_a(MochaVM* vm, type t)
+{
+    switch (t)
+    {
+        case char_:
+            _register.__a[0] = pop<char>(vm);
+            _register.__a___ = t;
+            break;
+        case uchar_:
+            _register.__a[0] = pop<unsigned char>(vm);
+            _register.__a___ = t;
+            break;
+        case short_:
+            ((short*)_register.__a)[0] = pop<short>(vm);
+            _register.__a___ = t;
+            break;
+        case ushort_:
+            ((unsigned short *)_register.__a)[0] = pop<unsigned short>(vm);
+            _register.__a___ = t;
+            break;
+        case int_:
+            ((int *)_register.__a)[0] = pop<int>(vm);
+            _register.__a___ = t;
+            break;
+        case uint_:
+            ((unsigned int *)_register.__a)[0] = pop<unsigned int>(vm);
+            _register.__a___ = t;
+            break;
+        case long_:
+            ((long *)_register.__a)[0] = pop<long>(vm);
+            _register.__a___ = t;
+            break;
+        case ulong_:
+            ((unsigned long *)_register.__a)[0] = pop<unsigned long>(vm);
+            _register.__a___ = t;
+            break;
+        case int128_:
+            vm->terminate("UnsupportedOperation: cast_int128");
+            break;
+        case uint128_:
+            vm->terminate("UnsupportedOperation: cast_uint128");
+            break;
+        case int256_:
+            vm->terminate("UnsupportedOperation: cast_int256");
+            break;
+        case uint256_:
+            vm->terminate("UnsupportedOperation: cast_uint256");
+            break;
+        case float8_:
+            vm->terminate("UnsupportedOperation: cast_float8");
+            break;
+        case float16_:
+            vm->terminate("UnsupportedOperation: cast_float16");
+            break;
+        case float32_:
+            ((float *)_register.__a)[0] = pop<float>(vm);
+            _register.__a___ = t;
+            break;
+        case float64_:
+            ((double *)_register.__a)[0] = pop<double>(vm);
+            _register.__a___ = t;
+            break;
+        case float128_:
+            vm->terminate("UnsupportedOperation: cast_float128");
+            break;
+        case float256_:
+            vm->terminate("UnsupportedOperation: cast_float256");
+            break;
+        default:
+            vm->terminate("UnsupportedOperation: print_<?>");
+            break;
+    }
+}
+
+void stack::pop_register_b(MochaVM* vm, type t)
+{
+    switch (t)
+    {
+        case char_:
+            _register.__b[0] = pop<char>(vm);
+            _register.__b___ = t;
+            break;
+        case uchar_:
+            _register.__b[0] = pop<unsigned char>(vm);
+            _register.__b___ = t;
+            break;
+        case short_:
+            ((short*)_register.__b)[0] = pop<short>(vm);
+            _register.__b___ = t;
+            break;
+        case ushort_:
+            ((unsigned short *)_register.__b)[0] = pop<unsigned short>(vm);
+            _register.__b___ = t;
+            break;
+        case int_:
+            ((int *)_register.__b)[0] = pop<int>(vm);
+            _register.__b___ = t;
+            break;
+        case uint_:
+            ((unsigned int *)_register.__b)[0] = pop<unsigned int>(vm);
+            _register.__b___ = t;
+            break;
+        case long_:
+            ((long *)_register.__b)[0] = pop<long>(vm);
+            _register.__b___ = t;
+            break;
+        case ulong_:
+            ((unsigned long *)_register.__b)[0] = pop<unsigned long>(vm);
+            _register.__b___ = t;
+            break;
+        case int128_:
+            vm->terminate("UnsupportedOperation: cast_int128");
+            break;
+        case uint128_:
+            vm->terminate("UnsupportedOperation: cast_uint128");
+            break;
+        case int256_:
+            vm->terminate("UnsupportedOperation: cast_int256");
+            break;
+        case uint256_:
+            vm->terminate("UnsupportedOperation: cast_uint256");
+            break;
+        case float8_:
+            vm->terminate("UnsupportedOperation: cast_float8");
+            break;
+        case float16_:
+            vm->terminate("UnsupportedOperation: cast_float16");
+            break;
+        case float32_:
+            ((float *)_register.__b)[0] = pop<float>(vm);
+            _register.__b___ = t;
+            break;
+        case float64_:
+            ((double *)_register.__b)[0] = pop<double>(vm);
+            _register.__b___ = t;
+            break;
+        case float128_:
+            vm->terminate("UnsupportedOperation: cast_float128");
+            break;
+        case float256_:
+            vm->terminate("UnsupportedOperation: cast_float256");
+            break;
+        default:
+            vm->terminate("UnsupportedOperation: print_<?>");
+            break;
+    }
+}
+
+void stack::load_register_a(MochaVM *vm, type t, unsigned long __i)
+{
+
+    switch (t)
+    {
+        case char_:
+            _register.__a[0] = pop<char>(vm);
+            _register.__a___ = t;
+            break;
+        case uchar_:
+            _register.__a[0] = pop<unsigned char>(vm);
+            _register.__a___ = t;
+            break;
+        case short_:
+            ((short*)_register.__a)[0] = pop<short>(vm);
+            _register.__a___ = t;
+            break;
+        case ushort_:
+            ((unsigned short *)_register.__a)[0] = pop<unsigned short>(vm);
+            _register.__a___ = t;
+            break;
+        case int_:
+            ((int *)_register.__a)[0] = pop<int>(vm);
+            _register.__a___ = t;
+            break;
+        case uint_:
+            ((unsigned int *)_register.__a)[0] = pop<unsigned int>(vm);
+            _register.__a___ = t;
+            break;
+        case long_:
+            ((long *)_register.__a)[0] = pop<long>(vm);
+            _register.__a___ = t;
+            break;
+        case ulong_:
+            ((unsigned long *)_register.__a)[0] = pop<unsigned long>(vm);
+            _register.__a___ = t;
+            break;
+        case int128_:
+            vm->terminate("UnsupportedOperation: cast_int128");
+            break;
+        case uint128_:
+            vm->terminate("UnsupportedOperation: cast_uint128");
+            break;
+        case int256_:
+            vm->terminate("UnsupportedOperation: cast_int256");
+            break;
+        case uint256_:
+            vm->terminate("UnsupportedOperation: cast_uint256");
+            break;
+        case float8_:
+            vm->terminate("UnsupportedOperation: cast_float8");
+            break;
+        case float16_:
+            vm->terminate("UnsupportedOperation: cast_float16");
+            break;
+        case float32_:
+            ((float *)_register.__a)[0] = pop<float>(vm);
+            _register.__a___ = t;
+            break;
+        case float64_:
+            ((double *)_register.__a)[0] = pop<double>(vm);
+            _register.__a___ = t;
+            break;
+        case float128_:
+            vm->terminate("UnsupportedOperation: cast_float128");
+            break;
+        case float256_:
+            vm->terminate("UnsupportedOperation: cast_float256");
+            break;
+        default:
+            vm->terminate("UnsupportedOperation: print_<?>");
+            break;
+    }
+}
+
+void stack::load_register_b(MochaVM *vm, type t, unsigned long __i)
+{
+//    peek<t>(__i, vm);
+}
+
+void stack::_____register_add(type final_cast)
+{
+}
+
+void stack::_____register_sub(type final_cast)
+{
+}
+
+void stack::_____register_mul(type final_cast)
+{
+}
+
+void stack::_____register_div(type final_cast)
+{
 }

@@ -11,7 +11,7 @@ IF(APPLE)
 #    set(Boost_LIBRARIES "/usr/local/Cellar/boost/1.67.0_1/lib/")
 #    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 
-    FIND_PACKAGE(Boost REQUIRED COMPONENTS filesystem system)
+    FIND_PACKAGE(Boost REQUIRED COMPONENTS filesystem system thread regex)
     INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 ELSEIF(WIN32)
     FIND_PACKAGE(Boost REQUIRED)
@@ -37,8 +37,8 @@ add_executable(RiverCoin_cpp core/main.cpp
         core/block.h core/block.cpp
         core/security/security.h core/security/security.cpp
         core/transaction.h core/transaction.cpp
-        core/protocol.h core/hash.h core/logger.h core/logger.cpp core/tcp.h core/tree.h core/base58.h core/base58.cpp core/config.h core/context.cpp core/context.h core/compute/MochaPP/VM/instructions.h
-        core/compute/MochaPP/VM/tinyvm.h core/compute/MochaPP/VM/tinyvm.cpp
+        core/protocol.h core/hash.h core/logger.h core/logger.cpp core/tcp.h core/tree.h core/base58.h core/base58.cpp core/config.h core/context.cpp core/context.h core/compute/mochapp/vm/instructions.h
+        core/compute/mochapp/vm/tinyvm.h core/compute/mochapp/vm/tinyvm.cpp
         core/fileutils.h core/defines.h core/math/math.h core/math/riverhash.h core/math/hashutil.h core/serializeable.h
         core/blockchain.h core/blockchain.cpp
         core/async.h

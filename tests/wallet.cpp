@@ -6,7 +6,7 @@
 #include <string>
 #include "../core/security/ecdsa.h";
 
-int main(int arg_l, const char* args[])
+int wallet_test(int arg_l, const char* args[])
 {
     ECDSA::Keypair* my_first_keypair = ECDSA::ecdsa_new("my cool wallet seed");
 

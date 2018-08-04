@@ -49,12 +49,12 @@ void SocketConnection::disconnect()
 
 void SocketConnection::send(const std::string& msg)
 {
-    boost::array<char, 4> buf;
-    std::copy(msg.begin(), msg.end(), buf);
-
-    boost::system::error_code e;
-
-    socket->socket.async_write_some(boost::asio::buffer(buf, msg.size()), e);
+//    boost::array<char, 4> buf;
+//    std::copy(msg.begin(), msg.end(), buf);
+//
+//    boost::system::error_code e;
+//
+//    socket->socket.async_write_some(boost::asio::buffer(buf, msg.size()), e);
 }
 
 void SocketConnection::receive()

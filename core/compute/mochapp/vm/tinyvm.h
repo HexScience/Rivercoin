@@ -8,6 +8,7 @@
 #include "instructions.h"
 #include <stack>
 #include <iostream>
+#include <vector>
 
 typedef instructions instruction;
 
@@ -34,7 +35,62 @@ enum type{
     pointer_,
 };
 
+struct executable{
+    std::vector<instruction>                    instructions__;
+    std::vector<std::vector<instruction>>       functions__;
+
+    executable(std::vector<instruction> prgrm)
+    {
+        for (unsigned long i = 0; i < prgrm.size(); i ++)
+        {
+            instruction INST = prgrm[i];
+
+            if (INST == start_func)
+                functions__.push_back(pack_in_vector(prgrm, ++i));
+
+            else if (INST == end_func)
+            {
+            }
+
+            else instructions__.push_back(INST);
+        }
+    }
+
+    std::vector<instruction> pack_in_vector(std::vector<instruction> prgrm, unsigned long& i)
+    {
+        std::vector<instruction> instr__;
+
+        while (i < prgrm.size())
+        {
+            instruction INST = prgrm[i];
+
+            if (INST == start_func)
+                functions__.push_back(pack_in_vector(prgrm, ++i));
+
+            else if (INST == end_func)
+                return instr__;
+
+            else instr__.push_back(INST);
+
+            i ++;
+        }
+
+        return instr__;
+    }
+};
+
 class MochaVM;
+
+struct _register_
+{
+    char __a[32];
+    char __b[32];
+    char __c[32];
+
+    type __a___;
+    type __b___;
+    type __c___;
+};
 
 class stack
 {
@@ -43,6 +99,7 @@ private:
     unsigned char *  _stack;
     long             _index;
     unsigned long    _size;
+    _register_       _register;
 public:
     stack(unsigned int size) : _index(0), _stack(new unsigned char(size)), _size(size) {}
     stack(const stack& o)
@@ -62,6 +119,20 @@ public:
     void cast_by_type(type t)
     {
     }
+
+    void pop_register_a(MochaVM* vm, type t);
+    void pop_register_b(MochaVM* vm, type t);
+
+    void load_register_a(MochaVM* vm, type t, unsigned long __i);
+    void load_register_b(MochaVM* vm, type t, unsigned long __i);
+
+    void push_register_a(MochaVM* vm, type t, char data[32]);
+    void push_register_b(MochaVM* vm, type t, char data[32]);
+
+    void _____register_add(type final_cast);
+    void _____register_sub(type final_cast);
+    void _____register_mul(type final_cast);
+    void _____register_div(type final_cast);
 
     void iadd(MochaVM* vm, type a, type b, unsigned char length);
     void isub(MochaVM* vm, type a, type b, unsigned char length);
@@ -95,7 +166,7 @@ public:
     {
     }
 
-    void execute(unsigned char* prgrm, unsigned int size, unsigned int& index);
+    void execute(const unsigned char* prgrm, const executable& program, unsigned int size, unsigned int& index);
     void terminate(const char* t)
     {
         execute_ = false;

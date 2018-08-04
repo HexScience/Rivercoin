@@ -128,6 +128,10 @@ enum instructions{
 
     call_,
     call_native,
+
+    /** none executable instructions **/
+    start_func,
+    end_func,
 };
 
 #endif //RIVERCOIN_CPP_INSTRUCTIONS_H
