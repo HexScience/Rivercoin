@@ -12,6 +12,7 @@
 
 package com.riverssen.core.mpp;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,27 @@ public class Executable
     public void add(int code)
     {
         op_codes.add((byte) code);
+    }
+
+    public void addAll(byte codes[])
+    {
+        for (int code : codes)
+            op_codes.add((byte) code);
+    }
+
+    public void add(byte codes[])
+    {
+        for (int code : codes)
+            op_codes.add((byte) code);
+    }
+
+    public byte[] convertInt(int integer)
+    {
+        ByteBuffer _int_ = ByteBuffer.allocate(4);
+        _int_.putInt(integer);
+        _int_.flip();
+
+        return _int_.array();
     }
 
 //    public Executable(final byte op_codes[])

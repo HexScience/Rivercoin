@@ -72,7 +72,7 @@ public class MainCompiler
 
                 CompiledProgram program = new CompiledProgram(parsedProgram);
 
-                program.spit(new File(main_class.getParent()));
+                program.spit(new File(main_class.getParent() + File.separator + "" + main_class.getName().substring(0, main_class.getName().lastIndexOf(".")) + ".o"));
             }
         }
     }

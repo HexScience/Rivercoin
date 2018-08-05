@@ -144,5 +144,6 @@ public class instructions
 
     /** none executable instructions **/
     start_func = 90,
-    end_func = 91;
+    end_func = 91,
+    _new_ = 92;
 }
