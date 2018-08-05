@@ -12,10 +12,16 @@
 
 package com.riverssen.core.mpp;
 
+import com.riverssen.core.mpp.compiler.LexedProgram;
+import com.riverssen.core.mpp.compiler.ParsedProgram;
+import com.riverssen.core.mpp.exceptions.ParseException;
+import com.riverssen.core.utils.FileUtils;
+
+import java.io.File;
+
 public class MainCompiler
 {
-    public static void main(String args[])
-    {
+    public static void main(String args[]) throws ParseException {
         final String[] commands = {
                 "---commands---",
                 "-c <path to main-class> --compiles and exports it to class.o file--",
@@ -26,9 +32,7 @@ public class MainCompiler
                 "--v_x --appended at end of command to define language version (e.g --v_1_0a--"
         };
 
-        System.out.println("hi");
-
-        if (args == null && args.length == 0)
+        if (args == null || args.length == 0)
         {
             System.err.println("no arguments...");
             for (String string : commands)
@@ -37,9 +41,30 @@ public class MainCompiler
             System.exit(0);
         }
 
-        if (args.length > 0)
+        if (args.length >= 2)
         {
             System.out.println(args.length);
+
+            File main_class = new File(args[1].substring(1, args[1].length() - 1));
+
+            String arg = args[0];
+
+            if (main_class.exists())
+            {
+                System.err.println("file '" + main_class + "' doesn't exist.");
+                System.exit(0);
+            }
+
+            if (arg.equals("-c") || arg.equals("-compile"))
+            {
+                LexedProgram lexedProgram = new LexedProgram(FileUtils.readUTF(main_class.toString()));
+
+                ParsedProgram parsedProgram = new ParsedProgram(lexedProgram);
+
+                CompiledProgram program = new CompiledProgram(parsedProgram);
+
+                program.spit(main_class.getParent());
+            }
         }
     }
 }
