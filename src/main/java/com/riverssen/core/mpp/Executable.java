@@ -20,44 +20,54 @@ import static com.riverssen.core.mpp.instructions.*;
 public class Executable
 {
     public List<Byte>          op_codes;
-    public List<List<Byte>>    funcs;
+//    public List<List<Byte>>    funcs;
 
-    public Executable(final byte op_codes[])
+    public Executable()
     {
-        this.funcs = new ArrayList<>();
-        this.op_codes = new ArrayList();
-
-        for (int i = 0; i < op_codes.length; i ++)
-        {
-            int INST = Byte.toUnsignedInt(op_codes[i]);
-
-            if (INST == start_func)
-                funcs.add(getOps(op_codes, i));
-            else if (INST == end_func)
-            {
-                System.err.println("not inside function");
-                System.exit(0);
-            }
-            else this.op_codes.add((byte) INST);
-        }
+        op_codes = new ArrayList<>();
     }
 
-    List<Byte> getOps(final byte op_codes[], int s)
+    public void add(int code)
     {
-        ArrayList<Byte> list = new ArrayList<>();
-
-        for (int i = s; i < op_codes.length; i ++)
-        {
-            int INST = Byte.toUnsignedInt(op_codes[i]);
-
-            if (INST == start_func)
-                funcs.add(getOps(op_codes, i));
-            else if (INST == end_func)
-                return list;
-
-            else list.add((byte) INST);
-        }
-
-        return list;
+        op_codes.add((byte) code);
     }
+
+//    public Executable(final byte op_codes[])
+//    {
+//        this.funcs = new ArrayList<>();
+//        this.op_codes = new ArrayList();
+//
+//        for (int i = 0; i < op_codes.length; i ++)
+//        {
+//            int INST = Byte.toUnsignedInt(op_codes[i]);
+//
+//            if (INST == start_func)
+//                funcs.add(getOps(op_codes, i));
+//            else if (INST == end_func)
+//            {
+//                System.err.println("not inside function");
+//                System.exit(0);
+//            }
+//            else this.op_codes.add((byte) INST);
+//        }
+//    }
+//
+//    List<Byte> getOps(final byte op_codes[], int s)
+//    {
+//        ArrayList<Byte> list = new ArrayList<>();
+//
+//        for (int i = s; i < op_codes.length; i ++)
+//        {
+//            int INST = Byte.toUnsignedInt(op_codes[i]);
+//
+//            if (INST == start_func)
+//                funcs.add(getOps(op_codes, i));
+//            else if (INST == end_func)
+//                return list;
+//
+//            else list.add((byte) INST);
+//        }
+//
+//        return list;
+//    }
 }
