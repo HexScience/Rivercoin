@@ -17,11 +17,11 @@ import com.riverssen.core.mpp.compiler.ParsedProgram;
 import com.riverssen.core.mpp.exceptions.ParseException;
 import com.riverssen.core.utils.FileUtils;
 
-import java.io.File;
+import java.io.*;
 
 public class MainCompiler
 {
-    public static void main(String args[]) throws ParseException {
+    public static void main(String args[]) throws ParseException, IOException {
         final String[] commands = {
                 "---commands---",
                 "-c <path to main-class> --compiles and exports it to class.o file--",
@@ -43,13 +43,11 @@ public class MainCompiler
 
         if (args.length >= 2)
         {
-            System.out.println(args.length);
-
             File main_class = new File(args[1].substring(1, args[1].length() - 1));
 
             String arg = args[0];
 
-            if (main_class.exists())
+            if (!main_class.exists())
             {
                 System.err.println("file '" + main_class + "' doesn't exist.");
                 System.exit(0);
@@ -57,13 +55,24 @@ public class MainCompiler
 
             if (arg.equals("-c") || arg.equals("-compile"))
             {
-                LexedProgram lexedProgram = new LexedProgram(FileUtils.readUTF(main_class.toString()));
+                String utf_program = "";
+
+                BufferedReader reader = new BufferedReader(new FileReader(main_class));
+
+                String line = "";
+
+                while ((line = reader.readLine()) != null)
+                    utf_program += line + "\n";
+
+                reader.close();
+
+                LexedProgram lexedProgram = new LexedProgram(utf_program);
 
                 ParsedProgram parsedProgram = new ParsedProgram(lexedProgram);
 
                 CompiledProgram program = new CompiledProgram(parsedProgram);
 
-                program.spit(main_class.getParent());
+                program.spit(new File(main_class.getParent()));
             }
         }
     }

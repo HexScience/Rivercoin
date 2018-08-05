@@ -138,7 +138,11 @@ public class instructions
     call_ = 85,
     call_native = 86,
 
+    if_ = 87,
+    elif_ = 88,
+    else_ = 89,
+
     /** none executable instructions **/
-    start_func = 87,
-    end_func = 88;
+    start_func = 90,
+    end_func = 91;
 }
