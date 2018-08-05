@@ -129,6 +129,10 @@ enum instructions{
     call_,
     call_native,
 
+    if_,
+    elif_,
+    else_,
+
     /** none executable instructions **/
     start_func,
     end_func,
