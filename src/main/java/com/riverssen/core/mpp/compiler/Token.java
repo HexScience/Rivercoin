@@ -13,7 +13,9 @@
 package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.RiverCoin;
+import com.riverssen.core.mpp.Executable;
 import com.riverssen.core.mpp.exceptions.CompileException;
+import com.riverssen.core.mpp.instructions;
 import com.riverssen.core.mpp.objects.*;
 import com.riverssen.core.mpp.objects.Boolean;
 import com.riverssen.core.mpp.objects.Float;
@@ -217,6 +219,54 @@ public class Token implements Serializable
     {
         this.children.add(token);
         return this;
+    }
+
+    private int __find__(List<Token> _args_, String name)
+    {
+        for (int i = 0; i < _args_.size(); i ++)
+            if (_args_.get(0).getTokens().get(0).toString().equals(name))
+                return i;
+
+        return -1;
+    }
+
+    private void initilization(List<Token> _args_, Executable _exe_, Token identifier)
+    {
+        int self = 0;
+
+        if (modifiers.contains(Modifier.STATIC))
+            self = -1;
+        else
+//        {
+//            _args_.add(0, 0);
+            self = 0;
+//        }
+
+        String __name__ = identifier.children.get(0).toString();
+
+        final int MEM = 0, STK = 1;
+        int OP = MEM;
+
+        int op_write = instructions.memory_write;
+
+        if (__find__(_args_, __name__) >= 0)
+        {
+        }
+        else if (self == 0)
+        {
+        }
+
+        _exe_.add(instructions.memory_write);
+        _exe_.add(0);
+    }
+
+    public void compile(List<Token> _args_, Executable _exe_)
+    {
+        switch (type)
+        {
+            case INITIALIZATION:
+                break;
+        }
     }
 
     public Container interpret(Container context, Container self, Container fcontext, Container fself, boolean proc, Container ...args) throws CompileException

@@ -14,7 +14,7 @@ package com.riverssen.core.mpp;
 
 public class instructions
 {
-    static final short
+    public static final short
     /**
      * Push
      */
@@ -145,5 +145,9 @@ public class instructions
     /** none executable instructions **/
     start_func = 90,
     end_func = 91,
-    _new_ = 92;
+    _new_ = 92,
+    push = 93,
+    pop = 94,
+    malloc_ = 95,
+    calloc_ = 96;
 }

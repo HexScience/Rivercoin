@@ -14,13 +14,30 @@ package com.riverssen.core.mpp;
 
 import com.riverssen.core.mpp.compiler.LexedProgram;
 import com.riverssen.core.mpp.compiler.ParsedProgram;
+import com.riverssen.core.mpp.contracts.Contracts;
 import com.riverssen.core.mpp.exceptions.ParseException;
-import com.riverssen.core.utils.FileUtils;
 
 import java.io.*;
 
 public class MainCompiler
 {
+    private static String stdlib()
+            throws IOException
+    {
+        String utf_program = "";
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(Contracts.class.getClassLoader().getResource("std.mpp").openStream()));
+
+        String line = "";
+
+        while ((line = reader.readLine()) != null)
+            utf_program += line + "\n";
+
+        reader.close();
+
+        return utf_program;
+    }
+
     public static void main(String args[]) throws ParseException, IOException {
         final String[] commands = {
                 "---commands---",
@@ -55,7 +72,7 @@ public class MainCompiler
 
             if (arg.equals("-c") || arg.equals("-compile"))
             {
-                String utf_program = "";
+                String utf_program = "" + stdlib();
 
                 BufferedReader reader = new BufferedReader(new FileReader(main_class));
 
@@ -69,6 +86,8 @@ public class MainCompiler
                 LexedProgram lexedProgram = new LexedProgram(utf_program);
 
                 ParsedProgram parsedProgram = new ParsedProgram(lexedProgram);
+
+                System.out.println(parsedProgram.getRoot().humanReadable(0));
 
                 CompiledProgram program = new CompiledProgram(parsedProgram);
 

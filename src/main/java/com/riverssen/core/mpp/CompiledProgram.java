@@ -33,6 +33,187 @@ public class CompiledProgram
         simulate(root);
     }
 
+    private void simulate_contract(Token root)
+    {
+        Set<Token>              methods_ = new LinkedHashSet<>();
+        Set<Token>              structs_ = new LinkedHashSet<>();
+        Map<String, Integer>    sizeof_ = new HashMap();
+        Map<String, Integer>    tablef_ = new HashMap<>();
+        Map<String, Integer>    tablet_ = new HashMap<>();
+
+        tablet_.put("char", 1);
+        tablet_.put("uchar", 1);
+        tablet_.put("short", 2);
+        tablet_.put("ushort", 2);
+        tablet_.put("int", 4);
+        tablet_.put("uint", 4);
+        tablet_.put("float", 4);
+        tablet_.put("long", 8);
+        tablet_.put("ulong", 8);
+        tablet_.put("double", 8);
+        tablet_.put("int128", 16);
+        tablet_.put("uint128", 16);
+        tablet_.put("float128", 16);
+        tablet_.put("int256", 32);
+        tablet_.put("uint256", 32);
+        tablet_.put("float256", 32);
+        tablet_.put("string", 8);
+        tablet_.put("pointer", 8);
+        tablet_.put("PublicAddress", 25);
+        tablet_.put("ContractAddress", 35);
+        tablet_.put("InvokeAddress", 39);
+
+        int funcs_  = 0;
+        int _stack_ = 0;
+
+        Map<String, Tuple<Integer, Object>> map = new HashMap();
+
+        for (Token token : root.getTokens())
+        {
+            if (token.getType().equals(Token.Type.METHOD_DECLARATION))
+            {
+                tablef_.put(token.getTokens().get(0).toString(), methods_.size());
+                methods_.add(token);
+            }
+            else if (token.getType().equals(Token.Type.CLASS_DECLARATION))
+            {
+                tablet_.put(token.getTokens().get(0).toString(), structs_.size());
+                structs_.add(token);
+
+                for (Token method : token.getTokens().get(1).getTokens())
+                {
+                    if (method.getType().equals(Token.Type.METHOD_DECLARATION)) {
+                        tablef_.put(method.getTokens().get(0).toString(), methods_.size());
+                        methods_.add(method);
+                    }
+                }
+            }
+        }
+
+        class _object_
+        {
+            String  _typename_;
+            int     _typesize_;
+
+            protected _object_ clone()
+            {
+                _object_ object_ = new _object_();
+                object_._typename_ = _typename_;
+                object_._typesize_ = _typesize_;
+
+                return object_;
+            }
+        }
+
+        class _struct_
+        {
+            Token   _tokenidn_;
+            String  _typename_;
+            int     _typesize_;
+
+            Map<String, Integer> ___fields___ = new HashMap<>();
+
+            int sizeof(String name)
+            {
+                if (tablet_.containsKey(name)) return tablet_.get(name);
+                System.err.println("type '" + name + "' doesn't exist.");
+                System.exit(0);
+                return -1;
+            }
+
+            _struct_(Token token, int size)
+            {
+                int index  = 0;
+                _tokenidn_ = token;
+                _typename_ = token.getTokens().get(0).toString();
+                _typesize_ = size;
+
+                for (Token field : token.getTokens().get(1).getTokens())
+                {
+                    if (field.getType().equals(Token.Type.EMPTY_DECLARATION) || field.getType().equals(Token.Type.FULL_DECLARATION))
+                    {
+                        String type = field.getTokens().get(0).toString();
+                        String name = field.getTokens().get(1).toString();
+
+                        ___fields___.put(name, index);
+                        index += sizeof(type);
+                    }
+                }
+            }
+
+            int __indexof__(String name)
+            {
+                if (___fields___.containsKey(name)) return ___fields___.get(name);
+                System.err.println("field '" + name + "' doesn't exist in scope of '" + _typename_ + "'.");
+                System.exit(0);
+                return -1;
+            }
+
+            void _fetch_(String name)
+            {
+                executable.add(instructions.memory_load);
+                executable.add(executable.convertInt(__indexof__(name)));
+            }
+
+            void _call_(String name, Token ...arguments)
+            {
+               List<Token> body = _tokenidn_.getTokens().get(1).getTokens();
+
+               for (Token token : body)
+                   if (token.getType().equals(Token.Type.METHOD_DECLARATION) && token.getTokens().get(0).toString().equals(name))
+                   {
+                       Token args[] = arguments;
+                       if (arguments == null)
+                           args = new Token[0];
+
+                       List<Token> parenthesis = token.getTokens().get(2).getTokens();
+
+                       if (parenthesis.size() != args.length)
+                       {
+                           System.err.println("function '" + name + "' with '" + args.length + "' arguments doesn't exist in the scope of '" + _typename_ + "'.");
+                           System.exit(0);
+                       }
+
+                       for (Token arg : args)
+                           __interpret__(arg);
+
+                       executable.add(instructions.call_);
+                       executable.add(executable.convertInt(tablef_.get(name)));
+                   }
+
+               System.err.println("function '" + name + "' doesn't exist in the scope of '" + _typename_ + "'.");
+               System.exit(0);
+            }
+
+            void __interpret__(Token token)
+            {
+                switch (token.getType())
+                {
+                    case INITIALIZATION:
+                        break;
+                    case PROCEDURAL_ACCESS:
+                        break;
+                    case MATH_OP:
+                        break;
+                }
+            }
+        }
+
+        for (Token method : methods_)
+        {
+            executable.add(instructions.start_func);
+
+            List<Token> args = method.getTokens().get(2).getTokens();
+
+            Token       body = method.getTokens().get(3);
+
+            for (Token statement : body.getTokens())
+                statement.compile(args, executable);
+
+            executable.add(instructions.end_func);
+        }
+    }
+
     /** for none contract type compilation **/
     private void simulate(Token root)
     {
@@ -133,6 +314,7 @@ public class CompiledProgram
             io.write(Byte.toUnsignedInt(byt.byteValue()));
 
         io.flush();
+        io.close();
 
         return true;
     }
