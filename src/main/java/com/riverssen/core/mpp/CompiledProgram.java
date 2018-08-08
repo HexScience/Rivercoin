@@ -206,18 +206,21 @@ public class CompiledProgram
 
             List<Token> args = method.getTokens().get(2).getTokens();
 
+            String accessPoint = "null";
+
             if (method.inClass())
             {
                 Token empty_declaration = new Token(Token.Type.EMPTY_DECLARATION);
                 empty_declaration.add(new Token(Token.Type.IDENTIFIER).setName(method.getContainingClass().getTokens().get(0).toString()));
                 empty_declaration.add(new Token(Token.Type.IDENTIFIER).setName("this"));
                 args.add(0, empty_declaration);
+                accessPoint = method.getContainingClass().getTokens().get(0).toString();
             }
 
             Token       body = method.getTokens().get(3);
 
             for (Token statement : body.getTokens())
-                statement.compile(args, executable);
+                statement.compile(args, executable, accessPoint);
 
             executable.add(instructions.end_func);
         }

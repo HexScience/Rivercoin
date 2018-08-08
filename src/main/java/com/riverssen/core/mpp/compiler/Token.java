@@ -294,11 +294,66 @@ public class Token implements Serializable
         _exe_.add(0);
     }
 
-    public void compile(List<Token> _args_, Executable _exe_)
+    interface Executeable<T>{
+        T execute(List<Token> _args_, Executable _exe_, String accessPoint);
+    }
+
+    interface AccessorType extends Executeable<AccessorType>{
+        AccessorType execute(List<Token> _args_, Executable _exe_, String accessPoint);
+    }
+
+    class ProceduralAccessor implements AccessorType{
+        Token accessor;
+
+        ProceduralAccessor(Token accessor)
+        {
+            this.accessor = accessor;
+        }
+
+        Token accessA()
+        {
+            return accessor.getTokens().get(0);
+        }
+
+        Token accessB()
+        {
+            return accessor.getTokens().get(1);
+        }
+
+        @Override
+        public AccessorType execute(List<Token> _args_, Executable _exe_, String accessPoint)
+        {
+            return hasNext() ? accessB().asAccessor() : null;
+        }
+
+        boolean isBAccessor()
+        {
+            return accessor.getTokens().get(1).getType().equals(Type.PROCEDURAL_ACCESS) || accessor.getTokens().get(1).getType().equals(Type.STATIC_ACCESS);
+        }
+
+        boolean hasNext()
+        {
+            return accessor.getTokens().get(1).getType().equals(Type.PROCEDURAL_ACCESS) || accessor.getTokens().get(1).getType().equals(Type.STATIC_ACCESS);
+        }
+    }
+
+    private AccessorType asAccessor()
+    {
+        if (getType().equals(Type.PROCEDURAL_ACCESS))
+            return new ProceduralAccessor(this);
+        else return null;
+    }
+
+    public void compile(List<Token> _args_, Executable _exe_, String accessPoint)
     {
         switch (type)
         {
             case INITIALIZATION:
+                break;
+            case PROCEDURAL_ACCESS:
+                long start_point = 0;
+                AccessorType accessor = new ProceduralAccessor(this);
+                while ((accessor = accessor.execute(_args_, _exe_, accessPoint)) != null);
                 break;
         }
     }
