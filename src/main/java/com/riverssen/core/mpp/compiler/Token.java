@@ -35,6 +35,7 @@ public class Token implements Serializable
     private List<Token>         children;
     private Set<Modifier>       modifiers = new LinkedHashSet<>();
     private BigInteger          cost = BigInteger.ZERO;
+    private Token               parent;
 
     public boolean isMathOp()
     {
@@ -104,9 +105,10 @@ public class Token implements Serializable
         return token;
     }
 
-    public void setName(String name)
+    public Token setName(String name)
     {
         this.value = new StringBuilder(name);
+        return this;
     }
 
     public static enum          Type implements Serializable {
@@ -218,7 +220,39 @@ public class Token implements Serializable
     public Token add(Token token)
     {
         this.children.add(token);
+        token.parent = this;
         return this;
+    }
+
+    public Token getParent()
+    {
+        return parent;
+    }
+
+    public boolean inClass()
+    {
+        Token parent = getParent();
+
+        while (parent != null)
+        {
+            if (parent.getType().equals(Type.CLASS_DECLARATION)) return true;
+            parent = parent.getParent();
+        }
+
+        return false;
+    }
+
+    public Token getContainingClass()
+    {
+        Token parent = getParent();
+
+        while (parent != null)
+        {
+            if (parent.getType().equals(Type.CLASS_DECLARATION)) return parent;
+            parent = parent.getParent();
+        }
+
+        return null;
     }
 
     private int __find__(List<Token> _args_, String name)

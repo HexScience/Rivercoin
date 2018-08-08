@@ -15,6 +15,7 @@ package com.riverssen.core.mpp;
 import com.riverssen.core.mpp.compiler.ParsedProgram;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.utils.Tuple;
+import sun.tools.java.Identifier;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -204,6 +205,14 @@ public class CompiledProgram
             executable.add(instructions.start_func);
 
             List<Token> args = method.getTokens().get(2).getTokens();
+
+            if (method.inClass())
+            {
+                Token empty_declaration = new Token(Token.Type.EMPTY_DECLARATION);
+                empty_declaration.add(new Token(Token.Type.IDENTIFIER).setName(method.getContainingClass().getTokens().get(0).toString()));
+                empty_declaration.add(new Token(Token.Type.IDENTIFIER).setName("this"));
+                args.add(0, empty_declaration);
+            }
 
             Token       body = method.getTokens().get(3);
 
