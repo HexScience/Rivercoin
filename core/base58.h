@@ -13,10 +13,14 @@ class Base58 {
 public:
     static std::string quick_encode(char* data, int length);
 // result must be declared: char result[len * 137 / 100];
-    static int encode(const unsigned char *bytes, int len, unsigned char result[]);
+//    static int encode(const unsigned char *bytes, int len, unsigned char result[]);
+//    static int length(int length);
+
+    static std::string encode(void* data, int length);
+    static bool decode(std::string base58, std::vector<unsigned char>& result);
 
 // result must be declared (for the worst case): char result[len * 2];
-    static int decode(
-            const unsigned char *str, int len, unsigned char *result);
+//    static int decode(
+//            const unsigned char *str, int len, unsigned char *result);
 };
 #endif //RIVERCOIN_CPP_BASE58_H

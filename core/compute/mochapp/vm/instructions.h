@@ -136,6 +136,11 @@ enum instructions{
     /** none executable instructions **/
     start_func,
     end_func,
+    _new_,
+    push,
+    pop,
+    malloc_,
+    calloc_,
 };
 
 #endif //RIVERCOIN_CPP_INSTRUCTIONS_H

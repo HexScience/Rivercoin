@@ -16,6 +16,7 @@
 typedef boost::multiprecision::uint256_t u_int256;
 typedef boost::multiprecision::uint256_t uint256;
 typedef unsigned long long BlockIndex;
+typedef boost::multiprecision::uint1024_t uint1024;
 
 struct ByteUtil{
     static void reverse(const char* array, char reversed[32])
@@ -54,12 +55,33 @@ struct ByteUtil{
         reversed[31] = array[0];
     }
 
+    static void reverse(const char* array, char* reversed, int length)
+    {
+        int k = length;
+
+        for (int i = 0; i < length; i ++)
+            reversed[i] = array[-- k];
+    }
+
+    static boost::multiprecision::uint1024_t fromBytes1024(const char* array, int length)
+    {
+        char reversed[128];
+        reverse(array, reversed, length);
+
+        boost::multiprecision::uint1024_t t("9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999");
+
+        memset((char *) &t, 0, 128);
+        memcpy(((char *) &t)/** + (128 - length)**/, reversed, length);
+
+        return t;
+    }
+
     static boost::multiprecision::uint256_t fromBytes256(const char* array)
     {
         char reversed[32];
         reverse(array, reversed);
 
-        unsigned long long a = ((unsigned long long *) reversed)[0], b = ((unsigned long long *) reversed)[1], c = ((unsigned long long *) reversed)[2], d = ((unsigned long long *) reversed)[3];
+//        unsigned long long a = ((unsigned long long *) reversed)[0], b = ((unsigned long long *) reversed)[1], c = ((unsigned long long *) reversed)[2], d = ((unsigned long long *) reversed)[3];
 
         boost::multiprecision::uint256_t t("57669001306428065956053000376875938421040345304064124051023973211784186134399");
 
@@ -142,6 +164,48 @@ struct ByteUtil{
 //        return (char *) val;
 //    }
 //};
+
+namespace memory{
+    template <typename T>
+    struct buffer{
+        unsigned int specific_length;
+        unsigned int index;
+        T* data;
+
+        buffer(unsigned int length) : specific_length(length), index(0), data(new T[length]) {}
+        buffer(const buffer& o) : specific_length(o.specific_length), index(o.index), data(new T[o.specific_length]) { memcpy(data, o.data, sizeof(T) * specific_length); }
+        ~buffer() { delete data; }
+
+        void put(const T byte)
+        {
+            if(specific_length > index)
+                data[index ++] = byte;
+        }
+
+        void put(const T* bytes, unsigned int length)
+        {
+            unsigned int i = 0;
+
+            while(remaining() && length > i)
+                put(bytes[i ++]);
+        }
+
+        void next(T* bytes, unsigned int length)
+        {
+            memcpy(bytes, data, length);
+        }
+
+        bool remaining()
+        {
+            return specific_length > index;
+        }
+
+        void rewind()
+        {
+            index = 0;
+        }
+    };
+}
 
 template <typename T, unsigned int L> struct Array{
     T array[L];

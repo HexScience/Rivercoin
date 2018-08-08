@@ -56,17 +56,18 @@ bool Address::__check_address_valid(const char *addr_, bool DECODE_B58)
 {
     const unsigned char NETWORK_ADDRESS = 0;
 
-    char ADDRESS[ADDRESS_SIZE];
+//    char ADDRESS[ADDRESS_SIZE];
+    std::vector<unsigned char> ADDRESS;
 
     if (DECODE_B58)
-        Base58::decode((unsigned char *)addr_, strlen(addr_), (unsigned char *)ADDRESS);
+        if (!Base58::decode(addr_, ADDRESS)) return false;
 
     if (ADDRESS[0] != NETWORK_ADDRESS) return false;
 
     char CHECKSUM0[32];
     char CHECKSUM[32];
 
-    SHA256((unsigned char *)ADDRESS, 21, (unsigned char *)CHECKSUM0);
+    SHA256(ADDRESS.data(), 21, (unsigned char *)CHECKSUM0);
     SHA256((unsigned char *)CHECKSUM0, 32, (unsigned char *)CHECKSUM);
 
     for (int i = 0; i < 4; i ++)
@@ -156,41 +157,41 @@ Keypair::Keypair()
 
 void Key::derivePublic()
 {
-    BIGNUM* bignum = BN_new();
-
-    char debased[EC_KEY_SIZE];
-
-    Base58::decode((unsigned char *) key, EC_KEY_SIZE, (unsigned char *) debased);
-
-    BN_bin2bn((unsigned char *) debased + 1, 32, bignum);
-
-    EC_GROUP* pgroup = EC_GROUP_new_by_curve_name(NID_secp256k1);
-    EC_POINT* pub_key = EC_POINT_new(pgroup);
-
-    if (!EC_POINT_mul(pgroup, pub_key, bignum, NULL, NULL, NULL))
-    {
-        return;
-    } else {
-    }
-
-    unsigned int bufsize = EC_POINT_point2oct (pgroup, pub_key, POINT_CONVERSION_UNCOMPRESSED, NULL, 0, NULL);
-    u_int8_t * buffer = (u_int8_t *) malloc(bufsize);
-    //then we place the data in the buffer
-    int len = EC_POINT_point2oct (pgroup, pub_key, POINT_CONVERSION_UNCOMPRESSED, buffer, bufsize, NULL);
-    if (len == 0) {
-        printf("ERROR: Couldn't convert point to octet string.");
-    }
-
-    Key pub;
-
-    std::cout << bufsize << " " << EC_KEY_SIZE << std::endl;
-
-    pub.set((char *) buffer);
-
-    BN_free(bignum);
-    EC_POINT_free(pub_key);
-    EC_GROUP_free(pgroup);
-    delete(buffer);
+//    BIGNUM* bignum = BN_new();
+//
+//    std::vector<unsigned char> debased[EC_KEY_SIZE];
+//
+//    Base58::decode(key, debased);
+//
+//    BN_bin2bn((unsigned char *) debased + 1, 32, bignum);
+//
+//    EC_GROUP* pgroup = EC_GROUP_new_by_curve_name(NID_secp256k1);
+//    EC_POINT* pub_key = EC_POINT_new(pgroup);
+//
+//    if (!EC_POINT_mul(pgroup, pub_key, bignum, NULL, NULL, NULL))
+//    {
+//        return;
+//    } else {
+//    }
+//
+//    unsigned int bufsize = EC_POINT_point2oct (pgroup, pub_key, POINT_CONVERSION_UNCOMPRESSED, NULL, 0, NULL);
+//    u_int8_t * buffer = (u_int8_t *) malloc(bufsize);
+//    //then we place the data in the buffer
+//    int len = EC_POINT_point2oct (pgroup, pub_key, POINT_CONVERSION_UNCOMPRESSED, buffer, bufsize, NULL);
+//    if (len == 0) {
+//        printf("ERROR: Couldn't convert point to octet string.");
+//    }
+//
+//    Key pub;
+//
+//    std::cout << bufsize << " " << EC_KEY_SIZE << std::endl;
+//
+//    pub.set((char *) buffer);
+//
+//    BN_free(bignum);
+//    EC_POINT_free(pub_key);
+//    EC_GROUP_free(pgroup);
+//    delete(buffer);
 
 //    return pub;
 }

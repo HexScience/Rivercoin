@@ -15,48 +15,6 @@
 #include "hashutil.h"
 #include "../block.h"
 
-namespace memory{
-    template <typename T>
-    struct buffer{
-        unsigned int specific_length;
-        unsigned int index;
-        T* data;
-
-        buffer(unsigned int length) : specific_length(length), index(0), data(new T[length]) {}
-        buffer(const buffer& o) : specific_length(o.specific_length), index(o.index), data(new T[o.specific_length]) { memcpy(data, o.data, sizeof(T) * specific_length); }
-        ~buffer() { delete data; }
-
-        void put(const T byte)
-        {
-            if(specific_length > index)
-                data[index ++] = byte;
-        }
-
-        void put(const T* bytes, unsigned int length)
-        {
-            unsigned int i = 0;
-
-            while(remaining() && length > i)
-                put(bytes[i ++]);
-        }
-
-        void next(T* bytes, unsigned int length)
-        {
-            memcpy(bytes, data, length);
-        }
-
-        bool remaining()
-        {
-            return specific_length > index;
-        }
-
-        void rewind()
-        {
-            index = 0;
-        }
-    };
-}
-
 class RiverHash{
 private:
     static void xor_(const char* a, const char* b, char* c, unsigned int length)

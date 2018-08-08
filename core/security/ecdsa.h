@@ -12,43 +12,75 @@
 #define TESTNET_ADDRESS_PREFIX 1
 
 namespace ECDSA{
-    template <unsigned short L> struct eckey_t{
-        unsigned char key[L];
+//    template <size_t L> struct eckey_t{
+//        unsigned char key[L];
+//
+//        eckey_t();
+//        eckey_t(const eckey_t<L>& o);
+//        std::string base58();
+//    };
+//
+//    template<size_t L>
+//    eckey_t<L>::eckey_t()
+//    {
+//        for (int i = 0; i < L; i ++) key[i] = 0;
+//    }
+//
+//    template<size_t L>
+//    eckey_t<L>::eckey_t(const eckey_t<L> &o)
+//    {
+//        for (int i = 0; i < L; i ++) key[i] = o.key[i];
+//    }
+//
+//    template<size_t L>
+//    std::string eckey_t<L>::base58()
+//    {
+//        return Base58::quick_encode((char *) key, L);
+//    }
 
-        eckey_t();
-        eckey_t(const eckey_t<L>& o);
+#define PRIVATE_KEY_SIZE 38
+#define PUBLIC_KEY_SIZE 39
+#define ADDRESS_KEY_SIZE 25
+
+    struct eckeypriv_t
+    {
+        unsigned char * key;
+
+        eckeypriv_t();
+        eckeypriv_t(const eckeypriv_t& o);
         std::string base58();
+        ~eckeypriv_t();
     };
 
-    template<unsigned short L>
-    eckey_t<L>::eckey_t()
+    struct eckeypubl_t
     {
-    }
+        unsigned char * key;
 
-    template<unsigned short L>
-    eckey_t<L>::eckey_t(const eckey_t<L> &o)
+        eckeypubl_t();
+        eckeypubl_t(const eckeypriv_t& o);
+        std::string base58();
+        ~eckeypubl_t();
+    };
+
+    struct ecbtcaddr_t
     {
-        for (int i = 0; i < L; i ++) key[i] = o.key[i];
-    }
+        unsigned char * key;
 
-    template<unsigned short L>
-    std::string eckey_t<L>::base58()
-    {
-        return Base58::quick_encode((char *) key, L);
-    }
-
-    typedef eckey_t<32> eckeypriv_t;
-    typedef eckey_t<33> eckeypubl_t;
-    typedef eckey_t<25> ecbtcaddr_t;
+        ecbtcaddr_t();
+        ecbtcaddr_t(const ecbtcaddr_t& o);
+        std::string base58();
+        ~ecbtcaddr_t();
+    };
 
     struct Keypair{
-        eckeypriv_t _private_;
-        eckeypubl_t _public_;
+        eckeypriv_t* _private_;
+        eckeypubl_t* _public_;
+        ecbtcaddr_t* _addrss_;
 
-        Keypair(eckeypriv_t P, eckeypubl_t p);
+        Keypair(eckeypriv_t* P, eckeypubl_t* p, ecbtcaddr_t* a);
         Keypair(const Keypair& o);
         ~Keypair();
-        std::shared_ptr<ecbtcaddr_t> getAddress();
+        ecbtcaddr_t* getAddress();
     };
     ecbtcaddr_t*        bitcoin_address(eckeypubl_t* _public_, unsigned char PREFIX);
     Keypair*            ecdsa_new(const std::string& seed);

@@ -22,6 +22,7 @@
 //#include "security/ecad.h"
 #include "security/ecdsa.h"
 #include <boost/filesystem.hpp>
+#include "btc/base58.h"
 //#include "network.h"
 
 #include "math/hashalgorithm.h"
@@ -33,21 +34,21 @@ int ack(int m, int n)
     return ack( m - 1, ack( m, n - 1 ) );
 }
 
-std::string toHex58(const char * data, int length)
-{
-    char result[length * 2];
-    unsigned int rlength = Base58::encode((unsigned char *)data, length, (unsigned char *)result);
-
-    return std::string(result).substr(0, rlength);
-}
-
-std::string fmHex58(const char * data, int length)
-{
-    char result[length];
-    unsigned int rlength = Base58::decode((unsigned char *)data, length, (unsigned char *)result);
-
-    return std::string(result).substr(0, rlength);
-}
+//std::string toHex58(const char * data, int length)
+//{
+//    char result[length * 2];
+//    unsigned int rlength = Base58::encode((unsigned char *)data, length, (unsigned char *)result);
+//
+//    return std::string(result).substr(0, rlength);
+//}
+//
+//std::string fmHex58(const char * data, int length)
+//{
+//    char result[length];
+//    unsigned int rlength = Base58::decode((unsigned char *)data, length, (unsigned char *)result);
+//
+//    return std::string(result).substr(0, rlength);
+//}
 
 std::string toHex(const char * data, int length)
 {
@@ -126,6 +127,110 @@ static std::string getPath(const std::string& arg)
 int main(int arg_l, const char* args[]) {
     logger::alert("----------------------------------------");
 
+//    your PRIVATE key is: 11H69mv4maiMzCd2GXm3iSJg6MamcrdZEmTWgwZqsnpe5MVFcKq
+//    your PUBLIC key is:  118U4jAJzBoVjugqnTr2aEbb3dWeUqYHs54hZtar5wErLEhMzMNM
+//    your ADDRESS is:     1A8dwmpP96Ww9qctYxaHQWPukpk9ES4qjM
+
+//    -wg potato peetateo
+
+//    -d 112AFaA4ewj1qQCyXBqWrhTzZ7ZwGkACvEDkohyQueSuGA2w7NexyUkB FALSE public
+
+
+//    std::vector<unsigned char> result;
+//
+//    std::string base58_ = "112AFaA4ewj1qQCyXBqWrhTzZ7ZwGkACvEDkohyQueSuGA2w7NexyUkB";
+//
+//    if (Base58::decode(base58_, result))
+//    {
+//        std::string string = Base58::encode(result.data(), result.size());
+//
+//        std::cout << base58_ << "\n" << string << std::endl;
+//    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    if (arg_l > 1)
+    {
+        std::string arg = std::string(args[1]);
+        //-wg <name> <seed>
+        if (arg == "-wg")
+        {
+            if (arg_l == 4)
+            {
+                std::string name(args[2]);
+                std::string seed(args[3]);
+
+                ECDSA::Keypair* pair = ECDSA::ecdsa_new(seed);
+
+//                std::cout << (char *) enc << std::endl;
+//
+//                unsigned char res[25];
+//
+//                Base58::decode(enc, i, res);
+//
+//                unsigned char enc2[50];
+//
+//                std::cout << Base58::encode(res, 25, enc2) << " " << Base58::length(25) << " " << i << std::endl;
+//
+//                std::cout << (char *) enc2 << std::endl;
+
+
+                if (pair)
+                    std::cout << "your PRIVATE key is: " << pair->_private_->base58() << "\nyour PUBLIC key is:  " + pair->_public_->base58() << "\nyour ADDRESS is:     " << pair->_addrss_->base58() << std::endl;
+                else
+                    std::cout << "an error occurred, please check for errors in the console and retry." << std::endl;
+            } else {
+                std::cout << "incorrect usage of command -wg" << "\ncorrect usage: -wg <name> <seed>" << std::endl;;
+            }
+        //-d <private_key> <bool_is_RAW> <type>
+        } else if (arg == "-d")
+        {
+            if (arg_l >= 5)
+            {
+                int num = arg_l - 4;
+                std::string types[num];
+
+                for (int i = 0; i < num; i ++)
+                    types[i] = args[4 + i];
+
+                bool isRAW = true;
+                if (std::string(args[3]) == "FALSE") isRAW = false;
+
+                std::vector<unsigned char> KEY;
+                ecdsapriv_t key = new ECDSA::eckeypriv_t();
+
+                Base58::decode(args[2], KEY);
+
+                memcpy(key->key, KEY.data(), KEY.size());
+
+                ecdsapubl_t pub = ECDSA::derive_public(key);
+                ecdsaaddr_t add = ECDSA::bitcoin_address(pub, NETWORK_ADDRESS_PREFIX);
+
+                std::cout << "your PUBLIC Key:  "  << pub->base58() << std::endl;
+                std::cout << "your ADDRESA key: " << add->base58() << std::endl;
+            } else {
+                std::cout << "incorrect usage of command -d" << "\ncorrect usage: -d <private_key> <bool_is_RAW> <type>..." << std::endl;;
+            }
+        } else {
+            std::cout << "unknown command.\nto generate a wallet please use:\n\t-wg <name> <seed>\nto derive keys from a private key please use:\n\t-d <private_key> <bool_is_RAW> <type>..." << std::endl;
+        }
+
+        std::cout << std::endl;
+        exit(0);
+    }
+
     /* Load the human readable error strings for libcrypto */
     ERR_load_crypto_strings();
 
@@ -147,7 +252,7 @@ int main(int arg_l, const char* args[]) {
 
     eckeypair_t pair = ECDSA::ecdsa_new("hell1o world");
 
-    std::cout << pair->getAddress().get()->base58() << std::endl;
+    std::cout << pair->getAddress()->base58() << std::endl;
 
 //    std::cout << algorithms::sha256::base58<5>(Array<char, 5>("hello")) << std::endl;
 
