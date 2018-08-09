@@ -323,7 +323,18 @@ public class Token implements Serializable
         @Override
         public AccessorType execute(List<Token> _args_, Executable _exe_, String accessPoint)
         {
-            return hasNext() ? accessB().asAccessor() : null;
+            Token a = accessor.getTokens().get(0);
+
+            a.compile(_args_, _exe_, accessPoint);
+
+            if (accessor.getTokens().size() > 1)
+            {
+                Token b = accessor.getTokens().get(1);
+
+                return hasNext() ? accessB().asAccessor() : null;
+            }
+
+            return null;
         }
 
         boolean isBAccessor()
@@ -351,9 +362,8 @@ public class Token implements Serializable
             case INITIALIZATION:
                 break;
             case PROCEDURAL_ACCESS:
-                long start_point = 0;
-                AccessorType accessor = new ProceduralAccessor(this);
-                while ((accessor = accessor.execute(_args_, _exe_, accessPoint)) != null);
+                    AccessorType accessor = new ProceduralAccessor(this);
+                    while ((accessor = accessor.execute(_args_, _exe_, accessPoint)) != null);
                 break;
         }
     }

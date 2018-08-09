@@ -45,6 +45,11 @@ public class Executable
             op_codes.add((byte) code);
     }
 
+    public void add(List<Byte> codes)
+    {
+        op_codes.addAll(codes);
+    }
+
     public byte[] convertInt(int integer)
     {
         ByteBuffer _int_ = ByteBuffer.allocate(4);
