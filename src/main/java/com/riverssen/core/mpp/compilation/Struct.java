@@ -26,7 +26,7 @@ public class Struct
     private Set<Field>  __fields__;
     private Set<Method> __methods__;
 
-    public Struct(Token token)
+    public Struct(GlobalSpace space, Token token)
     {
         this.__fields__ = new LinkedHashSet<>();
         this.__methods__= new LinkedHashSet<>();
@@ -44,7 +44,10 @@ public class Struct
                         System.err.println("field __" + t.getTokens().get(1).toString() + "__ already exists in __" + __typename__ + "__.");
                         System.exit(0);
                     }
-                    __fields__.add(new Field(t));
+                    Field field = new Field(space, t);
+                    field.setLocation(__typesize__);
+                    __typesize__ += field.size(space);
+                    __fields__.add(field);
                     fields.add(t.getTokens().get(1).toString());
                     break;
                 case FULL_DECLARATION:
@@ -53,11 +56,14 @@ public class Struct
                         System.err.println("field __" + t.getTokens().get(1).toString() + "__ already exists in __" + __typename__ + "__.");
                         System.exit(0);
                     }
-                    __fields__.add(new Field(t));
+                    Field _field_ = new Field(space, t);
+                    _field_.setLocation(__typesize__);
+                    __typesize__ += _field_.size(space);
+                    __fields__.add(_field_);
                     fields.add(t.getTokens().get(1).toString());
                     break;
                 case METHOD_DECLARATION:
-                    Method method = new Method(t);
+                    Method method = new Method(space, t);
 
                     if (__methods__.contains(method))
                     {
@@ -68,10 +74,30 @@ public class Struct
                     __methods__.add(method);
                     break;
                 case CLASS_DECLARATION:
-                    System.err.println("class declaration not allowed inside a class __" + __typename__ + "__.");
+                    System.err.println("class declaration not allowed inside of a class __" + __typename__ + "__.");
                     default:
                         System.exit(0);
             }
         }
+
+        space.getGlobalTypes().put(__typename__, this);
+    }
+
+    public Method func_call(String name, boolean is_static)
+    {
+        for (Method method : __methods__)
+            if (method.getName().equals(name));
+
+        return null;
+    }
+
+    public long size()
+    {
+        return __typesize__;
+    }
+
+    public String getName()
+    {
+        return __typename__;
     }
 }

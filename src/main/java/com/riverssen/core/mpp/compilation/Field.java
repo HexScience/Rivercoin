@@ -25,10 +25,11 @@ public class Field
     private String          __typename__;
     private String          __realname__;
     private Set<Modifier>   __modifiers__;
+    private long            __position__;
 
     Executable              __opcodes__;
 
-    public Field(Token token)
+    public Field(GlobalSpace space, Token token)
     {
         __modifiers__   = new LinkedHashSet<>();
         __opcodes__     = new Executable();
@@ -49,5 +50,15 @@ public class Field
     public void __new__(Executable executable)
     {
         executable.add(__opcodes__.op_codes);
+    }
+
+    public void setLocation(long typesize__)
+    {
+        this.__position__ = typesize__;
+    }
+
+    public long size(GlobalSpace space)
+    {
+        return space.getGlobalTypes().get(__typename__).size();
     }
 }

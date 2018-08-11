@@ -12,11 +12,13 @@
 
 package com.riverssen.core.mpp;
 
+import com.riverssen.core.mpp.compilation.Field;
+import com.riverssen.core.mpp.compilation.GlobalSpace;
+import com.riverssen.core.mpp.compilation.Method;
+import com.riverssen.core.mpp.compilation.Struct;
 import com.riverssen.core.mpp.compiler.ParsedProgram;
 import com.riverssen.core.mpp.compiler.Token;
 import com.riverssen.core.utils.Tuple;
-import sun.tools.java.Identifier;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,10 +33,63 @@ public class CompiledProgram
         Token root = parsedProgram.getRoot();
         executable = new Executable();
 
-        simulate(root);
+        simulate_contract_b(root);
     }
 
-    private void simulate_contract(Token root)
+    private void simulate_contract_b(Token root)
+    {
+        GlobalSpace space = new GlobalSpace();
+
+        for (Token t : root.getTokens())
+        {
+            switch (t.getType())
+            {
+                case EMPTY_DECLARATION:
+                    if (space.getGlobalFields().containsKey(t.getTokens().get(1).toString()))
+                    {
+                        System.err.println("field __" + t.getTokens().get(1).toString() + "__ already exists in __global__.");
+                        System.exit(0);
+                    }
+                    Field field = new Field(space, t);
+                    space.getGlobalFields().put(t.getTokens().get(1).toString(), field);
+                    break;
+                case FULL_DECLARATION:
+                    if (space.getGlobalFields().containsKey(t.getTokens().get(1).toString()))
+                    {
+                        System.err.println("field __" + t.getTokens().get(1).toString() + "__ already exists in __global__.");
+                        System.exit(0);
+                    }
+                    Field _field_ = new Field(space, t);
+                    space.getGlobalFields().put(t.getTokens().get(1).toString(), _field_);
+                    break;
+                case METHOD_DECLARATION:
+                    Method method = new Method(space, t);
+
+                    if (space.getGlobalMethods().containsKey(method.getName()))
+                    {
+                        System.err.println("method __" + t.getTokens().get(0).toString() + "__ already exists in __global__.");
+                        System.exit(0);
+                    }
+
+                    space.getGlobalMethods().put(method.getName(), method);
+                    break;
+                case CLASS_DECLARATION:
+                    Struct struct = new Struct(space, t);
+
+                    if (space.getGlobalMethods().containsKey(struct.getName()))
+                    {
+                        System.err.println("struct __" + struct.getName() + "__ already exists in __global__.");
+                        System.exit(0);
+                    }
+
+                    space.getGlobalTypes().put(struct.getName(), struct);
+                default:
+                    System.exit(0);
+            }
+        }
+    }
+
+    private void simulate_contract_a(Token root)
     {
         Set<Token>              methods_ = new LinkedHashSet<>();
         Set<Token>              structs_ = new LinkedHashSet<>();

@@ -16,17 +16,25 @@ import com.riverssen.core.mpp.compiler.Modifier;
 import com.riverssen.core.mpp.compiler.Token;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Method
 {
+    private String          __methodname__;
     private Set<Modifier>   __modifiers__;
     private ArrayList<Byte> __opcodes__;
 
-    public Method(Token token)
+    public Method(GlobalSpace space, Token token)
     {
         __modifiers__   = new LinkedHashSet<>();
         __opcodes__     = new ArrayList();
+        __methodname__  = token.getTokens().get(0).toString();
+    }
+
+    public String getName()
+    {
+        return __methodname__;
     }
 }
