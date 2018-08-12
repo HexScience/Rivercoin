@@ -70,7 +70,34 @@ public class MainCompiler
                 System.exit(0);
             }
 
-            if (arg.equals("-c") || arg.equals("-compile"))
+            if (arg.equals("-t") || arg.equals("-tree"))
+            {
+                String utf_program = "" + stdlib();
+
+                BufferedReader reader = new BufferedReader(new FileReader(main_class));
+
+                String line = "";
+
+                while ((line = reader.readLine()) != null)
+                    utf_program += line + "\n";
+
+                reader.close();
+
+                LexedProgram lexedProgram = new LexedProgram(utf_program);
+
+                ParsedProgram parsedProgram = new ParsedProgram(lexedProgram);
+
+                String t = (parsedProgram.getRoot().humanReadable(0));
+
+                File out = new File(main_class.getParent() + File.separator + "" + main_class.getName().substring(0, main_class.getName().lastIndexOf(".")) + ".t");
+
+                BufferedWriter writer = new BufferedWriter(new FileWriter(out));
+
+                writer.write(t);
+
+                writer.flush();
+                writer.close();
+            } else if (arg.equals("-c") || arg.equals("-compile"))
             {
                 String utf_program = "" + stdlib();
 
