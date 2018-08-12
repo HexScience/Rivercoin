@@ -37,6 +37,8 @@ public class ParsedProgram
         tokens = initialparse(tokens);
         this.tokens = new Token(Token.Type.ROOT);
         parse(tokens, this.tokens, false);
+
+        this.tokens.fix();
     }
 
     private Token getNext(List<Token> tokens, Token offset, String errmsg) throws ParseException

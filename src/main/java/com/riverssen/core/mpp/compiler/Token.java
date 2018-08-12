@@ -620,6 +620,31 @@ public class Token implements Serializable
         this.type = type;
     }
 
+    public void fix()
+    {
+        if (type.equals(Type.MATH_OP))
+        {
+            switch (toString())
+            {
+                case "+":
+                    setType(Type.ADDITION);
+                    break;
+                case "-":
+                    setType(Type.SUBTRACTION);
+                    break;
+                case "*":
+                    setType(Type.MULTIPLICATION);
+                    break;
+                case "/":
+                    setType(Type.SUBDIVISION);
+                    break;
+            }
+        }
+
+        for (Token token : getTokens())
+            token.fix();
+    }
+
     public List<Byte> getInstruction()
     {
         Executable executable = new Executable();
@@ -631,6 +656,7 @@ public class Token implements Serializable
                 {
                     case STRING:
                         String push_s_v = getTokens().get(0).toString();
+                        push_s_v = push_s_v.substring(1, push_s_v.length() - 1);
                         executable.add(instructions.push_s);
                         executable.add(executable.convertInt(push_s_v.length()));
                         for (int i = 0; i < push_s_v.length(); i ++)
@@ -651,6 +677,7 @@ public class Token implements Serializable
 
             case STRING:
                 String push_s_v = toString();
+                push_s_v = push_s_v.substring(1, push_s_v.length() - 1);
                 executable.add(instructions.push_s);
                 executable.add(executable.convertInt(push_s_v.length()));
                 for (int i = 0; i < push_s_v.length(); i ++)
@@ -704,7 +731,7 @@ public class Token implements Serializable
 
         return executable.op_codes;
     }
-    
+
     private byte[] IntegralBytes()
     {
         BigInteger i = new BigInteger(toString());
