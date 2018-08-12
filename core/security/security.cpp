@@ -65,7 +65,7 @@ bool Address::__check_address_valid(const char *addr_, bool DECODE_B58)
     if (ADDRESS[0] != NETWORK_ADDRESS) return false;
 
     char CHECKSUM0[32];
-    char CHECKSUM[32];
+    unsigned char CHECKSUM[32];
 
     SHA256(ADDRESS.data(), 21, (unsigned char *)CHECKSUM0);
     SHA256((unsigned char *)CHECKSUM0, 32, (unsigned char *)CHECKSUM);
@@ -81,10 +81,16 @@ const char* Address::addr()
     return address_;
 }
 
-void Address::setAddress(const char *address)
+void Address::setAddress(const void *address)
 {
+    const char * a = (const char *) address;
     for (int i = 0; i < ADDRESS_SIZE; i ++)
-        address_[i] = address[i];
+        address_[i] = a[i];
+}
+
+std::string Address::base58()
+{
+    return Base58::encode(address_, ADDRESS_SIZE);
 }
 
 //void ECDSA::generate_private()

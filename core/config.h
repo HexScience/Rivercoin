@@ -8,12 +8,14 @@
 #include "defines.h"
 #include "security/security.h"
 #include <string>
+#include <vector>
 
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/foreach.hpp>
 #include "security/security.h"
 #include "logger.h"
+#include "base58.h"
 
 #define MAX_RIVERCOIN_AMT 180000000
 #define FIRST_REWARD 50
@@ -55,12 +57,14 @@ struct config{
         BOOST_FOREACH(boost::property_tree::ptree::value_type const& v, tree.get_child("Config") )
         {
             if(v.first == "Mining") {
-                const char* mining_address_string = (v.second.get<std::string>("Address").c_str());
-
-                if(Address::__check_address_valid(mining_address_string))
+                const char const * mining_address_string = (v.second.get<std::string>("Address").c_str());
+                std::string address_string = (v.second.get<std::string>("Address").c_str());
+                if(Address::__check_address_valid(mining_address_string, true))
                 {
-                    address = Address(mining_address_string);
-                    logger::alert((std::string("mining address: '") + std::string(mining_address_string) + std::string("' found.")).c_str());
+                    std::vector<unsigned char> add;
+                    Base58::decode(address_string.c_str(), add);
+                    address = Address(add.data());
+                    logger::alert((std::string("mining address: '") + address.base58() + std::string("' found.")).c_str());
                 }
                 else{
                     logger::err((std::string("mining address: '") + std::string(mining_address_string) + std::string("' incorrect.")).c_str());

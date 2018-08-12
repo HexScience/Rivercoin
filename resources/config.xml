@@ -1,6 +1,6 @@
 <Config>
     <Mining>
-        <Address>15Hk9FmrpPb5EY5EE2yigsiqVyLbwmcwDp</Address>
+        <Address>1HAGqV1dX1fMAKx3AcBTPf8XvVcYcoy7PY</Address>
         <Enabled>true</Enabled>
         <GPUMining>false</GPUMining>
         <CPUThreadCount>1</CPUThreadCount>

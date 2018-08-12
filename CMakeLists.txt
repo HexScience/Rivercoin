@@ -25,6 +25,9 @@ INCLUDE_DIRECTORIES(${OPENSSL_INCLUDE_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/config.xml
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/structure)
 
+file(COPY ${Boost_LIBRARIES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/dependencies)
+file(COPY ${OPENSSL_LIBRARIES}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/dependencies)
+
 #message("OPENSSL_FOUND is "  ${OPENSSL_FOUND})
 #message("OPENSSL_INCLUDE_DIR is "  ${OPENSSL_INCLUDE_DIR})
 #message("OPENSSL_CRYPTO_LIBRARY is "  ${OPENSSL_CRYPTO_LIBRARY})
@@ -43,6 +46,6 @@ add_executable(RiverCoin_cpp core/main.cpp
         core/blockchain.h core/blockchain.cpp
         core/async.h
         core/miner.h core/miner.cpp
-        core/math/progpow.h core/math/progpow.cpp core/pools.cpp core/pools.h core/utils.cpp core/utils.h core/security/ecad.h core/security/ecad.cpp core/security/ecdsa.cpp core/security/ecdsa.h core/math/HashAlgorithm.cpp core/math/HashAlgorithm.h core/math/hashalgorithm.cpp core/math/hashalgorithm.h tests/wallet.cpp core/btc/uint256.h core/btc/uint256.cpp core/btc/utilsencodings.cpp core/btc/utilsencodings.h core/btc/tinyformat.h core/btc/crypto/common.h core/btc/crypto/endian.h core/btc/crypto/byteswap.h core/btc/base58.cpp core/btc/base58.h)
+        core/math/progpow.h core/math/progpow.cpp core/pools.cpp core/pools.h core/utils.cpp core/utils.h core/security/ecad.h core/security/ecad.cpp core/security/ecdsa.cpp core/security/ecdsa.h core/math/HashAlgorithm.cpp core/math/HashAlgorithm.h core/math/hashalgorithm.cpp core/math/hashalgorithm.h tests/wallet.cpp core/btc/uint256.h core/btc/uint256.cpp core/btc/utilsencodings.cpp core/btc/utilsencodings.h core/btc/tinyformat.h core/btc/crypto/common.h core/btc/crypto/endian.h core/btc/crypto/byteswap.h core/btc/base58.cpp core/btc/base58.h core/net/site.h)
 target_link_libraries(RiverCoin_cpp LINK_PUBLIC ${Boost_LIBRARIES})
 target_link_libraries(RiverCoin_cpp LINK_PUBLIC ${OPENSSL_LIBRARIES})

@@ -36,7 +36,7 @@ public:
     {
         setAddress(DEFAULT_ADDRESS);
     }
-    Address(const char* address) {setAddress(address);}
+    Address(const void* address) {setAddress(address);}
     Address(CompressedPublicKey key) {setAddress(DEFAULT_ADDRESS);}
     Address(const Address& o) {setAddress(o.address_);}
     static bool __check_address_valid(const char* addr_, bool DECODE_B58 = true);
@@ -48,7 +48,8 @@ public:
     bool operator<= (const Address& a) const;
     bool operator>= (const Address& a) const;
     const char* addr();
-    void setAddress(const char address[ADDRESS_SIZE]);
+    std::string base58();
+    void setAddress(const void* address);
 };
 
 #define EC_KEY_SIZE 65
