@@ -12,6 +12,7 @@
 
 package com.riverssen.core.mpp.compilation;
 
+import com.riverssen.core.mpp.Executable;
 import com.riverssen.core.mpp.compiler.Token;
 
 import java.util.LinkedHashSet;
@@ -63,7 +64,7 @@ public class Struct
                     fields.add(t.getTokens().get(1).toString());
                     break;
                 case METHOD_DECLARATION:
-                    Method method = new Method(space, t);
+                    Method method = new Method(space, this, t);
 
                     if (__methods__.contains(method))
                     {
@@ -99,5 +100,28 @@ public class Struct
     public String getName()
     {
         return __typename__;
+    }
+
+    public boolean containsField(String reference, String accessor)
+    {
+        boolean must_be_public = accessor.equals(__typename__);
+
+        for (Field field : __fields__)
+            if (field.getName().equals(reference) && (must_be_public ? field.isPublic() : true)) return true;
+        return false;
+    }
+
+    public Field getField(String reference, String accessor)
+    {
+        boolean must_be_public = accessor.equals(__typename__);
+
+        for (Field field : __fields__)
+            if (field.getName().equals(reference) && (must_be_public ? field.isPublic() : true)) return field;
+        return null;
+    }
+
+    public void accessField(String name, Executable executable, String accessor)
+    {
+        Field field = getField(name, accessor);
     }
 }

@@ -63,7 +63,7 @@ public class CompiledProgram
                     space.getGlobalFields().put(t.getTokens().get(1).toString(), _field_);
                     break;
                 case METHOD_DECLARATION:
-                    Method method = new Method(space, t);
+                    Method method = new Method(space, null, t);
 
                     if (space.getGlobalMethods().containsKey(method.getName()))
                     {

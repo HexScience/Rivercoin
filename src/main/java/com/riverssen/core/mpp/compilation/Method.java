@@ -15,22 +15,54 @@ package com.riverssen.core.mpp.compilation;
 import com.riverssen.core.mpp.compiler.Modifier;
 import com.riverssen.core.mpp.compiler.Token;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Method
 {
+    private Struct          __parenttype__;
     private String          __methodname__;
     private Set<Modifier>   __modifiers__;
     private ArrayList<Byte> __opcodes__;
 
-    public Method(GlobalSpace space, Token token)
+    public Method(GlobalSpace space, Struct parent, Token token)
     {
+        __parenttype__  = parent;
         __modifiers__   = new LinkedHashSet<>();
         __opcodes__     = new ArrayList();
         __methodname__  = token.getTokens().get(0).toString();
+
+        int stack = -1;
+        Map<String, Integer> referencemap = new HashMap<>();
+
+        if (parent != null)
+            referencemap.put("this", ++ stack);
+
+        for (Token t : token.getTokens().get(2).getTokens())
+        {
+            switch (t.getType())
+            {
+                case IF:
+                    break;
+                case INITIALIZATION:
+                    String reference = t.getTokens().get(0).toString();
+
+                    if (referencemap.containsKey(reference))
+                    {
+                    } else if (parent != null && parent.containsField(reference))
+                    {
+                    } else {
+                        System.out.println("variable '" + reference + "' doesn't exist.");
+                        System.exit(0);
+                    }
+                    break;
+                case EMPTY_DECLARATION:
+                    break;
+                case FULL_DECLARATION:
+                    break;
+                case PROCEDURAL_ACCESS:
+                    break;
+            }
+        }
     }
 
     public String getName()

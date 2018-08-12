@@ -61,4 +61,14 @@ public class Field
     {
         return space.getGlobalTypes().get(__typename__).size();
     }
+
+    public String getName()
+    {
+        return __realname__;
+    }
+
+    public boolean isPublic()
+    {
+        return __modifiers__.contains(Modifier.PUBLIC);
+    }
 }
