@@ -59,6 +59,15 @@ public class Executable
         return _int_.array();
     }
 
+    public byte[] convertLong(long integer)
+    {
+        ByteBuffer _int_ = ByteBuffer.allocate(8);
+        _int_.putLong(integer);
+        _int_.flip();
+
+        return _int_.array();
+    }
+
 //    public Executable(final byte op_codes[])
 //    {
 //        this.funcs = new ArrayList<>();

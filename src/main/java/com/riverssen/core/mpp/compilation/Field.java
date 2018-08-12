@@ -71,4 +71,9 @@ public class Field
     {
         return __modifiers__.contains(Modifier.PUBLIC);
     }
+
+    public long getLocation()
+    {
+        return __position__;
+    }
 }

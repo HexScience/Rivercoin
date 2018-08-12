@@ -12,6 +12,7 @@
 
 package com.riverssen.core.mpp.compilation;
 
+import com.riverssen.core.mpp.Executable;
 import com.riverssen.core.mpp.compiler.Modifier;
 import com.riverssen.core.mpp.compiler.Token;
 
@@ -37,6 +38,11 @@ public class Method
         if (parent != null)
             referencemap.put("this", ++ stack);
 
+        Executable executable = new Executable();
+
+        String accessor = "null";
+        if (__parenttype__ != null) accessor = __parenttype__.getName();
+
         for (Token t : token.getTokens().get(2).getTokens())
         {
             switch (t.getType())
@@ -48,8 +54,9 @@ public class Method
 
                     if (referencemap.containsKey(reference))
                     {
-                    } else if (parent != null && parent.containsField(reference))
+                    } else if (parent != null && parent.containsField(reference, accessor))
                     {
+                        parent.accessField(reference, executable, accessor);
                     } else {
                         System.out.println("variable '" + reference + "' doesn't exist.");
                         System.exit(0);

@@ -14,6 +14,7 @@ package com.riverssen.core.mpp.compilation;
 
 import com.riverssen.core.mpp.Executable;
 import com.riverssen.core.mpp.compiler.Token;
+import com.riverssen.core.mpp.instructions;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -123,5 +124,14 @@ public class Struct
     public void accessField(String name, Executable executable, String accessor)
     {
         Field field = getField(name, accessor);
+
+        if (field != null)
+        {
+            executable.add(instructions.stack_read);
+            executable.add(executable.convertLong(field.getLocation()));
+        } else {
+            System.err.println(name + " unaccessible.");
+            System.exit(0);
+        }
     }
 }
