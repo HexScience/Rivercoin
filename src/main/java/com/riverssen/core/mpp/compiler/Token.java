@@ -20,6 +20,7 @@ import com.riverssen.core.mpp.objects.*;
 import com.riverssen.core.mpp.objects.Boolean;
 import com.riverssen.core.mpp.objects.Float;
 import com.riverssen.core.mpp.objects.Integer;
+import com.riverssen.core.utils.ByteUtil;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -36,6 +37,7 @@ public class Token implements Serializable
     private Set<Modifier>       modifiers = new LinkedHashSet<>();
     private BigInteger          cost = BigInteger.ZERO;
     private Token               parent;
+    private short               instruction;
 
     public boolean isMathOp()
     {
@@ -618,6 +620,154 @@ public class Token implements Serializable
         this.type = type;
     }
 
+    public List<Byte> getInstruction()
+    {
+        Executable executable = new Executable();
+
+        switch (type)
+        {
+            case VALUE:
+                switch (getTokens().get(0).getType())
+                {
+                    case STRING:
+                        String push_s_v = getTokens().get(0).toString();
+                        executable.add(instructions.push_s);
+                        executable.add(executable.convertInt(push_s_v.length()));
+                        for (int i = 0; i < push_s_v.length(); i ++)
+                            executable.add(push_s_v.charAt(i));
+                        break;
+                    case NUMBER:
+                        long push_l_v = Long.parseLong(getTokens().get(0).toString());
+                        executable.add(getTokens().get(0).IntegralType());
+                        executable.add(getTokens().get(0).IntegralBytes());
+                        break;
+                    case DECIMAL:
+                        long push_d_v = Long.parseLong(getTokens().get(0).toString());
+                        executable.add(instructions.push_f_64);
+                        executable.add(executable.convertDouble(push_d_v));
+                        break;
+                }
+                break;
+
+            case STRING:
+                String push_s_v = toString();
+                executable.add(instructions.push_s);
+                executable.add(executable.convertInt(push_s_v.length()));
+                for (int i = 0; i < push_s_v.length(); i ++)
+                    executable.add(push_s_v.charAt(i));
+                break;
+            case NUMBER:
+                executable.add(IntegralType());
+                executable.add(IntegralBytes());
+                break;
+            case DECIMAL:
+                long push_d_v = Long.parseLong(toString());
+                executable.add(instructions.push_f_64);
+                executable.add(executable.convertDouble(push_d_v));
+                break;
+
+            case ADDITION:
+                for (Token token : getTokens())
+                    executable.add(token.getInstruction());
+                executable.add(instructions.op_add);
+                break;
+
+            case SUBTRACTION:
+                for (Token token : getTokens())
+                    executable.add(token.getInstruction());
+                executable.add(instructions.op_sub);
+                break;
+
+            case MULTIPLICATION:
+                for (Token token : getTokens())
+                    executable.add(token.getInstruction());
+                executable.add(instructions.op_mul);
+                break;
+
+            case SUBDIVISION:
+                for (Token token : getTokens())
+                    executable.add(token.getInstruction());
+                executable.add(instructions.op_div);
+                break;
+
+            case POW:
+                for (Token token : getTokens())
+                    executable.add(token.getInstruction());
+                executable.add(instructions.op_pow);
+                break;
+
+            case IDENTIFIER:
+                executable.add(instructions.stack_load);
+                executable.add(executable.convertLong(0));
+                break;
+        }
+
+        return executable.op_codes;
+    }
+    
+    private byte[] IntegralBytes()
+    {
+        BigInteger i = new BigInteger(toString());
+        int l = i.toByteArray().length;
+        int y = 0;
+
+        if (l <= 4)
+        {
+            byte b[] = new byte[4];
+
+            for (int x = 4 - l; x < 4; x ++)
+                b[x] = i.toByteArray()[y ++];
+
+            return b;
+        }
+        else if (l <= 8)
+        {
+            byte b[] = new byte[8];
+
+            for (int x = 8 - l; x < 8; x ++)
+                b[x] = i.toByteArray()[y ++];
+
+            return b;
+        }
+        else if (l <= 16)
+        {
+            byte b[] = new byte[16];
+
+            for (int x = 16 - l; x < 16; x ++)
+                b[x] = i.toByteArray()[y ++];
+
+            return b;
+        }
+        else
+        {
+            byte b[] = new byte[32];
+
+            for (int x = 32 - l; x < 32; x ++)
+                b[x] = i.toByteArray()[y ++];
+
+            return b;
+        }
+    }
+
+    public int IntegralType()
+    {
+        BigInteger i = new BigInteger(toString());
+        int l = i.toByteArray().length;
+
+        if (l <= 4)
+            return instructions.push_i_32;
+        else if (l <= 8)
+            return instructions.push_i_64;
+        else if (l <= 16)
+            return instructions.push_i_128;
+        else return instructions.push_i_256;
+    }
+
+    public String getInstructionsAsString()
+    {
+        return getInstruction().toString();
+    }
+
     public Type getType()
     {
         if (type == null)
@@ -739,7 +889,7 @@ public class Token implements Serializable
 
     public String humanReadable(int i)
     {
-        String s = (whitespace(i) + type + " " + value) + "\n";
+        String s = (whitespace(i) + type + " " + value + " " + getInstructionsAsString()) + "\n";
         for(Token token : children)
             s += token.humanReadable(i + 1) + "\n";
         return s;

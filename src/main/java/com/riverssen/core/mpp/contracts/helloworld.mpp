@@ -36,4 +36,9 @@ class HelloWorld {
         if(owner == msg.sender)
             destroy()
     }
+
+    public function mul() : void
+    {
+        return 5 * y
+    }
 }

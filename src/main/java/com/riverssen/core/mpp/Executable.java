@@ -16,8 +16,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.riverssen.core.mpp.instructions.*;
-
 public class Executable
 {
     public List<Byte>          op_codes;
@@ -63,6 +61,15 @@ public class Executable
     {
         ByteBuffer _int_ = ByteBuffer.allocate(8);
         _int_.putLong(integer);
+        _int_.flip();
+
+        return _int_.array();
+    }
+
+    public byte[] convertDouble(long integer)
+    {
+        ByteBuffer _int_ = ByteBuffer.allocate(8);
+        _int_.putDouble(integer);
         _int_.flip();
 
         return _int_.array();

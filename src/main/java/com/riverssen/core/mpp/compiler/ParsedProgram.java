@@ -706,7 +706,7 @@ public class ParsedProgram
                     } else root.add(A_);
                     break;
                 case STRING:
-                    root.add(new Token(Token.Type.INPUT).add(getNext(tokens, currentToken, "")));
+                    root.add(getNext(tokens, currentToken, ""));
                     break;
                 case SYMBOL:
                     if (currentToken.toString().charAt(0) == ',')
