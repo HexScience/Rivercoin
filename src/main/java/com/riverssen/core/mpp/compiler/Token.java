@@ -663,7 +663,6 @@ public class Token implements Serializable
                             executable.add(push_s_v.charAt(i));
                         break;
                     case NUMBER:
-                        long push_l_v = Long.parseLong(getTokens().get(0).toString());
                         executable.add(getTokens().get(0).IntegralType());
                         executable.add(getTokens().get(0).IntegralBytes());
                         break;
