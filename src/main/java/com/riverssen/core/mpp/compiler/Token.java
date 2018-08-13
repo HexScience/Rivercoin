@@ -14,6 +14,7 @@ package com.riverssen.core.mpp.compiler;
 
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.mpp.Executable;
+import com.riverssen.core.mpp.compilation.Struct;
 import com.riverssen.core.mpp.exceptions.CompileException;
 import com.riverssen.core.mpp.instructions;
 import com.riverssen.core.mpp.objects.*;
@@ -637,6 +638,9 @@ public class Token implements Serializable
                     break;
                 case "/":
                     setType(Type.SUBDIVISION);
+                    break;
+                case "^":
+                    setType(Type.POW);
                     break;
             }
         }
