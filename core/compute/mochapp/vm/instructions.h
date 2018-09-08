@@ -76,27 +76,12 @@ enum instructions{
     op_mod,
     op_pow,
 
-    iadd,
-    imul,
-    idiv,
-    isub,
-
-    fadd,
-    fmul,
-    fdiv,
-    fsub,
-
-    imod,
-    ipow,
-    fmod_,
-    fpow,
-
     boolean_and, boolean_or, boolean_not,
     logical_and, logical_or, logical_xor,
 
     lshift, rshift,
 
-    inc,
+    inc, dec,
 
     /**
      * IO
@@ -110,8 +95,13 @@ enum instructions{
      * Other, Misc
      */
 
+    mov, /** move from memory to register **/
+    load, /** load from stack to register (mov={register.load(stack.peek(i), (type)stack.peek(i))}**/
+
     stack_read, // undefined operator
     stack_load, // push stack_get(i)
+    stack_write, // push stack_get(i)
+    stack_set, // push stack_get(i)
     memory_read, // undefined operator
     memory_load, // push memory_get(i)
     memory_write, // memory.set(i, data[])
@@ -136,11 +126,17 @@ enum instructions{
     /** none executable instructions **/
     start_func,
     end_func,
-    _new_,
     push,
     pop,
     malloc_,
     calloc_,
+    free_,
+    less_,
+    more_,
+    lesseq_,
+    moreeq_,
+    equal_,
+    halt,
 };
 
 #endif //RIVERCOIN_CPP_INSTRUCTIONS_H

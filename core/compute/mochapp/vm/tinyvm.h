@@ -33,6 +33,7 @@ enum type{
     float256_,
     c_string,
     pointer_,
+    instance,
 };
 
 struct executable{
@@ -148,6 +149,7 @@ public:
     template <typename T, typename O> T cast(O o);
 
     void inc(MochaVM* vm, type t);
+    unsigned long size();
 };
 
 class heap{
@@ -172,6 +174,11 @@ public:
         execute_ = false;
         std::cout << t << std::endl;
     }
+};
+
+template <unsigned long L>
+class Instance{
+    char _data_[L];
 };
 
 #endif //RIVERCOIN_CPP_TINYVM_H

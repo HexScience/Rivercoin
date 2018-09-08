@@ -7,12 +7,75 @@
 
 void MochaVM::execute(const unsigned char* prgrm, const executable& program, unsigned int size, unsigned int& index)
 {
+    unsigned long _stackpos_ = vm_stack.size();instruction
+
     while (index < size && execute_)
     {
         instruction current = static_cast<instruction>(prgrm[index ++]);
 
         switch (current)
         {
+            case stack_load:
+                unsigned char _type____ = prgrm[index ++];
+                unsigned long _positin_ = ((unsigned long long*) ((unsigned char[8]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7]}))[0];
+                index += 8;
+                switch (_type____)
+                {
+                    case pointer_:
+                        unsigned long _pointer_ = vm_stack.peek<unsigned long>(_stackpos_ + _positin_, this);
+                        vm_stack.push((unsigned long) _pointer_, this);
+                        break;
+                    case char_:
+                        char _char_ = vm_stack.peek<char>(_stackpos_ + _positin_, this);
+                        vm_stack.push((char) _char_, this);
+                        break;
+                    case uchar_:
+                        unsigned char _uchar_ = vm_stack.peek<unsigned char>(_stackpos_ + _positin_, this);
+                        vm_stack.push((unsigned char) _uchar_, this);
+                        break;
+                    case short_:
+                        short _short_ = vm_stack.peek<short>(_stackpos_ + _positin_, this);
+                        vm_stack.push((short) _short_, this);
+                        break;
+                    case ushort_:
+                        unsigned short _ushort_ = vm_stack.peek<unsigned short>(_stackpos_ + _positin_, this);
+                        vm_stack.push((unsigned short) _ushort_, this);
+                        break;
+                    case int_:
+                        int _int_ = vm_stack.peek<int>(_stackpos_ + _positin_, this);
+                        vm_stack.push((int) _int_, this);
+                        break;
+                    case uint_:
+                        int _uint_ = vm_stack.peek<unsigned int>(_stackpos_ + _positin_, this);
+                        vm_stack.push((unsigned int) _int_, this);
+                        break;
+                    case long_:
+                        long long _long_ = vm_stack.peek<long long>(_stackpos_ + _positin_, this);
+                        vm_stack.push((long long) _long_, this);
+                        break;
+                    case ulong_:
+                        unsigned long long _ulong_ = vm_stack.peek<unsigned long long>(_stackpos_ + _positin_, this);
+                        vm_stack.push((unsigned long long) _ulong_, this);
+                        break;
+                    case c_string:
+                        unsigned long _cspointer_ = vm_stack.peek<unsigned long>(_stackpos_ + _positin_, this);
+                        vm_stack.push((unsigned long) _cspointer_, this);
+                        break;
+                    case instance:
+//                        unsigned long _sizeofobject_ = ((unsigned long long*) ((unsigned char[8]){prgrm[index], prgrm[index + 1], prgrm[index + 2], prgrm[index + 3], prgrm[index + 4], prgrm[index + 5], prgrm[index + 6], prgrm[index + 7]}))[0];
+//                        index += 8;
+//
+//                        char _instance2_[_sizeofobject_];
+//
+//                        char _instance_[_sizeofobject_] = vm_stack.peek<char[50]>(_stackpos_ + _positin_, this);
+//                        vm_stack.push((unsigned long) _cspointer_, this);
+                        break;
+                    case int128_:
+//                        unsigned long long _int128_ = vm_stack.peek<unsigned long long>(_stackpos_ + _positin_, this);
+//                        vm_stack.push((unsigned long long) _ulong_, this);
+                        break;
+                }
+                break;
             case push_i_8:      vm_stack.push((char) prgrm[index ++], this); break;
             case push_i_8u:     vm_stack.push((unsigned char) prgrm[index ++], this); break;
             case push_i_16:     vm_stack.push(((short*) ((unsigned char[2]){prgrm[index], prgrm[index + 1]}))[0], this); index += 2; break;
@@ -942,4 +1005,9 @@ void stack::_____register_mul(type final_cast)
 
 void stack::_____register_div(type final_cast)
 {
+}
+
+unsigned long stack::size()
+{
+    return _size;
 }
