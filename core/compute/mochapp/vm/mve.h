@@ -17,10 +17,6 @@ enum Opcodes{
 enum NativeType{
 };
 
-class Method{
-    std::vector<Opcodes> mOpcodes;
-};
-
 class LVT{
 };
 
@@ -115,6 +111,13 @@ public:
     void csstore(LVT* t);
 };
 
+class Method{
+    std::vector<unsigned char> mOpcodes;
+public:
+    Method(std::vector<unsigned char> o);
+    void invoke(Stack&, LVT&);
+};
+
 class GlobalSpace{
     std::vector<Method> mMethods;
 };
@@ -124,6 +127,10 @@ class mve {
     Register            mRegister;
     Stack               mStack;
     Heap                mHeap;
+public:
+    mve(std::vector<unsigned char> o);
+    Method& getMethod(unsigned long address);
+    void invokeMethod(unsigned long address);
 };
 
 
