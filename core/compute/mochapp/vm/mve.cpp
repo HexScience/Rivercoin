@@ -3,3 +3,8 @@
 //
 
 #include "mve.h"
+
+Reference::Reference(unsigned char* p)
+{
+
+}
