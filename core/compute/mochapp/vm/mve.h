@@ -8,6 +8,8 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <memory>
+#include <stack>
 
 enum Opcodes{
 };
@@ -39,17 +41,37 @@ union ALU_Unit{
     double float64;
 };
 
+class Stack;
+
 class Register{
     ALU_Unit mUnitA;
     ALU_Unit mUnitB;
 public:
     void load(ALU_Unit, NativeType);
+    bool  greaterThan();
+    bool  lessThan();
+    bool  greaterThanEq();
+    bool  lessThanEq();
+    void  add(Stack* stack);
+    void  mul(Stack* stack);
+    void  sub(Stack* stack);
+    void  div(Stack* stack);
+    void  mod(Stack* stack);
+    void  pow(Stack* stack);
+    void  AND(Stack* stack);
+    void  OR(Stack* stack);
+    void  XOR(Stack* stack);
+};
+
+class StackObject{
 };
 
 class Heap{
 };
 
 class Stack{
+private:
+    std::stack<StackObject> mStack;
 public:
     void aconst_null();
     void aconst_new(long size);
@@ -92,6 +114,7 @@ class mve {
     GlobalSpace         mSpace;
     Register            mRegister;
     Stack               mStack;
+    Heap                mHeap;
 };
 
 
