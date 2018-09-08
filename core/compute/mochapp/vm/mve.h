@@ -68,9 +68,19 @@ class StackObject{
 class Heap{
 };
 
+//References act like a shared pointer, once their lifecycle is reached, they are deleted.
+class Reference{
+    unsigned short mReferences;
+    unsigned char  mObject;
+public:
+    Reference(unsigned char);
+    Reference(const Reference& o);
+    ~Reference();
+};
+
 class Stack{
 private:
-    std::stack<StackObject> mStack;
+    std::stack<char> mStack;
 public:
     void aconst_null();
     void aconst_new(long size);
