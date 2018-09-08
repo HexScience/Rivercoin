@@ -44,8 +44,7 @@ union ALU_Unit{
 class Stack;
 
 class Register{
-    ALU_Unit mUnitA;
-    ALU_Unit mUnitB;
+    std::stack<ALU_Unit> mUnits;
 public:
     void load(ALU_Unit, NativeType);
     bool  greaterThan();
