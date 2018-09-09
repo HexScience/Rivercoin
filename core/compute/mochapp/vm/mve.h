@@ -64,10 +64,17 @@ class StackObject{
 class Heap{
 };
 
+struct ReferenceCounter{
+    short mReferences;
+    unsigned char* mObject;
+
+    ReferenceCounter(unsigned short references, unsigned char* object);
+};
+
 //References act like a shared pointer, once their lifecycle is reached, they are deleted.
 class Reference{
-    unsigned short mReferences;
-    unsigned char* mObject;
+private:
+    ReferenceCounter* mReference;
 public:
     Reference(unsigned char*);
     Reference(const Reference& o);
