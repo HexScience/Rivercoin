@@ -12,9 +12,6 @@
 
 package nucleus.algorithms;
 
-import com.riverssen.core.headers.HashAlgorithm;
-import com.riverssen.core.utils.Base58;
-import com.riverssen.core.utils.HashUtil;
 import nucleus.util.Base58;
 import nucleus.util.HashUtil;
 

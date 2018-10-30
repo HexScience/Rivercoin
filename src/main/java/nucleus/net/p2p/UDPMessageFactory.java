@@ -1,9 +1,9 @@
 package nucleus.net.p2p;
 
-import com.riverssen.core.utils.ByteUtil;
 import nucleus.net.message.Message;
 import nucleus.net.message.MessageFactory;
 import nucleus.protocol.protobufs.Transaction;
+import nucleus.util.ByteUtil;
 
 import java.io.IOException;
 

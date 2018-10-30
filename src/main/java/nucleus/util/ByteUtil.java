@@ -12,10 +12,8 @@
 
 package nucleus.util;
 
+import nucleus.algorithms.HashAlgorithm;
 import nucleus.algorithms.Sha3;
-import com.riverssen.core.headers.Exportable;
-import com.riverssen.core.headers.HashAlgorithm;
-import com.riverssen.core.headers.Serialisable;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -46,15 +44,15 @@ public class ByteUtil
         return array;
     }
 
-    public static byte[] encode(Serialisable serialisable)
-    {
-        return null;
-    }
-
-    public static void decode(Serialisable serialisable, byte data[])
-    {
-    }
-
+//    public static byte[] encode(Serialisable serialisable)
+//    {
+//        return null;
+//    }
+//
+//    public static void decode(Serialisable serialisable, byte data[])
+//    {
+//    }
+//
     public static byte[] encodeHash(String hash)
     {
         return new BigInteger(hash).toByteArray();
@@ -171,24 +169,24 @@ public class ByteUtil
         stream1.close();
     }
 
-    public static byte[] getBytes(Exportable exportable)
-    {
-        try{
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            DataOutputStream s = new DataOutputStream(stream);
-
-            exportable.export(s);
-
-            s.flush();
-            s.close();
-
-            return stream.toByteArray();
-        } catch (Exception e)
-        {
-            return new byte[0];
-        }
-    }
-
+//    public static byte[] getBytes(Exportable exportable)
+//    {
+//        try{
+//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//            DataOutputStream s = new DataOutputStream(stream);
+//
+//            exportable.export(s);
+//
+//            s.flush();
+//            s.close();
+//
+//            return stream.toByteArray();
+//        } catch (Exception e)
+//        {
+//            return new byte[0];
+//        }
+//    }
+//
     public static byte[] trim(byte[] bytes, int i, int i1) {
         byte new_bytes[]    = new byte[i1 - i];
 

@@ -12,7 +12,7 @@
 
 package nucleus.gpu;
 
-import com.riverssen.core.system.Logger;
+import nucleus.util.Logger;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.PointerBuffer;

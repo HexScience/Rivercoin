@@ -1,12 +1,11 @@
 package nucleus.protocol.protobufs;
 
 
-import com.riverssen.core.utils.HashUtil;
-import com.riverssen.wallet.PrivKey;
 import nucleus.crypto.ec.ECDerivedPublicKey;
 import nucleus.ledger.AddressBalanceTable;
 import nucleus.ledger.LedgerDatabase;
 import nucleus.system.Context;
+import nucleus.util.HashUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -47,9 +46,9 @@ public class Transaction
 		setComment(comment);
 	}
 
-	public static byte[] sign(Transaction transaction, PrivKey privateKey, String pph) throws IOException {
-		return privateKey.sign(transaction.getSignatureData(), pph.getBytes());
-	}
+//	public static byte[] sign(Transaction transaction, BigInteger privateKey, String pph) throws IOException {
+//		return privateKey.sign(transaction.getSignatureData(), pph.getBytes());
+//	}
 
 	private byte[] getSignatureData() throws IOException {
 		ByteArrayOutputStream stream1 = new ByteArrayOutputStream();

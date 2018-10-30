@@ -1,9 +1,7 @@
 package nucleus.crypto.ec;
 
-import com.riverssen.core.utils.ByteUtil;
 import nucleus.crypto.Key;
 import nucleus.protocol.protobufs.Address;
-import org.bouncycastle.asn1.eac.ECDSAPublicKey;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
 
 import java.io.DataInputStream;

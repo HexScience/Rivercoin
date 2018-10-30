@@ -1,8 +1,8 @@
 package nucleus.protocol.protobufs;
 
 
-import com.riverssen.core.utils.Base58;
-import com.riverssen.core.utils.ByteUtil;
+import nucleus.util.Base58;
+import nucleus.util.ByteUtil;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

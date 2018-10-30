@@ -12,8 +12,7 @@
 
 package nucleus.util;
 
-import com.riverssen.core.headers.ContextI;
-import com.riverssen.core.system.Logger;
+import nucleus.system.Context;
 
 import java.io.*;
 import java.nio.file.FileSystems;
@@ -160,11 +159,11 @@ public class FileUtils
         return "";
     }
 
-    public static void deleteblock(long i, ContextI context)
+    public static void deleteblock(long i, Context context)
     {
-        File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "block[" + i + "]");
-
-        if(file.exists())
-            file.delete();
+//        File file = new File(context.getConfig().getBlockChainDirectory() + File.separator + "block[" + i + "]");
+//
+//        if(file.exists())
+//            file.delete();
     }
 }

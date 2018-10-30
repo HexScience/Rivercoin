@@ -1,6 +1,6 @@
 package nucleus.net.message;
 
-import com.riverssen.core.utils.ByteUtil;
+import nucleus.util.ByteUtil;
 
 public abstract class Message
 {

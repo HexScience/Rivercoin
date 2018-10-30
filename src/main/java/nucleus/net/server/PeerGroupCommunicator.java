@@ -1,9 +1,9 @@
 package nucleus.net.server;
 
-import com.riverssen.core.system.Logger;
 import nucleus.net.message.Message;
 import nucleus.net.p2p.UDPMessageFactory;
 import nucleus.system.Parameters;
+import nucleus.util.Logger;
 
 import java.io.IOException;
 import java.net.*;

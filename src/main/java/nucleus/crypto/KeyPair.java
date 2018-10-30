@@ -1,17 +1,15 @@
 package nucleus.crypto;
 
-import com.riverssen.core.utils.Base58;
-import com.riverssen.core.utils.ByteUtil;
-import com.riverssen.core.utils.HashUtil;
-import nucleus.crypto.ec.ECLib;
 import nucleus.protocol.protobufs.Address;
 import nucleus.util.Base16;
+import nucleus.util.Base58;
+import nucleus.util.ByteUtil;
+import nucleus.util.HashUtil;
 import org.bouncycastle.asn1.sec.SECNamedCurves;
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
-import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 
 import java.math.BigInteger;
 import java.security.*;

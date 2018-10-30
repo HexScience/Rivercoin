@@ -12,9 +12,6 @@
 
 package nucleus.util;
 
-import com.riverssen.core.system.Logger;
-import com.riverssen.wallet.PubKey;
-
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.interfaces.ECPublicKey;
@@ -152,15 +149,6 @@ public class HashUtil
 //    Alias: "1.2.156.197.1.401" -> "SM3"
 //    Alias: "1.2.643.2.2.9" -> "GOST3411"
 //    Alias: "GOST-2012-512" -> "GOST3411-2012-512"
-
-    public static String compressPublicKey(PubKey key)
-    {
-        ECPublicKey key1 = (ECPublicKey) key.getPublic();
-
-        ECPoint w = key1.getW();
-
-        return null;
-    }
 
     public static byte[] base64Encode(byte data[])
     {

@@ -1,9 +1,9 @@
 package nucleus.tscript;
 
-import com.riverssen.core.utils.ByteUtil;
 import nucleus.crypto.ec.ECDerivedPublicKey;
 import nucleus.protocol.protobufs.Address;
 import nucleus.protocol.protobufs.Transaction;
+import nucleus.util.ByteUtil;
 
 import java.util.Stack;
 

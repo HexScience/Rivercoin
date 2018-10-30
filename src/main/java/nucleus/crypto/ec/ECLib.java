@@ -1,11 +1,11 @@
 package nucleus.crypto.ec;
 
-import com.riverssen.core.utils.Base58;
-import com.riverssen.core.utils.ByteUtil;
-import com.riverssen.core.utils.HashUtil;
 import nucleus.exceptions.ECLibException;
 import nucleus.exceptions.ECPointUnobtainableException;
 import nucleus.exceptions.ECPrivateKeyInconstructableException;
+import nucleus.util.Base58;
+import nucleus.util.ByteUtil;
+import nucleus.util.HashUtil;
 import org.bouncycastle.asn1.sec.SECNamedCurves;
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.crypto.params.ECDomainParameters;
