@@ -12,6 +12,8 @@
 
 package com.riverssen.core.system;
 
+import nucleus.util.TimeUtil;
+
 public class Logger
 {
     public static final String COLOUR_YELLOW    = isUnixBased() ? (char)27 + "[33m" : "";
@@ -32,7 +34,7 @@ public class Logger
 
     public static void prt(String colour, String msg)
     {
-        System.out.println(colour + msg);
+        System.out.println(colour + TimeUtil.getPretty("H:M:S") + " " + msg);
     }
 
     public static void err(String msg)

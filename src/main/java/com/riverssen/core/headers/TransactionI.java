@@ -14,8 +14,8 @@ package com.riverssen.core.headers;
 
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.security.CompressedAddress;
-import com.riverssen.core.security.PrivKey;
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.wallet.PrivKey;
+import com.riverssen.wallet.PublicAddress;
 import com.riverssen.core.transactions.*;
 import com.riverssen.riverssen.UTXOMap;
 
@@ -53,7 +53,7 @@ public interface TransactionI extends Comparable<TransactionI>, Encodeable, JSON
             if(type         == TRANSACTION)     return new Transaction(stream);
             else if(type    == REWARD)          return new RewardTransaction(stream);
             else if(type    == CONTRACT)        return new ContractDeploy(stream);
-            else if(type    == CONTRACT_INVOKE) return new ContractInvoke(stream);
+            else if(type    == CONTRACT_INVOKE) return null;//return new ContractInvoke(stream);
             else throw new Exception("corrupted transaction data");
         } catch (IOException e) {
             e.printStackTrace();

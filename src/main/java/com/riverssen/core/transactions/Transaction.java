@@ -16,8 +16,8 @@ import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.TransactionI;
 import com.riverssen.core.security.CompressedAddress;
-import com.riverssen.core.security.PrivKey;
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.wallet.PrivKey;
+import com.riverssen.wallet.PublicAddress;
 import com.riverssen.core.system.Config;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.utils.Base58;
@@ -90,24 +90,29 @@ public class Transaction implements TransactionI, Encodeable
 
     public boolean valid(UTXOMap map, ContextI context)
     {
-        if (sender.toPublicKey() == null) return false;
+        try{
+            if (sender.toPublicKey() == null) return false;
 
-        if (!sender.toPublicKey().isValid()) return false;
+            if (!sender.toPublicKey().isValid()) return false;
 
-        Set<TransactionOutput> utxos = map.get(sender.toPublicKey().getAddress().toString());
+//        Set<TransactionOutput> utxos = map.get(sender.toPublicKey().getAddress().toString());
 
-        for(TransactionInput input : txids) if(!utxos.contains(input.getUTXO().getHash())) return false;
+//        for(TransactionInput input : txids) if(!utxos.contains(input.getUTXO().getHash())) return false;
 
-        /** check amount is more than or equal to the minimum transaction amount **/
-        if(amount.toBigInteger().compareTo(new BigInteger(Config.getMinimumTransactionAmount())) < 0) return false;
+            /** check amount is more than or equal to the minimum transaction amount **/
+            if(amount.toBigInteger().compareTo(new BigInteger(Config.getMinimumTransactionAmount())) < 0) return false;
 
-        /** check utxo amount is more than transaction amount **/
-        if (amount.toBigInteger().compareTo(getInputAmount()) > 0) return false;
+            /** check utxo amount is more than transaction amount **/
+            if (amount.toBigInteger().compareTo(getInputAmount()) > 0) return false;
 
-        /** check utxo amount is contains a transaction fee **/
-        if (cost().toBigInteger().compareTo(getInputAmount()) >= 0) return false;
+            /** check utxo amount is contains a transaction fee **/
+            if (cost().toBigInteger().compareTo(getInputAmount()) >= 0) return false;
 
-        return sender.toPublicKey().verifySignature(generateSignatureData(), Base58.encode(signature));
+            return sender.toPublicKey().verifySignature(generateSignatureData(), Base58.encode(signature));
+        } catch (Exception e)
+        {
+            return false;
+        }
     }
 
     @Override
@@ -141,26 +146,26 @@ public class Transaction implements TransactionI, Encodeable
         RiverCoin leftOver = new RiverCoin(getInputAmount().subtract(amount.toBigInteger()));
 
         /** if miner doesn't want fees, then all the leftover amount is returned to the sender as a new unspent output **/
-        if(miner == null) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
-        else {
-            /** measure the cost as a fee **/
-            RiverCoin fee = cost();
-
-            /** calculate new leftover **/
-            leftOver = new RiverCoin(leftOver.toBigInteger().subtract(fee.toBigInteger()));
-
-            /** check that there is a left over **/
-            if (leftOver.toBigInteger().compareTo(BigInteger.ZERO) < 0)
-                return null;
-
-            /** check that the fee is more than zero **/
-            if (fee.toBigInteger().compareTo(BigInteger.ZERO) <= 0) return null;
-
-            utxos.add(new TransactionOutput(miner, fee, encode(ByteUtil.defaultEncoder())));
-
-            if (leftOver.toBigInteger().compareTo(BigInteger.ZERO) > 0)
-                utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
-        }
+//        if(miner == null) utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
+//        else {
+//            /** measure the cost as a fee **/
+//            RiverCoin fee = cost();
+//
+//            /** calculate new leftover **/
+//            leftOver = new RiverCoin(leftOver.toBigInteger().subtract(fee.toBigInteger()));
+//
+//            /** check that there is a left over **/
+//            if (leftOver.toBigInteger().compareTo(BigInteger.ZERO) < 0)
+//                return null;
+//
+//            /** check that the fee is more than zero **/
+//            if (fee.toBigInteger().compareTo(BigInteger.ZERO) <= 0) return null;
+//
+//            utxos.add(new TransactionOutput(miner, fee, encode(ByteUtil.defaultEncoder())));
+//
+//            if (leftOver.toBigInteger().compareTo(BigInteger.ZERO) > 0)
+//                utxos.add(new TransactionOutput(sender.toPublicKey().getAddress(), leftOver, encode(ByteUtil.defaultEncoder())));
+//        }
 
         return utxos;
     }
@@ -259,19 +264,20 @@ public class Transaction implements TransactionI, Encodeable
 
     @Override
     public String toJSON() {
-        JSON json = new JSON().add("type", "transaction").add("sender", getSender().toPublicKey().getAddress().toString()).add("receiver", getReceiver().toString()).add("input", new RiverCoin(getInputAmount().toString()).toRiverCoinString()).add("amount", amount.toRiverCoinString()).add("timestamp", getTimeStamp() + "");
-
-        String inputs = new String("\"inputs\":[");
-
-        for(TransactionInput input : txids)
-            inputs += ("\"" + Base58.encode(input.getTransactionOutputID()) + "\"") + ", ";
-
-        if(inputs.length() > 0)
-            inputs = inputs.substring(0, inputs.length() - 2) + "]";
-        else inputs = "[]";
-
-        json.add(inputs);
-
-        return json.toString();
+//        JSON json = new JSON().add("type", "transaction").add("sender", getSender().toPublicKey().getAddress().toString()).add("receiver", getReceiver().toString()).add("input", new RiverCoin(getInputAmount().toString()).toRiverCoinString()).add("amount", amount.toRiverCoinString()).add("timestamp", getTimeStamp() + "");
+//
+//        String inputs = new String("\"inputs\":[");
+//
+//        for(TransactionInput input : txids)
+//            inputs += ("\"" + Base58.encode(input.getTransactionOutputID()) + "\"") + ", ";
+//
+//        if(inputs.length() > 0)
+//            inputs = inputs.substring(0, inputs.length() - 2) + "]";
+//        else inputs = "[]";
+//
+//        json.add(inputs);
+//
+//        return json.toString();
+        return "";
     }
 }

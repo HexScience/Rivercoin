@@ -13,18 +13,13 @@
 package com.riverssen.core.utils;
 
 import com.riverssen.core.system.Logger;
-import com.riverssen.core.security.PubKey;
+import com.riverssen.wallet.PubKey;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.security.Provider;
-import java.security.Security;
 import java.security.interfaces.ECPublicKey;
 import java.security.spec.ECPoint;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
-import java.util.Set;
 
 public class HashUtil
 {

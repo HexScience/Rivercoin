@@ -14,8 +14,7 @@ package com.riverssen.core.system;
 
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.block.BlockHeader;
-import com.riverssen.core.headers.ContextI;
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.wallet.PublicAddress;
 import com.riverssen.core.security.Wallet;
 
 import java.io.BufferedReader;

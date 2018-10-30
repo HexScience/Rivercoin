@@ -15,6 +15,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.bitlet</groupId>
+            <artifactId>weupnp</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+
+        <dependency>
             <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
@@ -39,6 +45,12 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20180130</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.web3j</groupId>
+            <artifactId>crypto</artifactId>
+            <version>3.3.1</version>
         </dependency>
     </dependencies>
 

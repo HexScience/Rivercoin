@@ -33,7 +33,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class BlockChain implements Runnable
 {
     private volatile Set<BlockDownloadService>                  orphanedBlocks;
-//    private Map<Client, Set<FullBlock>>     downloadedBlocks;
+//    private Map<Peer, Set<FullBlock>>     downloadedBlocks;
     private volatile Set<BlockDownloadService>              downloadedBlocks;
     private volatile Handler<FullBlock>              block;
     private volatile ContextI                        context;
@@ -50,6 +50,10 @@ public class BlockChain implements Runnable
         this.lock           = new ReentrantLock();
         this.block          = new Handler<>(null);
         this.current        = new AtomicLong(0);
+    }
+
+    public synchronized void que(String address, FullBlock que)
+    {
     }
 
     public synchronized void FetchTransactions()

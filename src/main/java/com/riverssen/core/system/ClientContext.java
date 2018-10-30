@@ -25,9 +25,8 @@ import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.networking.Server;
 import com.riverssen.core.networking.NetworkManager;
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.wallet.PublicAddress;
 import com.riverssen.core.security.Wallet;
-import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.riverssen.UTXOMap;
 
 import java.math.BigInteger;
@@ -239,7 +238,7 @@ public class ClientContext implements ContextI
                                         break;
                                     }
 
-                                    this.wallet = com.riverssen.testing.Wallet.generate(this, name, seed, encr, numa);
+//                                    this.wallet = com.riverssen.testing.Wallet.generate(this, name, seed, encr, numa);
 
                                     Logger.alert("wallet generation successful!");
                                 break;

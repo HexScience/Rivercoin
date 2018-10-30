@@ -14,7 +14,6 @@ package com.riverssen.core.utils;
 
 import com.riverssen.core.algorithms.Sha3;
 import com.riverssen.core.headers.*;
-import com.riverssen.core.mpp.compiler.Token;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

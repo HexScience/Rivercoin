@@ -1,0 +1,53 @@
+{
+  "parameters":{
+    "Java-Package":"com.riverssen.protocols"
+  },
+  "definitions": {
+    "address_array": "int_8[25]",
+    "Hash": "int_8[32]",
+    "compressed_key":"int_8[37]",
+    "Satoshis":"uint_64",
+    "Comment":"uint_8[256]",
+    "Signature":"bytes"
+  },
+  "classes":{
+    "Address":[
+      {"address":"address_array"}
+    ],
+    "CompressedKey":[
+      {"key":"compressed_key"}
+    ],
+    "Header":[
+      {"version":"uint_64"},
+      {"blockID":"uint_64"},
+      {"parentHash":"Hash"},
+      {"merkleRoot":"Hash"},
+      {"forkRoot":"Hash"},
+      {"timeStamp":"uint_64"},
+      {"difficulty":"double"},
+      {"nonce":"uint_64"},
+      {"minerAddress":"Address"},
+      {"reward":"Satoshis"}
+    ],
+
+    "TransactionOutput":[
+      {"txid":"Hash"},
+      {"owner":"Address"}
+    ],
+
+    "Transaction":[
+      {"sender":"CompressedKey"},
+      {"receiver":"Address"},
+      {"amount":"Satoshis"},
+      {"utxos":"List::TransactionOutput"},
+      {"fee":"Satoshis"},
+      {"comment":"Comment"},
+      {"signature":"Signature"}
+    ],
+
+    "Block":[
+      {"header": "Header"},
+      {"transactions": "List::uint_32"}
+    ]
+  }
+}

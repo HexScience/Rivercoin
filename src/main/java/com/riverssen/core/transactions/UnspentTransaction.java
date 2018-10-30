@@ -14,7 +14,7 @@ package com.riverssen.core.transactions;
 
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.Encodeable;
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.wallet.PublicAddress;
 import com.riverssen.core.utils.ByteUtil;
 
 public class UnspentTransaction implements Encodeable

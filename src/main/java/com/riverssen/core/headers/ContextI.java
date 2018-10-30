@@ -16,13 +16,12 @@ import com.riverssen.core.BlockChain;
 import com.riverssen.core.BlockPool;
 import com.riverssen.core.TransactionPool;
 import com.riverssen.core.networking.NetworkManager;
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.wallet.PublicAddress;
 import com.riverssen.core.security.Wallet;
 import com.riverssen.core.system.Config;
 import com.riverssen.core.system.FileSpec;
 import com.riverssen.riverssen.UTXOMap;
 
-import java.io.DataInputStream;
 import java.io.File;
 import java.math.BigInteger;
 import java.util.concurrent.ExecutorService;

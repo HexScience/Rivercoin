@@ -12,6 +12,7 @@
 
 package com.riverssen.core.networking;
 
+import com.dosse.upnp.UPnP;
 import com.riverssen.core.block.BlockDownloadService;
 import com.riverssen.core.block.FullBlock;
 import com.riverssen.core.headers.ContextI;
@@ -24,6 +25,7 @@ import org.jsoup.nodes.Document;
 import sun.rmi.runtime.Log;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.*;
@@ -45,14 +47,18 @@ public class Server implements NetworkManager
 
         this.socket         = new ServerSocket();
         this.socket.bind(new InetSocketAddress("0.0.0.0", context.getConfig().getPort()));
+
+//        UPnP.waitInit();
+//        Logger.alert("UPnP available: " + UPnP.isUPnPAvailable());
+//        Logger.alert("Opening port 5110: " + UPnP.openPortTCP(8333));
     }
 
     public void establishConnection() throws Exception
     {
         addSavedIps();
         addSeedIPs();
+        ipAddresses.add("2a02:810b:c7c0:1e9c:31b3:7ff7:5e89:71e7");
         createListener();
-        ipAddresses.add("77.22.250.86");
 
         if(ipAddresses.size() == 0)
             throw new Exception("no seed ip address found.");
@@ -180,9 +186,15 @@ public class Server implements NetworkManager
 
     private void addSeedIPs() throws Exception
     {
-        Connection connection = Jsoup.connect(seedNodeUrl);
-        Document doc = connection.get();
-        String text = doc.body().text();
+        String text = "";
+
+        try{
+            Connection connection = Jsoup.connect(seedNodeUrl);
+            Document doc = connection.get();
+            text = doc.body().text();
+        } catch (Exception e)
+        {
+        }
 
         String ips[] = text.split(" ");
 

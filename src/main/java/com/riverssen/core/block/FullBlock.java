@@ -16,7 +16,7 @@ import com.riverssen.core.miningalgorithm.Riv3rH4sh;
 import com.riverssen.core.system.Logger;
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.*;
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.wallet.PublicAddress;
 import com.riverssen.core.system.Config;
 import com.riverssen.core.system.LatestBlockInfo;
 import com.riverssen.core.transactions.RewardTransaction;

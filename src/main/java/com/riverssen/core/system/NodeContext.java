@@ -25,9 +25,8 @@ import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.networking.Server;
 import com.riverssen.core.networking.NetworkManager;
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.wallet.PublicAddress;
 import com.riverssen.core.security.Wallet;
-import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.TimeUtil;
 import com.riverssen.riverssen.UTXOMap;
 

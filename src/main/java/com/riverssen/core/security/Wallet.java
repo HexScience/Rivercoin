@@ -18,6 +18,9 @@ import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.HashUtil;
 import com.riverssen.core.utils.Truple;
 import com.riverssen.riverssen.UTXOMap;
+import com.riverssen.wallet.PrivKey;
+import com.riverssen.wallet.PubKey;
+import com.riverssen.wallet.PublicAddress;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -110,7 +113,7 @@ public class Wallet
             keyGen.initialize(ecSpec, random);
             KeyPair keyPair = keyGen.generateKeyPair();
 
-            keyPairs.add(new Truple<>(name == null ? "default" : name, new PrivKey(keyPair.getPrivate()), new PubKey(keyPair.getPublic())));
+//            keyPairs.add(new Truple<>(name == null ? "default" : name, new PrivKey(keyPair.getPrivate()), new PubKey(keyPair.getPublic())));
         } catch (Exception e)
         {
             throw new RuntimeException(e);
@@ -185,7 +188,7 @@ public class Wallet
             {
                 Truple<String, PrivKey, PubKey> keypair = iterator.next();
 
-                bufferedWriter.write(keypair.getI() + "\t\t\t:\t\t\t" + keypair.getC().getAddress() + "\n");
+//                bufferedWriter.write(keypair.getI() + "\t\t\t:\t\t\t" + keypair.getC().getAddress() + "\n");
             }
 
             bufferedWriter.flush();
@@ -253,18 +256,18 @@ public class Wallet
     }
 
     public PublicAddress getPublicAddress(int i) {
-        return getPublicKey(i).getAddress();
+        return null;//getPublicKey(i).getAddress();
     }
 
     public boolean containsAddress(PublicAddress address) {
-            for(Truple<String, PrivKey, PubKey> keyPair : keyPairs)
-                if(keyPair.getC().getAddress().equals(address)) return true;
+//            for(Truple<String, PrivKey, PubKey> keyPair : keyPairs)
+//                if(keyPair.getC().getAddress().equals(address)) return true;
         return false;
     }
 
     public Truple<String, PrivKey, PubKey> getKeyPairFromAddress(PublicAddress address) {
-        for(Truple<String, PrivKey, PubKey> keyPair : keyPairs)
-            if(keyPair.getC().getAddress().equals(address)) return keyPair;
+//        for(Truple<String, PrivKey, PubKey> keyPair : keyPairs)
+//            if(keyPair.getC().getAddress().equals(address)) return keyPair;
         return null;
     }
 

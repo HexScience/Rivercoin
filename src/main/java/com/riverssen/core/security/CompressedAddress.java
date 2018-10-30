@@ -15,15 +15,30 @@ package com.riverssen.core.security;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.utils.Base58;
 import com.riverssen.core.headers.Encodeable;
+import com.riverssen.core.utils.ByteUtil;
+import com.riverssen.core.utils.HashUtil;
 import com.riverssen.core.utils.SmartDataTransferer;
+import com.riverssen.wallet.Key;
+import com.riverssen.wallet.PubKey;
+import com.riverssen.wallet.PublicAddress;
+import org.bouncycastle.jce.ECNamedCurveTable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
 
-public class CompressedAddress implements Encodeable, Exportable
+public class CompressedAddress implements Encodeable, Exportable, Key
 {
     private String address;
+
+    public CompressedAddress(byte address[])
+    {
+        this.address = HashUtil.hashToStringBase16(address);
+    }
 
     public CompressedAddress(String address)
     {
@@ -49,18 +64,53 @@ public class CompressedAddress implements Encodeable, Exportable
         return address;
     }
 
-    public PubKey toPublicKey()
-    {
-        PubKey key = new PubKey(address);
+    public PubKey toPublicKey() throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
+        PubKey key = new PubKey(this);
 
         if(key.isValid()) return key;
         return null;
     }
 
     @Override
+    public boolean fromBytes(byte[] bytes) {
+        this.address = Base58.encode(bytes);
+        return true;
+    }
+
+    @Override
     public byte[] getBytes()
     {
-        return Base58.decode(address);
+        return new BigInteger(address, 16).toByteArray();
+    }
+
+    @Override
+    public byte[] sign(byte[] bytes, byte[] encryption) {
+        return new byte[0];
+    }
+
+    @Override
+    public boolean verify(byte[] signature, byte[] data) {
+        return false;
+    }
+
+    @Override
+    public boolean decrypt(byte key) {
+        return false;
+    }
+
+    @Override
+    public boolean encrypt(byte key) {
+        return false;
+    }
+
+    @Override
+    public Key getCompressedForm() {
+        return this;
+    }
+
+    @Override
+    public PublicAddress getAddressForm(byte prefix) {
+        return null;
     }
 
 //    @Override
@@ -87,5 +137,15 @@ public class CompressedAddress implements Encodeable, Exportable
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public BigInteger decompress()
+    {
+        org.bouncycastle.jce.spec.ECNamedCurveParameterSpec SPEC = ECNamedCurveTable.getParameterSpec("secp256k1");
+
+        org.bouncycastle.math.ec.ECPoint point = SPEC.getCurve().decodePoint(getBytes());
+        BigInteger x = point.getXCoord().toBigInteger();//.getEncoded();
+        BigInteger y = point.getYCoord().toBigInteger();//.getEncoded();
+        return new BigInteger(ByteUtil.concatenate(x.toByteArray(), y.toByteArray()));
     }
 }

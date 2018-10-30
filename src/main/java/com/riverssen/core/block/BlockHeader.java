@@ -16,7 +16,7 @@ import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.JSONFormattable;
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.wallet.PublicAddress;
 import com.riverssen.core.utils.*;
 import com.riverssen.core.headers.Encodeable;
 

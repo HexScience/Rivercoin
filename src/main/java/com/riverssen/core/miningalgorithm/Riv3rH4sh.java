@@ -15,7 +15,6 @@ package com.riverssen.core.miningalgorithm;
 import com.riverssen.core.algorithms.*;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.headers.HashAlgorithm;
-import com.riverssen.core.mpp.objects.RSA;
 import com.riverssen.core.security.AdvancedEncryptionStandard;
 import com.riverssen.core.system.FileSpec;
 import com.riverssen.core.utils.Base58;

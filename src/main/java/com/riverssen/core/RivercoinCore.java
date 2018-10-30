@@ -12,12 +12,18 @@
 
 package com.riverssen.core;
 
+import com.dosse.upnp.UPnP;
+import com.riverssen.core.algorithms.Thund3rSt0rm;
 import com.riverssen.core.exceptions.FeatureUnavailableException;
 import com.riverssen.core.miningalgorithm.Riv3rH4sh;
 import com.riverssen.core.system.*;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.utils.ByteUtil;
 import com.riverssen.core.utils.FileUtils;
+import com.riverssen.system.Parameters;
+import org.bitlet.weupnp.GatewayDevice;
+import org.bitlet.weupnp.GatewayDiscover;
+import sun.rmi.runtime.Log;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -28,6 +34,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.security.Security;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Random;
 
 public class RivercoinCore
@@ -48,7 +55,7 @@ public class RivercoinCore
 
     private RivercoinCore(String type, String file, String ...args) throws Exception
     {
-        /** This Code Starts The Rivercoin Client **/
+        /** This Code Starts The Rivercoin Peer **/
         /** create a context **/
         ContextI context = null;
         Config   config  = new Config(new File(file + File.separator));

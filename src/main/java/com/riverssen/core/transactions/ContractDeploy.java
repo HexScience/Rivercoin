@@ -14,15 +14,9 @@ package com.riverssen.core.transactions;
 
 import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.TransactionI;
-import com.riverssen.core.mpp.compiler.LexedProgram;
-import com.riverssen.core.mpp.compiler.Namespace;
-import com.riverssen.core.mpp.compiler.ParsedProgram;
-import com.riverssen.core.mpp.compiler.Token;
-import com.riverssen.core.mpp.exceptions.CompileException;
-import com.riverssen.core.mpp.exceptions.ParseException;
 import com.riverssen.core.security.CompressedAddress;
-import com.riverssen.core.security.PrivKey;
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.wallet.PrivKey;
+import com.riverssen.wallet.PublicAddress;
 import com.riverssen.core.system.Config;
 import com.riverssen.core.headers.ContextI;
 import com.riverssen.core.utils.SmartDataTransferer;
@@ -37,21 +31,17 @@ import java.util.List;
 public class ContractDeploy implements TransactionI
 {
     private CompressedAddress sender;
-    private Namespace         global;
     private TXIList           fees;
     private long              timestamp;
-
-    private Token             root;
 
     public ContractDeploy(DataInputStream stream)
     {
     }
 
-    public ContractDeploy(CompressedAddress sender, TXIList fees, String contract) throws ParseException, CompileException
+    public ContractDeploy(CompressedAddress sender, TXIList fees, String contract)
     {
         this.sender = sender;
         this.fees   = fees;
-        this.root   = new ParsedProgram(new LexedProgram(contract)).getRoot();
     }
 
     @Override
@@ -102,7 +92,7 @@ public class ContractDeploy implements TransactionI
     @Override
     public RiverCoin cost()
     {
-        return new RiverCoin(new RiverCoin(Config.getMiningFee()).toBigInteger().add(root.calculateCost()));
+        return new RiverCoin(new RiverCoin(Config.getMiningFee()).toBigInteger().add(BigInteger.ZERO));
     }
 
     @Override

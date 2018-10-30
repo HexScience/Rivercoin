@@ -224,4 +224,28 @@ public class ByteUtil
             bytes[i] = (byte) (hash_[i] ^ prng[i]);
         return bytes;
     }
+
+    //** maximum of 12 bytes **/
+    public static byte[] pingpong(byte[] data, int i)
+    {
+        byte[] pingpong = new byte[i];
+
+        int[] seeds = {
+                511209451,
+                621731250,
+                -9203121,
+                -512087395
+        };
+
+        for (int x = 0; x < i; x ++)
+        {
+            int ping = seeds[x % 4] | seeds[data.length % 4];
+
+            int pong = seeds[i*i % 4] | seeds[data.length*x*i % 4];
+
+            pingpong[x] = data[(ping * pong) % data.length];
+        }
+
+        return pingpong;
+    }
 }

@@ -13,7 +13,7 @@
 package com.riverssen.core.ledger;
 
 import com.riverssen.core.RiverCoin;
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.wallet.PublicAddress;
 import com.riverssen.core.utils.ByteUtil;
 
 import java.io.*;

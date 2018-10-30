@@ -16,12 +16,11 @@ import com.riverssen.core.RiverCoin;
 import com.riverssen.core.headers.Encodeable;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.JSONFormattable;
-import com.riverssen.core.security.PublicAddress;
+import com.riverssen.wallet.PublicAddress;
 import com.riverssen.core.utils.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.util.Set;
 
 /** Instances of this class will be created during runtime using the Transaction::generateOutputs(Transaction*); **/
 public class TransactionOutput/**<T extends Encodeable & JSONFormattable & Exportable>**/ implements Encodeable, JSONFormattable, Exportable
