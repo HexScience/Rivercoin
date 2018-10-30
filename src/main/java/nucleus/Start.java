@@ -1,11 +1,9 @@
 package nucleus;
 
-import com.riverssen.core.utils.Base58;
-import com.riverssen.core.utils.ByteUtil;
-import com.riverssen.core.utils.HashUtil;
 import nucleus.crypto.KeyPair;
 import nucleus.crypto.ec.ECLib;
 import nucleus.exceptions.ECLibException;
+import nucleus.util.ByteUtil;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;

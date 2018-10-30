@@ -12,7 +12,7 @@
 
 package nucleus.util;
 
-import com.riverssen.core.algorithms.Sha3;
+import nucleus.algorithms.Sha3;
 import com.riverssen.core.headers.Exportable;
 import com.riverssen.core.headers.HashAlgorithm;
 import com.riverssen.core.headers.Serialisable;
