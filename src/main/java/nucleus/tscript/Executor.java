@@ -2,7 +2,7 @@ package nucleus.tscript;
 
 import nucleus.crypto.ec.ECDerivedPublicKey;
 import nucleus.protocol.protobufs.Address;
-import nucleus.protocol.protobufs.Transaction;
+import nucleus.protocol.transaction.Transaction;
 import nucleus.util.ByteUtil;
 
 import java.util.Stack;

@@ -9,6 +9,7 @@ public abstract class Message
      */
 
     public static byte
+    PUNCH           = -1,
     PING            = 0,
     PONG            = 1,
 

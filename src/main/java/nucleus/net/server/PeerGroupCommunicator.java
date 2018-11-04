@@ -14,7 +14,8 @@ public class PeerGroupCommunicator
 {
     private Set<String>         allKnownPossiblePeers;
     private DatagramSocket      socket;
-    private UDPMessageFactory messageFactory;
+    private UDPMessageFactory   messageFactory;
+
     /**
      * broadcast our presence to all known ip addresses
      */

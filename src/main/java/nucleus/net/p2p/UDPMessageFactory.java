@@ -2,7 +2,7 @@ package nucleus.net.p2p;
 
 import nucleus.net.message.Message;
 import nucleus.net.message.MessageFactory;
-import nucleus.protocol.protobufs.Transaction;
+import nucleus.protocol.transaction.Transaction;
 import nucleus.util.ByteUtil;
 
 import java.io.IOException;
@@ -16,6 +16,8 @@ public class UDPMessageFactory implements MessageFactory
     {
         return new UDPMessage(code, message);
     }
+
+    public Message holepunch() { return create(PUNCH, new byte[1]); }
 
     public Message createPingMessage()
     {

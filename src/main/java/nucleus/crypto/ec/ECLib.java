@@ -8,6 +8,7 @@ import nucleus.util.ByteUtil;
 import nucleus.util.HashUtil;
 import org.bouncycastle.asn1.sec.SECNamedCurves;
 import org.bouncycastle.asn1.x9.X9ECParameters;
+import org.bouncycastle.crypto.ec.CustomNamedCurves;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
@@ -31,8 +32,71 @@ public class ECLib
     public static final void init()
     {
         Security.addProvider(new BouncyCastleProvider());
-        params = SECNamedCurves.getByName("secp256k1");
+        params = CustomNamedCurves.getByName("secp256k1");//SECNamedCurves.getByName("secp256k1");
         CURVE = new ECDomainParameters(params.getCurve(), params.getG(), params.getN(), params.getH());
+    }
+
+    /**
+     * @param priv Private key to use for signing data.
+     * @param data A sha3 of the data to be signed.
+     * @return A valid signature byte array.
+     * @throws ECLibException
+     */
+    public static byte[] ECSign(BCECPrivateKey priv, byte data[]) throws ECLibException
+    {
+        try{
+            Signature dsa = Signature.getInstance("SHA256withECDSA", "BC");
+
+            dsa.initSign(priv);
+
+            dsa.update(HashUtil.applySha3(data));
+
+            return dsa.sign();
+        } catch (NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+        } catch (SignatureException e)
+        {
+            e.printStackTrace();
+        } catch (InvalidKeyException e)
+        {
+            e.printStackTrace();
+        } catch (NoSuchProviderException e)
+        {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param pubkey Public key to be used for signature verification.
+     * @param data A sha3 of the original signed data.
+     * @param sig The signature to verify.
+     * @return True only if the Public key is derived from the signing private key.
+     * @throws ECLibException
+     */
+    public static boolean ECSigVerify(BCECPublicKey pubkey, byte[] data, byte[] sig) throws ECLibException
+    {
+        try{
+            Signature signature = Signature.getInstance("SHA256withECDSA");
+            signature.initVerify(pubkey);
+
+            signature.update(HashUtil.applySha3(data));
+
+            return signature.verify(sig);
+        } catch (NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+        } catch (SignatureException e)
+        {
+            e.printStackTrace();
+        } catch (InvalidKeyException e)
+        {
+            e.printStackTrace();
+        }
+
+        return false;
     }
     /**
      * This is a utility library written for creating and manipulating ECDSA Keypairs.
@@ -173,17 +237,32 @@ public class ECLib
          */
 
         boolean pointRecovered  = false;
-        boolean publicKeyRcvrd  = false;
+//        boolean publicKeyRcvrd  = false;
         boolean publicKeyRcvr2  = false;
+        boolean publicKeyRcvr3  = false;
 
         ECPoint p               = ECLib.EC_POINT_point2oct((publicKey) .getQ().getEncoded(false), false);
         BCECPublicKey recovered = ECPublicKey(new BigInteger(publicKey.getQ().getEncoded(false)));
 
         pointRecovered          = ByteUtil.equals(publicKey.getQ().getEncoded(false), p.getEncoded(false));
-        publicKeyRcvrd          = ByteUtil.equals(recovered.getQ().getEncoded(false), publicKey.getQ().getEncoded(false));
+//        publicKeyRcvrd          = ByteUtil.equals(recovered.getQ().getEncoded(false), publicKey.getQ().getEncoded(false));
         publicKeyRcvr2          = ByteUtil.equals(publicKey.getQ().getEncoded(false), ECLib.ECPublicKey(privateKey).getQ().getEncoded(false));
 
-        return pointRecovered && publicKeyRcvrd && publicKeyRcvr2 && publicKey.getQ().getEncoded(false).length == 65 && privateKey.getD().toByteArray().length == 32;
+        p                       = ECLib.EC_POINT_point2oct((publicKey) .getQ().getEncoded(true), true);
+        recovered               = ECPublicKey(new BigInteger(publicKey.getQ().getEncoded(false)));
+        publicKeyRcvr3          = ByteUtil.equals(publicKey.getQ().getEncoded(false), p.getEncoded(false));
+        boolean publicKeyRcvr4  = ByteUtil.equals(recovered.getQ().getEncoded(false), publicKey.getQ().getEncoded(false));
+
+        if (!pointRecovered) throw new ECLibException("point recovery fail.");
+//        if (!publicKeyRcvrd) throw new ECLibException("point recovery fail.");
+        if (!publicKeyRcvr2) throw new ECLibException("private->public recovery fail.");
+        if (!publicKeyRcvr3) throw new ECLibException("point (compressed) recovery fail.");
+        if (!publicKeyRcvr4) throw new ECLibException("public from point (compressed) recovery fail.");
+        if (publicKey.getQ().getEncoded(false).length != 65) throw new ECLibException("public size fail (" + publicKey.getQ().getEncoded(false).length + ").");
+        if (publicKey.getQ().getEncoded(true).length != 33) throw new ECLibException("public compressed size fail (" + publicKey.getQ().getEncoded(true).length + ").");
+        if (privateKey.getD().toByteArray().length != 32) throw new ECLibException("private size fail (" + privateKey.getD().toByteArray().length + ").");
+
+        return pointRecovered /**&& publicKeyRcvrd **/ && publicKeyRcvr2 && publicKeyRcvr3 && publicKeyRcvr4 && publicKey.getQ().getEncoded(false).length == 65 && privateKey.getD().toByteArray().length == 32;
     }
 
     public static final String WIFPrivateKey(BigInteger privateKey) throws ECLibException

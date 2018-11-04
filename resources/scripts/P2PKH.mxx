@@ -1,31 +1,11 @@
-class P2PKH extends TransactionImpl
+public publickey_hash owner = ""
+
+public function P2PKH(Transaction transaction, TransactionInput transactionInput) : boolean
 {
-    private PublicKey       origin
-    private List            signer
-    private List            destination
+    if (!is_valid_public_key(transaction.getSender()))
+        return false
+    if (!publickey_hash(transaction.getSender()).equals(owner))
+        return false
 
-    public function getSignatureValid() : boolean
-    {
-        for (int i = 0; i < signer.size() i ++)
-        {
-            if (! getSignatureValid(signer.getPublicKey(), signer.getSignature()))
-                return false
-        }
-
-        return true
-    }
-
-    public function getOutputs() : List
-    {
-        List outputs
-        for (int i = 0; i < destination.size(); i ++)
-        {
-            TransactionReceiver receiver = destination.get(i)
-            outputs.add(new TransactionOutput(getTXID(), receiver.getAmount(), receiver.getReceivingAddress()))
-        }
-
-        outputs.add(new TransactionOutput(getTXID(), getFee(), getMiner()))
-
-        return outputs
-    }
+    return true
 }

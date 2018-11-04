@@ -1,6 +1,7 @@
 package nucleus.crypto;
 
 import nucleus.protocol.protobufs.Address;
+import nucleus.system.Parameters;
 import nucleus.util.Base16;
 import nucleus.util.Base58;
 import nucleus.util.ByteUtil;
@@ -95,7 +96,7 @@ public class KeyPair
         byte sha2562[]  = HashUtil.applySha256(sha256);
         byte ripeMD[]   = HashUtil.applyRipeMD160(sha2562);
 
-        byte version    = 0x00;
+        byte version    = Parameters.MAIN_NETWORK_PUBLIC_ADDRESS_PREFIX;
         byte key_21[]   = ByteUtil.concatenate(new byte[] {version}, ripeMD);
 
         byte checksum[] = ByteUtil.trim(HashUtil.applySha256(HashUtil.applySha256(key_21)), 0, 4);
@@ -124,6 +125,6 @@ public class KeyPair
     @Override
     public String toString()
     {
-        return "\tprivate: " + getWIFPrivateKey() + " " + privateKey.getD().toByteArray().length + "\n\tpublic:  " + Base16.encode(publicKey.getQ().getEncoded(false)) +  " " + publicKey.getQ().getEncoded(false) + " " + enckey.length + "\n\taddress: " + getAddress();
+        return "\tprivate: " + getWIFPrivateKey() + " " + privateKey.getD().toByteArray().length + "\n\tpublic:  " + Base58.encode(publicKey.getQ().getEncoded(false)) + " " + enckey.length + "\n\taddress: " + getAddress();
     }
 }

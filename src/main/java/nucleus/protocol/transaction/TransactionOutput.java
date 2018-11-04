@@ -1,9 +1,5 @@
-package nucleus.protocol.protobufs;
+package nucleus.protocol.transaction;
 
-
-import com.riverssen.core.utils.ByteUtil;
-import nucleus.system.Context;
-import nucleus.util.HashUtil;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -11,16 +7,11 @@ import java.io.IOException;
 
 public class TransactionOutput
 {
-	/**
-	 * a sha512(sha512(origin)) where origin is the previous transaction.
-	 */
-
+	/** The originator transaction ID **/
 	private byte[] 	txid 		= new byte[64];
-	/**
-	 * the value of the output.
-	 */
+	/** Output value **/
 	private long	value 		= 0;
-
+	/** The spend or "unlock" script **/
 	private byte[]  spendScript = new byte[0];
 
 	public TransactionOutput()

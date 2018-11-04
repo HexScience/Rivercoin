@@ -2,7 +2,7 @@ package nucleus.system;
 
 import nucleus.protocol.protobufs.Block;
 import nucleus.protocol.protobufs.BlockHeader;
-import nucleus.protocol.protobufs.Transaction;
+import nucleus.protocol.transaction.Transaction;
 
 public class Serializer
 {

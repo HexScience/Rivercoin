@@ -1,25 +1,31 @@
 package nucleus.crypto.ec;
 
 import nucleus.crypto.Key;
+import nucleus.exceptions.ECLibException;
 import nucleus.protocol.protobufs.Address;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.security.PublicKey;
+import java.math.BigInteger;
 
 public class ECDerivedPublicKey implements Key
 {
-    private PublicKey key;
+    private BCECPublicKey key;
 
     public ECDerivedPublicKey()
     {
     }
 
-    public ECDerivedPublicKey(PublicKey key)
+    public ECDerivedPublicKey(BCECPublicKey key)
     {
         this.key = key;
+    }
+
+    public ECDerivedPublicKey(byte key[]) throws ECLibException
+    {
+        this.key = ECLib.ECPublicKey(new BigInteger(key));
     }
 
     @Override
@@ -40,9 +46,9 @@ public class ECDerivedPublicKey implements Key
         return new byte[0];
     }
 
-    public boolean verify(byte signature[], byte signatureData[])
+    public boolean verify(byte signature[], byte signatureData[]) throws ECLibException
     {
-        return false;
+        return ECLib.ECSigVerify(key, signatureData, signature);
     }
 
     @Override
