@@ -4,6 +4,6 @@ import nucleus.net.server.PeerGroupCommunicator;
 
 public class ServerManager
 {
-    private MessageQueue messageQueue;
-    private PeerGroupCommunicator peerGroupCommunicator;
+    private MessageQueue            messageQueue;
+    private PeerGroupCommunicator   peerGroupCommunicator;
 }

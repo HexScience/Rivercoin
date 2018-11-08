@@ -1,19 +1,35 @@
 package nucleus.protocol.transaction;
 
+import nucleus.util.ByteUtil;
+
 public class TransactionInput
 {
-    /** the UTXO index **/
-    private int utxo;
-    /** the unlocking script to be used to unlock this utxo in the future **/
-    private byte[] unlockingscript;
+    private byte    previousTransaction[];
+    private int     previousTXoutIndex;
+    /** the unlocking script to be used to unlock this utxo **/
+    private byte    unlockingscript[];
 
     public TransactionInput()
     {
     }
 
-    public TransactionInput(int utxo, byte[] unlockingscript)
+    public TransactionInput(byte previousTXN[], int previousTXoutIndex, byte[] unlockingscript)
     {
-        this.utxo = utxo;
-        this.unlockingscript = unlockingscript;
+        this.previousTransaction    = previousTXN;
+        this.previousTXoutIndex     = previousTXoutIndex;
+        this.unlockingscript        = unlockingscript;
+    }
+
+    /**
+     * @return A unique identifier that can be used in lookup tables.
+     */
+    public byte[] getUniqueIdentifier()
+    {
+        return ByteUtil.concatenate(previousTransaction, ByteUtil.encodei(previousTXoutIndex));
+    }
+
+    public byte[] getUnlockingScript()
+    {
+        return unlockingscript;
     }
 }

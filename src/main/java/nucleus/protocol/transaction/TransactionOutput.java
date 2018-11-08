@@ -7,8 +7,6 @@ import java.io.IOException;
 
 public class TransactionOutput
 {
-	/** The originator transaction ID **/
-	private byte[] 	txid 		= new byte[64];
 	/** Output value **/
 	private long	value 		= 0;
 	/** The spend or "unlock" script **/
@@ -18,39 +16,35 @@ public class TransactionOutput
 	{
 	}
 
-	public TransactionOutput(byte txid[], long value[])
+	public TransactionOutput(long value, byte spendScript[])
 	{
+		this.value			= value;
+		this.spendScript	= spendScript;
 	}
-
-//	GETTERS
-
-	public byte[] getTxid() { return txid; }
-
-//	SETTERS
-
-	private void  setTxid(byte[] txid) { this.txid = txid; }
 
 	public void write(final DataOutputStream stream) throws IOException
 	{
-		stream.write(txid);
-//		stream.write(checksum);
 		stream.writeLong(value);
+		stream.writeInt(spendScript.length);
+		stream.write(spendScript);
 	}
 
 	public void read(final DataInputStream stream) throws IOException
 	{
-		stream.read(txid);
-//		stream.read(checksum);
-		this.value = stream.readLong();
-	}
+		this.value 	= stream.readLong();
+		int size	= stream.readInt();
+		spendScript = new byte[size];
 
-//	public boolean isCorrectOwner(Address address)
-//	{
-//		return ByteUtil.equals(checksum, ByteUtil.trim(HashUtil.applySha512(HashUtil.applySha512(ByteUtil.concatenate(address.getBytes(), txid))), 59, 64));
-//	}
+		stream.read(spendScript);
+	}
 
 	public long getValue()
 	{
 		return value;
+	}
+
+	public byte[] getScriptPubKey()
+	{
+		return spendScript;
 	}
 }

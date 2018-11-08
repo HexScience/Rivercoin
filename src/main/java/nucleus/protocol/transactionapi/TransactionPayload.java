@@ -4,9 +4,11 @@ import nucleus.crypto.ec.ECDerivedPublicKey;
 import nucleus.exceptions.ECLibException;
 import nucleus.exceptions.PayLoadException;
 import nucleus.protocol.protobufs.Address;
+import nucleus.protocol.transaction.Signature;
 import nucleus.protocol.transaction.Transaction;
 import nucleus.system.Parameters;
 import nucleus.util.ByteUtil;
+import nucleus.util.HashUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -50,7 +52,20 @@ public class TransactionPayload
         PUSH_PK,
         PUSH_AD,
         PUSH_PRK,
+        PUSH_DATA,
+        PUSH_SIG,
         DUP,
+        DUP2,
+        DUP3,
+        DUP4,
+        DUP5,
+        DUP6,
+        POP,
+        POP2,
+        POP3,
+        POP4,
+        POP5,
+        POP6,
         ROT,
         ROTSWAP,
         ROT2,
@@ -90,7 +105,8 @@ public class TransactionPayload
         RETURN_BOOL,
         AND,
 
-        P2PKH,
+        P2PKHL,
+        P2PKHK,
 
         LVT_INIT,
         EXT;
@@ -419,7 +435,7 @@ public class TransactionPayload
         }
     }
 
-    public static byte[] P2PKH(Address owner)
+    public static byte[] P2PKH_lock(Address owner)
     {
         /**
          * Single signature Pay To Public Key-Hash
@@ -438,6 +454,12 @@ public class TransactionPayload
                 new byte[]{Op.EQUALS.opcode, Op.ROT.opcode, Op.CHECKSIG.opcode,
                         Op.AND.opcode,
                         Op.RETURN_BOOL.opcode});
+    }
+
+    public static byte[] P2PKH_key(Signature signature)
+    {
+        return ByteUtil.concatenate(new byte[]{Op.PUSH_SIG.opcode, (byte) signature.getSignature().length}, signature.getSignature(),
+                new byte[]{Op.PUSH_PK.opcode}, signature.getKey().getBytes());
     }
 
     /**
@@ -541,7 +563,7 @@ public class TransactionPayload
         return ops.toByteArray();
     }
 
-    public static boolean execute(byte codes[], Transaction transaction) throws PayLoadException
+    public static boolean execute(byte codes[], byte transaction[]) throws PayLoadException
     {
         Stack<ScriptObject> stack = new Stack<>();
         ScriptObject[]      localVarTable;
@@ -552,6 +574,92 @@ public class TransactionPayload
 
             switch (code)
             {
+                /** push private key **/
+                case PUSH_PRK:
+                    break;
+                case PUSH_SIG:
+                    int length = Byte.toUnsignedInt(codes[++ i]);
+                    byte sig_bytes[] = new byte[length];
+                    for (int b = 0; b < length; b ++)
+                        sig_bytes[b] = codes[b + 1];
+                    i += length;
+                    stack.push(new SignatureScriptObject(sig_bytes));
+                    break;
+                case PUSH_DATA:
+                    byte[] _int_ = new byte[4];
+                    for (int x = 0; x < 4; x ++)
+                        _int_[x] = codes[x + 1];
+
+                    i += 4;
+                    byte array[] = new byte[ByteUtil.decodei(_int_)];
+                    for (int b = 0; b < array.length; b ++)
+                        array[b] = codes[b + 1];
+
+                    stack.push(new SignatureScriptObject(array));
+                    break;
+                case POP:
+                    stack.pop();
+                    break;
+                case POP2:
+                    stack.pop();
+                    stack.pop();
+                    break;
+                case POP3:
+                    stack.pop();
+                    stack.pop();
+                    stack.pop();
+                    break;
+                case POP4:
+                    stack.pop();
+                    stack.pop();
+                    stack.pop();
+                    stack.pop();
+                    break;
+                case POP5:
+                    stack.pop();
+                    stack.pop();
+                    stack.pop();
+                    stack.pop();
+                    stack.pop();
+                    break;
+                case POP6:
+                    stack.pop();
+                    stack.pop();
+                    stack.pop();
+                    stack.pop();
+                    stack.pop();
+                    stack.pop();
+                    break;
+                case DUP2:
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    break;
+                case DUP3:
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    break;
+                case DUP4:
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    break;
+                case DUP5:
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    break;
+                case DUP6:
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    stack.push(stack.peek());
+                    break;
                 case PUSHUP:
                     byte[] int_ = new byte[4];
                     for (int x = 0; x < 4; x ++)
@@ -648,7 +756,7 @@ public class TransactionPayload
                 case LVT_INIT:
                     localVarTable = new ScriptObject[256];
                     break;
-                case P2PKH:{
+                case P2PKHL:{
                     byte address_bytes[] = new byte[25];
                     for (int b = 0; b < 25; b ++)
                         address_bytes[b] = codes[b + 1];
@@ -656,10 +764,24 @@ public class TransactionPayload
                     i += 25;
                     Address address = new Address(address_bytes);
 
-                    byte codes_b[] = P2PKH(address);
+                    byte codes_b[] = P2PKH_lock(address);
 
                     stack.push(new BooleanScriptObject(execute(codes_b, transaction)));
                 }
+                break;
+                case P2PKHK:{
+                    byte address_bytes[] = new byte[25];
+                    for (int b = 0; b < 25; b ++)
+                        address_bytes[b] = codes[b + 1];
+
+                    i += 25;
+                    Address address = new Address(address_bytes);
+
+//                    byte codes_b[] = P2PKH_key(address);
+
+//                    stack.push(new BooleanScriptObject(execute(codes_b, transaction)));
+                }
+                break;
                 case ROTSWAP:{
                     ScriptObject C = stack.pop();
                     ScriptObject B = stack.pop();
@@ -772,8 +894,7 @@ public class TransactionPayload
 
                     try
                     {
-                        boolean checksig = pubKeyScriptObject.asPubKey().verify(null, null);
-                        stack.push(new BooleanScriptObject(checksig));
+                        stack.push(new BooleanScriptObject(pubKeyScriptObject.asPubKey().verify(stack.pop().getBytes(), HashUtil.applySha3(transaction))));
                     } catch (ECLibException e)
                     {
                         throw new PayLoadException("Cannot verify signature with PubKey \n" + e.getMessage());

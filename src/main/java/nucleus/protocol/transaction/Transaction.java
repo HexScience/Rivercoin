@@ -2,10 +2,13 @@ package nucleus.protocol.transaction;
 
 
 import nucleus.crypto.ec.ECDerivedPublicKey;
+import nucleus.exceptions.PayLoadException;
 import nucleus.ledger.AddressBalanceTable;
 import nucleus.ledger.LedgerDatabase;
 import nucleus.protocol.protobufs.Address;
+import nucleus.protocol.transactionapi.TransactionPayload;
 import nucleus.system.Context;
+import nucleus.util.ByteUtil;
 import nucleus.util.HashUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -17,24 +20,33 @@ import java.util.List;
 
 public class Transaction
 {
+	/**
+	 * Flags
+	 */
+	public static final class Flag{
+		public static final int UNDEFINED = 0x00;
+		public static final int P2PKH = 0x01;
+		public static final int MULTISIG = 0x02;
+		public static final int P2PKH_CARRY_PAYLOAD = 0x03;
+		public static final int MULTISIG_CARRY_PAYLOAD = 0x04;
+		public static final int PAYLOAD_ONLY = 0x05;
+	}
+
 	private int						version		= 0;
 	private short					flag		= 0;
+
+	private long					magicheader = 0;
 	private long					locktime	= 0;
-	/** an ECPublicKey's that can be used to send and unlock the transaction inputs. **/
-	private ECDerivedPublicKey 		sender 		= new ECDerivedPublicKey();
-	/** an array containing outputs that if the transaction succeeds, will be added to the ledger. **/
-	private Output					outputs[]	= new Output[1];
-	/** a list of UTXO indices **/
-	private TransactionInput 		utxos[] 	= new TransactionInput[0];
+
+	/** an array of inputs **/
+	private TransactionInput     	inputs[] 	= new TransactionInput[0];
+	/** an array of outputs that if the transaction succeeds, will be added to the ledger. **/
+	private List<byte[]>			outputs		= new ArrayList<>();
 	/** a comment written by the sender **/
 	private byte 					comment[] 	= new byte[256];
-	/** a signature/array of signatures **/
-	private Signature 				signature[] = new Signature[1];
-	/** maximum fee to pay for this transaction **/
-	private long 					fee;
 	/**
 	 * a payload to be injected into the ledger
-	 * fee might be higher depending on the
+	 * fee varies depending on the
 	 * size of the payload.
 	 */
 	private byte					payload[] 	= new byte[0];
@@ -53,12 +65,42 @@ public class Transaction
 	 */
 	public Transaction(ECDerivedPublicKey from, Address to, long amount, List<Integer> utxos, long fee, byte comment[])
 	{
-		setSender(from);
-//		setReceiver(to);
-//		setAmount(amount);
-//		setUtxos(utxos);
-		setFee(fee);
-		setComment(comment);
+	}
+
+	public boolean execute(Context context, LedgerDatabase ledgerdb)
+	{
+		boolean noErrors = true;
+		byte[] transaction = getBytes();
+		for (TransactionInput input : inputs)
+		{
+			TransactionOutput unspentOutput = ledgerdb.getUTXO(input.getUniqueIdentifier());
+			if (unspentOutput != null)
+			{
+				try{
+					noErrors = noErrors && TransactionPayload.execute(ByteUtil.concatenate(input.getUnlockingScript(), unspentOutput.getScriptPubKey()), transaction);
+				} catch (PayLoadException e)
+				{
+					noErrors = noErrors && false;
+				}
+			} else noErrors = noErrors && false;
+		}
+//			if (ledgerdb.UTXOExists(utxoid))
+//			{
+//				TransactionOutput output = ledgerdb.getUTXO(utxoid);
+//
+//				try
+//				{
+//					noErrors = noErrors && TransactionPayload.execute(output.getSpendScript(), this);
+//					ledgerdb.removeUTXO(utxoid);
+//				} catch (PayLoadException e)
+//				{
+//					e.printStackTrace();
+//					noErrors = noErrors && false;
+//				}
+//			} else noErrors = noErrors && false;
+//		}
+
+		return noErrors;
 	}
 
 //	public static byte[] sign(Transaction transaction, BigInteger privateKey, String pph) throws IOException {
@@ -68,14 +110,6 @@ public class Transaction
 	private byte[] getSignatureData() throws IOException {
 		ByteArrayOutputStream stream1 = new ByteArrayOutputStream();
 		DataOutputStream stream = new DataOutputStream(stream1);
-
-//		sender.write(stream);
-//		receiver.write(stream);
-//		stream.writeLong(amount);
-//		stream.writeShort(utxos.size());
-//		for (Integer output : utxos)
-//			stream.writeInt(output);
-//		stream.write(comment);
 
 		stream.flush();
 		stream.close();
@@ -87,84 +121,48 @@ public class Transaction
 
 	//GETTERS
 
-	public ECDerivedPublicKey getSender() { return sender; }
-//	public Address getReceiver() { return receiver; }
-//	public long getAmount()
-//	{
-//		return amount;
-//	}
-//	public List<Integer> getUtxos() { return utxos; }
-	public long getFee() { return fee; }
 	public byte[] getComment() { return comment; }
 
 	//SETTERS
-	private void  setSender(ECDerivedPublicKey sender) { this.sender = sender; }
-//	private void  setReceiver(Address receiver) { this.receiver = receiver; }
-//	private void  setAmount(long amount) { this.amount = amount; }
-//	private void  setUtxos(List<Integer> utxos) { this.utxos = utxos; }
-	private void  setFee(long fee) { this.fee = fee; }
 	private void 	setComment(byte comment[])
 	{
 		this.comment = comment;
-	}
-	private Signature[] getSignate()
-	{
-		return signature;
 	}
 
 	//IO Functions And Commands
 
 	public void write(final DataOutputStream stream) throws IOException
 	{
-		sender.write(stream);
-//		receiver.write(stream);
-//		stream.writeLong(amount);
-//		stream.writeShort(utxos.size());
-//		for (Integer output : utxos)
-//			stream.writeInt(output);
-//		stream.write(comment);
-//		stream.writeShort(signature.length);
-//		stream.write(signature);
 	}
 
 
 	public void read(final DataInputStream stream) throws IOException
 	{
-//		this.sender.read(stream);
-//		this.receiver.read(stream);
-//		this.amount = stream.readLong();
-//		long numUTXOS = stream.readShort();
-//
-//		for (int i = 0; i < numUTXOS; i ++)
-			TransactionOutput output = new TransactionOutput();
-			output.read(stream);
-//			this.utxos.add(stream.readInt());
-//
-//		this.fee = stream.readLong();
-//		stream.read(comment);
-//		short signatureLength = stream.readShort();
-//
-//		this.signature = new byte[signatureLength];
-//		stream.read(signature);
 	}
 
 	public boolean isTransactionValid() throws Exception {
 		/** check against the signature **/
-//		sender.verify(signature, getSignatureData());
 		return true;
 	}
 
-	public byte[] getBytes() throws IOException
+	public byte[] getBytes()
 	{
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(stream);
+		try{
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			DataOutputStream dos = new DataOutputStream(stream);
 
-		write(dos);
+			write(dos);
 
-		dos.flush();
-		dos.close();
+			dos.flush();
+			dos.close();
 
-		return stream.toByteArray();
+			return stream.toByteArray();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	public byte[] getTXID() throws IOException
@@ -186,10 +184,18 @@ public class Transaction
 	{
 		List<TransactionOutput> outputs = new ArrayList<>();
 
-		long collective = collectiveValue(db.getAddressBalanceTable(sender.toAddress()));
+//		long collective = collectiveValue(db.getAddressBalanceTable(sender.toAddress()));
 
 //		long change = (collective - fee) - amount;
 
 		return outputs;
+	}
+
+	public TransactionOutput getOutput(int output)
+	{
+//		if (output >= 0 && output < outputs.length)
+//			return new TransactionOutput(this, );
+//		else return null;
+		return null;
 	}
 }

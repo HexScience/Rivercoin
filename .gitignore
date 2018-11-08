@@ -48,3 +48,8 @@ out/artifacts/Rivercoin_jar/mining/rivercoin.config
 out/artifacts/Rivercoin/mining/structure/chain/block[0]
 out/artifacts/Rivercoin/mining/structure/chain/block[1]
 .idea/copyright/MIT.xml
+db/CURRENT
+db/LOCK
+db/MANIFEST-000314
+switch.txt
+ops.txt
