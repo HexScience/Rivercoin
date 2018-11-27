@@ -1,6 +1,12 @@
 package nucleus.system;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.UnknownHostException;
 
 public class Parameters
 {
@@ -83,6 +89,11 @@ public class Parameters
         return Math.max(PRICE_PER_NETWORK_KBYTE, cost);
     }
 
+    public static BigInteger toInteger(double difficulty)
+    {
+        return new BigDecimal(difficulty).pow(256).toBigInteger();
+    }
+
     public static String prependedHash(String hash)
     {
         while (hash.length() < 64)
@@ -114,5 +125,19 @@ public class Parameters
 //        Logger.alert(Parameters.prependedHash(new BigDecimal(diff).pow(256).toBigInteger().toString(16)));
 
         return diff;
+    }
+
+    public static String getMyIP()
+    {
+        try{
+            URL url = new URL("http://checkip.amazonaws.com/");
+            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            return br.readLine();
+        } catch (Exception e)
+        {
+        }
+
+        return null;
     }
 }

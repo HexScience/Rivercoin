@@ -195,6 +195,11 @@ public class HashUtil
         return hashWith(input, "BLAKE2B-256");
     }
 
+    public static byte[] applyBlake2b384(byte[] input)
+    {
+        return hashWith(input, "BLAKE2B-384");
+    }
+
     public static byte[] applySha3(byte[] input)
     {
         return hashWith(input, "SHA3-256");

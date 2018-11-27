@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Block
+public class Block implements StrippedObject
 {
 	private BlockHeader header = new BlockHeader();
 	private List<Transaction> transactions = new ArrayList<>();
@@ -54,5 +54,11 @@ public class Block
 
 			transactions.add(transaction);
 		}
+	}
+
+	@Override
+	public byte[] strip()
+	{
+		return new byte[0];
 	}
 }

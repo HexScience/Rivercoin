@@ -1,14 +1,26 @@
 package nucleus.net;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import nucleus.net.protocol.Message;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MessageQueue
 {
-    private Set<MessageRoundtrip> messages;
+    private Queue<Message> messages;
 
     public MessageQueue()
     {
-        this.messages = new LinkedHashSet<>();
+        this.messages = new ConcurrentLinkedQueue<>();
+    }
+
+    public void push(Message message)
+    {
+        this.messages.add(message);
+    }
+
+    public Message get()
+    {
+        return messages.poll();
     }
 }

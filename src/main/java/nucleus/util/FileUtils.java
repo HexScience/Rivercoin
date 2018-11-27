@@ -122,12 +122,76 @@ public class FileUtils
         return new byte[1];
     }
 
+    public static byte[] readBytes(InputStream file)
+    {
+        try
+        {
+            DataInputStream stream = new DataInputStream(file);
+
+            byte bytes[] = new byte[stream.readInt()];
+
+            stream.read(bytes);
+
+            stream.close();
+
+            return bytes;
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return new byte[1];
+    }
+
+    public static byte[] readBytesRAW(InputStream file)
+    {
+        try
+        {
+            DataInputStream stream = new DataInputStream(file);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte bytes[] = new byte[1024];
+
+            while (stream.available() > 0)
+            {
+                int read = stream.read(bytes);
+                out.write(bytes, 0, read);
+            }
+
+            stream.close();
+            out.flush();
+            out.close();
+
+            return out.toByteArray();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return new byte[1];
+    }
+
     public static void writeBytes(File file, byte info[])
     {
         try{
             DataOutputStream stream = new DataOutputStream(new FileOutputStream(file));
 
             stream.write(info.length);
+            stream.write(info);
+
+            stream.flush();
+
+            stream.close();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void writeBytesRAW(File file, byte info[])
+    {
+        try{
+            DataOutputStream stream = new DataOutputStream(new FileOutputStream(file));
+
             stream.write(info);
 
             stream.flush();

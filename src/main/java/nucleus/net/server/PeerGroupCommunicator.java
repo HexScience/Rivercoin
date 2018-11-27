@@ -1,6 +1,6 @@
 package nucleus.net.server;
 
-import nucleus.net.message.Message;
+import nucleus.net.protocol.Message;
 import nucleus.net.p2p.UDPMessageFactory;
 import nucleus.system.Parameters;
 import nucleus.util.Logger;
