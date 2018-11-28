@@ -10,8 +10,8 @@ import nucleus.util.ByteUtil;
 public abstract class MessagewResponse extends Message
 {
     /**
-     * @param code Message code
-     * @param id Unique Message 160-bit id
+     * @param code    Message code
+     * @param id      Unique Message 160-bit id
      * @param message The message
      */
     public MessagewResponse(byte code, MessageID id, byte[] message)

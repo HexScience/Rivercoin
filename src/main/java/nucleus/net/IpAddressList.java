@@ -12,6 +12,8 @@ import nucleus.util.Logger;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -131,5 +133,27 @@ public class IpAddressList
 
         writer.flush();
         writer.close();
+    }
+
+    public List<IpAddress> get(int num)
+    {
+        List<IpAddress> list = new ArrayList<>();
+
+        int index = 0;
+
+        for (IpAddress address : priorityQueue)
+        {
+            index ++;
+            list.add(address);
+            if (index >= num)
+                return list;
+        }
+
+        return list;
+    }
+
+    public Queue<IpAddress> get()
+    {
+        return priorityQueue;
     }
 }

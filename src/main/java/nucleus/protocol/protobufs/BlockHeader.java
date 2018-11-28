@@ -7,6 +7,8 @@ import java.io.IOException;
 
 public class BlockHeader
 {
+	public static final int SIZE = 8 + 8 + 32 + 32 + 32 + 8 + 8 + 8 + 33 + 8;
+
 	private long 			version;
 	private long 			blockID;
 	private byte[] 			parentHash = new byte[32];
@@ -15,7 +17,7 @@ public class BlockHeader
 	private long 			timeStamp ;
 	private double 			difficulty;
 	private long 			nonce;
-	private Address 		minerAddress = new Address();
+	private CompressedKey 	minerAddress = new CompressedKey();
 	private long 			reward;
 
 	//GETTERS
@@ -52,7 +54,7 @@ public class BlockHeader
 
 	//GETTERS
 
-	public Address getMinerAddress() { return minerAddress; }
+	public CompressedKey getMinerAddress() { return minerAddress; }
 
 	//GETTERS
 
@@ -60,43 +62,43 @@ public class BlockHeader
 
 	//SETTERS
 
-	private void  setVersion(long version) { this.version = version; }
+	public void  setVersion(long version) { this.version = version; }
 
 	//SETTERS
 
-	private void  setBlockID(long blockID) { this.blockID = blockID; }
+	public void  setBlockID(long blockID) { this.blockID = blockID; }
 
 	//SETTERS
 
-	private void  setParentHash(byte[] parentHash) { this.parentHash = parentHash; }
+	public void  setParentHash(byte[] parentHash) { this.parentHash = parentHash; }
 
 	//SETTERS
 
-	private void  setMerkleRoot(byte[] merkleRoot) { this.merkleRoot = merkleRoot; }
+	public void  setMerkleRoot(byte[] merkleRoot) { this.merkleRoot = merkleRoot; }
 
 	//SETTERS
 
-	private void  setForkRoot(byte[] forkRoot) { this.forkRoot = forkRoot; }
+	public void  setForkRoot(byte[] forkRoot) { this.forkRoot = forkRoot; }
 
 	//SETTERS
 
-	private void  setTimeStamp(long timeStamp) { this.timeStamp = timeStamp; }
+	public void  setTimeStamp(long timeStamp) { this.timeStamp = timeStamp; }
 
 	//SETTERS
 
-	private void  setDifficulty(double difficulty) { this.difficulty = difficulty; }
+	public void  setDifficulty(double difficulty) { this.difficulty = difficulty; }
 
 	//SETTERS
 
-	private void  setNonce(long nonce) { this.nonce = nonce; }
+	public void  setNonce(long nonce) { this.nonce = nonce; }
 
 	//SETTERS
 
-	private void  setMinerAddress(Address minerAddress) { this.minerAddress = minerAddress; }
+	public void  setMinerAddress(CompressedKey minerAddress) { this.minerAddress = minerAddress; }
 
 	//SETTERS
 
-	private void  setReward(long reward) { this.reward = reward; }
+	public void  setReward(long reward) { this.reward = reward; }
 
 	public void write(final DataOutputStream stream) throws IOException
 	{

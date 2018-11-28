@@ -737,6 +737,8 @@ public class NKMiner
              * Generate The Hash
              */
 
+            //TODO: Buffer size is x4 times bigger.
+
             GL11.glReadBuffer(GL11.GL_FRONT);
             int width   = NKMiner.width;
             int height  = NKMiner.height;

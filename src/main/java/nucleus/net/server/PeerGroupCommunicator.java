@@ -1,47 +1,52 @@
 package nucleus.net.server;
 
+import nucleus.NucleusContext;
+import nucleus.net.p2p.udp.PacketSendReceive;
 import nucleus.net.protocol.Message;
-import nucleus.net.p2p.UDPMessageFactory;
 import nucleus.system.Parameters;
 import nucleus.util.Logger;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public class PeerGroupCommunicator
 {
-    private Set<String>         allKnownPossiblePeers;
+    private NucleusContext      context;
     private DatagramSocket      socket;
-    private UDPMessageFactory   messageFactory;
+    private List<IpAddress>     connected;
+//    private UDPMessageFactory   messageFactory;
+
+    public PeerGroupCommunicator(NucleusContext context) throws SocketException
+    {
+        this.context = context;
+        this.socket     = PacketSendReceive.createSocket(Parameters.MAIN_NETWORK_NODE_PORT);
+        broadcast();
+    }
+
 
     /**
      * broadcast our presence to all known ip addresses
      */
-    public void broadcast() throws SocketException
+    public void broadcast()
     {
-        Set<String> toRemove = new HashSet<>();
-
-        for (String ipAddress : allKnownPossiblePeers)
+        for (IpAddress ipAddress : context.getServerManager().getIpList().get())
         {
             try
             {
-                InetAddress ip = InetAddress.getByName(ipAddress);
+                socket.send(createPacket(socket, ipAddress.getAddress(), Parameters.MAIN_NETWORK_NODE_PORT, null));
+                connected.add(ipAddress);
 
-                socket.send(createPacket(socket, ip, Parameters.MAIN_NETWORK_NODE_PORT, null));
+                if (connected.size() > 60)
+                    return;
             } catch (UnknownHostException e)
             {
-                Logger.err("An error occurred with the ip address: " + ipAddress + ", (address will be removed).");
-                toRemove.add(ipAddress);
+                Logger.err("An error occurred with the ip address: " + ipAddress + ".");
             } catch (IOException e)
             {
                 e.printStackTrace();
             }
         }
-
-        /** remove all invalid ip addresses **/
-        allKnownPossiblePeers.removeAll(toRemove);
     }
 
     public void listen()

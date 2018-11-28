@@ -7,8 +7,8 @@ public abstract class Message
     public static final byte
     NOTFY = 0, /** a notification message type **/
     REPLY = 1, /** a reply message type **/
-    RSPND = 1, /** a must-respond message type **/
-    OPTIN = 2; /** an optional-to-replay message type **/
+    RSPND = 2, /** a must-respond message type **/
+    OPTIN = 3; /** an optional-to-reply message type **/
 
     /**
      * A list of message codes
@@ -45,6 +45,10 @@ public abstract class Message
     }
 
     public abstract Class<?> getAnswerMessage();
+    public byte getType()
+    {
+        return code;
+    }
     public byte getCode()
     {
         return code;

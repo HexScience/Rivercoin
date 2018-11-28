@@ -2,10 +2,12 @@ package nucleus.protocol.protobufs;
 
 
 import nucleus.protocol.transaction.Transaction;
+import nucleus.tscript.Executor;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,27 @@ public class Block implements StrippedObject
 {
 	private BlockHeader header = new BlockHeader();
 	private List<Transaction> transactions = new ArrayList<>();
+	private byte codebase[];
+
+	public Block()
+	{
+	}
+
+	public Block(DataInputStream inputStream)
+	{
+	}
+
+	public Block(BlockHeader header, List<Transaction> buffer, byte codebase[])
+	{
+		this.header = header;
+		this.transactions = buffer;
+		this.codebase = codebase;
+	}
+
+	public void build()
+	{
+		this.codebase = null;
+	}
 
 	//GETTERS
 
@@ -38,6 +61,9 @@ public class Block implements StrippedObject
 
 		for (Transaction transaction : transactions)
 			transaction.write(stream);
+
+		stream.writeShort(codebase.length);
+		stream.write(codebase);
 	}
 
 
@@ -54,6 +80,11 @@ public class Block implements StrippedObject
 
 			transactions.add(transaction);
 		}
+
+		short cbl = stream.readShort();
+		codebase = new byte[cbl];
+
+		stream.read(codebase);
 	}
 
 	@Override

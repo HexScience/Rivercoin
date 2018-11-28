@@ -7,6 +7,7 @@ import nucleus.mining.NKMiner;
 import nucleus.system.Context;
 import nucleus.system.Parameters;
 import nucleus.util.FileUtils;
+import nucleus.versioncontrol.VersionControl;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.Options;
 
@@ -20,12 +21,22 @@ import static org.iq80.leveldb.impl.Iq80DBFactory.factory;
 
 public class Start
 {
+    /**
+     * @param args Minimum args = 2 (-ep 'path')
+     * @throws Throwable
+     */
     public static void main(String args[]) throws Throwable
     {
         List<Integer> usableDevices = new ArrayList<>();
         double        maxDifficulty = Parameters.MAXIMUM_DIFFICULY;
 
+        /**
+         * Initialize the EC Util Library.
+         */
         ECLib.init();
+        /**
+         * Initialize the NKMiner.
+         */
         NKMiner miner = NKMiner.init();
         FileService entryPoint = null;
 
@@ -102,6 +113,11 @@ public class Start
         {
             entryPoint.newFile("chain").file().mkdirs();
         }
+
+        /**
+         * Initialize the version control class
+         */
+        VersionControl.init();
 
         DB db = factory.open(entryPoint.newFile("data").newFile("db").file(), new Options());
         Context context = new NucleusContext(entryPoint, db, miner);

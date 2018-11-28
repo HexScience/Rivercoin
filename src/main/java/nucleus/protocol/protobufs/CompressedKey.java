@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class CompressedKey
 {
-	private byte[] key = new byte[35];
+	private byte[] key = new byte[33];
 
 	public CompressedKey() {}
 

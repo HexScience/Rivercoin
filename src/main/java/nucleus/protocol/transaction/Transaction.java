@@ -33,15 +33,16 @@ public class Transaction
 	}
 
 	private int						version		= 0;
-	private short					flag		= 0;
+	private long					flag		= 0;
 
 	private long					magicheader = 0;
 	private long					locktime	= 0;
 
 	/** an array of inputs **/
 	private TransactionInput     	inputs[] 	= new TransactionInput[0];
-	/** an array of outputs that if the transaction succeeds, will be added to the ledger. **/
-	private List<byte[]>			outputs		= new ArrayList<>();
+//	/** an array of outputs that if the transaction succeeds, will be added to the ledger. **/
+//	private List<byte[]>			outputs		= new ArrayList<>();
+	private TransactionOutput		outputs[]	= new TransactionOutput[0];
 	/** a comment written by the sender **/
 	private byte 					comment[] 	= new byte[256];
 	/**
@@ -53,6 +54,17 @@ public class Transaction
 
 	public Transaction()
 	{
+	}
+
+	public Transaction(long flags, long magh, long locktime, TransactionInput inputs[], TransactionOutput outputs[], byte comment[], byte payload[])
+	{
+		this.flag = flags;
+		this.magicheader = magh;
+		this.locktime = locktime;
+		this.inputs = inputs;
+		this.outputs = outputs;
+		this.comment = comment;
+		this.payload = payload;
 	}
 
 	/**

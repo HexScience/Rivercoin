@@ -53,9 +53,18 @@ public class Executor
 
     /**
      * @param spender: The person that will be allowed to spend these coins.
-     * @return An unlock script
+     * @return An unlocking script
      */
-    public static byte[] P2PKH(Address spender)
+    public static byte[] P2PKH_l(Address spender)
+    {
+        return ByteUtil.concatenate(new byte[] {op_pushadrs}, spender.getBytes(), new byte[] {});
+    }
+
+    /**
+     * @param spender: The person that will be allowed to spend these coins.
+     * @return A locking script
+     */
+    public static byte[] P2PKH_u(Address spender)
     {
         return ByteUtil.concatenate(new byte[] {op_ldsig, 0, op_pushadrs}, spender.getBytes(), new byte[] {op_ldpubkey, op_pktaddrs, OP_EQUAL, op_checksig});
     }
