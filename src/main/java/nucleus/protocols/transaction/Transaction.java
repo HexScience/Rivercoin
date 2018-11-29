@@ -177,9 +177,9 @@ public class Transaction
 		return null;
 	}
 
-	public byte[] getTXID() throws IOException
+	public byte[] getTransactionID()
 	{
-		return HashUtil.applySha512(HashUtil.applySha512(getBytes()));
+		return HashUtil.applySha256(HashUtil.applySha256(getBytes()));
 	}
 
 	public long collectiveValue(AddressBalanceTable abt)

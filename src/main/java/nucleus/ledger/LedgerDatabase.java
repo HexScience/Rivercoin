@@ -1,7 +1,6 @@
 package nucleus.ledger;
 
 import nucleus.protocols.transaction.TransactionOutput;
-import nucleus.protocols.transaction.TransactionOutputID;
 
 import java.util.HashMap;
 import java.util.Map;

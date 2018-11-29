@@ -4,7 +4,6 @@ import nucleus.protocols.protobufs.Block;
 import nucleus.protocols.protobufs.BlockHeader;
 import nucleus.protocols.transaction.Transaction;
 import nucleus.protocols.transaction.TransactionOutput;
-import nucleus.protocols.transaction.TransactionOutputID;
 
 public class Serializer
 {
@@ -23,8 +22,8 @@ public class Serializer
         return loadBlock(block).getTransactions().get(transactionID);
     }
 
-    public TransactionOutput loadTransactionOutput(TransactionOutputID id)
+    public TransactionOutput loadTransactionOutput(long block, int transaction, int id)
     {
-        return loadTransaction(id.getBlock(), id.getTransaction()).getOutput(id.getOutput());
+        return loadTransaction(block, transaction).getOutput(id);
     }
 }

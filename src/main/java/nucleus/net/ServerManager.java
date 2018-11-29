@@ -3,7 +3,7 @@ package nucleus.net;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import nucleus.exceptions.FileServiceException;
-import nucleus.io.FileService;
+import nucleus.util.FileService;
 import nucleus.net.protocol.Message;
 import nucleus.net.server.IpAddress;
 import nucleus.net.server.PeerGroupCommunicator;

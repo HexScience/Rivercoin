@@ -2,12 +2,11 @@ package nucleus;
 
 import nucleus.crypto.ec.ECLib;
 import nucleus.exceptions.UnknownCommandException;
-import nucleus.io.FileService;
+import nucleus.util.FileService;
 import nucleus.mining.NKMiner;
 import nucleus.system.Context;
 import nucleus.system.Parameters;
 import nucleus.util.FileUtils;
-import nucleus.util.Logger;
 import nucleus.versioncontrol.VersionControl;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.Options;

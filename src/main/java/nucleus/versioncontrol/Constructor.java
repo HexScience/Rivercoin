@@ -1,7 +1,7 @@
 package nucleus.versioncontrol;
 
 import nucleus.exceptions.FileServiceException;
-import nucleus.io.FileService;
+import nucleus.util.FileService;
 
 import java.io.DataInputStream;
 import java.io.IOException;

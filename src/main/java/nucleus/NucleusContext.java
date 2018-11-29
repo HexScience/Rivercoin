@@ -2,7 +2,7 @@ package nucleus;
 
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import nucleus.exceptions.FileServiceException;
-import nucleus.io.FileService;
+import nucleus.util.FileService;
 import nucleus.ledger.LedgerDatabase;
 import nucleus.mining.NKMiner;
 import nucleus.net.ServerManager;

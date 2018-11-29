@@ -1,4 +1,4 @@
-package nucleus.io;
+package nucleus.util;
 
 import nucleus.exceptions.FileServiceException;
 
