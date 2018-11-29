@@ -17,6 +17,11 @@ public class MnemonicPhraseSeeder
 
     public MnemonicPhraseSeeder()
     {
+        this(null);
+    }
+
+    public MnemonicPhraseSeeder(byte seed[])
+    {
         this.tree = new BinaryTree();
         this.wordList = new ArrayList<>();
         this.string = new MnemonicString();
@@ -29,7 +34,10 @@ public class MnemonicPhraseSeeder
             if (string.length() > 2)
                 wordList.add(new MnemonicWord(string));
 
-        SecureRandom random = new SecureRandom();
+        SecureRandom random = null;
+
+        if (seed == null) random = new SecureRandom();
+        else random = new SecureRandom(seed);
 
         Set<Integer> used = new LinkedHashSet<>();
 

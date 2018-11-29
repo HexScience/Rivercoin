@@ -207,7 +207,9 @@ public class ECLib
 
             if (key.getD().bitLength() > CURVE.getN().bitLength())
             {
-                key = (BCECPrivateKey) ECLib.ECPrivateKey(key.getD().mod(CURVE.getN()));
+                while (key.getD().bitLength() > CURVE.getN().bitLength())
+                    key = (BCECPrivateKey) ECLib.ECPrivateKey(key.getD().mod(CURVE.getN()));
+
                 if (!ignoreSecurityErrs) throw new ECLibException("ECPrivateKeyTooBigException: P%N==0 (Major security flaw).\n\t(ignoreSecurityErrs=true) to continue.");
                 if (key.getD().equals(BigInteger.ZERO)) throw new ECLibException("ECPrivateKeyZeroException: Resulting private key is ZERO.");
             }
@@ -265,7 +267,11 @@ public class ECLib
         if (publicKey.getQ().getEncoded(true).length != 33) throw new ECLibException("public compressed size fail (" + publicKey.getQ().getEncoded(true).length + ").");
         if (privateKey.getD().toByteArray().length != 32) throw new ECLibException("private size fail (" + privateKey.getD().toByteArray().length + ").");
 
-        return pointRecovered /**&& publicKeyRcvrd **/ && publicKeyRcvr2 && publicKeyRcvr3 && publicKeyRcvr4 && publicKey.getQ().getEncoded(false).length == 65 && privateKey.getD().toByteArray().length == 32;
+        boolean succeeded = pointRecovered /**&& publicKeyRcvrd **/ && publicKeyRcvr2 && publicKeyRcvr3 && publicKeyRcvr4 && publicKey.getQ().getEncoded(false).length == 65 && privateKey.getD().toByteArray().length == 32;;
+
+        if (!succeeded) throw new ECLibException("ECPairRecovery checks failed.");
+
+        return succeeded;
     }
 
     public static final String WIFPrivateKey(BigInteger privateKey) throws ECLibException

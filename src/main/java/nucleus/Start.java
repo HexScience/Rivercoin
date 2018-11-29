@@ -12,6 +12,8 @@ import nucleus.util.FileUtils;
 import nucleus.versioncontrol.VersionControl;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.Options;
+import tests.Tests;
+import tests.WalletGeneration;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -125,9 +127,5 @@ public class Start
          */
         DB db = factory.open(entryPoint.newFile("data").newFile("db").file(), new Options());
         Context context = new NucleusContext(entryPoint, db, miner);
-
-        MnemonicPhraseSeeder seeder = new MnemonicPhraseSeeder();
-        System.out.println(seeder.getString());
-        System.out.println(Base58.encode(seeder.getSeed()));
     }
 }

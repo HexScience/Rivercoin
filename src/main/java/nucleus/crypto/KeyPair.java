@@ -1,6 +1,7 @@
 package nucleus.crypto;
 
 import nucleus.crypto.ec.ECLib;
+import nucleus.exceptions.ECLibException;
 import nucleus.protocols.protobufs.Address;
 import nucleus.system.Parameters;
 import nucleus.util.Base58;
@@ -24,10 +25,16 @@ public class KeyPair
     private byte[]              enckey;
     private long                seeds[];
 
-    public KeyPair(byte seed[])
+    public KeyPair(byte seed[]) throws ECLibException
     {
         this.seed = HashUtil.applySha256(HashUtil.applySha256(seed));
-        this.generate(seed);
+        this.generate(this.seed);
+        this.runchecks();
+    }
+
+    private boolean runchecks() throws ECLibException
+    {
+        return ECLib.ECPairRecover(privateKey, publicKey, enckey);
     }
 
     public byte[] getSeed()
@@ -67,17 +74,11 @@ public class KeyPair
      * This produces the same result as opposed to SecureRandom which can produce dif
      * -ferent results on different platforms.
      */
-    private void generate(byte seed[])
+    private void generate(byte seed[]) throws ECLibException
     {
-        try
-        {
             this.privateKey = (BCECPrivateKey) ECLib.ECPrivateKey(new BigInteger(seed));
             this.publicKey = ECLib.ECPublicKey(this.privateKey);
             this.enckey = this.publicKey.getQ().getEncoded(true);
-        } catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
     }
 
     public Address getAddress()
