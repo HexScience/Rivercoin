@@ -1,8 +1,7 @@
 package nucleus.crypto;
 
-import nucleus.protocol.protobufs.Address;
+import nucleus.protocols.protobufs.Address;
 import nucleus.system.Parameters;
-import nucleus.util.Base16;
 import nucleus.util.Base58;
 import nucleus.util.ByteUtil;
 import nucleus.util.HashUtil;

@@ -1,8 +1,8 @@
 package nucleus.versioncontrol.versions.ir;
 
-import nucleus.protocol.protobufs.Block;
-import nucleus.protocol.protobufs.BlockHeader;
-import nucleus.protocol.transaction.Transaction;
+import nucleus.protocols.protobufs.Block;
+import nucleus.protocols.protobufs.BlockHeader;
+import nucleus.protocols.transaction.Transaction;
 import nucleus.versioncontrol.Constructor;
 
 import java.io.DataInputStream;

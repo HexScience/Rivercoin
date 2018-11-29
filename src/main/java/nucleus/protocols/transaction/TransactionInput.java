@@ -1,4 +1,4 @@
-package nucleus.protocol.transaction;
+package nucleus.protocols.transaction;
 
 import nucleus.util.ByteUtil;
 

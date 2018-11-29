@@ -1,4 +1,4 @@
-package nucleus.protocol.protobufs;
+package nucleus.protocols.protobufs;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;

@@ -1,10 +1,10 @@
 package nucleus.system;
 
-import nucleus.protocol.protobufs.Block;
-import nucleus.protocol.protobufs.BlockHeader;
-import nucleus.protocol.transaction.Transaction;
-import nucleus.protocol.transaction.TransactionOutput;
-import nucleus.protocol.transaction.TransactionOutputID;
+import nucleus.protocols.protobufs.Block;
+import nucleus.protocols.protobufs.BlockHeader;
+import nucleus.protocols.transaction.Transaction;
+import nucleus.protocols.transaction.TransactionOutput;
+import nucleus.protocols.transaction.TransactionOutputID;
 
 public class Serializer
 {

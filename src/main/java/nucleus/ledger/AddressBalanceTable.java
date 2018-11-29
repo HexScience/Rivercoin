@@ -1,7 +1,7 @@
 package nucleus.ledger;
 
-import nucleus.protocol.protobufs.Address;
-import nucleus.protocol.transaction.TransactionOutput;
+import nucleus.protocols.protobufs.Address;
+import nucleus.protocols.transaction.TransactionOutput;
 import nucleus.system.Context;
 
 import java.util.List;

@@ -206,6 +206,11 @@ public class NKMiner
         String vertShader = null;
         String fragShader = null;
 
+        /**
+         * Bind the vertex array to bypass validation errors.
+         */
+        GL30.glBindVertexArray(element.vertices);
+
         try
         {
             vertShader = Read(Start.class.getClass().getResourceAsStream("/mining/vert.txt"));
@@ -268,6 +273,8 @@ public class NKMiner
 
 //        glViewport(0,0,width,height);
 //        clInit();
+
+        Logger.alert("NKMiner initialized successfully.");
     }
 
     private void clInit() throws NKMinerException
@@ -306,9 +313,8 @@ public class NKMiner
             printPlatformInfo(platform, "CL_PLATFORM_VENDOR", CL_PLATFORM_VENDOR);
             printPlatformInfo(platform, "CL_PLATFORM_EXTENSIONS", CL_PLATFORM_EXTENSIONS);
             if (platformCaps.cl_khr_icd)
-            {
                 printPlatformInfo(platform, "CL_PLATFORM_ICD_SUFFIX_KHR", CL_PLATFORM_ICD_SUFFIX_KHR);
-            }
+
             Logger.prt("");
 
             clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, null, pi);

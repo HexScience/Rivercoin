@@ -1,6 +1,6 @@
 package nucleus.versioncontrol.versions.ir;
 
-import nucleus.protocol.transaction.TransactionInput;
+import nucleus.protocols.transaction.TransactionInput;
 import nucleus.versioncontrol.Constructor;
 
 import java.io.DataInputStream;

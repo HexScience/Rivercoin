@@ -6,6 +6,7 @@ import nucleus.exceptions.ECPrivateKeyInconstructableException;
 import nucleus.util.Base58;
 import nucleus.util.ByteUtil;
 import nucleus.util.HashUtil;
+import nucleus.util.Logger;
 import org.bouncycastle.asn1.sec.SECNamedCurves;
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.crypto.ec.CustomNamedCurves;
@@ -34,6 +35,8 @@ public class ECLib
         Security.addProvider(new BouncyCastleProvider());
         params = CustomNamedCurves.getByName("secp256k1");//SECNamedCurves.getByName("secp256k1");
         CURVE = new ECDomainParameters(params.getCurve(), params.getG(), params.getN(), params.getH());
+
+        Logger.alert("ECLib initialized successfully.");
     }
 
     /**

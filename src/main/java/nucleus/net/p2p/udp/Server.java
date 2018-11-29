@@ -1,6 +1,6 @@
 package nucleus.net.p2p.udp;
 
-import nucleus.protocol.protobufs.Block;
+import nucleus.protocols.protobufs.Block;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;

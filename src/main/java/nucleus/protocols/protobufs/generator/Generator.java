@@ -1,4 +1,4 @@
-package nucleus.protocol.protobufs.generator;
+package nucleus.protocols.protobufs.generator;
 
 import org.json.JSONObject;
 

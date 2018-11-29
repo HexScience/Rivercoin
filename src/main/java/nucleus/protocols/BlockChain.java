@@ -1,4 +1,4 @@
-package nucleus.protocol;
+package nucleus.protocols;
 
 public class BlockChain
 {

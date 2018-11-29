@@ -1,12 +1,12 @@
-package nucleus.protocol.transaction;
+package nucleus.protocols.transaction;
 
 
 import nucleus.crypto.ec.ECDerivedPublicKey;
 import nucleus.exceptions.PayLoadException;
 import nucleus.ledger.AddressBalanceTable;
 import nucleus.ledger.LedgerDatabase;
-import nucleus.protocol.protobufs.Address;
-import nucleus.protocol.transactionapi.TransactionPayload;
+import nucleus.protocols.protobufs.Address;
+import nucleus.protocols.transactionapi.TransactionPayload;
 import nucleus.system.Context;
 import nucleus.util.ByteUtil;
 import nucleus.util.HashUtil;

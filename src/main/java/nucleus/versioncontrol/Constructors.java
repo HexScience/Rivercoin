@@ -1,10 +1,10 @@
 package nucleus.versioncontrol;
 
-import nucleus.protocol.protobufs.Block;
-import nucleus.protocol.protobufs.BlockHeader;
-import nucleus.protocol.transaction.Transaction;
-import nucleus.protocol.transaction.TransactionInput;
-import nucleus.protocol.transaction.TransactionOutput;
+import nucleus.protocols.protobufs.Block;
+import nucleus.protocols.protobufs.BlockHeader;
+import nucleus.protocols.transaction.Transaction;
+import nucleus.protocols.transaction.TransactionInput;
+import nucleus.protocols.transaction.TransactionOutput;
 
 public class Constructors// <const_head_constructor, const_block_constructor, const_txn_constructor, const_txin_constructor, const_txout_constructor>
 {

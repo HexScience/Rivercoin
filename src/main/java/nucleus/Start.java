@@ -7,6 +7,7 @@ import nucleus.mining.NKMiner;
 import nucleus.system.Context;
 import nucleus.system.Parameters;
 import nucleus.util.FileUtils;
+import nucleus.util.Logger;
 import nucleus.versioncontrol.VersionControl;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.Options;
@@ -28,16 +29,9 @@ public class Start
     public static void main(String args[]) throws Throwable
     {
         List<Integer> usableDevices = new ArrayList<>();
+        /** Maximum difficulty to mine; (0) to mine any **/
         double        maxDifficulty = Parameters.MAXIMUM_DIFFICULY;
 
-        /**
-         * Initialize the EC Util Library.
-         */
-        ECLib.init();
-        /**
-         * Initialize the NKMiner.
-         */
-        NKMiner miner = NKMiner.init();
         FileService entryPoint = null;
 
         String COPYRIGHT_txt = FileUtils.readUTF(Start.class.getResourceAsStream("/GeoLiteC/COPYRIGHT.txt"));
@@ -110,15 +104,24 @@ public class Start
         }
 
         if (!entryPoint.newFile("chain").file().exists())
-        {
             entryPoint.newFile("chain").file().mkdirs();
-        }
 
         /**
-         * Initialize the version control class
+         * Initialize the EC Util Library.
+         */
+        ECLib.init();
+        /**
+         * Initialize the NKMiner.
+         */
+        NKMiner miner = NKMiner.init();
+        /**
+         * Initialize the version control class.
          */
         VersionControl.init();
 
+        /**
+         * Create a GoogleDB instance.
+         */
         DB db = factory.open(entryPoint.newFile("data").newFile("db").file(), new Options());
         Context context = new NucleusContext(entryPoint, db, miner);
     }

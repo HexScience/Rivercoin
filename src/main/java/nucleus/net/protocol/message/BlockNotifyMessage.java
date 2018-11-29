@@ -1,7 +1,7 @@
 package nucleus.net.protocol.message;
 
 import nucleus.net.protocol.NotificationMessage;
-import nucleus.protocol.protobufs.Block;
+import nucleus.protocols.protobufs.Block;
 
 /**
  * This class should be used when notifying peers of newfound blocks and or block solutions.

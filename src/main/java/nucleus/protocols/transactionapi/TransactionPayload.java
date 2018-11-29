@@ -1,11 +1,10 @@
-package nucleus.protocol.transactionapi;
+package nucleus.protocols.transactionapi;
 
 import nucleus.crypto.ec.ECDerivedPublicKey;
 import nucleus.exceptions.ECLibException;
 import nucleus.exceptions.PayLoadException;
-import nucleus.protocol.protobufs.Address;
-import nucleus.protocol.transaction.Signature;
-import nucleus.protocol.transaction.Transaction;
+import nucleus.protocols.protobufs.Address;
+import nucleus.protocols.transaction.Signature;
 import nucleus.system.Parameters;
 import nucleus.util.ByteUtil;
 import nucleus.util.HashUtil;

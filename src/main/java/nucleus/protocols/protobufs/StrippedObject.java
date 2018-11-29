@@ -1,4 +1,4 @@
-package nucleus.protocol.protobufs;
+package nucleus.protocols.protobufs;
 
 public interface StrippedObject
 {

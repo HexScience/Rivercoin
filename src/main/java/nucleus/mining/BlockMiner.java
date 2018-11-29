@@ -1,7 +1,7 @@
 package nucleus.mining;
 
 import nucleus.algorithms.Sha256;
-import nucleus.protocol.protobufs.BlockHeader;
+import nucleus.protocols.protobufs.BlockHeader;
 
 import java.io.IOException;
 import java.math.BigInteger;

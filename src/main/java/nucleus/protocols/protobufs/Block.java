@@ -1,13 +1,11 @@
-package nucleus.protocol.protobufs;
+package nucleus.protocols.protobufs;
 
 
-import nucleus.protocol.transaction.Transaction;
-import nucleus.tscript.Executor;
+import nucleus.protocols.transaction.Transaction;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 

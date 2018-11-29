@@ -1,14 +1,14 @@
 //package nucleus.net.p2p;
 //
-//import nucleus.net.protocol.MessageFactory;
-//import nucleus.protocol.transaction.Transaction;
+//import nucleus.net.protocols.MessageFactory;
+//import nucleus.protocols.transaction.Transaction;
 //import nucleus.util.ByteUtil;
 //
 //import java.io.IOException;
 //
-//import nucleus.net.protocol.Message;
+//import nucleus.net.protocols.Message;
 //
-//import static nucleus.net.protocol.Message.*;
+//import static nucleus.net.protocols.Message.*;
 //
 //public class UDPMessageFactory implements MessageFactory
 //{

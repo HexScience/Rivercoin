@@ -1,7 +1,7 @@
 package nucleus.versioncontrol.versions.ir;
 
-import nucleus.protocol.protobufs.BlockHeader;
-import nucleus.protocol.protobufs.CompressedKey;
+import nucleus.protocols.protobufs.BlockHeader;
+import nucleus.protocols.protobufs.CompressedKey;
 import nucleus.versioncontrol.Constructor;
 
 import java.io.DataInputStream;
