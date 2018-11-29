@@ -4,7 +4,6 @@ package nucleus.protocols.transaction;
 import nucleus.crypto.ec.ECDerivedPublicKey;
 import nucleus.exceptions.PayLoadException;
 import nucleus.ledger.AddressBalanceTable;
-import nucleus.ledger.LedgerDatabase;
 import nucleus.protocols.protobufs.Address;
 import nucleus.protocols.transactionapi.TransactionPayload;
 import nucleus.system.Context;
@@ -79,22 +78,22 @@ public class Transaction
 	{
 	}
 
-	public boolean execute(Context context, LedgerDatabase ledgerdb)
+	public boolean execute(Context context, Object ledgerdb)
 	{
 		boolean noErrors = true;
 		byte[] transaction = getBytes();
 		for (TransactionInput input : inputs)
 		{
-			TransactionOutput unspentOutput = ledgerdb.getUTXO(input.getUniqueIdentifier());
-			if (unspentOutput != null)
-			{
-				try{
-					noErrors = noErrors && TransactionPayload.execute(ByteUtil.concatenate(input.getUnlockingScript(), unspentOutput.getScriptPubKey()), transaction);
-				} catch (PayLoadException e)
-				{
-					noErrors = noErrors && false;
-				}
-			} else noErrors = noErrors && false;
+//			TransactionOutput unspentOutput = ledgerdb.getUTXO(input.getUniqueIdentifier());
+//			if (unspentOutput != null)
+//			{
+//				try{
+//					noErrors = noErrors && TransactionPayload.execute(ByteUtil.concatenate(input.getUnlockingScript(), unspentOutput.getScriptPubKey()), transaction);
+//				} catch (PayLoadException e)
+//				{
+//					noErrors = noErrors && false;
+//				}
+//			} else noErrors = noErrors && false;
 		}
 //			if (ledgerdb.UTXOExists(utxoid))
 //			{
@@ -192,7 +191,7 @@ public class Transaction
 		return b;
 	}
 
-	public List<TransactionOutput> calculateOutputs(Context context, LedgerDatabase db, Address miner)
+	public List<TransactionOutput> calculateOutputs(Context context, Object db, Address miner)
 	{
 		List<TransactionOutput> outputs = new ArrayList<>();
 

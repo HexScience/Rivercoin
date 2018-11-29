@@ -1,7 +1,9 @@
 package nucleus;
 
+import nucleus.crypto.MnemonicPhraseSeeder;
 import nucleus.crypto.ec.ECLib;
 import nucleus.exceptions.UnknownCommandException;
+import nucleus.util.Base58;
 import nucleus.util.FileService;
 import nucleus.mining.NKMiner;
 import nucleus.system.Context;
@@ -123,5 +125,9 @@ public class Start
          */
         DB db = factory.open(entryPoint.newFile("data").newFile("db").file(), new Options());
         Context context = new NucleusContext(entryPoint, db, miner);
+
+        MnemonicPhraseSeeder seeder = new MnemonicPhraseSeeder();
+        System.out.println(seeder.getString());
+        System.out.println(Base58.encode(seeder.getSeed()));
     }
 }

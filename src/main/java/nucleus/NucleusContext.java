@@ -2,8 +2,8 @@ package nucleus;
 
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import nucleus.exceptions.FileServiceException;
+import nucleus.ledger.Ledger;
 import nucleus.util.FileService;
-import nucleus.ledger.LedgerDatabase;
 import nucleus.mining.NKMiner;
 import nucleus.net.ServerManager;
 import nucleus.system.Config;
@@ -18,7 +18,7 @@ public class NucleusContext implements Context
     private Config          config;
     private Serializer      serializer;
     private ServerManager   serverManager;
-    private LedgerDatabase  ledgerDatabase;
+    private Ledger          ledgerDatabase;
     private DB              db;
     private NKMiner         miner;
 
@@ -27,7 +27,7 @@ public class NucleusContext implements Context
         this.config = new Config();
         this.serializer = new Serializer();
         this.serverManager = new ServerManager(entryPoint);
-        this.ledgerDatabase = new LedgerDatabase();
+        this.ledgerDatabase = new Ledger();
         this.db = db;
         this.miner = miner;
     }
@@ -51,7 +51,7 @@ public class NucleusContext implements Context
     }
 
     @Override
-    public LedgerDatabase getLedger()
+    public Ledger getLedger()
     {
         return ledgerDatabase;
     }

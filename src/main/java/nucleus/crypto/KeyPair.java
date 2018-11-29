@@ -1,5 +1,6 @@
 package nucleus.crypto;
 
+import nucleus.crypto.ec.ECLib;
 import nucleus.protocols.protobufs.Address;
 import nucleus.system.Parameters;
 import nucleus.util.Base58;
@@ -25,9 +26,8 @@ public class KeyPair
 
     public KeyPair(byte seed[])
     {
-        this.seed = HashUtil.applySha512(seed);
-
-        this.generate(HashUtil.applySha512(seed));
+        this.seed = HashUtil.applySha256(HashUtil.applySha256(seed));
+        this.generate(seed);
     }
 
     public byte[] getSeed()
@@ -60,27 +60,20 @@ public class KeyPair
         return publicKey;
     }
 
-    /** Generate an ECDSA Key Pair **/
+    /**
+     * Generate an ECDSA Key Pair;
+     * This function takes a double sha256 seed (or any arbitrary 256bit byte array)
+     * and generates a private key DIRECTLY from the array.
+     * This produces the same result as opposed to SecureRandom which can produce dif
+     * -ferent results on different platforms.
+     */
     private void generate(byte seed[])
     {
         try
         {
-            X9ECParameters params = SECNamedCurves.getByName("secp256k1");
-            ECDomainParameters CURVE = new ECDomainParameters(params.getCurve(), params.getG(), params.getN(), params.getH());
-
-            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC", "BC");
-            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-            random.setSeed(seed);
-
-            ECGenParameterSpec ecSpec = new ECGenParameterSpec("secp256k1");//"prime192v1");
-
-            keyGen.initialize(ecSpec, random);
-            java.security.KeyPair keyPair = keyGen.generateKeyPair();
-
-            this.privateKey = ((BCECPrivateKey) keyPair.getPrivate());//.getD();
-
-            this.publicKey = (((BCECPublicKey)  keyPair.getPublic()));// .getQ().getEncoded(false));
-            this.enckey = ((((BCECPublicKey)  keyPair.getPublic()) .getQ().getEncoded(true)));
+            this.privateKey = (BCECPrivateKey) ECLib.ECPrivateKey(new BigInteger(seed));
+            this.publicKey = ECLib.ECPublicKey(this.privateKey);
+            this.enckey = this.publicKey.getQ().getEncoded(true);
         } catch (Exception e)
         {
             throw new RuntimeException(e);
