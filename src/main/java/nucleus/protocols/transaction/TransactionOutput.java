@@ -47,4 +47,14 @@ public class TransactionOutput
 	{
 		return spendScript;
 	}
+
+	public void setValue(long value)
+	{
+		this.value = value;
+	}
+
+	public void setSpendScript(byte spendScript[])
+	{
+		this.spendScript = spendScript;
+	}
 }

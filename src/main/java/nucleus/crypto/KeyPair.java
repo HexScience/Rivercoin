@@ -94,7 +94,7 @@ public class KeyPair
         return new Address(ByteUtil.concatenate(key_21, checksum));
     }
 
-    public String getWIFPrivateKey(BCECPrivateKey privateKey)
+    public static String WIFPrivateKey(BCECPrivateKey privateKey)
     {
         byte prefix = (byte) 0x80;
 

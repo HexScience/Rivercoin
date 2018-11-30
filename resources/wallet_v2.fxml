@@ -90,14 +90,14 @@
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <Button fx:id="send_btn" layoutX="29.0" layoutY="32.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Send" textFill="WHITE">
+                        <Button fx:id="send_btn" layoutX="29.0" layoutY="32.0" mnemonicParsing="false" onAction="#onSendButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Send" textFill="WHITE">
                            <tooltip>
-                              <Tooltip text="Create a new wallet" />
+                              <Tooltip text="Send a transaction" />
                            </tooltip>
                         </Button>
-                        <Button fx:id="receive_btn" layoutX="154.0" layoutY="32.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Receive" textFill="WHITE">
+                        <Button fx:id="receive_btn" layoutX="154.0" layoutY="32.0" mnemonicParsing="false" onAction="#onReceiveButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Receive" textFill="WHITE">
                            <tooltip>
-                              <Tooltip text="Create a new wallet" />
+                              <Tooltip text="Receive a transaction" />
                            </tooltip>
                         </Button>
                         <ListView fx:id="txn_list" layoutX="28.0" layoutY="77.0" prefHeight="298.0" prefWidth="247.0" style="-fx-background-color: transparent; -fx-border-color: aliceblue;" />
@@ -115,17 +115,52 @@
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <Button fx:id="send_btn1" layoutX="29.0" layoutY="32.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Back" textFill="WHITE">
+                        <Button fx:id="send_btn1" layoutX="29.0" layoutY="32.0" mnemonicParsing="false" onAction="#onSendBackButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Back" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Go back" />
+                           </tooltip>
+                        </Button>
+                        <Button fx:id="receive_btn1" layoutX="154.0" layoutY="32.0" mnemonicParsing="false" onAction="#onReceiveButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Receive" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Receive funds" />
+                           </tooltip>
+                        </Button>
+                        <TextField fx:id="recipient_field" layoutX="29.0" layoutY="81.0" prefHeight="29.0" prefWidth="460.0" promptText="recipient..." style="-fx-background-color: transparent; -fx-prompt-text-fill: aliceblue; -fx-border-color: aliceblue; -fx-text-inner-color: aliceblue;">
+                           <tooltip>
+                              <Tooltip text="Add a recipient" />
+                           </tooltip>
+                        </TextField>
+                        <Button fx:id="add_recipient_btn" layoutX="646.0" layoutY="81.0" mnemonicParsing="false" onAction="#onAddRecipientButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Add" textFill="WHITE">
                            <tooltip>
                               <Tooltip text="Create a new wallet" />
                            </tooltip>
                         </Button>
-                        <Button fx:id="receive_btn1" layoutX="154.0" layoutY="32.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Receive" textFill="WHITE">
+                        <ListView fx:id="recipient_list" layoutX="29.0" layoutY="126.0" prefHeight="200.0" prefWidth="738.0" style="-fx-background-color: transparent; -fx-border-color: aliceblue;" />
+                        <TextField fx:id="amount_field" layoutX="499.0" layoutY="81.0" prefHeight="29.0" prefWidth="137.0" promptText="amount..." style="-fx-background-color: transparent; -fx-text-inner-color: aliceblue; -fx-prompt-text-fill: aliceblue; -fx-border-color: aliceblue;">
                            <tooltip>
-                              <Tooltip text="Create a new wallet" />
+                              <Tooltip text="Amount" />
+                           </tooltip>
+                        </TextField>
+                        <Button fx:id="add_recipient_btn1" layoutX="646.0" layoutY="334.0" mnemonicParsing="false" onAction="#onSendTransactionButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Send" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Send the transaction" />
                            </tooltip>
                         </Button>
-                        <ImageView fx:id="qr_image_preview1" fitHeight="345.0" fitWidth="372.0" layoutX="388.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" />
+                        <Button fx:id="add_recipient_btn11" layoutX="29.0" layoutY="334.0" mnemonicParsing="false" onAction="#onClearRecipientListButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Clear" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Clear the recipient list" />
+                           </tooltip>
+                        </Button>
+                        <Button fx:id="add_recipient_btn111" layoutX="516.0" layoutY="334.0" mnemonicParsing="false" onAction="#onRemoveRecipientButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Remove" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Remove selected recipient" />
+                           </tooltip>
+                        </Button>
+                        <TextField fx:id="feepmb_field" layoutX="154.0" layoutY="334.0" prefHeight="29.0" prefWidth="124.0" promptText="fee /mb..." style="-fx-background-color: transparent; -fx-prompt-text-fill: aliceblue; -fx-text-inner-color: aliceblue; -fx-border-color: aliceblue;">
+                           <tooltip>
+                              <Tooltip text="Max fee per mb of data" />
+                           </tooltip>
+                        </TextField>
                      </children>
                   </AnchorPane>
                </content>
@@ -139,33 +174,33 @@
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <Button fx:id="send_btn11" layoutX="29.0" layoutY="32.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Back" textFill="WHITE">
+                        <Button fx:id="send_btn11" layoutX="29.0" layoutY="32.0" mnemonicParsing="false" onAction="#onReceiveBackButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Back" textFill="WHITE">
                            <tooltip>
                               <Tooltip text="Create a new wallet" />
                            </tooltip>
                         </Button>
-                        <Button fx:id="receive_btn11" layoutX="154.0" layoutY="32.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Receive" textFill="WHITE">
+                        <Button fx:id="recieve_send_btn" layoutX="154.0" layoutY="32.0" mnemonicParsing="false" onAction="#onSendButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Send" textFill="WHITE">
                            <tooltip>
                               <Tooltip text="Create a new wallet" />
                            </tooltip>
                         </Button>
                         <ImageView fx:id="qr_image_preview11" fitHeight="345.0" fitWidth="372.0" layoutX="388.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" />
-                        <Text fx:id="current_balance_txt111" fill="WHITE" layoutX="27.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Receiving Address Is:">
+                        <Text fx:id="receiving_address_txt" fill="WHITE" layoutX="27.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Receiving Address Is:">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <Text fx:id="current_balance_txt1111" fill="WHITE" layoutX="27.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Public Key Is:">
+                        <Text fx:id="receive_pubkey_txt" fill="WHITE" layoutX="27.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Public Key Is:">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <Text fx:id="current_balance_txt11111" fill="WHITE" layoutX="27.0" layoutY="209.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Private Key Is: HIDDEN">
+                        <Text fx:id="privatekey_txt" fill="WHITE" layoutX="27.0" layoutY="209.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Private Key Is: HIDDEN">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <Button fx:id="copy_address_btn" layoutX="250.0" layoutY="90.0" mnemonicParsing="false" prefHeight="10.0" prefWidth="58.0" stylesheets="@wallet_style.css" text="Copy" textFill="WHITE">
+                        <Button fx:id="copy_address_btn" layoutX="250.0" layoutY="90.0" mnemonicParsing="false" onAction="#onCopyAddressButtonPressed" prefHeight="10.0" prefWidth="58.0" stylesheets="@wallet_style.css" text="Copy" textFill="WHITE">
                            <tooltip>
                               <Tooltip text="Create a new wallet" />
                            </tooltip>
@@ -173,7 +208,7 @@
                               <Font size="9.0" />
                            </font>
                         </Button>
-                        <Button fx:id="copy_address_btn1" layoutX="249.0" layoutY="141.0" mnemonicParsing="false" prefHeight="10.0" prefWidth="58.0" stylesheets="@wallet_style.css" text="Copy" textFill="WHITE">
+                        <Button fx:id="copy_pubkey_btn" layoutX="249.0" layoutY="141.0" mnemonicParsing="false" onAction="#onCopyPubKeyButtonPressed" prefHeight="10.0" prefWidth="58.0" stylesheets="@wallet_style.css" text="Copy" textFill="WHITE">
                            <font>
                               <Font size="9.0" />
                            </font>
@@ -181,7 +216,7 @@
                               <Tooltip text="Create a new wallet" />
                            </tooltip>
                         </Button>
-                        <Button fx:id="copy_address_btn11" layoutX="250.0" layoutY="191.0" mnemonicParsing="false" prefHeight="10.0" prefWidth="58.0" stylesheets="@wallet_style.css" text="Copy" textFill="WHITE">
+                        <Button fx:id="copy_privatekey_btn" layoutX="250.0" layoutY="191.0" mnemonicParsing="false" onAction="#onCopyPrivateKeyButtonPressed" prefHeight="10.0" prefWidth="58.0" stylesheets="@wallet_style.css" text="Copy" textFill="WHITE">
                            <font>
                               <Font size="9.0" />
                            </font>

@@ -1,12 +1,7 @@
 package nucleus;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
-import nucleus.crypto.MnemonicPhraseSeeder;
 import nucleus.crypto.ec.ECLib;
 import nucleus.exceptions.UnknownCommandException;
-import nucleus.ui.Wallet;
-import nucleus.util.Base58;
 import nucleus.util.FileService;
 import nucleus.mining.NKMiner;
 import nucleus.system.Context;
@@ -14,8 +9,6 @@ import nucleus.util.FileUtils;
 import nucleus.versioncontrol.VersionControl;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.Options;
-import tests.Tests;
-import tests.WalletGeneration;
 
 import java.io.File;
 import java.util.ArrayList;

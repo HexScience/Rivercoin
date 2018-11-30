@@ -1,10 +1,11 @@
 package nucleus.protocols.transaction;
 
-import nucleus.util.ByteUtil;
-
 public class TransactionInput
 {
     private byte    previousTransaction[];
+
+    private long    txnBlock; private int txnIndex;
+
     private int     previousTXoutIndex;
     /** the unlocking script to be used to unlock this utxo **/
     private byte    unlockingscript[];
@@ -13,9 +14,11 @@ public class TransactionInput
     {
     }
 
-    public TransactionInput(byte previousTXN[], int previousTXoutIndex, byte[] unlockingscript)
+    public TransactionInput(byte previousTXN[], long block, int index, int previousTXoutIndex, byte[] unlockingscript)
     {
         this.previousTransaction    = previousTXN;
+        this.txnBlock               = block;
+        this.txnIndex               = index;
         this.previousTXoutIndex     = previousTXoutIndex;
         this.unlockingscript        = unlockingscript;
     }
@@ -25,7 +28,8 @@ public class TransactionInput
      */
     public byte[] getUniqueIdentifier()
     {
-        return ByteUtil.concatenate(previousTransaction, ByteUtil.encodei(previousTXoutIndex));
+//        return ByteUtil.concatenate(previousTransaction, ByteUtil.encodei(previousTXoutIndex));
+        return null;
     }
 
     public byte[] getUnlockingScript()

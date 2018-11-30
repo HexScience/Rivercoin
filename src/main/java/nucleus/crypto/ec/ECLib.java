@@ -308,4 +308,23 @@ public class ECLib
 
         return new Address(ByteUtil.concatenate(key_21, checksum));
     }
+
+    public static final boolean ValidECAddress(String address)
+    {
+        byte bytes[] = Base58.decode(address);
+
+        byte version    = Parameters.MAIN_NETWORK_PUBLIC_ADDRESS_PREFIX;
+
+        if (version != bytes[0])
+            return false;
+
+        byte key_20[]   = ByteUtil.trim(bytes, 1, 21);
+
+        byte checksum[] = ByteUtil.trim(HashUtil.applySha256(HashUtil.applySha256(ByteUtil.trim(bytes, 0, 21))), 0, 4);
+
+        if (!ByteUtil.equals(checksum, ByteUtil.trim(bytes, 21, 25)))
+            return false;
+
+        return true;
+    }
 }

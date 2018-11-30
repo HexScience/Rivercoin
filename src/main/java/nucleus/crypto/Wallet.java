@@ -4,10 +4,7 @@ import nucleus.crypto.ec.ECLib;
 import nucleus.exceptions.EncryptionPasswordInvalidException;
 import nucleus.exceptions.InvalidWalletFileException;
 import nucleus.protocols.protobufs.Address;
-import nucleus.util.Base58;
-import nucleus.util.ByteUtil;
-import nucleus.util.FileService;
-import nucleus.util.Tuple;
+import nucleus.util.*;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
 
@@ -89,6 +86,13 @@ public class Wallet
     }
 
     public BCECPrivateKey getPrivateKey(String password) throws Throwable
+    {
+        Tuple<byte[], Long> data = loadFromDisk(password);
+
+        return KeyPair.getPrivateKey(data.getI());
+    }
+
+    public BCECPrivateKey getPrivateKeyWIF(String password) throws Throwable
     {
         Tuple<byte[], Long> data = loadFromDisk(password);
 
@@ -211,5 +215,18 @@ public class Wallet
         wallet.iteration = iteration;
 
         return wallet;
+    }
+
+    public static String WIFPrivateKey(BCECPrivateKey privateKey)
+    {
+        byte prefix = (byte) 0x80;
+
+        byte sha256[]   = HashUtil.applySha256(ByteUtil.concatenate(new byte[] {prefix}, privateKey.getD().toByteArray()));
+        byte sha2562[]  = HashUtil.applySha256(sha256);
+
+        byte version    = 0x00;
+        byte checksum[] = ByteUtil.trim(sha2562, 0, 4);
+
+        return Base58.encode(ByteUtil.concatenate(ByteUtil.concatenate(new byte[] {prefix}, privateKey.getD().toByteArray()), checksum));
     }
 }

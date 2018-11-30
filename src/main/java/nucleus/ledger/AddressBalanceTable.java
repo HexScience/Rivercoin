@@ -60,7 +60,7 @@ public class AddressBalanceTable
             TransactionOutput utxo = outputMap.get(output.toString());
             Transaction transaction = context.getSerializer().loadTransaction(output.getBlockID(), output.getTransactionID());
 
-            inputs.add(new TransactionInput(transaction.getTransactionID(), output.getOutputID(), script));
+            inputs.add(new TransactionInput(transaction.getTransactionID(), output.getBlockID(), output.getTransactionID(), output.getOutputID(), script));
 
             val += utxo.getValue();
 
@@ -72,6 +72,19 @@ public class AddressBalanceTable
             return (TransactionInput[]) inputs.toArray();
 
         else return null;
+    }
+
+    public TransactionInput[] getAllOutputs(byte script[])
+    {
+        List<TransactionInput> inputs = new ArrayList<>();
+
+        for (DBTransactionOutput output : balances)
+        {
+            Transaction transaction = context.getSerializer().loadTransaction(output.getBlockID(), output.getTransactionID());
+            inputs.add(new TransactionInput(transaction.getTransactionID(), output.getBlockID(), output.getTransactionID(), output.getOutputID(), script));
+        }
+
+        return (TransactionInput[]) inputs.toArray();
     }
 
     /**

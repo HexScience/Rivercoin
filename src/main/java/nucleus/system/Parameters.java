@@ -37,6 +37,7 @@ public class Parameters
 
     public static final long MAXIMUM_SATOSHIS                   = 32_000_000__00_000_000_000L;//92_233_720___36_854_775_807L;
     public static final long SATOSHIS_PERCOIN                   =            100_000_000_000L;
+    public static final long DECIMALS_PERCOIN                   =            11L;
 
     public static final long PRICE_PER_NETWORK_GBYTE            =                    750_000L;
     public static final long PRICE_PER_NETWORK_MBYTE            =                        750L;
@@ -73,14 +74,16 @@ public class Parameters
         return 1;
     }
 
-    public static long coinToSatoshis(double amt)
+    public static long coinToSatoshis(String amt)
     {
-        return (long) amt * SATOSHIS_PERCOIN;
+//        return (long) amt * SATOSHIS_PERCOIN;
+        return new BigDecimal(amt).multiply(BigDecimal.valueOf(SATOSHIS_PERCOIN)).longValue();
     }
 
-    public static double satoshisToCoin(long amt)
+    public static BigDecimal satoshisToCoin(long amt)
     {
-        return (double) amt / SATOSHIS_PERCOIN;
+//        return (double) amt / SATOSHIS_PERCOIN;
+        return BigDecimal.valueOf(amt).divide(BigDecimal.valueOf(SATOSHIS_PERCOIN), 11, BigDecimal.ROUND_UP);
     }
 
     public static long byteStorageCost(long amt)
