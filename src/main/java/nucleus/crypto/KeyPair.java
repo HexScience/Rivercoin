@@ -19,38 +19,33 @@ import java.security.spec.ECGenParameterSpec;
 
 public class KeyPair
 {
-    private byte[]              seed;
-    private BCECPrivateKey      privateKey;
     private BCECPublicKey       publicKey;
     private byte[]              enckey;
-    private long                seeds[];
 
-    public KeyPair(byte seed[]) throws ECLibException
+    public KeyPair(byte rawSeed[]) throws ECLibException
     {
-        this.seed = HashUtil.applySha256(HashUtil.applySha256(seed));
-        this.generate(this.seed);
-        this.runchecks();
+        this.generate(rawSeed);
     }
 
-    private boolean runchecks() throws ECLibException
+//    private byte[] seed(byte rawSeed[])
+//    {
+//        return rawSeed;
+//    }
+
+    private boolean runchecks(BCECPrivateKey privateKey) throws ECLibException
     {
         return ECLib.ECPairRecover(privateKey, publicKey, enckey);
     }
 
-    public byte[] getSeed()
-    {
-        return seed;
-    }
-
-    public BigInteger getPrivateKey()
-    {
-        return privateKey.getD();
-    }
-
-    public BCECPrivateKey getPrivateKeyObject()
-    {
-        return privateKey;
-    }
+//    public BigInteger getPrivateKey()
+//    {
+//        return privateKey.getD();
+//    }
+//
+//    public BCECPrivateKey getPrivateKeyObject()
+//    {
+//        return privateKey;
+//    }
 
     public byte[] getPublicKey()
     {
@@ -74,11 +69,13 @@ public class KeyPair
      * This produces the same result as opposed to SecureRandom which can produce dif
      * -ferent results on different platforms.
      */
-    private void generate(byte seed[]) throws ECLibException
+    private void generate(byte rawSeed[]) throws ECLibException
     {
-            this.privateKey = (BCECPrivateKey) ECLib.ECPrivateKey(new BigInteger(seed));
-            this.publicKey = ECLib.ECPublicKey(this.privateKey);
+            BCECPrivateKey privateKey = getPrivateKey(rawSeed);
+            this.publicKey = ECLib.ECPublicKey(privateKey);
             this.enckey = this.publicKey.getQ().getEncoded(true);
+
+            runchecks(privateKey);
     }
 
     public Address getAddress()
@@ -97,7 +94,7 @@ public class KeyPair
         return new Address(ByteUtil.concatenate(key_21, checksum));
     }
 
-    public String getWIFPrivateKey()
+    public String getWIFPrivateKey(BCECPrivateKey privateKey)
     {
         byte prefix = (byte) 0x80;
 
@@ -118,6 +115,11 @@ public class KeyPair
     @Override
     public String toString()
     {
-        return "\tprivate: " + getWIFPrivateKey() + " " + privateKey.getD().toByteArray().length + "\n\tpublic:  " + Base58.encode(publicKey.getQ().getEncoded(false)) + " " + enckey.length + "\n\taddress: " + getAddress();
+        return /**"\tprivate: " + getWIFPrivateKey() + " " + privateKey.getD().toByteArray().length + "\n\t**/"public:  " + Base58.encode(publicKey.getQ().getEncoded(false)) + " " + enckey.length + "\n\taddress: " + getAddress();
+    }
+
+    public static BCECPrivateKey getPrivateKey(byte seed[]) throws ECLibException
+    {
+        return (BCECPrivateKey) ECLib.ECPrivateKey(new BigInteger(seed));
     }
 }

@@ -44,4 +44,24 @@ public class FileService
         else
             throw new FileServiceException("no useful type provided.");
     }
+
+    public void move(FileService service) throws IOException
+    {
+        copyTo(service);
+        file().delete();
+    }
+
+    public void copyTo(FileService service) throws IOException
+    {
+        FileInputStream instream = new FileInputStream(file());
+
+        FileOutputStream out = new FileOutputStream(service.file());
+
+        while (instream.available() > 0)
+            out.write(instream.read());
+
+        instream.close();
+        out.flush();
+        out.close();
+    }
 }

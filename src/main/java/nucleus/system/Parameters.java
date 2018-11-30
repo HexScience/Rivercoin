@@ -52,8 +52,9 @@ public class Parameters
 //    public static final long PRICE_PER_STORAGE_GBYTE            =                  7_500_000L;
 
     public static final long TIME_PER_EPOCH                     = ((2_563_200L) / 12L) * 3;
+    public static final String ShortName                        = "NCL";
 
-    public static byte TOTAL_OPCODES                           = 0;
+    public static byte TOTAL_OPCODES                            = 0;
 
     /** calculates the reward per block **/
     public static long rewardAtBlock(long x)

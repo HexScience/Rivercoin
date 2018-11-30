@@ -14,7 +14,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(#9fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);">
                      <children>
-                        <Button fx:id="open_existing_wallet_btn" layoutX="330.0" layoutY="225.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Open Existing" textFill="WHITE">
+                        <Button fx:id="open_existing_wallet_btn" layoutX="330.0" layoutY="225.0" mnemonicParsing="false" onAction="#onOpenExistingWallet" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Open Existing" textFill="WHITE">
                            <tooltip>
                               <Tooltip text="Open an existing wallet" />
                            </tooltip>
@@ -105,6 +105,93 @@
                      </children>
                   </AnchorPane>
               </content>
+            </Tab>
+            <Tab fx:id="logged_in_screen1" text="Send Screen">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(#FE9C9C 0%, #FE9CF4 51%, #E19CFE 75%);">
+                     <children>
+                        <Text fx:id="current_balance_txt1" fill="WHITE" layoutX="27.0" layoutY="419.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Balance: 0.0">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Text>
+                        <Button fx:id="send_btn1" layoutX="29.0" layoutY="32.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Back" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Create a new wallet" />
+                           </tooltip>
+                        </Button>
+                        <Button fx:id="receive_btn1" layoutX="154.0" layoutY="32.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Receive" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Create a new wallet" />
+                           </tooltip>
+                        </Button>
+                        <ImageView fx:id="qr_image_preview1" fitHeight="345.0" fitWidth="372.0" layoutX="388.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="logged_in_screen11" text="Receive Screen">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(#FE9C9C 0%, #FE9CF4 51%, #E19CFE 75%);">
+                     <children>
+                        <Text fx:id="current_balance_txt11" fill="WHITE" layoutX="27.0" layoutY="419.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Balance: 0.0">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Text>
+                        <Button fx:id="send_btn11" layoutX="29.0" layoutY="32.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Back" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Create a new wallet" />
+                           </tooltip>
+                        </Button>
+                        <Button fx:id="receive_btn11" layoutX="154.0" layoutY="32.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Receive" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Create a new wallet" />
+                           </tooltip>
+                        </Button>
+                        <ImageView fx:id="qr_image_preview11" fitHeight="345.0" fitWidth="372.0" layoutX="388.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" />
+                        <Text fx:id="current_balance_txt111" fill="WHITE" layoutX="27.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Receiving Address Is:">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="current_balance_txt1111" fill="WHITE" layoutX="27.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Public Key Is:">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="current_balance_txt11111" fill="WHITE" layoutX="27.0" layoutY="209.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Private Key Is: HIDDEN">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Text>
+                        <Button fx:id="copy_address_btn" layoutX="250.0" layoutY="90.0" mnemonicParsing="false" prefHeight="10.0" prefWidth="58.0" stylesheets="@wallet_style.css" text="Copy" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Create a new wallet" />
+                           </tooltip>
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="copy_address_btn1" layoutX="249.0" layoutY="141.0" mnemonicParsing="false" prefHeight="10.0" prefWidth="58.0" stylesheets="@wallet_style.css" text="Copy" textFill="WHITE">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                           <tooltip>
+                              <Tooltip text="Create a new wallet" />
+                           </tooltip>
+                        </Button>
+                        <Button fx:id="copy_address_btn11" layoutX="250.0" layoutY="191.0" mnemonicParsing="false" prefHeight="10.0" prefWidth="58.0" stylesheets="@wallet_style.css" text="Copy" textFill="WHITE">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                           <tooltip>
+                              <Tooltip text="Create a new wallet" />
+                           </tooltip>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+               </content>
             </Tab>
         </tabs>
       </TabPane>

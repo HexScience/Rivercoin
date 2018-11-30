@@ -15,7 +15,7 @@ public class Thund3rSt0rm implements HashAlgorithm
 
     @Override
     public byte[] encode(byte[] data) {
-        /** generate a pseudorandom seed from pingonging 8 bytes from the data set**/
+        /** incrementPair a pseudorandom seed from pingonging 8 bytes from the data set**/
 //        byte[] seed = ByteUtil.pingpong(data, 8);
 
         byte[] sha256 = new Sha256().encode(data);

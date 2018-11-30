@@ -3,6 +3,8 @@ package nucleus.crypto.ec;
 import nucleus.exceptions.ECLibException;
 import nucleus.exceptions.ECPointUnobtainableException;
 import nucleus.exceptions.ECPrivateKeyInconstructableException;
+import nucleus.protocols.protobufs.Address;
+import nucleus.system.Parameters;
 import nucleus.util.Base58;
 import nucleus.util.ByteUtil;
 import nucleus.util.HashUtil;
@@ -119,7 +121,7 @@ public class ECLib
     }
 
     /**
-     * @param privateKey The private key used to generate this public key.
+     * @param privateKey The private key used to incrementPair this public key.
 //     * @param mod Ignore security flaw in seed.
      * @return A public key.
      * @throws ECLibException
@@ -289,5 +291,21 @@ public class ECLib
         byte checksum[] = ByteUtil.trim(sha2562, 0, 4);
 
         return Base58.encode(ByteUtil.concatenate(ByteUtil.concatenate(new byte[] {prefix}, privateKey.toByteArray()), checksum));
+    }
+
+    public static final Address ECGenAddress(BCECPublicKey key)
+    {
+        byte keyprefixbyte[] = {0x04};
+
+        byte sha256[]   = HashUtil.applySha256(ByteUtil.concatenate(keyprefixbyte, key.getQ().getEncoded(false)));
+        byte sha2562[]  = HashUtil.applySha256(sha256);
+        byte ripeMD[]   = HashUtil.applyRipeMD160(sha2562);
+
+        byte version    = Parameters.MAIN_NETWORK_PUBLIC_ADDRESS_PREFIX;
+        byte key_21[]   = ByteUtil.concatenate(new byte[] {version}, ripeMD);
+
+        byte checksum[] = ByteUtil.trim(HashUtil.applySha256(HashUtil.applySha256(key_21)), 0, 4);
+
+        return new Address(ByteUtil.concatenate(key_21, checksum));
     }
 }

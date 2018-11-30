@@ -1,6 +1,12 @@
 package nucleus.ui;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -8,33 +14,23 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.imageio.ImageIO;
 import javafx.event.ActionEvent;
 import nucleus.crypto.KeyChain;
 import nucleus.crypto.MnemonicPhraseSeeder;
 import nucleus.crypto.ec.ECLib;
-import nucleus.exceptions.ECLibException;
-import nucleus.exceptions.FileServiceException;
-import nucleus.exceptions.WalletException;
-import nucleus.util.ByteUtil;
+import nucleus.exceptions.*;
 import nucleus.util.FileService;
 import nucleus.versioncontrol.VersionControl;
 
-import java.io.DataOutputStream;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -50,6 +46,7 @@ public class Wallet extends Application implements Initializable
          * Initialize the NKMiner.
          */
         VersionControl.init();
+
         launch();
     }
 
@@ -68,45 +65,14 @@ public class Wallet extends Application implements Initializable
     @FXML
     PasswordField password_field;
 
-    KeyChain chain;
+    @FXML
+    ImageView qr_image_preview;
+
+    Wallet wallet;
 
     @Override
     public void start(Stage stage) throws Exception
     {
-        byte bytes[] = new byte[1024];
-
-        String byteString = "";
-
-        SecureRandom secure = new SecureRandom(ByteUtil.encode(1480202125194240L));
-
-
-        secure.nextBytes(bytes);
-
-        int index = 0;
-
-        for (int j = 0; j < 32; j ++)
-        {
-            for (int i = 0; i < 12; i ++)
-                byteString += "(byte) 0x" + Integer.toHexString(Byte.toUnsignedInt(bytes[index ++])) + ", ";
-
-            byteString += "\n";
-
-            for (int i = 0; i < 12; i ++)
-                byteString += "(byte) 0x" + Integer.toHexString(Byte.toUnsignedInt(bytes[index ++])) + ", ";
-
-            byteString += "\n";
-
-            for (int i = 0; i < 8; i ++)
-                byteString += "(byte) 0x" + Integer.toHexString(Byte.toUnsignedInt(bytes[index ++])) + ", ";
-
-            byteString += "\n\n\n";
-        }
-
-
-        System.out.println(byteString);
-
-        System.exit(0);
-
         this.stage = stage;
         Parent root = FXMLLoader.load(getClass().getResource("/wallet_v2.fxml"));
 
@@ -123,6 +89,25 @@ public class Wallet extends Application implements Initializable
         stage.show();
     }
 
+    private BufferedImage getQRImage()
+    {
+        try
+        {
+            String data = chain.pair().getAddress().toString();
+
+            QRCodeWriter writer = new QRCodeWriter();
+
+            BitMatrix matrix = writer.encode(data, BarcodeFormat.QR_CODE, 372, 345);
+
+            return MatrixToImageWriter.toBufferedImage(matrix);
+        } catch (WriterException e)
+        {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     /**
      * @param event
      *
@@ -132,6 +117,41 @@ public class Wallet extends Application implements Initializable
     public void onCreateNewWallet(ActionEvent event)
     {
         tabPane.getSelectionModel().select(1);
+    }
+
+    @FXML
+    public void onOpenExistingWallet(ActionEvent event)
+    {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open An Existing Wallet!");
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file == null)
+            return;
+
+        FileService fileService = new FileService(file);
+
+        String password = "default";
+
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Password");
+        dialog.setContentText("Please type in your password.");
+
+        String string = dialog.showAndWait().get();
+
+        if (string.length() > 0)
+            password = string;
+
+        try
+        {
+            chain = new KeyChain(fileService, password);
+//            chain.read(password, (DataInputStream) fileService.as(DataInputStream.class));
+
+            gotoLoggedInScreen();
+        } catch (Throwable e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -188,17 +208,28 @@ public class Wallet extends Application implements Initializable
         tabPane.getSelectionModel().select(3);
     }
 
+    public void gotoLoggedInScreen()
+    {
+        BufferedImage qrImage = getQRImage();
+
+        if (qrImage != null)
+            qr_image_preview.setImage(SwingFXUtils.toFXImage(qrImage, null));
+
+        tabPane.getSelectionModel().select(4);
+    }
+
     @FXML
     public void onStep3Next(ActionEvent event)
     {
+        /**
+         * Check if the user input matches with the provided seed words
+         */
         if (step2_wordlist.getText().replaceAll("\\s+", " ").replaceAll("\\n", " ").equals(step3_wordlist.getText().replaceAll("\\s+", " ").replaceAll("\\n", " ")))
         {
             seeder.setWords(step2_wordlist.getText());
 
             try
             {
-                chain = new KeyChain(seeder.getSeed());
-
                 String password = password_field.getText();
 
                 if (password.length() == 0)
@@ -221,47 +252,12 @@ public class Wallet extends Application implements Initializable
 
                 FileService file = new FileService(file_.toString() + ".nwf");
 
-                DataOutputStream stream = (DataOutputStream) file.as(DataOutputStream.class);
+                chain = new KeyChain(file, password, seeder.getSeed());
 
+                seeder = null;
 
-                chain.write( password, stream);
-
-                stream.flush();
-                stream.close();
-
-                tabPane.getSelectionModel().select(4);
-            } catch (ECLibException e)
-            {
-                generate();
-                tabPane.getSelectionModel().select(2);
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            } catch (FileServiceException e)
-            {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e)
-            {
-                e.printStackTrace();
-            } catch (InvalidKeyException e)
-            {
-                e.printStackTrace();
-            } catch (InvalidAlgorithmParameterException e)
-            {
-                e.printStackTrace();
-            } catch (NoSuchPaddingException e)
-            {
-                e.printStackTrace();
-            } catch (BadPaddingException e)
-            {
-                e.printStackTrace();
-            } catch (InvalidKeySpecException e)
-            {
-                e.printStackTrace();
-            } catch (IllegalBlockSizeException e)
-            {
-                e.printStackTrace();
-            } catch (WalletException e)
+                gotoLoggedInScreen();
+            } catch (Throwable e)
             {
             }
         }

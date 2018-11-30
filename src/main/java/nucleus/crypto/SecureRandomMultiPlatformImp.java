@@ -1,8 +1,16 @@
 package nucleus.crypto;
 
+import nucleus.util.ByteUtil;
+
+import java.nio.ByteBuffer;
+import java.util.Random;
+
+import static nucleus.util.HashUtil.*;
+
 public class SecureRandomMultiPlatformImp implements SecureRandomI
 {
     private byte seed[];
+    private long nonce;
 
 
     private byte randomBytes[] = {
@@ -203,7 +211,29 @@ public class SecureRandomMultiPlatformImp implements SecureRandomI
     @Override
     public int getInt(int bounds)
     {
-        return 0;
+        byte x512[] = applySkein(ByteUtil.concatenate(seed, ByteUtil.encode(nonce)), 1024, 1024);
+        byte x512_[] = ByteUtil.xor(applySkein(ByteUtil.trim(randomBytes, Byte.toUnsignedInt(x512[0]), Byte.toUnsignedInt(x512[0]) + 128), 1024, 1024),
+                                    applySkein(randomBytes, 1024, 1024));
+
+        byte nseed[] = applyRipeMD160(applySha256(ByteUtil.concatenate(x512, randomBytes, seed, x512_)));
+
+        byte nseed64[] = ByteUtil.xor(ByteUtil.trim(nseed, 0, 10), ByteUtil.trim(nseed, 10, 20));
+
+        long realSeed = ByteUtil.decode(nseed64);
+
+        Random r = new Random(realSeed);
+
+        byte mix512[] = ByteUtil.xor(x512, x512_);
+        ByteBuffer bbuffr = ByteBuffer.wrap(mix512);
+
+        long seedArray[] = {bbuffr.getLong(), bbuffr.getLong(), bbuffr.getLong(), bbuffr.getLong(),
+                            bbuffr.getLong(), bbuffr.getLong(), bbuffr.getLong(), bbuffr.getLong()};
+
+        long seedArrayx256[] = ByteUtil.xor(ByteUtil.trim(seedArray, 0, 4), ByteUtil.trim(seedArray, 4, 8));
+
+        nonce ++;
+
+        return (int) Math.abs(((r.nextLong() + ((seedArrayx256[0] * seedArrayx256[3]) ^ (seedArrayx256[2] * seedArrayx256[1])))) % (bounds + 1));
     }
 
     @Override

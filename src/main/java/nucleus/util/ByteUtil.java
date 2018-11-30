@@ -197,6 +197,16 @@ public class ByteUtil
         return new_bytes;
     }
 
+    public static long[] trim(long[] bytes, int i, int i1) {
+        long new_bytes[]    = new long[i1 - i];
+
+        int free            = 0;
+
+        for(int index = i; index < i1; index ++)
+            new_bytes[free ++] = bytes[index];
+        return new_bytes;
+    }
+
     public static String list(byte[] checksum) {
         StringBuilder builder = new StringBuilder("[");
 
@@ -220,6 +230,14 @@ public class ByteUtil
 
         for(int i = 0; i < hash_.length; i ++)
             bytes[i] = (byte) (hash_[i] ^ prng[i]);
+        return bytes;
+    }
+
+    public static long[] xor(long[] hash_, long[] prng) {
+        long bytes[] = new long[hash_.length];
+
+        for(int i = 0; i < hash_.length; i ++)
+            bytes[i] = (hash_[i] ^ prng[i]);
         return bytes;
     }
 
