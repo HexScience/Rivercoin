@@ -49,4 +49,9 @@ public class MnemonicString
 
         return string;
     }
+
+    public void clear()
+    {
+        mnemonicString.clear();
+    }
 }

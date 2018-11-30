@@ -34,19 +34,19 @@ public class MnemonicPhraseSeeder
             if (string.length() > 2)
                 wordList.add(new MnemonicWord(string));
 
-        SecureRandom random = null;
+        SecureRandomI random = null;
 
-        if (seed == null) random = new SecureRandom();
-        else random = new SecureRandom(seed);
+        if (seed == null) random = new SecureRandomImp();
+        else random = new SecureRandomMultiPlatformImp(seed);
 
         Set<Integer> used = new LinkedHashSet<>();
 
         for (int i = 0; i < 24; i ++)
         {
-            int newInt = random.nextInt(wordList.size());
+            int newInt = random.getInt(wordList.size());
 
             while (used.contains(newInt))
-                newInt = random.nextInt(wordList.size());
+                newInt = random.getInt(wordList.size());
 
             used.add(newInt);
 
@@ -70,5 +70,15 @@ public class MnemonicPhraseSeeder
             tree.insert(word.data);
 
         return tree.build();
+    }
+
+    public void setWords(String words)
+    {
+        String words_[] = words.replaceAll("\\s+", " ").replaceAll("\n", " ").split("\\s+");
+
+        string.clear();
+
+        for (String word : words_)
+            string.concatenate(new MnemonicWord(word));
     }
 }

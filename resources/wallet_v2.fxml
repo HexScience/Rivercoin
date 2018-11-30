@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="430.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nucleus.ui.Wallet">
+   <children>
+      <TabPane fx:id="tabPane" layoutY="-39.0" prefHeight="469.0" prefWidth="780.0" stylesheets="@wallet_style.css" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab fx:id="splash_screen" text="Splash Screen">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(#9fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);">
+                     <children>
+                        <Button fx:id="open_existing_wallet_btn" layoutX="330.0" layoutY="225.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Open Existing" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Open an existing wallet" />
+                           </tooltip>
+                        </Button>
+                        <Button fx:id="new_wallet_btn" layoutX="330.0" layoutY="189.0" mnemonicParsing="false" onAction="#onCreateNewWallet" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Create New" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Create a new wallet" />
+                           </tooltip>
+                        </Button>
+                        <Text fill="WHITE" layoutX="275.0" layoutY="144.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please Choose An Option To Proceed" />
+                        <Button fx:id="exit_btn" layoutX="330.0" layoutY="309.0" mnemonicParsing="false" onAction="#onExit" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Exit" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Exit the program" />
+                           </tooltip>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="gen_step1" text="Generator Screen A">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(#9fb8ad 0%, pink 51%, #2cb5e8 75%);">
+                     <children>
+                        <Button fx:id="create_new_btn" layoutX="319.0" layoutY="185.0" mnemonicParsing="false" onAction="#onCreateNewWalletBTN" prefHeight="29.0" prefWidth="140.0" stylesheets="@wallet_style.css" text="Create New" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Create a new wallet" />
+                           </tooltip>
+                        </Button>
+                        <Button fx:id="create_seed_btn" layoutX="319.0" layoutY="220.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="140.0" stylesheets="@wallet_style.css" text="Create From Seed" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Create a new wallet" />
+                           </tooltip>
+                        </Button>
+                        <Button fx:id="step1_back_btn" layoutX="319.0" layoutY="254.0" mnemonicParsing="false" onAction="#onStep1Back" prefHeight="29.0" prefWidth="140.0" stylesheets="@wallet_style.css" text="Back" textFill="WHITE" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+            <Tab fx:id="gen_step2" text="Generator Screen B">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(E9D0E8 0%, pink 51%, #F6A0F3 75%);">
+                     <children>
+                        <TextArea fx:id="step2_wordlist" layoutX="206.0" layoutY="119.0" prefHeight="148.0" prefWidth="373.0" style="-fx-background-color: transparent;" stylesheets="@wallet_style.css" />
+                        <Text fill="WHITE" layoutX="257.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please keep these words somewhere secure" />
+                        <Button fx:id="step2_next_btn" layoutX="392.0" layoutY="274.0" mnemonicParsing="false" onAction="#onStep2Next" prefHeight="29.0" prefWidth="184.0" stylesheets="@wallet_style.css" text="Next" textFill="WHITE" />
+                        <Button fx:id="step2_back_btn" layoutX="205.0" layoutY="274.0" mnemonicParsing="false" onAction="#onStep2Back" prefHeight="29.0" prefWidth="184.0" stylesheets="@wallet_style.css" text="Back" textFill="WHITE" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="gen_step3" text="Generator Screen C">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(#F6A0A0 0%, #FEE19C 51%, F6A0D1 75%);">
+                     <children>
+                        <TextArea fx:id="step3_wordlist" layoutX="206.0" layoutY="119.0" prefHeight="148.0" prefWidth="373.0" style="-fx-background-color: transparent;" stylesheets="@wallet_style.css" />
+                        <Text fill="WHITE" layoutX="203.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please re-enter the words provided to you in the previous step" />
+                        <Button fx:id="step3_next_btn" layoutX="395.0" layoutY="308.0" mnemonicParsing="false" onAction="#onStep3Next" prefHeight="29.0" prefWidth="184.0" stylesheets="@wallet_style.css" text="Next" textFill="WHITE" />
+                        <Button fx:id="step3_back_btn" layoutX="208.0" layoutY="308.0" mnemonicParsing="false" onAction="#onStep3Back" prefHeight="29.0" prefWidth="184.0" stylesheets="@wallet_style.css" text="Back" textFill="WHITE" />
+                        <PasswordField fx:id="password_field" layoutX="208.0" layoutY="274.0" prefHeight="27.0" prefWidth="373.0">
+                           <tooltip>
+                              <Tooltip text="Type a password to encrypt your wallet file (leave empty for no encryption)" />
+                           </tooltip>
+                        </PasswordField>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="logged_in_screen" text="Logged In Screen">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(#FE9C9C 0%, #FE9CF4 51%, #E19CFE 75%);">
+                     <children>
+                        <Text fx:id="current_balance_txt" fill="WHITE" layoutX="27.0" layoutY="419.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Balance: 0.0">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Text>
+                        <Button fx:id="send_btn" layoutX="29.0" layoutY="32.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Send" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Create a new wallet" />
+                           </tooltip>
+                        </Button>
+                        <Button fx:id="receive_btn" layoutX="154.0" layoutY="32.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Receive" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Create a new wallet" />
+                           </tooltip>
+                        </Button>
+                        <ListView fx:id="txn_list" layoutX="28.0" layoutY="77.0" prefHeight="298.0" prefWidth="247.0" style="-fx-background-color: transparent; -fx-border-color: aliceblue;" />
+                        <ImageView fx:id="qr_image_preview" fitHeight="345.0" fitWidth="372.0" layoutX="388.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</Pane>

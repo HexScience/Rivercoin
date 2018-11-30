@@ -1,13 +1,15 @@
 package nucleus;
 
+import javafx.application.Application;
+import javafx.stage.Stage;
 import nucleus.crypto.MnemonicPhraseSeeder;
 import nucleus.crypto.ec.ECLib;
 import nucleus.exceptions.UnknownCommandException;
+import nucleus.ui.Wallet;
 import nucleus.util.Base58;
 import nucleus.util.FileService;
 import nucleus.mining.NKMiner;
 import nucleus.system.Context;
-import nucleus.system.Parameters;
 import nucleus.util.FileUtils;
 import nucleus.versioncontrol.VersionControl;
 import org.iq80.leveldb.DB;
@@ -33,7 +35,7 @@ public class Start
     {
         List<Integer> usableDevices = new ArrayList<>();
         /** Maximum difficulty to mine; (0) to mine any **/
-        double        maxDifficulty = Parameters.MAXIMUM_DIFFICULY;
+        double        maxDifficulty = nucleus.system.Parameters.MAXIMUM_DIFFICULY;
 
         FileService entryPoint = null;
 
@@ -127,5 +129,7 @@ public class Start
          */
         DB db = factory.open(entryPoint.newFile("data").newFile("db").file(), new Options());
         Context context = new NucleusContext(entryPoint, db, miner);
+
+//        Tests.main();
     }
 }

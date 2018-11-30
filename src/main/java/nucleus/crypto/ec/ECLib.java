@@ -235,6 +235,11 @@ public class ECLib
         }
     }
 
+    public static final BCECPublicKey ECPublicKeyFromCompressed(byte compressed[]) throws ECLibException
+    {
+        return ECPublicKey(new BigInteger(ECLib.EC_POINT_point2oct(compressed, false).getEncoded(false)));
+    }
+
     public static final boolean ECPairRecover(BCECPrivateKey privateKey, BCECPublicKey publicKey, byte compressedPoint[]) throws ECLibException
     {
         /**

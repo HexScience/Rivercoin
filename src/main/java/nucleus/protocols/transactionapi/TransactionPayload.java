@@ -458,7 +458,7 @@ public class TransactionPayload
     public static byte[] P2PKH_key(Signature signature)
     {
         return ByteUtil.concatenate(new byte[]{Op.PUSH_SIG.opcode, (byte) signature.getSignature().length}, signature.getSignature(),
-                new byte[]{Op.PUSH_PK.opcode}, signature.getKey().getBytes());
+                new byte[]{Op.PUSH_PK.opcode}, signature.getSignature());
     }
 
     /**
