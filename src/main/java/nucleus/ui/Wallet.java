@@ -68,7 +68,7 @@ public class Wallet extends Application implements Initializable
     @FXML
     ImageView qr_image_preview;
 
-    Wallet wallet;
+    KeyChain chain;
 
     @Override
     public void start(Stage stage) throws Exception
