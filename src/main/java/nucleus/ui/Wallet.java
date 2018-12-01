@@ -29,9 +29,13 @@ import nucleus.crypto.MnemonicPhraseSeeder;
 import nucleus.crypto.ec.ECLib;
 import nucleus.exceptions.*;
 import nucleus.mining.NKMiner;
+import nucleus.protocols.protobufs.Address;
 import nucleus.protocols.transaction.TransactionInput;
 import nucleus.protocols.transaction.TransactionOutput;
+import nucleus.protocols.transactionapi.TransactionPayload;
 import nucleus.system.Context;
+import nucleus.system.Parameters;
+import nucleus.util.Base58;
 import nucleus.util.FileService;
 import nucleus.util.FileUtils;
 import nucleus.versioncontrol.VersionControl;
@@ -493,13 +497,15 @@ public class Wallet extends Application implements Initializable
         if (feepmb_field.getText().isEmpty())
             feepmb_field.setText(nucleus.system.Parameters.satoshisToCoin(nucleus.system.Parameters.PRICE_PER_NETWORK_MBYTE).toPlainString() + "");
 
+        long totalBalance = context.getLedger().getBalanceTable(wallet.getAddress()).collectiveBalance(context);
+
         long total = 0;
         long fee = nucleus.system.Parameters.coinToSatoshis(feepmb_field.getText());
 
         if (inputs == null)
             return;
 
-        TransactionOutput outputs[] = new TransactionOutput[recipient_list.getItems().size()];
+        TransactionOutput outputs[] = new TransactionOutput[recipient_list.getItems().size() + 2];
 
         for (int i = 0; i < recipient_list.getItems().size(); i ++)
         {
@@ -513,10 +519,29 @@ public class Wallet extends Application implements Initializable
             outputs[i] = new TransactionOutput();
             long longval = 0;
             outputs[i].setValue(longval = new BigDecimal(amount).multiply(BigDecimal.valueOf(nucleus.system.Parameters.SATOSHIS_PERCOIN)).longValue());
-            outputs[i].setSpendScript(null);
+            outputs[i].setSpendScript(TransactionPayload.P2PKH_lock(new Address(Base58.decode(address))));
 
             total += longval;
         }
+
+        long totalBytes = 0;
+
+        for (TransactionInput input : inputs)
+            totalBytes += input.size();
+
+        fee = totalBytes * fee;//new BigDecimal(totalBytes).divide(new BigDecimal(1000000), 34, BigDecimal.ROUND_UP).multiply(new BigDecimal(nucleus.system.Parameters.PRICE_PER_NETWORK_MBYTE)).max(new BigDecimal(nucleus.system.Parameters.PRICE_PER_NETWORK_MBYTE))
+
+        outputs[outputs.length - 2] = new TransactionOutput();
+        outputs[outputs.length - 2].setValue(fee);
+        outputs[outputs.length - 2].setSpendScript(new byte[] {TransactionPayload.Op.APPEND_COINBASE.opcode});
+
+
+        outputs[outputs.length - 1] = new TransactionOutput();
+        outputs[outputs.length - 1].setValue(Math.max(0, (totalBalance - total) - fee));
+        outputs[outputs.length - 1].setSpendScript(null);
+
+        TransactionOutput feeOutput = outputs[outputs.length - 2];
+        TransactionOutput returnOutput = outputs[outputs.length - 1];
 
         long totalFee = outputs.length / fee;
 

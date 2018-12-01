@@ -3,8 +3,14 @@ package nucleus.protocols.transactionapi;
 import nucleus.crypto.ec.ECDerivedPublicKey;
 import nucleus.exceptions.ECLibException;
 import nucleus.exceptions.PayLoadException;
+import nucleus.ledger.Ledger;
 import nucleus.protocols.protobufs.Address;
+import nucleus.protocols.protobufs.Block;
+import nucleus.protocols.transaction.DBTransactionOutput;
 import nucleus.protocols.transaction.Signature;
+import nucleus.protocols.transaction.TransactionInput;
+import nucleus.protocols.transaction.TransactionOutput;
+import nucleus.system.Context;
 import nucleus.system.Parameters;
 import nucleus.util.ByteUtil;
 import nucleus.util.HashUtil;
@@ -108,9 +114,12 @@ public class TransactionPayload
         P2PKHK,
 
         LVT_INIT,
-        EXT;
+        EXT,
+        APPEND_COINBASE,
+        APPEND_LEDGER,
+        ;
 
-        private byte opcode;
+        public byte opcode;
 
         Op()
         {
@@ -562,7 +571,12 @@ public class TransactionPayload
         return ops.toByteArray();
     }
 
-    public static boolean execute(byte codes[], byte transaction[]) throws PayLoadException
+    public static boolean execute(Context context, Ledger ledger,
+                                  Block current, TransactionInput input,
+                                  int transactionIndex,
+                                  TransactionOutput output,
+                                  int outputIndex,
+                                  byte codes[],byte transaction[]) throws PayLoadException
     {
         Stack<ScriptObject> stack = new Stack<>();
         ScriptObject[]      localVarTable;
@@ -573,6 +587,13 @@ public class TransactionPayload
 
             switch (code)
             {
+                case APPEND_LEDGER:
+                    Address laddress = stack.pop().asAddress();
+                    ledger.getBalanceTable(laddress).insertUnspentOutput(new DBTransactionOutput(current.getHeader().getBlockID(), transactionIndex, outputIndex));
+                    break;
+                case APPEND_COINBASE:
+                    current.getCoinbase().add(output);
+                    break;
                 /** push private key **/
                 case PUSH_PRK:
                     break;
@@ -765,7 +786,7 @@ public class TransactionPayload
 
                     byte codes_b[] = P2PKH_lock(address);
 
-                    stack.push(new BooleanScriptObject(execute(codes_b, transaction)));
+//                    stack.push(new BooleanScriptObject(execute(context, ledger, codes_b, transaction)));
                 }
                 break;
                 case P2PKHK:{

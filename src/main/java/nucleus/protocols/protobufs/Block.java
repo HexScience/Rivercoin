@@ -2,6 +2,7 @@ package nucleus.protocols.protobufs;
 
 
 import nucleus.protocols.transaction.Transaction;
+import nucleus.protocols.transaction.TransactionOutput;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,6 +14,7 @@ public class Block implements StrippedObject
 {
 	private BlockHeader header = new BlockHeader();
 	private List<Transaction> transactions = new ArrayList<>();
+	private List<TransactionOutput> coinbase;
 	private byte codebase[];
 
 	public Block()
@@ -28,6 +30,7 @@ public class Block implements StrippedObject
 		this.header = header;
 		this.transactions = buffer;
 		this.codebase = codebase;
+		this.coinbase = new ArrayList<>();
 	}
 
 	public void build()
@@ -83,6 +86,11 @@ public class Block implements StrippedObject
 		codebase = new byte[cbl];
 
 		stream.read(codebase);
+	}
+
+	public List<TransactionOutput> getCoinbase()
+	{
+		return coinbase;
 	}
 
 	@Override

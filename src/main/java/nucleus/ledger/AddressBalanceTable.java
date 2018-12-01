@@ -6,7 +6,6 @@ import nucleus.protocols.transaction.Transaction;
 import nucleus.protocols.transaction.TransactionInput;
 import nucleus.protocols.transaction.TransactionOutput;
 import nucleus.system.Context;
-import org.iq80.leveldb.DB;
 
 import java.nio.ByteBuffer;
 import java.util.*;
@@ -18,14 +17,22 @@ public class AddressBalanceTable
     private final   Map<String, TransactionOutput>  outputMap;
     private final   Context                         context;
 
-    public AddressBalanceTable(final Context context, final Address address, final DB db)
+    public AddressBalanceTable()
+    {
+        this.address = null;
+        this.balances = null;
+        this.outputMap = null;
+        this.context = null;
+    }
+
+    public AddressBalanceTable(final Context context, final Address address)
     {
         this.address = address;
         this.balances = new LinkedHashSet<>();
         this.outputMap = new LinkedHashMap<>();
         this.context = context;
 
-        byte data[] = db.get(address.getBytes());
+        byte data[] = context.getDB().get(address.getBytes());
 
         if (data != null && data.length > 0)
         {
@@ -78,11 +85,13 @@ public class AddressBalanceTable
     {
         List<TransactionInput> inputs = new ArrayList<>();
 
-        for (DBTransactionOutput output : balances)
-        {
-            Transaction transaction = context.getSerializer().loadTransaction(output.getBlockID(), output.getTransactionID());
-            inputs.add(new TransactionInput(transaction.getTransactionID(), output.getBlockID(), output.getTransactionID(), output.getOutputID(), script));
-        }
+        inputs.add(new TransactionInput(new byte[32], 0, 0, 0, script));
+
+//        for (DBTransactionOutput output : balances)
+//        {
+//            Transaction transaction = context.getSerializer().loadTransaction(output.getBlockID(), output.getTransactionID());
+//            inputs.add(new TransactionInput(transaction.getTransactionID(), output.getBlockID(), output.getTransactionID(), output.getOutputID(), script));
+//        }
 
         return (TransactionInput[]) inputs.toArray();
     }
@@ -99,5 +108,10 @@ public class AddressBalanceTable
             b += output.getValue();
 
         return b;
+    }
+
+    public void insertUnspentOutput(DBTransactionOutput output)
+    {
+        balances.add(output);
     }
 }

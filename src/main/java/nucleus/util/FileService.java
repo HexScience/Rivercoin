@@ -25,22 +25,22 @@ public class FileService
         return new File(entryPoint);
     }
 
-    public Object as(Class<?> ctype) throws FileServiceException, IOException
+    public <T> T as(Class<T> ctype) throws FileServiceException, IOException
     {
         if (ctype == BufferedReader.class)
-            return new BufferedReader(new FileReader(file()));
+            return (T) new BufferedReader(new FileReader(file()));
         else if (ctype == InputStream.class)
-            return new FileInputStream(file());
+            return (T) new FileInputStream(file());
         else if (ctype == DataInputStream.class)
-            return new DataInputStream(new FileInputStream(file()));
+            return (T) new DataInputStream(new FileInputStream(file()));
 
 
         else if (ctype == BufferedWriter.class)
-            return new BufferedWriter(new FileWriter(file()));
+            return (T) new BufferedWriter(new FileWriter(file()));
         else if (ctype == OutputStream.class)
-            return new FileOutputStream(file());
+            return (T) new FileOutputStream(file());
         else if (ctype == DataOutputStream.class)
-            return new DataOutputStream(new FileOutputStream(file()));
+            return (T) new DataOutputStream(new FileOutputStream(file()));
         else
             throw new FileServiceException("no useful type provided.");
     }

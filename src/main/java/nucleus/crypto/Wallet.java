@@ -123,7 +123,7 @@ public class Wallet
      */
     private void saveToDisk(final byte currentSeed[], final String password) throws Throwable
     {
-        DataOutputStream stream = (DataOutputStream) service.as(DataOutputStream.class);
+        DataOutputStream stream = service.as(DataOutputStream.class);
 
         /**
          * Format:
@@ -144,7 +144,7 @@ public class Wallet
 
     private Tuple<byte[], Long> loadFromDisk(final String password) throws Throwable
     {
-        DataInputStream stream = (DataInputStream) service.as(DataInputStream.class);
+        DataInputStream stream = service.as(DataInputStream.class);
 
         long header = stream.readLong();
 

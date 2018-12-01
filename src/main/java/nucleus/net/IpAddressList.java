@@ -26,7 +26,7 @@ public class IpAddressList
 
     public IpAddressList(FileService entryPoint, DatabaseReader dbReader) throws IOException, FileServiceException, GeoIp2Exception
     {
-        BufferedReader reader   = (BufferedReader) entryPoint.newFile("data").newFile("ipdb.dfx").as(BufferedReader.class);
+        BufferedReader reader   = entryPoint.newFile("data").newFile("ipdb.dfx").as(BufferedReader.class);
         this.priorityQueue      = new PriorityQueue<>();
         this.seed();
         this.entryPoint         = entryPoint;
@@ -125,7 +125,7 @@ public class IpAddressList
         BufferedWriter writer = null;
 
         if (overwrite)
-            writer = (BufferedWriter) entryPoint.newFile("data").newFile("ipdb.dfx").as(BufferedWriter.class);
+            writer = entryPoint.newFile("data").newFile("ipdb.dfx").as(BufferedWriter.class);
         else
             writer = new BufferedWriter(new FileWriter(entryPoint.newFile("data").newFile("ipdb.dfx").file(), true));
         for (IpAddress address : priorityQueue)

@@ -46,7 +46,7 @@ public class KeyChain
         this.location = service;
 
         byte seed[] = generateFirstPair(rawSeed);
-        write(password, seed, (DataOutputStream) service.as(DataOutputStream.class));
+        write(password, seed, service.as(DataOutputStream.class));
     }
 
     /**
@@ -60,7 +60,7 @@ public class KeyChain
     {
         this.location = service;
 
-        read(password, (DataInputStream) service.as(DataInputStream.class));
+        read(password, service.as(DataInputStream.class));
     }
 
     private byte[] generateFirstPair(byte seed[])
@@ -79,7 +79,7 @@ public class KeyChain
 
         keyPair.add(pair.get());
 
-        write(password, pair.getSeed(), (DataOutputStream) location.as(DataOutputStream.class));
+        write(password, pair.getSeed(), location.as(DataOutputStream.class));
 
         return this;
     }

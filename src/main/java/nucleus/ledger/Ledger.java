@@ -7,6 +7,6 @@ public class Ledger
 {
     public AddressBalanceTable getBalanceTable(Address address)
     {
-        return null;
+        return new AddressBalanceTable();
     }
 }

@@ -2,11 +2,13 @@ package nucleus.protocols.transaction;
 
 public class TransactionInput
 {
+    public static final int SIZE = 32 + 8 + 4 + 4;
+
     private byte    previousTransaction[];
-
-    private long    txnBlock; private int txnIndex;
-
-    private int     previousTXoutIndex;
+//    private long    txnBlock; private int txnIndex;
+//
+    private int     previousTransactionOutputIndex;
+//    private DBTransactionOutput output;
     /** the unlocking script to be used to unlock this utxo **/
     private byte    unlockingscript[];
 
@@ -14,12 +16,21 @@ public class TransactionInput
     {
     }
 
-    public TransactionInput(byte previousTXN[], long block, int index, int previousTXoutIndex, byte[] unlockingscript)
+    public TransactionInput(byte previousTXN[], DBTransactionOutput output, byte[] unlockingscript)
     {
         this.previousTransaction    = previousTXN;
-        this.txnBlock               = block;
-        this.txnIndex               = index;
-        this.previousTXoutIndex     = previousTXoutIndex;
+//        this.output                 = output;
+        this.unlockingscript        = unlockingscript;
+    }
+
+    public TransactionInput(byte previousTXN[], int previousTransactionOutputIndex, byte[] unlockingscript)
+    {
+        this.previousTransaction    = previousTXN;
+        this.previousTransactionOutputIndex = previousTransactionOutputIndex;
+//        this.output                 = new DBTransactionOutput(block, index, previousTXoutIndex);
+//        this.txnBlock               = block;
+//        this.txnIndex               = index;
+//        this.previousTXoutIndex     = previousTXoutIndex;
         this.unlockingscript        = unlockingscript;
     }
 
@@ -35,5 +46,10 @@ public class TransactionInput
     public byte[] getUnlockingScript()
     {
         return unlockingscript;
+    }
+
+    public int size()
+    {
+        return SIZE + unlockingscript.length;
     }
 }
