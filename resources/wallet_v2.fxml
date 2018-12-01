@@ -141,7 +141,7 @@
                               <Tooltip text="Amount" />
                            </tooltip>
                         </TextField>
-                        <Button fx:id="add_recipient_btn1" layoutX="646.0" layoutY="334.0" mnemonicParsing="false" onAction="#onSendTransactionButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Send" textFill="WHITE">
+                        <Button fx:id="sendtx_btn" layoutX="520.0" layoutY="334.0" mnemonicParsing="false" onAction="#onSendTransactionButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Send" textFill="WHITE">
                            <tooltip>
                               <Tooltip text="Send the transaction" />
                            </tooltip>
@@ -151,16 +151,21 @@
                               <Tooltip text="Clear the recipient list" />
                            </tooltip>
                         </Button>
-                        <Button fx:id="add_recipient_btn111" layoutX="516.0" layoutY="334.0" mnemonicParsing="false" onAction="#onRemoveRecipientButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Remove" textFill="WHITE">
+                        <Button fx:id="add_recipient_btn111" layoutX="393.0" layoutY="334.0" mnemonicParsing="false" onAction="#onRemoveRecipientButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Remove" textFill="WHITE">
                            <tooltip>
                               <Tooltip text="Remove selected recipient" />
                            </tooltip>
                         </Button>
                         <TextField fx:id="feepmb_field" layoutX="154.0" layoutY="334.0" prefHeight="29.0" prefWidth="124.0" promptText="fee /mb..." style="-fx-background-color: transparent; -fx-prompt-text-fill: aliceblue; -fx-text-inner-color: aliceblue; -fx-border-color: aliceblue;">
                            <tooltip>
-                              <Tooltip text="Max fee per mb of data" />
+                              <Tooltip text="Max fee per byte of data" />
                            </tooltip>
                         </TextField>
+                        <Button fx:id="safesendtx_btn" layoutX="646.0" layoutY="334.0" mnemonicParsing="false" onAction="#onSendSafeTransactionButtonPressed" prefHeight="29.0" prefWidth="120.0" stylesheets="@wallet_style.css" text="Safe Send" textFill="WHITE">
+                           <tooltip>
+                              <Tooltip text="Send the transaction and generate a new keypair (this is safer than keeping an old keypair)" />
+                           </tooltip>
+                        </Button>
                      </children>
                   </AnchorPane>
                </content>

@@ -16,22 +16,11 @@ public class TransactionInput
     {
     }
 
-    public TransactionInput(byte previousTXN[], DBTransactionOutput output, byte[] unlockingscript)
-    {
-        this.previousTransaction    = previousTXN;
-//        this.output                 = output;
-        this.unlockingscript        = unlockingscript;
-    }
-
     public TransactionInput(byte previousTXN[], int previousTransactionOutputIndex, byte[] unlockingscript)
     {
-        this.previousTransaction    = previousTXN;
+        this.previousTransaction            = previousTXN;
         this.previousTransactionOutputIndex = previousTransactionOutputIndex;
-//        this.output                 = new DBTransactionOutput(block, index, previousTXoutIndex);
-//        this.txnBlock               = block;
-//        this.txnIndex               = index;
-//        this.previousTXoutIndex     = previousTXoutIndex;
-        this.unlockingscript        = unlockingscript;
+        this.unlockingscript                = unlockingscript;
     }
 
     /**

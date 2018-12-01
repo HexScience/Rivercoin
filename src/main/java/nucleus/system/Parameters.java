@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 
 public class Parameters
 {
+    public static final byte MULTISIGNATURE_PUBLIC_ADDRESS_PREFIX = 20; //M
     /** public addresses to send/receive money (main network) **/
     public static final byte MAIN_NETWORK_PUBLIC_ADDRESS_PREFIX = 23;//A
     /** public addresses to send/receive money (test network) **/
@@ -53,7 +54,12 @@ public class Parameters
 //    public static final long PRICE_PER_STORAGE_GBYTE            =                  7_500_000L;
 
     public static final long TIME_PER_EPOCH                     = ((2_563_200L) / 12L) * 3;
-    public static final String ShortName                        = "NCL";
+    public static final String SHOR_TNAME                       = "NCL";
+
+    /**
+     * The maximum/mimimum allowed meantime per block (time difference since previous block)
+     */
+    public static final long BLOCK_MEANTIME                     = AVERAGE_BLOCK_TIME * 12;
 
     public static byte TOTAL_OPCODES                            = 0;
 

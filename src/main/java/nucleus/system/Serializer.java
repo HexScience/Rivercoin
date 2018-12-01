@@ -5,6 +5,8 @@ import nucleus.protocols.protobufs.BlockHeader;
 import nucleus.protocols.transaction.Transaction;
 import nucleus.protocols.transaction.TransactionOutput;
 
+import java.util.ArrayList;
+
 public class Serializer
 {
     public Block loadBlock(long block)
@@ -19,7 +21,7 @@ public class Serializer
 
     public Transaction loadTransaction(long block, int transactionID)
     {
-        return loadBlock(block).getTransactions().get(transactionID);
+        return new ArrayList<Transaction>(loadBlock(block).getAcceptedTransactions()).get(transactionID);
     }
 
     public TransactionOutput loadTransactionOutput(long block, int transaction, int id)

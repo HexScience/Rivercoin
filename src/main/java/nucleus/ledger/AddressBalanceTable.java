@@ -67,7 +67,7 @@ public class AddressBalanceTable
             TransactionOutput utxo = outputMap.get(output.toString());
             Transaction transaction = context.getSerializer().loadTransaction(output.getBlockID(), output.getTransactionID());
 
-            inputs.add(new TransactionInput(transaction.getTransactionID(), output.getBlockID(), output.getTransactionID(), output.getOutputID(), script));
+            inputs.add(new TransactionInput(transaction.getTransactionID(), output.getOutputID(), script));
 
             val += utxo.getValue();
 
@@ -85,7 +85,8 @@ public class AddressBalanceTable
     {
         List<TransactionInput> inputs = new ArrayList<>();
 
-        inputs.add(new TransactionInput(new byte[32], 0, 0, 0, script));
+        for (int i = 0; i < 6; i ++)
+        inputs.add(new TransactionInput(new byte[32], 0, script));
 
 //        for (DBTransactionOutput output : balances)
 //        {
@@ -93,7 +94,7 @@ public class AddressBalanceTable
 //            inputs.add(new TransactionInput(transaction.getTransactionID(), output.getBlockID(), output.getTransactionID(), output.getOutputID(), script));
 //        }
 
-        return (TransactionInput[]) inputs.toArray();
+        return inputs.toArray(new TransactionInput[inputs.size()]);
     }
 
     /**
@@ -102,12 +103,13 @@ public class AddressBalanceTable
      */
     public long collectiveBalance(Context context)
     {
-        long b = 0;
-
-        for (TransactionOutput output : outputMap.values())
-            b += output.getValue();
-
-        return b;
+        return 3020;
+//        long b = 0;
+//
+//        for (TransactionOutput output : outputMap.values())
+//            b += output.getValue();
+//
+//        return b;
     }
 
     public void insertUnspentOutput(DBTransactionOutput output)

@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nucleus.util.HashUtil.applySha256;
+
 public class Transaction
 {
 	/**
@@ -50,6 +52,7 @@ public class Transaction
 	 * size of the payload.
 	 */
 	private byte					payload[] 	= new byte[0];
+	private long					timeStamp	= 0L;
 
 	public Transaction()
 	{
@@ -178,7 +181,7 @@ public class Transaction
 
 	public byte[] getTransactionID()
 	{
-		return HashUtil.applySha256(HashUtil.applySha256(getBytes()));
+		return applySha256(applySha256(getBytes()));
 	}
 
 	public long collectiveValue(AddressBalanceTable abt)
@@ -208,5 +211,15 @@ public class Transaction
 //			return new TransactionOutput(this, );
 //		else return null;
 		return null;
+	}
+
+	public long getTimeStamp()
+	{
+		return timeStamp;
+	}
+
+	public byte[] getHash()
+	{
+		return applySha256(applySha256(getBytes()));
 	}
 }

@@ -295,9 +295,11 @@ public class ECLib
 
     public static final Address ECGenAddress(BCECPublicKey key)
     {
-        byte keyprefixbyte[] = {0x04};
-
-        byte sha256[]   = HashUtil.applySha256(ByteUtil.concatenate(keyprefixbyte, key.getQ().getEncoded(false)));
+//        AacLtZBpaP32qfGaVuYsf3ABXQWk1pL9vE
+//        ANta9ZfriyzhKSP4voESfSwgfeqveCPeHg
+//        byte keyprefixbyte[] = {0x04};
+//
+        byte sha256[]   = HashUtil.applySha256(key.getQ().getEncoded(false));
         byte sha2562[]  = HashUtil.applySha256(sha256);
         byte ripeMD[]   = HashUtil.applyRipeMD160(sha2562);
 
@@ -309,13 +311,32 @@ public class ECLib
         return new Address(ByteUtil.concatenate(key_21, checksum));
     }
 
-    public static final boolean ValidECAddress(String address)
+    public static final Address ECGenAddressMultiSig(BCECPublicKey... keys)
+    {
+        byte keyprefixbyte[] = {0x04};
+
+        byte sha256[]   = HashUtil.applySha256(ByteUtil.concatenate(keyprefixbyte, keys[0].getQ().getEncoded(false)));
+        byte sha2562[]  = HashUtil.applySha256(sha256);
+        byte ripeMD[]   = HashUtil.applyRipeMD160(sha2562);
+
+        byte version    = Parameters.MAIN_NETWORK_PUBLIC_ADDRESS_PREFIX;
+        byte key_21[]   = ByteUtil.concatenate(new byte[] {version}, ripeMD);
+
+        byte checksum[] = ByteUtil.trim(HashUtil.applySha256(HashUtil.applySha256(key_21)), 0, 4);
+
+        return new Address(ByteUtil.concatenate(key_21, checksum));
+    }
+
+    public static final boolean IsMultiSig(String address)
+    {
+        return Base58.decode(address)[0] == Parameters.MULTISIGNATURE_PUBLIC_ADDRESS_PREFIX;
+    }
+
+    public static final boolean ValidECAddress(int prefix, String address)
     {
         byte bytes[] = Base58.decode(address);
 
-        byte version    = Parameters.MAIN_NETWORK_PUBLIC_ADDRESS_PREFIX;
-
-        if (version != bytes[0])
+        if (prefix < 256 && prefix != Byte.toUnsignedInt(bytes[0]))
             return false;
 
         byte key_20[]   = ByteUtil.trim(bytes, 1, 21);
@@ -326,5 +347,10 @@ public class ECLib
             return false;
 
         return true;
+    }
+
+    public static final boolean ValidECAddress(String address)
+    {
+        return ValidECAddress(500, address);
     }
 }

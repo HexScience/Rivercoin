@@ -28,13 +28,12 @@ import nucleus.Start;
 import nucleus.crypto.MnemonicPhraseSeeder;
 import nucleus.crypto.ec.ECLib;
 import nucleus.exceptions.*;
-import nucleus.mining.NKMiner;
 import nucleus.protocols.protobufs.Address;
+import nucleus.protocols.transaction.Transaction;
 import nucleus.protocols.transaction.TransactionInput;
 import nucleus.protocols.transaction.TransactionOutput;
 import nucleus.protocols.transactionapi.TransactionPayload;
 import nucleus.system.Context;
-import nucleus.system.Parameters;
 import nucleus.util.Base58;
 import nucleus.util.FileService;
 import nucleus.util.FileUtils;
@@ -61,6 +60,7 @@ public class Wallet extends Application implements Initializable
     public static void main(String... args)
     {
         Wallet.args = args;
+
         launch();
     }
 
@@ -105,7 +105,7 @@ public class Wallet extends Application implements Initializable
 
     TransactionInput inputs[];
 
-    Context context;
+    static Context context;
 
     void start(String ... args) throws Throwable
     {
@@ -358,7 +358,7 @@ public class Wallet extends Application implements Initializable
         receiving_address_txt.setText("Your Address Is:\n" + wallet.getAddress().toString());
         receive_pubkey_txt.setText("Your Public Key Is:\n" + wallet.getBase58EncodedPublicKey(true));
 
-        inputs = context.getLedger().getBalanceTable(wallet.getAddress()).getAllOutputs(null);
+        inputs = context.getLedger().getBalanceTable(wallet.getAddress()).getAllOutputs(new byte[30]);
 
         tabPane.getSelectionModel().select(4);
     }
@@ -491,13 +491,14 @@ public class Wallet extends Application implements Initializable
         recipient_list.getItems().add(recipient + " :: " + amount + " :: --" + decimal.longValue() + " satoshis---");
     }
 
-    @FXML
-    public void onSendTransactionButtonPressed(ActionEvent event) throws Throwable
+    private void sendTransaction(boolean genNewKeypair)
     {
         if (feepmb_field.getText().isEmpty())
-            feepmb_field.setText(nucleus.system.Parameters.satoshisToCoin(nucleus.system.Parameters.PRICE_PER_NETWORK_MBYTE).toPlainString() + "");
+            feepmb_field.setText("0.0000000125");
 
-        long totalBalance = context.getLedger().getBalanceTable(wallet.getAddress()).collectiveBalance(context);
+        Address currentAddress = wallet.getAddress();
+
+        long totalBalance = context.getLedger().getBalanceTable(currentAddress).collectiveBalance(context);
 
         long total = 0;
         long fee = nucleus.system.Parameters.coinToSatoshis(feepmb_field.getText());
@@ -518,6 +519,7 @@ public class Wallet extends Application implements Initializable
 
             outputs[i] = new TransactionOutput();
             long longval = 0;
+
             outputs[i].setValue(longval = new BigDecimal(amount).multiply(BigDecimal.valueOf(nucleus.system.Parameters.SATOSHIS_PERCOIN)).longValue());
             outputs[i].setSpendScript(TransactionPayload.P2PKH_lock(new Address(Base58.decode(address))));
 
@@ -526,10 +528,12 @@ public class Wallet extends Application implements Initializable
 
         long totalBytes = 0;
 
+        Transaction transaction = new Transaction();
+
         for (TransactionInput input : inputs)
             totalBytes += input.size();
 
-        fee = totalBytes * fee;//new BigDecimal(totalBytes).divide(new BigDecimal(1000000), 34, BigDecimal.ROUND_UP).multiply(new BigDecimal(nucleus.system.Parameters.PRICE_PER_NETWORK_MBYTE)).max(new BigDecimal(nucleus.system.Parameters.PRICE_PER_NETWORK_MBYTE))
+        long actualFee = totalBytes * fee;//new BigDecimal(totalBytes).divide(new BigDecimal(1000000), 34, BigDecimal.ROUND_UP).multiply(new BigDecimal(nucleus.system.Parameters.PRICE_PER_NETWORK_MBYTE)).max(new BigDecimal(nucleus.system.Parameters.PRICE_PER_NETWORK_MBYTE))
 
         outputs[outputs.length - 2] = new TransactionOutput();
         outputs[outputs.length - 2].setValue(fee);
@@ -543,10 +547,11 @@ public class Wallet extends Application implements Initializable
         TransactionOutput feeOutput = outputs[outputs.length - 2];
         TransactionOutput returnOutput = outputs[outputs.length - 1];
 
-        long totalFee = outputs.length / fee;
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This transaction has a total cost of \"" + nucleus.system.Parameters.satoshisToCoin(total + fee).toPlainString() + "\" coins, continue?\n" +
+                "Breakdown:\n\tTotal: " + nucleus.system.Parameters.satoshisToCoin(total).toPlainString() +
+                "\n\tFees: " + nucleus.system.Parameters.satoshisToCoin(fee).toPlainString()
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This transaction has a total cost of \"" + nucleus.system.Parameters.satoshisToCoin(total + totalFee).toPlainString() + "\" coins, continue?\n" +
-                "Breakdown:\n\tTotal: " + nucleus.system.Parameters.satoshisToCoin(total).toPlainString() + "\n\tFees: " + nucleus.system.Parameters.satoshisToCoin(totalFee).toPlainString(), ButtonType.YES, ButtonType.NO);
+                , ButtonType.YES, ButtonType.NO);
 
         if (alert.showAndWait().get().equals(ButtonType.NO))
             return;
@@ -561,6 +566,18 @@ public class Wallet extends Application implements Initializable
 
         if (string.length() > 0)
             password = string;
+    }
+
+    @FXML
+    public void onSendTransactionButtonPressed(ActionEvent event) throws Throwable
+    {
+        sendTransaction(false);
+    }
+
+    @FXML
+    public void onSendSafeTransactionButtonPressed(ActionEvent event) throws Throwable
+    {
+        sendTransaction(true);
     }
 
     @FXML

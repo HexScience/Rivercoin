@@ -1,41 +1,83 @@
 package nucleus.protocols.protobufs;
 
 
+import nucleus.exceptions.FileServiceException;
 import nucleus.protocols.transaction.Transaction;
 import nucleus.protocols.transaction.TransactionOutput;
+import nucleus.util.FileService;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Block implements StrippedObject
 {
+    /**
+     * A block header that contains important information
+     * relating to this block.
+     */
 	private BlockHeader header = new BlockHeader();
-	private List<Transaction> transactions = new ArrayList<>();
-	private List<TransactionOutput> coinbase;
-	private byte codebase[];
+    /**
+     * A list of accepted transactions that went through,
+     * these transactions are finalized.
+     */
+	private Set<Transaction>        accepted;
+    /**
+     * A list of rejected transactions that did not go through,
+     * if a transaction is added to the rejected list, then it
+     * is safe to re-submit the transaction.
+     *
+     * Only valid transactions should go into this list,
+     * therefore the rejection reason is obvious;
+     * Transactions that are valid, but are too old to be
+     * considered valid anymore (older than the block meantime)
+     * due to low fees or bad communication in the network (la
+     * -te arrivals).
+     *
+     * The rejected transaction is represented by a double sha256
+     * transaction hash.
+     */
+    private Set<byte[]>             rejected;
+    /**
+     * A list of transaction outputs, the first output should be
+     * the reward, the rest are appended as fees.
+     */
+    private List<TransactionOutput> coinbase;
 
-	public Block()
+
+    /**
+     * A simple block constructor for creating an empty block.
+     */
+    public Block()
 	{
+	    this.accepted = new LinkedHashSet<>();
+	    this.rejected = new LinkedHashSet<>();
 	}
 
+    /**
+     * @param service
+     * @throws IOException
+     * @throws FileServiceException
+     */
+    public Block(FileService service) throws IOException, FileServiceException
+    {
+        this(service.as(DataInputStream.class));
+    }
+
+    /**
+     * @param inputStream
+     */
 	public Block(DataInputStream inputStream)
 	{
 	}
 
-	public Block(BlockHeader header, List<Transaction> buffer, byte codebase[])
+	public Block(BlockHeader header, Set<Transaction> accepted, Set<byte[]> rejected, byte codebase[])
 	{
-		this.header = header;
-		this.transactions = buffer;
-		this.codebase = codebase;
-		this.coinbase = new ArrayList<>();
-	}
-
-	public void build()
-	{
-		this.codebase = null;
+		this.header     = header;
+		this.accepted   = accepted;
+		this.rejected   = rejected;
+		this.coinbase   = new ArrayList<>();
 	}
 
 	//GETTERS
@@ -44,7 +86,8 @@ public class Block implements StrippedObject
 
 	//GETTERS
 
-	public List<Transaction> getTransactions() { return transactions; }
+    public Set<Transaction> getAcceptedTransactions() { return accepted; }
+    public Set<byte[]>      getRejectedTransactions() { return rejected; }
 
 	//SETTERS
 
@@ -52,19 +95,27 @@ public class Block implements StrippedObject
 
 	//SETTERS
 
-	private void  setTransactions(List<Transaction> transactions) { this.transactions = transactions; }
+    private void  setAccepted(Set<Transaction> accepted)    { this.accepted = accepted; }
+    private void  setRejected(Set<byte[]> rejected)         { this.rejected = rejected; }
+
+    public void addAcceptedTransaction(Transaction transaction)
+    {
+        this.accepted.add(transaction);
+    }
+
+    public void addRejectedTransaction(Transaction transaction)
+    {
+        this.rejected.add(transaction.getHash());
+    }
 
 
 	public void write(final DataOutputStream stream) throws IOException
 	{
 		header.write(stream);
-		stream.writeShort(transactions.size());
+		stream.writeShort(accepted.size());
 
-		for (Transaction transaction : transactions)
+		for (Transaction transaction : accepted)
 			transaction.write(stream);
-
-		stream.writeShort(codebase.length);
-		stream.write(codebase);
 	}
 
 
@@ -79,14 +130,43 @@ public class Block implements StrippedObject
 
 			transaction.read(stream);
 
-			transactions.add(transaction);
+			accepted.add(transaction);
 		}
-
-		short cbl = stream.readShort();
-		codebase = new byte[cbl];
-
-		stream.read(codebase);
 	}
+
+	public final long latestTransaction()
+    {
+        if (accepted.size() == 0)
+            return -1;
+
+        if (accepted.size() == 1)
+            return accepted.iterator().next().getTimeStamp();
+
+        List<Transaction> list = new ArrayList<>(accepted);
+
+        Collections.sort(list, (a, b)->{
+            return (a.getTimeStamp() < b.getTimeStamp()) ? -1 : (a.getTimeStamp() == b.getTimeStamp() ? 0 : 1);
+        });
+
+        return list.get(0).getTimeStamp();
+    }
+
+    public final long earliestTransaction()
+    {
+        if (accepted.size() == 0)
+            return -1;
+
+        if (accepted.size() == 1)
+            return accepted.iterator().next().getTimeStamp();
+
+        List<Transaction> list = new ArrayList<>(accepted);
+
+        Collections.sort(list, (a, b)->{
+            return (a.getTimeStamp() < b.getTimeStamp()) ? -1 : (a.getTimeStamp() == b.getTimeStamp() ? 0 : 1);
+        });
+
+        return list.get(list.size() - 1).getTimeStamp();
+    }
 
 	public List<TransactionOutput> getCoinbase()
 	{

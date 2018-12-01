@@ -14,7 +14,10 @@ public class BlockHeader
 	private byte[] 			parentHash = new byte[32];
 	private byte[] 			merkleRoot = new byte[32];
 	private byte[] 			forkRoot = new byte[32];
-	private long 			timeStamp ;
+	/**
+	 * timeStamp = ((block.earliesttransaction + block.latesttransaction) / 2);
+	 */
+	private long 			timeStamp;
 	private double 			difficulty;
 	private long 			nonce;
 	private CompressedKey 	minerAddress = new CompressedKey();
