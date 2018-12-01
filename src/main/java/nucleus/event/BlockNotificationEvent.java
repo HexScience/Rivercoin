@@ -1,10 +1,10 @@
 package nucleus.event;
 
-import nucleus.protocols.protobufs.Block;
+import nucleus.protocols.DownloadedBlock;
 
-public class BlockNotificationEvent extends ActionableEvent<Block>
+public class BlockNotificationEvent extends ActionableEvent<DownloadedBlock>
 {
-    public BlockNotificationEvent(long time, Block data)
+    public BlockNotificationEvent(long time, DownloadedBlock data)
     {
         super(EventType.NOTIFICATION, time, data);
     }

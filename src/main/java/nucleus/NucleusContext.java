@@ -2,6 +2,7 @@ package nucleus;
 
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import nucleus.event.EventManager;
+import nucleus.exceptions.EventFamilyDoesNotExistException;
 import nucleus.exceptions.FileServiceException;
 import nucleus.ledger.Ledger;
 import nucleus.protocols.BlockChain;
@@ -26,13 +27,14 @@ public class NucleusContext implements Context
     private EventManager    eventManager;
     private NKMiner         miner;
 
-    public NucleusContext(FileService entryPoint, DB db, NKMiner miner) throws IOException, FileServiceException, GeoIp2Exception
+    public NucleusContext(FileService entryPoint, DB db, NKMiner miner) throws IOException, FileServiceException, GeoIp2Exception, EventFamilyDoesNotExistException
     {
         this.config = new Config();
         this.serializer = new Serializer();
         this.serverManager = new ServerManager(entryPoint);
         this.ledgerDatabase = new Ledger();
         this.db = db;
+        this.eventManager = new EventManager();
         this.chain = new BlockChain(this);
         this.miner = miner;
     }

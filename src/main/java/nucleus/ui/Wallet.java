@@ -29,6 +29,7 @@ import nucleus.crypto.MnemonicPhraseSeeder;
 import nucleus.crypto.ec.ECLib;
 import nucleus.exceptions.*;
 import nucleus.protocols.protobufs.Address;
+import nucleus.protocols.protobufs.Block;
 import nucleus.protocols.transaction.Transaction;
 import nucleus.protocols.transaction.TransactionInput;
 import nucleus.protocols.transaction.TransactionOutput;
@@ -37,6 +38,7 @@ import nucleus.system.Context;
 import nucleus.util.Base58;
 import nucleus.util.FileService;
 import nucleus.util.FileUtils;
+import nucleus.util.SortedLinkedQueue;
 import nucleus.versioncontrol.VersionControl;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.Options;
@@ -201,6 +203,35 @@ public class Wallet extends Application implements Initializable
          */
         DB db = factory.open(entryPoint.newFile("data").newFile("db").file(), new Options());
         context = new NucleusContext(entryPoint, db, null);
+
+        Block a = new Block();
+        Block b = new Block();
+        Block c = new Block();
+        Block d = new Block();
+
+        a.getHeader().setBlockID(1);
+        b.getHeader().setBlockID(-1);
+        c.getHeader().setBlockID(3);
+
+        SortedLinkedQueue<Block> tree = new SortedLinkedQueue<>();
+
+        tree.add(c);
+        tree.add(b);
+        tree.add(a);
+        tree.add(d);
+
+        List<Block> list = new ArrayList<>();
+        list.add(b);
+        list.add(d);
+
+        tree.retainAll(list);
+
+        for (Block block : tree)
+            System.out.println(block);
+
+        System.out.println(tree);
+
+        System.exit(0);
     }
 
     @Override
@@ -210,7 +241,8 @@ public class Wallet extends Application implements Initializable
             start(args);
         } catch (Throwable throwable)
         {
-            throw new Exception(throwable.getMessage());
+            throwable.printStackTrace();
+            throw new Exception("");
         }
 
         this.stage = stage;

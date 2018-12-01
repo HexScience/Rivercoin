@@ -2,6 +2,7 @@ package nucleus;
 
 import nucleus.crypto.ec.ECLib;
 import nucleus.exceptions.UnknownCommandException;
+import nucleus.system.Parameters;
 import nucleus.util.FileService;
 import nucleus.mining.NKMiner;
 import nucleus.system.Context;
@@ -111,7 +112,10 @@ public class Start
         /**
          * Initialize the NKMiner.
          */
+
+        System.out.println(Long.MAX_VALUE);
         NKMiner miner = NKMiner.init();
+        miner.mine("potato".getBytes(), Parameters.toInteger(1.235));
         /**
          * Initialize the version control class.
          */

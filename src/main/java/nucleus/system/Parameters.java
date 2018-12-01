@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 
 public class Parameters
 {
-    public static final byte MULTISIGNATURE_PUBLIC_ADDRESS_PREFIX = 20; //M
+    public static final byte MULTISIGNATURE_PUBLIC_ADDRESS_PREFIX = 20;//M
     /** public addresses to send/receive money (main network) **/
     public static final byte MAIN_NETWORK_PUBLIC_ADDRESS_PREFIX = 23;//A
     /** public addresses to send/receive money (test network) **/

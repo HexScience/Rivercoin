@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class EventManager
 {
-    Map<String, EventFamily> eventFamilyMap;
+    private Map<String, EventFamily> eventFamilyMap;
 
     public EventManager()
     {

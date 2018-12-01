@@ -11,7 +11,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-public class Block implements StrippedObject
+public class Block implements Comparable<Block>, StrippedObject
 {
     /**
      * A block header that contains important information
@@ -51,8 +51,9 @@ public class Block implements StrippedObject
      */
     public Block()
 	{
-	    this.accepted = new LinkedHashSet<>();
-	    this.rejected = new LinkedHashSet<>();
+	    this.accepted   = new LinkedHashSet<>();
+	    this.rejected   = new LinkedHashSet<>();
+	    this.header     = new BlockHeader();
 	}
 
     /**
@@ -178,4 +179,29 @@ public class Block implements StrippedObject
 	{
 		return new byte[0];
 	}
+
+    public void lock()
+    {
+    }
+
+    @Override
+    public String toString()
+    {
+        return getHeader().getBlockID() + "";
+    }
+
+    @Override
+    public int compareTo(Block b)
+    {
+        Block a = this;
+        return a.getHeader().getBlockID() < b.getHeader().getBlockID() ? -1 : (a.getHeader().getBlockID() == b.getHeader().getBlockID() ? 0 : 1);
+    }
+
+    public static class BlockComparator implements Comparator<Block>{
+        @Override
+        public int compare(Block a, Block b)
+        {
+            return a.getHeader().getBlockID() < b.getHeader().getBlockID() ? -1 : (a.getHeader().getBlockID() == b.getHeader().getBlockID() ? 0 : 1);
+        }
+    }
 }
