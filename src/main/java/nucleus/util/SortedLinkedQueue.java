@@ -1,11 +1,8 @@
 package nucleus.util;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
-public class SortedLinkedQueue<E extends Comparable> implements Collection<E>
+public class SortedLinkedQueue<E extends Comparable> extends AbstractQueue<E> implements Collection<E>
 {
 //    private Map<IpAddress, Set<Block>> blockQueue;
 //
@@ -122,6 +119,16 @@ public class SortedLinkedQueue<E extends Comparable> implements Collection<E>
             child.moveBack(this);
         else element.child = null;
     }
+
+    public E get()
+    {
+        E e = block;
+
+        if (child != null)
+            child.moveBack(this);
+
+        return e;
+    }
 }
 
     private Element queue;
@@ -197,6 +204,25 @@ public class SortedLinkedQueue<E extends Comparable> implements Collection<E>
     public boolean add(E e)
     {
         return insert(e);
+    }
+
+    @Override
+    public boolean offer(E e)
+    {
+        insert(e);
+        return true;
+    }
+
+    @Override
+    public E poll()
+    {
+        return queue != null ? queue.get() : null;
+    }
+
+    @Override
+    public E peek()
+    {
+        return queue != null ? queue.block : null;
     }
 
     public boolean insert(E block)
