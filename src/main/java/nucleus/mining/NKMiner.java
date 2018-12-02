@@ -25,7 +25,6 @@ import java.util.Random;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL20.GL_LINK_STATUS;
 import static org.lwjgl.opengl.GL20.glDrawBuffers;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL30.*;
@@ -35,17 +34,12 @@ import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 
-import org.lwjgl.*;
 import org.lwjgl.opencl.*;
-import org.lwjgl.system.*;
 
-import java.nio.*;
 import java.util.concurrent.*;
 
 import static org.lwjgl.opencl.CL11.*;
 import static org.lwjgl.opencl.KHRICD.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.Pointer.*;
 
 import static nucleus.mining.InfoUtil.*;
@@ -213,8 +207,8 @@ public class NKMiner
 
         try
         {
-            vertShader = Read(Start.class.getClass().getResourceAsStream("/mining/vert.txt"));
-            fragShader = Read(Start.class.getClass().getResourceAsStream("/mining/frag.txt"));
+            vertShader = Read(Start.class.getClass().getResourceAsStream("/mining/shader.vertx"));
+            fragShader = Read(Start.class.getClass().getResourceAsStream("/mining/shader.fragm"));
         } catch (IOException e)
         {
             e.printStackTrace();
