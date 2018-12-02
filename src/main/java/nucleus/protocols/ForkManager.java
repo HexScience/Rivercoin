@@ -1,5 +1,7 @@
 package nucleus.protocols;
 
+import nucleus.protocols.protobufs.Block;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -15,6 +17,5 @@ public class ForkManager
     public void add(DownloadedBlock block)
     {
         for (ForkI fork : forks)
-            fork.add(block);
     }
 }

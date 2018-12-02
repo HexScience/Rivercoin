@@ -12,11 +12,12 @@ public class NetworkFork implements ForkI
     private IpAddress       peer;
 
     @Override
-    public void add(Block block)
+    public boolean add(Block block)
     {
+        return false;
     }
 
-    public void add(DownloadedBlock downloadedBlock)
+    public boolean add(DownloadedBlock downloadedBlock)
     {
         if (peer == null)
         {
@@ -26,6 +27,8 @@ public class NetworkFork implements ForkI
         }
         else if (downloadedBlock.getSender().equals(peer))
             blockQueue.add(downloadedBlock.getBlock());
+
+        return peer.equals(downloadedBlock.getSender());
     }
 
     @Override

@@ -6,7 +6,7 @@ import java.util.Queue;
 
 public interface ForkI
 {
-    void add(Block block);
-    void add(DownloadedBlock block);
+    boolean add(Block block);
+    boolean add(DownloadedBlock block);
     Queue<Block> get();
 }

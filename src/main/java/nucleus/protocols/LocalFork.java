@@ -15,14 +15,16 @@ public class LocalFork implements ForkI
     }
 
     @Override
-    public void add(Block block)
+    public boolean add(Block block)
     {
         queue.add(block);
+        return true;
     }
 
     @Override
-    public void add(DownloadedBlock block)
+    public boolean add(DownloadedBlock block)
     {
+        return false;
     }
 
     @Override
