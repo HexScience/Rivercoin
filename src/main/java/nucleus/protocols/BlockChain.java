@@ -27,11 +27,12 @@ public class BlockChain
      */
     private Block   current;
 
-    private Queue<DownloadedBlock> blockQueue;
+    private ForkManager forkManager;
 
     public BlockChain(Context context) throws EventFamilyDoesNotExistException
     {
         this.context = context;
+        this.forkManager = new ForkManager();
 
         /**
          * Register two event listeners to the event manager,
