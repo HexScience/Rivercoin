@@ -1,11 +1,14 @@
 #version 150
 
-in vec3 vertex;
-in vec2 vcoords;
+layout (location = 0) in vec3 vertex_in;
+layout (location = 1) in vec2 coords_in;
+layout (location = 2) in vec3 normal_in;
+
+out vec3 vertex;
+out vec3 normal
 out vec2 coords;
 
 void main(){
-    gl_Position = vec4(vertex, 1);
-//    vertColor = vec4(0.6, 0.3, 0.4, 1.0);
-    coords = vcoords;
+    vertex = vertex_in;
+    coords = coords_in;
 }
