@@ -17,5 +17,22 @@ public class ForkManager
     public void add(DownloadedBlock block)
     {
         for (ForkI fork : forks)
+            if (fork.add(block))
+                return;
+
+        ForkI fork = null;
+        forks.add(fork = new NetworkFork());
+        fork.add(block);
+    }
+
+    public void add(Block block)
+    {
+        for (ForkI fork : forks)
+            if (fork.add(block))
+                return;
+
+        ForkI fork = null;
+        forks.add(fork = new NetworkFork());
+        fork.add(block);
     }
 }
