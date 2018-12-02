@@ -21,7 +21,7 @@ public class ForkManager
                 return;
 
         ForkI fork = null;
-        forks.add(fork = new NetworkFork());
+        forks.add(fork = new ForeignFork());
         fork.add(block);
     }
 
@@ -32,7 +32,7 @@ public class ForkManager
                 return;
 
         ForkI fork = null;
-        forks.add(fork = new NetworkFork());
+        forks.add(fork = new ForeignFork());
         fork.add(block);
     }
 }
