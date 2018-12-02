@@ -6,8 +6,6 @@ import nucleus.protocols.protobufs.Block;
 import nucleus.system.Context;
 import nucleus.util.SortedLinkedQueue;
 
-import java.util.Queue;
-
 public class BlockChain
 {
     /**

@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
 
 public class Parameters
 {
