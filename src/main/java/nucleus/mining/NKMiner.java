@@ -5,8 +5,6 @@ import nucleus.algorithms.*;
 import nucleus.exceptions.NKMinerException;
 import nucleus.exceptions.NKMinerInstanceAlreadyExistsException;
 import nucleus.exceptions.NKMinerNullInstanceException;
-import nucleus.mining.engine.abstractions.FrameBufferObject;
-import nucleus.mining.engine.abstractions.Mesh;
 import nucleus.system.Parameters;
 import nucleus.util.ByteUtil;
 import nucleus.util.Logger;
@@ -24,7 +22,6 @@ import java.util.Random;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.glDrawBuffers;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL30.*;
