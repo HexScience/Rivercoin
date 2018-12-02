@@ -15,6 +15,21 @@ public class FileService
             this.entryPoint = this.entryPoint.substring(0, this.entryPoint.length() - 1);
     }
 
+    public static FileService homeDir()
+    {
+        return new FileService(System.getProperty("user.home"));
+    }
+
+    public static FileService appDir()
+    {
+        return new FileService(System.getProperty("user.home")).newFile("Applications");
+    }
+
+    public long length()
+    {
+        return file().length();
+    }
+
     public FileService newFile(String name)
     {
         return new FileService(entryPoint + File.separator + name);
@@ -63,5 +78,11 @@ public class FileService
         instream.close();
         out.flush();
         out.close();
+    }
+
+    @Override
+    public String toString()
+    {
+        return file().toString();
     }
 }
