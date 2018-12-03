@@ -73,7 +73,6 @@ public class NKMiner
     private int     mNkHash;
     private int     mMDL;
     private int     mMVP;
-    private VBO     vbo;
     private FBO     fbo;
     private Mesh    mesh;
 
@@ -130,10 +129,23 @@ public class NKMiner
 
         GL.createCapabilities();
 
+        float verticeswithcoords[] =
+            {
+                -1, -1, 0,
+                    -1, -1,
+                1, -1, 0,
+                    1, -1,
+                1, 1, 0,
+                    1, 1,
+                -1, -1, 0,
+                    -1, -1,
+                1, 1, 0,
+                    1, 1,
+                -1, 1, 0,
+                    -1, 1
+            };
+
         element = new Element();
-//        FloatBuffer verticese = BufferUtils.createFloatBuffer(vertices.length);
-//        verticese.put(vertices);
-//        verticese.flip();
 
         element.vertices = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(element.vertices);
@@ -149,111 +161,31 @@ public class NKMiner
 
         GL30.glBindVertexArray(0);
 
-        vbo = new VBO();
-
-        vbo.vbo = GL20.glGenBuffers();
-        vbo.ibo = GL20.glGenBuffers();
-
-//        float vertices[] =
-//        {
-//                -1, -1, 0,
-//                1,1,1,
-//                -1, -1,
-//                1, -1, 0,
-//                1,1,1,
-//                1, -1,
-//                1, 1, 0,
-//                1,1,1,
-//                1, 1,
-//                -1, -1, 0,
-//                1,1,1,
-//                -1, -1,
-//                1, 1, 0,
-//                1,1,1,
-//                1, 1,
-//                -1, 1, 0,
-//                1,1,1,
-//                -1, 1
-//        };
-
-//        int indices[] = {0, 1, 2, 3, 4, 5};
-
-        DataInputStream stream = new DataInputStream(Start.class.getClass().getResourceAsStream("/mining/cube.obj"));
-
-        byte dataset[] = new byte[58473478];
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-        stream.read(dataset);
-        baos.write(dataset);
-
-//        while (stream.available() > 0)
-//        {
-//            baos.write(stream.read());
-//            System.out.println("HI" + " " + stream.available());
-//        }
-
-        baos.flush();;
-        baos.close();
-
-        byte data[] = baos.toByteArray();
-
-        stream.close();
-
-        ByteBuffer file = MemoryUtil.memAlloc(data.length);
-        file.put(data);
-        file.flip();
-
-        AIScene scene = Assimp.aiImportFileFromMemory(file,
-                Assimp.aiProcess_Triangulate |
-                        Assimp.aiProcess_GenSmoothNormals |
-                        Assimp.aiProcess_FlipUVs |
-                        Assimp.aiProcess_CalcTangentSpace |
-                        Assimp.aiProcess_LimitBoneWeights,
-                "obj"
-        );
-
-        if (scene == null)
-            throw new NKMinerException("could not load PipeDreamObject data.");
-
-        AIMesh mesh = AIMesh.create(scene.mMeshes().get(0));
-
-        float vertices[] = new float[mesh.mNumVertices() * 8];
-        int indices[] = new int[mesh.mNumFaces() * mesh.mFaces().get(0).mNumIndices()];
-        int index = 0;
-
-        for (int v = 0; v < mesh.mNumVertices(); v ++)
+        float vertices[] =
         {
-            AIVector3D position = mesh.mVertices().get(v);
-            AIVector3D normal   = mesh.mNormals().get(v);
-            AIVector3D texCoord = mesh.mTextureCoords(0).get(v);
+                -1, -1, 0,
+                1,1,1,
+                -1, -1,
+                1, -1, 0,
+                1,1,1,
+                1, -1,
+                1, 1, 0,
+                1,1,1,
+                1, 1,
+                -1, -1, 0,
+                1,1,1,
+                -1, -1,
+                1, 1, 0,
+                1,1,1,
+                1, 1,
+                -1, 1, 0,
+                1,1,1,
+                -1, 1
+        };
 
-            vertices[index ++] = position.x();
-            vertices[index ++] = position.y();
-            vertices[index ++] = position.z();
-            vertices[index ++] = normal.x();
-            vertices[index ++] = normal.y();
-            vertices[index ++] = normal.z();
-            vertices[index ++] = texCoord.x();
-            vertices[index ++] = texCoord.z();
-        }
+        int indices[] = {0, 1, 2, 3, 4, 5};
 
-
-        index = 0;
-
-        for(int f = 0; f < mesh.mNumFaces(); f++)
-        {
-            AIFace face = mesh.mFaces().get(f);
-            for(int ind = 0; ind < face.mNumIndices(); ind++)
-                indices[index ++] = (face.mIndices().get(ind));
-        }
-
-        vbo.sze = indices.length;
-
-        glBindBuffer(GL_ARRAY_BUFFER, vbo.vbo);
-        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo.ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
+        mesh = new Mesh(vertices, indices);
 
 //        element.coords = GL30.glGenVertexArrays();
 //        GL30.glBindVertexArray(element.coords);
@@ -397,10 +329,6 @@ public class NKMiner
         tlsds.uniform("mvp", projv.Mul(model));
 
         mesh.render();
-
-
-//        GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
-
 
         GL30.glBindVertexArray(0);
     }
