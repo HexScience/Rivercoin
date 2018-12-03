@@ -151,14 +151,13 @@ public class NKMiner
         GL30.glBindVertexArray(element.vertices);
 
         element.vbo = GL15.glGenBuffers();
-        GL20.glEnableVertexAttribArray(0);
-        GL20.glEnableVertexAttribArray(1);
+//        GL20.glEnableVertexAttribArray(0);
+//        GL20.glEnableVertexAttribArray(1);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, element.vbo);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticeswithcoords, GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false,20, 0);
-        GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 20, 12);
+//        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticeswithcoords, GL15.GL_STATIC_DRAW);
+//        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false,20, 0);
+//        GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 20, 12);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-
         GL30.glBindVertexArray(0);
 
         float vertices[] =
@@ -337,8 +336,8 @@ public class NKMiner
     {
         fbo.bind();
 
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.1f, 0.0f, 0.1f, 1f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         draw(nonce_a, r, g, b, r2, g2, b2, r3, g3, b3);
 
