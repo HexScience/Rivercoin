@@ -98,5 +98,5 @@ void main()
 
     float Displacement = 0.0;
     vertex += normal * Displacement;
-    gl_Position = vec4(vertex, 1.0);
+    gl_Position = mvp * vec4(vertex, 1.0);
 }
