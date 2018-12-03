@@ -122,7 +122,23 @@ public class Mesh
                 indices[index ++] = (face.mIndices().get(ind));
         }
 
-        this.mesh(vertices, indices);
+        float actualVertices[] = new float[(indices.length) * 8];
+
+        index = 0;
+
+        for (int i = 0; i < indices.length; i ++)
+        {
+            actualVertices[index ++] = vertices[indices[i] * 8];
+            actualVertices[index ++] = vertices[indices[i] * 8 + 1];
+            actualVertices[index ++] = vertices[indices[i] * 8 + 2];
+            actualVertices[index ++] = vertices[indices[i] * 8 + 3];
+            actualVertices[index ++] = vertices[indices[i] * 8 + 4];
+            actualVertices[index ++] = vertices[indices[i] * 8 + 5];
+            actualVertices[index ++] = vertices[indices[i] * 8 + 6];
+            actualVertices[index ++] = vertices[indices[i] * 8 + 7];
+        }
+
+        this.mesh(actualVertices, indices);
     }
 
     public Mesh(float vertices[], int indices[])
