@@ -22,6 +22,7 @@ import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL40.GL_PATCHES;
 
 public class Mesh
@@ -131,16 +132,16 @@ public class Mesh
 
     private void mesh(float vertices[], int indices[])
     {
-//        sze = vertices.length / 8;
-//
-//
-//
-//        vbo = GL30.glGenVertexArrays();
-//        GL30.glBindVertexArray(vbo);
-//
-//        ibo = GL15.glGenBuffers();
-//        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, ibo);
-//        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertices, GL15.GL_STATIC_DRAW);
+        sze = vertices.length / 8;
+
+
+
+        vbo = GL30.glGenVertexArrays();
+        GL30.glBindVertexArray(vbo);
+
+        ibo = GL15.glGenBuffers();
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, ibo);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertices, GL15.GL_STATIC_DRAW);
 //
 //
 //        glEnableVertexAttribArray(0);
@@ -156,16 +157,16 @@ public class Mesh
 //        GL30.glBindVertexArray(0);
 
 
-        vbo = glGenBuffers();
-        ibo = glGenBuffers();
-
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
-
-        sze = indices.length;
+//        vbo = glGenBuffers();
+//        ibo = glGenBuffers();
+//
+//        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+//        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+//
+//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+//        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
+//
+//        sze = indices.length;
 
 
 //        sze = indices.length;
@@ -197,40 +198,40 @@ public class Mesh
 
     public void render()
     {
-//        glBindVertexArray(vbo);
-//        glBindBuffer(GL_ARRAY_BUFFER, ibo);
-//
-//        glEnableVertexAttribArray(0);
-//        glEnableVertexAttribArray(1);
-//        glEnableVertexAttribArray(2);
-//
-//        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false,32, 0);
-//        GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 32, 12);
-//        GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 32, 24);
-//
-//        glDrawArrays(GL_PATCHES, 0, sze);
-//
-//        glBindVertexArray(0);
-//        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
+        glBindVertexArray(vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, ibo);
 
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
         glEnableVertexAttribArray(2);
 
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * 4, 0);
-        glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * 4, 12);
-        glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * 4, 24);
+        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false,32, 0);
+        GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 32, 12);
+        GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 32, 24);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glDrawElements(GL_PATCHES, sze, GL_UNSIGNED_INT, 0);
-        System.out.println(sze);
+        glDrawArrays(GL_PATCHES, 0, sze);
 
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(2);
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+
+//        glEnableVertexAttribArray(0);
+//        glEnableVertexAttribArray(1);
+//        glEnableVertexAttribArray(2);
+//
+//        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+//        glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * 4, 0);
+//        glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * 4, 12);
+//        glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * 4, 24);
+//
+//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+//        glDrawElements(GL_PATCHES, sze, GL_UNSIGNED_INT, 0);
+//        System.out.println(sze);
+//
+//        glDisableVertexAttribArray(0);
+//        glDisableVertexAttribArray(1);
+//        glDisableVertexAttribArray(2);
 
 
 
