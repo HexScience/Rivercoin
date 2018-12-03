@@ -52,7 +52,6 @@ public class NKMiner
     private long mWindow;
     private float mQuad[];
     private int   mIndices[];
-    private int   mShaderPrograms[];
     private class VBO{
         private int vbo;
         private int ibo;
@@ -75,17 +74,14 @@ public class NKMiner
     private int     mMDL;
     private int     mMVP;
     private VBO     vbo;
+    private FBO     fbo;
+    private Mesh    mesh;
 
-    private class FrameBufferObject{
-        public int  fbo;
-        private int textureID;
-    }
+    private Shader  tlsds;
 
     private static final int width = 1280, height = 720;
 
-    private FrameBufferObject fbo;
-
-    private NKMiner() throws NKMinerException, IOException
+    private NKMiner() throws Exception
     {
         GLFWErrorCallback.createPrint(System.err).set();
 
@@ -133,42 +129,6 @@ public class NKMiner
         glfwMakeContextCurrent(mWindow);
 
         GL.createCapabilities();
-
-//        float vertices[] =
-//                {
-//                        // Left bottom triangle
-//                        -1f, 1f, 0f,
-//                        -1f, -1f, 0f,
-//                        1f, -1f, 0f,
-//
-//
-//                        // Right top triangle
-//                        1f, -1f, 0f,
-//                        1f, 1f, 0f,
-//                        -1f, 1f, 0f
-//                };
-
-        float verticeswithcoords[] =
-            {
-                -1, -1, 0,
-                    -1, -1,
-                1, -1, 0,
-                    1, -1,
-                1, 1, 0,
-                    1, 1,
-                -1, -1, 0,
-                    -1, -1,
-                1, 1, 0,
-                    1, 1,
-                -1, 1, 0,
-                    -1, 1
-            };
-
-//        mIndices = new int[]
-//                {
-//                    0, 1, 2,
-//                    0, 2, 3
-//                };
 
         element = new Element();
 //        FloatBuffer verticese = BufferUtils.createFloatBuffer(vertices.length);
@@ -306,342 +266,25 @@ public class NKMiner
 //
 //        GL30.glBindVertexArray(0);
 
-        String vertShader = null;
-        String tsscShader = null;
-        String tsseShader = null;
-        String fragShader = null;
-
         /**
          * Bind the vertex array to bypass validation errors.
          */
         GL30.glBindVertexArray(element.vertices);
 
-        try
-        {
-            vertShader = Read(Start.class.getClass().getResourceAsStream("/mining/shader.vertx"));
-            tsscShader = Read(Start.class.getClass().getResourceAsStream("/mining/shader.tessc"));
-            tsseShader = Read(Start.class.getClass().getResourceAsStream("/mining/shader.tesse"));
-            fragShader = Read(Start.class.getClass().getResourceAsStream("/mining/shader.fragm"));
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-            throw new NKMinerException("cannot read shader files.");
-        }
+        tlsds = new Shader("shader");
+        tlsds.registerUniform("nonce");
+        tlsds.registerUniform("mvp");
+        tlsds.registerUniform("model");
+        tlsds.registerUniform("LightColor");
+        tlsds.registerUniform("LightColor2");
+        tlsds.registerUniform("nonce2");
 
-        mShaderPrograms = new int[5];
-
-        mShaderPrograms[0] = GL20.glCreateProgram();
-
-        if (mShaderPrograms[0] == NULL) throw new NKMinerException("could not create main shader program.");
-
-        mShaderPrograms[1] = createShader(vertShader, GL20.GL_VERTEX_SHADER, mShaderPrograms[0]);
-        mShaderPrograms[3] = createShader(tsscShader, GL40.GL_TESS_CONTROL_SHADER, mShaderPrograms[0]);
-        mShaderPrograms[4] = createShader(tsseShader, GL40.GL_TESS_EVALUATION_SHADER, mShaderPrograms[0]);
-        mShaderPrograms[2] = createShader(fragShader, GL20.GL_FRAGMENT_SHADER, mShaderPrograms[0]);
-
-        link(mShaderPrograms[0], mShaderPrograms[1], mShaderPrograms[3], mShaderPrograms[4], mShaderPrograms[2]);
-
-        mTime = GL20.glGetUniformLocation(mShaderPrograms[0], "nonce");
-        mMVP = GL20.glGetUniformLocation(mShaderPrograms[0], "mvp");
-        mMDL = GL20.glGetUniformLocation(mShaderPrograms[0], "model");
-        mLightColour = GL20.glGetUniformLocation(mShaderPrograms[0], "LightColor");
-        mLightColour2 = GL20.glGetUniformLocation(mShaderPrograms[0], "LightColor2");
-        mNonce2 = GL20.glGetUniformLocation(mShaderPrograms[0], "nonce2");
-
-        fbo = new FrameBufferObject();
-
-        fbo.fbo = GL30.glGenFramebuffers();
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo.fbo);
-
-        fbo.textureID = glGenTextures();
-
-        glBindTexture(GL_TEXTURE_2D, fbo.textureID);
-
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width*4, height*4, 0, GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer) null);
-
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-        int depthrenderbuffer = glGenRenderbuffers();
-        glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width*4, height*4);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
-
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fbo.textureID, 0);
-
-        int DrawBuffers[] = {GL_COLOR_ATTACHMENT0};
-        glDrawBuffers(DrawBuffers);
-
-
-        if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            throw new NKMinerException("failed to create a framebuffer object.");
-
-
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        fbo = new FBO(width * 4, height * 4);
 
 //        glViewport(0,0,width,height);
 //        clInit();
 
         Logger.alert("NKMiner initialized successfully.");
-    }
-
-    private void clInit() throws NKMinerException
-    {
-        MemoryStack stack = stackPush();
-
-        IntBuffer pi = stack.mallocInt(1);
-        clGetPlatformIDs(null, pi);
-
-        if (pi.get(0) == 0)
-            throw new NKMinerException("No OpenCL platforms found.");
-
-        PointerBuffer platforms = stack.mallocPointer(pi.get(0));
-
-        clGetPlatformIDs(platforms, (IntBuffer) null);
-
-        PointerBuffer ctxProps = stack.mallocPointer(3);
-        ctxProps
-                .put(0, CL_CONTEXT_PLATFORM)
-                .put(2, 0);
-
-        IntBuffer errcode_ret = stack.callocInt(1);
-        for (int p = 0; p < platforms.capacity(); p++)
-        {
-            long platform = platforms.get(p);
-            ctxProps.put(1, platform);
-
-            Logger.prt("\n-------------------------");
-            Logger.prt("NEW PLATFORM: " + platform + "\n");
-
-            CLCapabilities platformCaps = CL.createPlatformCapabilities(platform);
-
-//            printPlatformInfo(platform, "CL_PLATFORM_PROFILE", CL_PLATFORM_PROFILE);
-            printPlatformInfo(platform, "CL_PLATFORM_VERSION", CL_PLATFORM_VERSION);
-            printPlatformInfo(platform, "CL_PLATFORM_NAME", CL_PLATFORM_NAME);
-            printPlatformInfo(platform, "CL_PLATFORM_VENDOR", CL_PLATFORM_VENDOR);
-            printPlatformInfo(platform, "CL_PLATFORM_EXTENSIONS", CL_PLATFORM_EXTENSIONS);
-            if (platformCaps.cl_khr_icd)
-                printPlatformInfo(platform, "CL_PLATFORM_ICD_SUFFIX_KHR", CL_PLATFORM_ICD_SUFFIX_KHR);
-
-            Logger.prt("");
-
-            clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, null, pi);
-
-            PointerBuffer devices = stack.mallocPointer(pi.get(0));
-            clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, devices, (IntBuffer) null);
-
-            for (int d = 0; d < devices.capacity(); d++)
-            {
-                long device = devices.get(d);
-
-                CLCapabilities caps = CL.createDeviceCapabilities(device, platformCaps);
-
-                Logger.prt("\n\t** NEW DEVICE: " + device + "\n");
-
-                Logger.prt("\tCL_DEVICE_TYPE = " + (getDeviceInfoLong(device, CL_DEVICE_TYPE) == CL_DEVICE_TYPE_CPU ? "CPU" : (getDeviceInfoLong(device, CL_DEVICE_TYPE) == CL_DEVICE_TYPE_GPU ? "GPU" : getDeviceInfoLong(device, CL_DEVICE_TYPE))));
-//                Logger.prt("\tCL_DEVICE_VENDOR_ID = " + getDeviceInfoInt(device, CL_DEVICE_VENDOR_ID));
-                Logger.prt("\tCL_DEVICE_MAX_COMPUTE_UNITS = " + getDeviceInfoInt(device, CL_DEVICE_MAX_COMPUTE_UNITS));
-                Logger.prt("\tCL_DEVICE_MAX_WORK_ITEM_DIMENSIONS = " + getDeviceInfoInt(device, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS));
-                Logger.prt("\tCL_DEVICE_MAX_WORK_GROUP_SIZE = " + getDeviceInfoPointer(device, CL_DEVICE_MAX_WORK_GROUP_SIZE));
-                Logger.prt("\tCL_DEVICE_MAX_CLOCK_FREQUENCY = " + getDeviceInfoInt(device, CL_DEVICE_MAX_CLOCK_FREQUENCY));
-                Logger.prt("\tCL_DEVICE_ADDRESS_BITS = " + getDeviceInfoInt(device, CL_DEVICE_ADDRESS_BITS));
-                Logger.prt("\tCL_DEVICE_AVAILABLE = " + (getDeviceInfoInt(device, CL_DEVICE_AVAILABLE) != 0));
-                Logger.prt("\tCL_DEVICE_COMPILER_AVAILABLE = " + (getDeviceInfoInt(device, CL_DEVICE_COMPILER_AVAILABLE) != 0));
-
-                printDeviceInfo(device, "CL_DEVICE_NAME", CL_DEVICE_NAME);
-                printDeviceInfo(device, "CL_DEVICE_VENDOR", CL_DEVICE_VENDOR);
-                printDeviceInfo(device, "CL_DRIVER_VERSION", CL_DRIVER_VERSION);
-                printDeviceInfo(device, "CL_DEVICE_PROFILE", CL_DEVICE_PROFILE);
-                printDeviceInfo(device, "CL_DEVICE_VERSION", CL_DEVICE_VERSION);
-                printDeviceInfo(device, "CL_DEVICE_EXTENSIONS", CL_DEVICE_EXTENSIONS);
-                if (caps.OpenCL11)
-                    printDeviceInfo(device, "CL_DEVICE_OPENCL_C_VERSION", CL_DEVICE_OPENCL_C_VERSION);
-            }
-
-
-            for (int d = 0; d < devices.capacity(); d++)
-            {
-                long device = devices.get(d);
-
-
-                String name = getDeviceInfoStringUTF8(device, CL_DEVICE_NAME);
-
-
-                CLContextCallback contextCB;
-                long context = clCreateContext(ctxProps, device, contextCB = CLContextCallback.create((errinfo, private_info, cb, user_data) ->
-                {
-                    System.err.println("[LWJGL] cl_context_callback");
-                    System.err.println("\tInfo: " + memUTF8(errinfo));
-                }), NULL, errcode_ret);
-                InfoUtil.checkCLError(errcode_ret);
-
-                long buffer = clCreateBuffer(context, CL_MEM_READ_ONLY, 128, errcode_ret);
-                InfoUtil.checkCLError(errcode_ret);
-
-                CLMemObjectDestructorCallback bufferCB1 = null;
-                CLMemObjectDestructorCallback bufferCB2 = null;
-
-                long subbuffer = NULL;
-
-                CLMemObjectDestructorCallback subbufferCB = null;
-
-                int errcode;
-
-                CLCapabilities caps = CL.createDeviceCapabilities(device, platformCaps);
-
-
-                CountDownLatch destructorLatch;
-
-                if (caps.OpenCL11)
-                {
-                    destructorLatch = new CountDownLatch(3);
-
-                    errcode = clSetMemObjectDestructorCallback(buffer, bufferCB1 = CLMemObjectDestructorCallback.create((memobj, user_data) ->
-                    {
-                        Logger.prt("\t\tBuffer destructed (1): " + memobj);
-                        destructorLatch.countDown();
-                    }), NULL);
-//                    checkCLError(errcode);
-
-                    errcode = clSetMemObjectDestructorCallback(buffer, bufferCB2 = CLMemObjectDestructorCallback.create((memobj, user_data) ->
-                    {
-                        Logger.prt("\t\tBuffer destructed (2): " + memobj);
-                        destructorLatch.countDown();
-                    }), NULL);
-//                    checkCLError(errcode);
-
-                    try (CLBufferRegion buffer_region = CLBufferRegion.malloc())
-                    {
-                        buffer_region.origin(0);
-                        buffer_region.size(64);
-
-                        subbuffer = nclCreateSubBuffer(buffer,
-                                CL_MEM_READ_ONLY,
-                                CL_BUFFER_CREATE_TYPE_REGION,
-                                buffer_region.address(),
-                                memAddress(errcode_ret));
-//                        checkCLError(errcode_ret);
-                    }
-
-                    errcode = clSetMemObjectDestructorCallback(subbuffer, subbufferCB = CLMemObjectDestructorCallback.create((memobj, user_data) ->
-                    {
-                        Logger.prt("\t\tSub Buffer destructed: " + memobj);
-                        destructorLatch.countDown();
-                    }), NULL);
-//                    checkCLError(errcode);
-                } else
-                {
-                    destructorLatch = null;
-                }
-
-                /**
-                 * Choose a capable GPU
-                 */
-                if (name.toLowerCase().contains("nvidia") || name.toLowerCase().contains("amd"))
-                {
-                    long queue = clCreateCommandQueue(context, device, NULL, errcode_ret);
-
-                    int errcb[] = new int[1];
-
-                    CL10GL.clCreateFromGLTexture2D(context, CL_MEM_READ_WRITE, GL_TEXTURE_2D, 0, fbo.textureID, errcb);
-
-                    if (errcb[0] != CL_SUCCESS)
-                        throw new NKMinerException("could not create a clTexture2d.");
-
-
-                    PointerBuffer ev = BufferUtils.createPointerBuffer(1);
-
-                    ByteBuffer kernelArgs = BufferUtils.createByteBuffer(4);
-                    kernelArgs.putInt(0, 1337);
-
-                    CLNativeKernel kernel;
-                    errcode = clEnqueueNativeKernel(queue, kernel = CLNativeKernel.create(
-                            args -> System.out.println("\t\tKERNEL EXEC argument: " + memByteBuffer(args, 4).getInt(0) + ", should be 1337")
-                    ), kernelArgs, null, null, null, ev);
-                    checkCLError(errcode);
-
-                    long e = ev.get(0);
-
-                    CountDownLatch latch = new CountDownLatch(1);
-
-                    CLEventCallback eventCB;
-                    errcode = clSetEventCallback(e, CL_COMPLETE, eventCB = CLEventCallback.create((event, event_command_exec_status, user_data) -> {
-                        System.out.println("\t\tEvent callback status: " + getEventStatusName(event_command_exec_status));
-                        latch.countDown();
-                    }), NULL);
-                    checkCLError(errcode);
-
-                    try {
-                        boolean expired = !latch.await(500, TimeUnit.MILLISECONDS);
-                        if (expired) {
-                            System.out.println("\t\tKERNEL EXEC FAILED!");
-                        }
-                    } catch (InterruptedException exc) {
-                        exc.printStackTrace();
-                    }
-                    eventCB.free();
-
-                    errcode = clReleaseEvent(e);
-                    checkCLError(errcode);
-                    kernel.free();
-
-                    kernelArgs = BufferUtils.createByteBuffer(POINTER_SIZE * 2);
-
-                    kernel = CLNativeKernel.create(args -> {
-                    });
-
-                    long time   = System.nanoTime();
-                    int  REPEAT = 1000;
-                    for (int i = 0; i < REPEAT; i++)
-                        clEnqueueNativeKernel(queue, kernel, kernelArgs, null, null, null, null);
-
-
-                    clFinish(queue);
-
-
-                    time = System.nanoTime() - time;
-
-                    System.out.printf("\n\t\tEMPTY NATIVE KERNEL AVG EXEC TIME: %.4fus\n", (double)time / (REPEAT * 1000));
-
-                    errcode = clReleaseCommandQueue(queue);
-                    checkCLError(errcode);
-                    kernel.free();
-                }
-            }
-        }
-    }
-
-    private static void get(FunctionProviderLocal provider, long platform, String name)
-    {
-        Logger.prt(name + ": " + provider.getFunctionAddress(platform, name));
-    }
-
-    private static void printPlatformInfo(long platform, String param_name, int param)
-    {
-        Logger.prt("\t" + param_name + " = " + getPlatformInfoStringUTF8(platform, param));
-    }
-
-    private static void printDeviceInfo(long device, String param_name, int param)
-    {
-        Logger.prt("\t" + param_name + " = " + getDeviceInfoStringUTF8(device, param));
-    }
-
-    private static String getEventStatusName(int status)
-    {
-        switch (status) {
-            case CL_QUEUED:
-                return "CL_QUEUED";
-            case CL_SUBMITTED:
-                return "CL_SUBMITTED";
-            case CL_RUNNING:
-                return "CL_RUNNING";
-            case CL_COMPLETE:
-                return "CL_COMPLETE";
-            default:
-                throw new IllegalArgumentException(String.format("Unsupported event status: 0x%X", status));
-        }
     }
 
     private static void link(int programId, int vertexShaderId, int tessellationControlShaderID, int tessellationEvaluationShaderID, int fragmentShaderId) throws NKMinerException
@@ -706,7 +349,7 @@ public class NKMiner
         return text;
     }
 
-    public static NKMiner init() throws NKMinerException, IOException
+    public static NKMiner init() throws Exception
     {
         if (instance != null)
             throw new NKMinerInstanceAlreadyExistsException();
@@ -733,11 +376,12 @@ public class NKMiner
 
     private void draw(float nonce_a, float r, float g, float b, float r2, float g2, float b2, float r3, float g3, float b3)
     {
-        glUseProgram(mShaderPrograms[0]);
-        GL20.glUniform1f(mTime, nonce_a);
-        GL20.glUniform3f(mLightColour, r, g, b);
-        GL20.glUniform3f(mLightColour2, r2, g2,  b2);
-        GL20.glUniform3f(mNonce2, r3, g3,  b3);
+        tlsds.bind();
+
+        tlsds.uniform("nonce", nonce_a);
+        tlsds.uniform("LightColor", r, g, b);
+        tlsds.uniform("LightColor2", r2, g2, b2);
+        tlsds.uniform("nonce2", r3, g3, b3);
 
         Matrix4f pos = new Matrix4f().InitTranslation(0,0,0),
                 rot = new Matrix4f().InitRotation(0,0,0),
@@ -750,30 +394,9 @@ public class NKMiner
         Matrix4f model = new Matrix4f().InitIdentity().Mul(pos.Mul(rot.Mul(scl)));
         Matrix4f projv = cproj.Mul(crot.Mul(cpos));
 
-//        glUniformMatrix4fv(mMDL, true, (model).get());
-        glUniformMatrix4fv(mMVP, true, projv.Mul(model).get());
-//        glVertexPointer(3, GL_FLOAT, 0, element.vertices);
-//        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, element.vbo);
+        tlsds.uniform("mvp", projv.Mul(model));
 
-//        GL30.glBindVertexArray(element.vertices);
-
-
-        GL20.glEnableVertexAttribArray(0);
-        GL20.glEnableVertexAttribArray(1);
-        GL20.glEnableVertexAttribArray(2);
-
-        glBindBuffer(GL_ARRAY_BUFFER, vbo.vbo);
-        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false,32, 0);
-        GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 32, 12);
-        GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 32, 24);
-
-        GL20.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo.ibo);
-        glDrawElements(GL_PATCHES, vbo.sze, GL_UNSIGNED_INT, 0);
-
-
-        GL20.glDisableVertexAttribArray(0);
-        GL20.glDisableVertexAttribArray(1);
-        GL20.glDisableVertexAttribArray(2);
+        mesh.render();
 
 
 //        GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
@@ -784,20 +407,15 @@ public class NKMiner
 
     public void step(float nonce_a, float r, float g, float b, float r2, float g2, float b2, float r3, float g3, float b3)
     {
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo.fbo);
-        glViewport(0,0, width*4, height*4);
+        fbo.bind();
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         draw(nonce_a, r, g, b, r2, g2, b2, r3, g3, b3);
 
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-        glBindFramebuffer(GL_READ_FRAMEBUFFER , fbo.fbo);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-        glBlitFramebuffer(0, 0, width, height, 0, 0, width*2, height*2, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        fbo.unbind();
+        fbo.display(width, height);
 
         glfwSwapBuffers(mWindow);
 
