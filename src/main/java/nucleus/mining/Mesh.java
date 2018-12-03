@@ -14,14 +14,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
-import static org.lwjgl.opengl.GL15.glBufferData;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL40.GL_PATCHES;
 
@@ -32,7 +26,7 @@ public class Mesh
      * don't let the field names confuse
      * you.
      */
-    private int vbo, ibo, sze;
+    private int vbo, ebo, ibo, sze;
 
     public Mesh(String name, String extention) throws IOException, NKMinerException
     {
@@ -122,23 +116,23 @@ public class Mesh
                 indices[index ++] = (face.mIndices().get(ind));
         }
 
-        float actualVertices[] = new float[(indices.length) * 8];
+//        float actualVertices[] = new float[(indices.length) * 8];
+//
+//        index = 0;
+//
+//        for (int i = 0; i < indices.length; i ++)
+//        {
+//            actualVertices[index ++] = vertices[indices[i] * 8];
+//            actualVertices[index ++] = vertices[indices[i] * 8 + 1];
+//            actualVertices[index ++] = vertices[indices[i] * 8 + 2];
+//            actualVertices[index ++] = vertices[indices[i] * 8 + 3];
+//            actualVertices[index ++] = vertices[indices[i] * 8 + 4];
+//            actualVertices[index ++] = vertices[indices[i] * 8 + 5];
+//            actualVertices[index ++] = vertices[indices[i] * 8 + 6];
+//            actualVertices[index ++] = vertices[indices[i] * 8 + 7];
+//        }
 
-        index = 0;
-
-        for (int i = 0; i < indices.length; i ++)
-        {
-            actualVertices[index ++] = vertices[indices[i] * 8];
-            actualVertices[index ++] = vertices[indices[i] * 8 + 1];
-            actualVertices[index ++] = vertices[indices[i] * 8 + 2];
-            actualVertices[index ++] = vertices[indices[i] * 8 + 3];
-            actualVertices[index ++] = vertices[indices[i] * 8 + 4];
-            actualVertices[index ++] = vertices[indices[i] * 8 + 5];
-            actualVertices[index ++] = vertices[indices[i] * 8 + 6];
-            actualVertices[index ++] = vertices[indices[i] * 8 + 7];
-        }
-
-        this.mesh(actualVertices, indices);
+        this.mesh(vertices, indices);
     }
 
     public Mesh(float vertices[], int indices[])
@@ -148,16 +142,18 @@ public class Mesh
 
     private void mesh(float vertices[], int indices[])
     {
-        sze = vertices.length / 8;
+        sze = indices.length;
 
 
 
         vbo = GL30.glGenVertexArrays();
-        GL30.glBindVertexArray(vbo);
-
         ibo = GL15.glGenBuffers();
+        ebo = GL15.glGenBuffers();
+        GL30.glBindVertexArray(vbo);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, ibo);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertices, GL15.GL_STATIC_DRAW);
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, ebo);
+        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indices, GL15.GL_STATIC_DRAW);
 //
 //
 //        glEnableVertexAttribArray(0);
@@ -216,6 +212,7 @@ public class Mesh
     {
         glBindVertexArray(vbo);
         glBindBuffer(GL_ARRAY_BUFFER, ibo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
@@ -225,7 +222,8 @@ public class Mesh
         GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 32, 12);
         GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 32, 24);
 
-        glDrawArrays(GL_PATCHES, 0, sze);
+//        glDrawArrays(GL_PATCHES, 0, sze);
+        glDrawElements(GL_PATCHES,  sze, GL_UNSIGNED_INT, 0);
 
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
