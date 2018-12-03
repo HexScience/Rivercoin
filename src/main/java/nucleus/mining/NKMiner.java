@@ -159,7 +159,7 @@ public class NKMiner
 
         int indices[] = {0, 1, 2, 3, 4, 5};
 
-        mesh = new Mesh(vertices, indices);
+        mesh = new Mesh("monkey", "obj");
 
 
 
