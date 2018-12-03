@@ -1,14 +1,17 @@
-#version 150
+#version 400
 
-layout (location = 0) in vec3 vertex_in;
-layout (location = 1) in vec2 coords_in;
-layout (location = 2) in vec3 normal_in;
+in vec3 vertex_in;
+in vec3 normal_in;
+in vec2 coord__in;
 
-out vec3 vertex;
-out vec3 normal
-out vec2 coords;
+out vec3 vertices_in;
+out vec3 normals_in;
+out vec2 coords_in;
+
+//uniform mat4 model;
 
 void main(){
-    vertex = vertex_in;
-    coords = coords_in;
+    vertices_in = vertex_in;//(model * vec4(vertex_in, 1.0)).xyz;
+    normals_in = normal_in;
+    coords_in = coord__in;
 }

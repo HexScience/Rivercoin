@@ -1,4 +1,4 @@
-#version 150
+#version 400
 in vec2 coords;
 
 out vec4 FragColor;
@@ -137,33 +137,35 @@ vec4 rayMarch(in vec3 from, in vec3 dir, in vec2 pix) {
 
 void main()
 {
-    offset = vec3(1.0+0.2*(cos(nonce/5.7)),0.3+0.1*(cos(nonce/1.7)),1.).xzy;
+  //   offset = vec3(1.0+0.2*(cos(nonce/5.7)),0.3+0.1*(cos(nonce/1.7)),1.).xzy;
+	//
+  //   float angle = nonce/5.0;
+	//
+  //       vec3 camPos = 0.5*nonce*vec3(1.0,0.0,0.0);
+  //       vec3 target = camPos + vec3(1.0,0.5*cos(nonce),0.5*sin(0.4*nonce));
+  //       vec3 camUp  = vec3(0.0,cos(angle),sin(angle));
+	//
+	//
+  //       vec3 camDir   = normalize(target-camPos); // direction for center ray
+  //       camUp = normalize(camUp-dot(camDir,camUp)*camDir); // orthogonalize
+  //       vec3 camRight = normalize(cross(camDir,camUp));
+	//
+	//
+  //       vec2 coord =-1.0+2.0*gl_FragCoord.xy/iResolution;
+  //       coord.x *= iResolution.x/iResolution.y;
+	//
+	//
+	// vec3 rayDir = normalize(camDir + (coord.x*camRight + coord.y*camUp)*FieldOfView);
+	//
+	// //this wasn't here before.
+  //   vec3 col = rayMarch(camPos, rayDir, gl_FragCoord.xy ).xyz;
+	//
+  //   //for(int i = 0; i < 3; i ++)
+  //    //   col = mix(col, rayMarch(camPos, rayDir * float(i)*0.1, gl_FragCoord.xy ).xyz, 0.2);
+	//
+  //   FragColor = vec4(col, 1);
 
-    float angle = nonce/5.0;
-
-        vec3 camPos = 0.5*nonce*vec3(1.0,0.0,0.0);
-        vec3 target = camPos + vec3(1.0,0.5*cos(nonce),0.5*sin(0.4*nonce));
-        vec3 camUp  = vec3(0.0,cos(angle),sin(angle));
-
-
-        vec3 camDir   = normalize(target-camPos); // direction for center ray
-        camUp = normalize(camUp-dot(camDir,camUp)*camDir); // orthogonalize
-        vec3 camRight = normalize(cross(camDir,camUp));
-
-
-        vec2 coord =-1.0+2.0*gl_FragCoord.xy/iResolution;
-        coord.x *= iResolution.x/iResolution.y;
-
-
-	vec3 rayDir = normalize(camDir + (coord.x*camRight + coord.y*camUp)*FieldOfView);
-
-	//this wasn't here before.
-    vec3 col = rayMarch(camPos, rayDir, gl_FragCoord.xy ).xyz;
-
-    for(int i = 0; i < 3; i ++)
-        col = mix(col, rayMarch(camPos, rayDir * float(i)*0.1, gl_FragCoord.xy ).xyz, 0.2);
-
-    FragColor = vec4(col, 1);
+	FragColor = vec4(1, 1, 1, 1);
 
     //old code
     //rayMarch(camPos, rayDir, gl_FragCoord.xy);

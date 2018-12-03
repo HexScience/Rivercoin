@@ -5,9 +5,11 @@ import nucleus.algorithms.*;
 import nucleus.exceptions.NKMinerException;
 import nucleus.exceptions.NKMinerInstanceAlreadyExistsException;
 import nucleus.exceptions.NKMinerNullInstanceException;
+import nucleus.math.Matrix4f;
 import nucleus.system.Parameters;
 import nucleus.util.ByteUtil;
 import nucleus.util.Logger;
+import org.lwjgl.assimp.*;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 import org.lwjgl.*;
@@ -27,11 +29,13 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
 import static org.lwjgl.opengl.GL32.glFramebufferTexture;
+import static org.lwjgl.opengl.GL40.GL_PATCHES;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 
 import org.lwjgl.opencl.*;
+import sun.misc.IOUtils;
 
 import java.util.concurrent.*;
 
@@ -49,6 +53,12 @@ public class NKMiner
     private float mQuad[];
     private int   mIndices[];
     private int   mShaderPrograms[];
+    private class VBO{
+        private int vbo;
+        private int ibo;
+        private int sze;
+    }
+
     private class Element{
         private int vertices;
         private int vbo;
@@ -62,6 +72,9 @@ public class NKMiner
     private int     mLightColour2;
     private int     mNonce2;
     private int     mNkHash;
+    private int     mMDL;
+    private int     mMVP;
+    private VBO     vbo;
 
     private class FrameBufferObject{
         public int  fbo;
@@ -72,7 +85,7 @@ public class NKMiner
 
     private FrameBufferObject fbo;
 
-    private NKMiner() throws NKMinerException
+    private NKMiner() throws NKMinerException, IOException
     {
         GLFWErrorCallback.createPrint(System.err).set();
 
@@ -81,8 +94,8 @@ public class NKMiner
 
         glfwDefaultWindowHints();
 
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 //        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -121,25 +134,19 @@ public class NKMiner
 
         GL.createCapabilities();
 
-        float vertices[] =
+//        float vertices[] =
 //                {
-//                    -1, -1, 0,
-//                    -1,  1, 0,
-//                    1,  1, 0,
-//                    1, -1, 0
+//                        // Left bottom triangle
+//                        -1f, 1f, 0f,
+//                        -1f, -1f, 0f,
+//                        1f, -1f, 0f,
+//
+//
+//                        // Right top triangle
+//                        1f, -1f, 0f,
+//                        1f, 1f, 0f,
+//                        -1f, 1f, 0f
 //                };
-                {
-                        // Left bottom triangle
-                        -1f, 1f, 0f,
-                        -1f, -1f, 0f,
-                        1f, -1f, 0f,
-
-
-                        // Right top triangle
-                        1f, -1f, 0f,
-                        1f, 1f, 0f,
-                        -1f, 1f, 0f
-                };
 
         float verticeswithcoords[] =
             {
@@ -182,6 +189,111 @@ public class NKMiner
 
         GL30.glBindVertexArray(0);
 
+        vbo = new VBO();
+
+        vbo.vbo = GL20.glGenBuffers();
+        vbo.ibo = GL20.glGenBuffers();
+
+//        float vertices[] =
+//        {
+//                -1, -1, 0,
+//                1,1,1,
+//                -1, -1,
+//                1, -1, 0,
+//                1,1,1,
+//                1, -1,
+//                1, 1, 0,
+//                1,1,1,
+//                1, 1,
+//                -1, -1, 0,
+//                1,1,1,
+//                -1, -1,
+//                1, 1, 0,
+//                1,1,1,
+//                1, 1,
+//                -1, 1, 0,
+//                1,1,1,
+//                -1, 1
+//        };
+
+//        int indices[] = {0, 1, 2, 3, 4, 5};
+
+        DataInputStream stream = new DataInputStream(Start.class.getClass().getResourceAsStream("/mining/cube.obj"));
+
+        byte dataset[] = new byte[58473478];
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        stream.read(dataset);
+        baos.write(dataset);
+
+//        while (stream.available() > 0)
+//        {
+//            baos.write(stream.read());
+//            System.out.println("HI" + " " + stream.available());
+//        }
+
+        baos.flush();;
+        baos.close();
+
+        byte data[] = baos.toByteArray();
+
+        stream.close();
+
+        ByteBuffer file = MemoryUtil.memAlloc(data.length);
+        file.put(data);
+        file.flip();
+
+        AIScene scene = Assimp.aiImportFileFromMemory(file,
+                Assimp.aiProcess_Triangulate |
+                        Assimp.aiProcess_GenSmoothNormals |
+                        Assimp.aiProcess_FlipUVs |
+                        Assimp.aiProcess_CalcTangentSpace |
+                        Assimp.aiProcess_LimitBoneWeights,
+                "obj"
+        );
+
+        if (scene == null)
+            throw new NKMinerException("could not load PipeDreamObject data.");
+
+        AIMesh mesh = AIMesh.create(scene.mMeshes().get(0));
+
+        float vertices[] = new float[mesh.mNumVertices() * 8];
+        int indices[] = new int[mesh.mNumFaces() * mesh.mFaces().get(0).mNumIndices()];
+        int index = 0;
+
+        for (int v = 0; v < mesh.mNumVertices(); v ++)
+        {
+            AIVector3D position = mesh.mVertices().get(v);
+            AIVector3D normal   = mesh.mNormals().get(v);
+            AIVector3D texCoord = mesh.mTextureCoords(0).get(v);
+
+            vertices[index ++] = position.x();
+            vertices[index ++] = position.y();
+            vertices[index ++] = position.z();
+            vertices[index ++] = normal.x();
+            vertices[index ++] = normal.y();
+            vertices[index ++] = normal.z();
+            vertices[index ++] = texCoord.x();
+            vertices[index ++] = texCoord.z();
+        }
+
+
+        index = 0;
+
+        for(int f = 0; f < mesh.mNumFaces(); f++)
+        {
+            AIFace face = mesh.mFaces().get(f);
+            for(int ind = 0; ind < face.mNumIndices(); ind++)
+                indices[index ++] = (face.mIndices().get(ind));
+        }
+
+        vbo.sze = indices.length;
+
+        glBindBuffer(GL_ARRAY_BUFFER, vbo.vbo);
+        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo.ibo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
 //        element.coords = GL30.glGenVertexArrays();
 //        GL30.glBindVertexArray(element.coords);
@@ -195,6 +307,8 @@ public class NKMiner
 //        GL30.glBindVertexArray(0);
 
         String vertShader = null;
+        String tsscShader = null;
+        String tsseShader = null;
         String fragShader = null;
 
         /**
@@ -205,6 +319,8 @@ public class NKMiner
         try
         {
             vertShader = Read(Start.class.getClass().getResourceAsStream("/mining/shader.vertx"));
+            tsscShader = Read(Start.class.getClass().getResourceAsStream("/mining/shader.tessc"));
+            tsseShader = Read(Start.class.getClass().getResourceAsStream("/mining/shader.tesse"));
             fragShader = Read(Start.class.getClass().getResourceAsStream("/mining/shader.fragm"));
         } catch (IOException e)
         {
@@ -212,19 +328,22 @@ public class NKMiner
             throw new NKMinerException("cannot read shader files.");
         }
 
-        mShaderPrograms = new int[3];
+        mShaderPrograms = new int[5];
 
         mShaderPrograms[0] = GL20.glCreateProgram();
 
         if (mShaderPrograms[0] == NULL) throw new NKMinerException("could not create main shader program.");
 
-        createVertexShader(vertShader, mShaderPrograms);
-        createFragmentShader(fragShader, mShaderPrograms);
+        mShaderPrograms[1] = createShader(vertShader, GL20.GL_VERTEX_SHADER, mShaderPrograms[0]);
+        mShaderPrograms[3] = createShader(tsscShader, GL40.GL_TESS_CONTROL_SHADER, mShaderPrograms[0]);
+        mShaderPrograms[4] = createShader(tsseShader, GL40.GL_TESS_EVALUATION_SHADER, mShaderPrograms[0]);
+        mShaderPrograms[2] = createShader(fragShader, GL20.GL_FRAGMENT_SHADER, mShaderPrograms[0]);
 
-        link(mShaderPrograms[0], mShaderPrograms[1], mShaderPrograms[2]);
-
+        link(mShaderPrograms[0], mShaderPrograms[1], mShaderPrograms[3], mShaderPrograms[4], mShaderPrograms[2]);
 
         mTime = GL20.glGetUniformLocation(mShaderPrograms[0], "nonce");
+        mMVP = GL20.glGetUniformLocation(mShaderPrograms[0], "mvp");
+        mMDL = GL20.glGetUniformLocation(mShaderPrograms[0], "model");
         mLightColour = GL20.glGetUniformLocation(mShaderPrograms[0], "LightColor");
         mLightColour2 = GL20.glGetUniformLocation(mShaderPrograms[0], "LightColor2");
         mNonce2 = GL20.glGetUniformLocation(mShaderPrograms[0], "nonce2");
@@ -417,7 +536,6 @@ public class NKMiner
                     destructorLatch = null;
                 }
 
-
                 /**
                  * Choose a capable GPU
                  */
@@ -526,7 +644,7 @@ public class NKMiner
         }
     }
 
-    private static void link(int programId, int vertexShaderId, int fragmentShaderId) throws NKMinerException
+    private static void link(int programId, int vertexShaderId, int tessellationControlShaderID, int tessellationEvaluationShaderID, int fragmentShaderId) throws NKMinerException
     {
         GL20.glLinkProgram(programId);
         if (GL20.glGetProgrami(programId, GL20.GL_LINK_STATUS) == 0)
@@ -534,6 +652,10 @@ public class NKMiner
 
         if (vertexShaderId != 0)
             GL20.glDetachShader(programId, vertexShaderId);
+        if (tessellationControlShaderID != 0)
+            GL20.glDetachShader(programId, tessellationControlShaderID);
+        if (tessellationEvaluationShaderID != 0)
+            GL20.glDetachShader(programId, tessellationEvaluationShaderID);
         if (fragmentShaderId != 0)
             GL20.glDetachShader(programId, fragmentShaderId);
         GL20.glValidateProgram(programId);
@@ -562,7 +684,7 @@ public class NKMiner
         GL20.glCompileShader(shaderId);
 
         if (GL20.glGetShaderi(shaderId, GL20.GL_COMPILE_STATUS) == 0) {
-            throw new NKMinerException("Error compiling Shader code: " + GL20.glGetShaderInfoLog(shaderId, 1024));
+            throw new NKMinerException("Error compiling Shader code: " + GL20.glGetShaderInfoLog(shaderId, 1024) + " " + shaderType);
         }
 
         GL20.glAttachShader(programId, shaderId);
@@ -584,7 +706,7 @@ public class NKMiner
         return text;
     }
 
-    public static NKMiner init() throws NKMinerException
+    public static NKMiner init() throws NKMinerException, IOException
     {
         if (instance != null)
             throw new NKMinerInstanceAlreadyExistsException();
@@ -616,19 +738,47 @@ public class NKMiner
         GL20.glUniform3f(mLightColour, r, g, b);
         GL20.glUniform3f(mLightColour2, r2, g2,  b2);
         GL20.glUniform3f(mNonce2, r3, g3,  b3);
+
+        Matrix4f pos = new Matrix4f().InitTranslation(0,0,0),
+                rot = new Matrix4f().InitRotation(0,0,0),
+                scl = new Matrix4f().InitScale(1,1,1),
+
+        cpos = new Matrix4f().InitTranslation(0,0,0),
+        crot = new Matrix4f().InitRotation(0,0,0),
+        cproj = new Matrix4f().InitPerspective((float) Math.toRadians(90.0), ((float) width) / ((float) height), 0.01F, 1000.0F);
+
+        Matrix4f model = new Matrix4f().InitIdentity().Mul(pos.Mul(rot.Mul(scl)));
+        Matrix4f projv = cproj.Mul(crot.Mul(cpos));
+
+//        glUniformMatrix4fv(mMDL, true, (model).get());
+        glUniformMatrix4fv(mMVP, true, projv.Mul(model).get());
 //        glVertexPointer(3, GL_FLOAT, 0, element.vertices);
 //        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, element.vbo);
 
-        GL30.glBindVertexArray(element.vertices);
+//        GL30.glBindVertexArray(element.vertices);
+
+
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
+        GL20.glEnableVertexAttribArray(2);
+
+        glBindBuffer(GL_ARRAY_BUFFER, vbo.vbo);
+        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false,32, 0);
+        GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 32, 12);
+        GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 32, 24);
+
+        GL20.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo.ibo);
+        glDrawElements(GL_PATCHES, vbo.sze, GL_UNSIGNED_INT, 0);
 
 
-        GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
-
-
-        GL20.glDisableVertexAttribArray(1);
         GL20.glDisableVertexAttribArray(0);
+        GL20.glDisableVertexAttribArray(1);
+        GL20.glDisableVertexAttribArray(2);
+
+
+//        GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
+
+
         GL30.glBindVertexArray(0);
     }
 

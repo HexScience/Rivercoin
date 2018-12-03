@@ -1,16 +1,24 @@
-#version 150
+#version 400
 
 layout(triangles, equal_spacing, ccw) in;
 
-uniform mat4 gVP;
-
-in vec3 vertices_in[];
-in vec3 normals_in[];
-in vec2 coords_in[];
+in vec3 verticesc_in[];
+in vec3 normalsc_in[];
+in vec2 coordsc_in[];
 
 out vec3 vertex;
 out vec3 normal;
 out vec2 coords;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 proj;
+
+struct camera{
+    mat4 proj;
+    mat4 rotm;
+    mat4 posm;
+};
 
 vec2 interpolate2D(vec2 v0, vec2 v1, vec2 v2)
 {
@@ -22,12 +30,73 @@ vec3 interpolate3D(vec3 v0, vec3 v1, vec3 v2)
    	return vec3(gl_TessCoord.x) * v0 + vec3(gl_TessCoord.y) * v1 + vec3(gl_TessCoord.z) * v2;
 }
 
+mat4 rotationMatrix(vec3 axis, float angle)
+{
+    axis = normalize(axis);
+    float s = sin(angle);
+    float c = cos(angle);
+    float oc = 1.0 - c;
+
+    return mat4(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.0,
+                oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.0,
+                oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,
+                0.0,                                0.0,                                0.0,                                1.0);
+}
+
+mat4 perspectiveMatrix(float fov, float aspectRatio, float zNear, float zFar)
+{
+    float tanHalfFOV = tan(fov / 2.0);
+    float zRange = zNear - zFar;
+
+    return mat4(vec4(1.0 / (tanHalfFOV * aspectRatio), 0.0, 0.0, 0.0),
+                vec4(0.0, 1.0 / tanHalfFOV, 0.0, 0.0),
+                vec4(0.0, 0.0, (-zNear -zFar) / zRange, 2.0 * zFar * zNear / zRange),
+                vec4(0.0, 0.0, 0.0, 1.0));
+}
+
+mat4 translation(float x, float y, float z)
+{
+    return mat4(vec4(1.0, 0.0, 0.0, x),
+                vec4(0.0, 1.0, 0.0, y),
+                vec4(0.0, 0.0, 1.0, z),
+                vec4(0.0, 0.0, 0.0, 1.0));
+}
+
+#define pi 3.14159265359
+#define toRadians(x) (2*pi * (x / 360))
+
+uniform mat4 mvp;
+
 void main()
-   	coords = interpolate2D(coords_in[0], coords_in[1], coords_in[2]);
-   	normal = normalize(interpolate3D(normals_in[0], normals_in[1], normals_in[2]));
-   	vertex = interpolate3D(vertices_in[0], vertices_in[1], vertices_in[2]);
+{
+    // mat4 identity = mat4(vec4(1.0, 0.0, 0.0, 0.0),
+    //                 vec4(0.0, 1.0, 0.0, 0.0),
+    //                 vec4(0.0, 0.0, 1.0, 0.0),
+    //                 vec4(0.0, 0.0, 0.0, 1.0));
+    //
+    //                 vec3 pos = vec3(0.0, 0.0, 0.0);
+    //
+    // mat4 model =                          identity * (translation(pos.x, pos.y, pos.z)
+    //                                                                                                  * (rotationMatrix(vec3(0.0,0.0,1.0), 20.0)
+    //                                                                                                                                            * mat4(vec4(1.0, 0.0, 0.0, 0.0),
+    //                                                                                                                                                   vec4(0.0, 1.0, 0.0, 0.0),
+    //                                                                                                                                                   vec4(0.0, 0.0, 1.0, 0.0),
+    //                                                                                                                                                   vec4(0.0, 0.0, 0.0, 1.0))));
+    // camera cam;
+    // cam.proj = perspectiveMatrix(toRadians(90.0), 1280.0/720.0, 0.1, 1000.0);
+    // cam.posm = translation(0.0, 0.0, -10.0);
+    // cam.rotm = rotationMatrix(vec3(0.0, 0.0, 0.0), 0.0);
+    //
+    //
+    // mat4 projectionView = cam.proj * (cam.rotm * cam.posm);
+    // mat4 mvp = projectionView * model;
+
+
+    coords = interpolate2D(coordsc_in[0], coordsc_in[1], coordsc_in[2]);
+   	normal = normalize(interpolate3D(normalsc_in[0], normalsc_in[1], normalsc_in[2]));
+   	vertex = interpolate3D(verticesc_in[0], verticesc_in[1], verticesc_in[2]);
 
     float Displacement = 0.0;
     vertex += normal * Displacement;
-    gl_Position = gVP * vec4(WorldPos_FS_in, 1.0);
+    gl_Position = vec4(vertex, 1.0);
 }
