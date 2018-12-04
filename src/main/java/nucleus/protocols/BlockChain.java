@@ -38,6 +38,7 @@ public class BlockChain
          */
         this.context.getEventManager().register((BlockNotificationEventListener) (_BlockNotificationEvent_)->{onEventBlockNotify(_BlockNotificationEvent_); }, "Block");
         this.context.getEventManager().register((RequestedBlockReceivedListener) (_RequestedBlockReceivedEvent_)->{onEventRequestedBlockReceived(_RequestedBlockReceivedEvent_); }, "Block");
+        this.context.getEventManager().register((BlockMinedListener) (_MinedBlockEvent_)->{onBlockMinedEvent(_MinedBlockEvent_); }, "Block");
     }
 
     /**
@@ -96,6 +97,11 @@ public class BlockChain
      */
     private void handleFutureBlock(DownloadedBlock block)
     {
+    }
+
+    private void onBlockMinedEvent(BlockMinedEvent event)
+    {
+
     }
 
     /**
