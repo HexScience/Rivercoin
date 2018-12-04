@@ -202,6 +202,11 @@ public class Block implements Comparable<Block>, StrippedObject
         return (double) accepted.size() / (double) rejected.size();
     }
 
+    public long getTotalValue()
+    {
+        return 0;
+    }
+
     public static class BlockComparator implements Comparator<Block>{
         @Override
         public int compare(Block a, Block b)
