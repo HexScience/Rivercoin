@@ -5,19 +5,17 @@ import nucleus.util.SortedLinkedQueue;
 
 import java.util.Queue;
 
-public class LocalFork implements ForkI
+public class LocalFork extends ForkI
 {
-    private Queue<Block> queue;
-
     public LocalFork()
     {
-        this.queue = new SortedLinkedQueue<>();
+        this.blockQueue = new SortedLinkedQueue<>();
     }
 
     @Override
     public boolean add(Block block)
     {
-        queue.add(block);
+        blockQueue.add(block);
         return true;
     }
 
@@ -30,6 +28,6 @@ public class LocalFork implements ForkI
     @Override
     public Queue<Block> get()
     {
-        return queue;
+        return blockQueue;
     }
 }

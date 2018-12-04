@@ -6,9 +6,8 @@ import nucleus.util.SortedLinkedQueue;
 
 import java.util.Queue;
 
-public class ForeignFork implements ForkI
+public class ForeignFork extends ForkI
 {
-    private Queue<Block>    blockQueue;
     private IpAddress       peer;
 
     @Override
