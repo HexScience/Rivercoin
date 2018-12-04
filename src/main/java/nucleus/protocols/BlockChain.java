@@ -71,6 +71,10 @@ public class BlockChain
     {
     }
 
+    public void onBlockMinedEvent(BlockMinedEvent event)
+    {
+    }
+
     /**
      * @param block
      * This function handles any blocks that are received from
@@ -97,11 +101,6 @@ public class BlockChain
      */
     private void handleFutureBlock(DownloadedBlock block)
     {
-    }
-
-    private void onBlockMinedEvent(BlockMinedEvent event)
-    {
-
     }
 
     /**
