@@ -7,9 +7,10 @@ import java.util.Queue;
 public abstract class ForkI
 {
     abstract boolean add(Block block);
+
     abstract boolean add(DownloadedBlock block);
 
-    protected Queue<Block>    blockQueue;
+    protected Queue<Block> blockQueue;
 
     public long numTransactions()
     {
@@ -34,5 +35,6 @@ public abstract class ForkI
 
         return (double) (numTransactions / numrTransactions);
     }
+
     abstract Queue<Block> get();
 }
