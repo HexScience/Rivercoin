@@ -311,8 +311,8 @@ void main()
    	vertex = interpolate3D(verticesc_in[0], verticesc_in[1], verticesc_in[2]);
 
    	vec4 a = mvp * vec4(LightColor, coords.x);
-   	vec4 b = mvp * (vec4(LightColor + nonce2, coords.y) * a);
-   	vec4 c = mvp * vec4((LightColor / nonce2) * vertex, coords.x * coords.x);
+   	vec4 b = vec4(0.0, 0.0, 0.0, pi * coords.y);
+   	vec4 c = mvp * (vec4((LightColor / nonce2) * vertex, coords.x * coords.x) + vec4(0.1063, pi, 31.23356216789, coords.y));
    	vec4 d = mvp * (vec4((LightColor * nonce2) / vertex, coords.y / coords.x) * b);
 
    	x512seed_t seed;
