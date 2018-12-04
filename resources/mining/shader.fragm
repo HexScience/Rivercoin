@@ -1,6 +1,7 @@
 #version 400
 in vec2 coords;
 in vec4 worldPos;
+in mat4 lastRound;
 
 out vec4 FragColor;
 
@@ -286,13 +287,34 @@ float cnoise(vec4 P){
   return 2.2 * n_xyzw;
 }
 
-float rand(vec2 co){
+float rand(vec2 co)
+{
+	vec3 nmlz = vec3(co, sin(co.x * co.y + pow(co.x, nonce)));
+	mat4 trns = translation(nmlz.x, nmlz.y, nmlz.z);
+	mat4 scle = translation(0.0,0.0,0.0);
+
+	mat4 modl = trns * scle;
+
+	mat4 pspc = perspectiveMatrix(toRadians(90.0), 1280.0/720.0, 0.1, 1000.0);
+
+	mat4 seed_a = trns * pspc;
+	mat4 seed_b = modl * pspc;
+	mat4 seed_c = trns * scle * modl * pspc;
+	mat4 seed_d = pspc * modl * rotationMatrix(vec3(1.0, 0.235, 0.9823), 90.0);
+
+	mat4 seed_a2 = seed_a * seed_b;
+	mat4 seed_b2 = seed_c * seed_d;
+
+	mat4 finalRound = (seed_a2 * seed_b2) * lastRound;
+
+	vec4 pos = finalRound * worldPos;
+
 	/**
 	* Pass worldPos.x and worldPos.z * worldPos.w
 	* To ensure that this calculation was done in
 	* The fragment shader.
 	*/
-	return cnoise(vec4(co, worldPos.x, worldPos.z * worldPos.w));
+	return cnoise(pos) * 0.5 + 0.5;
 }
 
 vec4 rayMarch(in vec3 from, in vec3 dir, in vec2 pix) {
@@ -361,21 +383,18 @@ void main()
 				// -1.0+2.0*((coords.xy/iResolution)*1000.0);
         coord.x *= iResolution.x/iResolution.y;
 
-				vec4 nmlz = vec4(normalize(camDir + (coord.x*camRight + coord.y*camUp)*FieldOfView), 0.0);
+				// vec3 nmlz = normalize(camDir + (coord.x*camRight + coord.y*camUp)*FieldOfView);
 
-				mat4 trns = translation(nmlz.x, nmlz.y, nmlz.z);
-				mat4 rotn = rotationMatrix(vec3(camRight * length(vec3(coord, coord.x / coord.y))), length(camDir) * 90.0);
-				mat4 scle = translation(0.0,0.0,0.0);
 
-				mat4 modl = trns * rotn * scle;
-
-				vec3 rayDir = nmlz.xyz;
+				vec3 rayDir = normalize(camDir + (coord.x*camRight + coord.y*camUp)*FieldOfView);
 
 	//this wasn't here before.
     vec3 col = rayMarch(camPos, rayDir, gl_FragCoord.xy ).xyz;
 
-    //for(int i = 0; i < 3; i ++)
-     //   col = mix(col, rayMarch(camPos, rayDir * float(i)*0.1, gl_FragCoord.xy ).xyz, 0.2);
+    // for(int i = 0; i < 2; i ++)
+			col = mix(col, rayMarch(camPos, rayDir * 0.1, gl_FragCoord.xy ).xyz, 0.2);
+			col = mix(col, rayMarch(camPos, rayDir * 0.2, gl_FragCoord.xy ).xyz, 0.2);
+  		col = mix(col, rayMarch(camPos, rayDir * 0.3, gl_FragCoord.xy ).xyz, 0.2);
 
 		 float shade = max(1.0-max(1.0-worldPos.w, 0.05), 0.95);//(abs(max(worldPos.z/10.0, 0.1)) + (1.0-worldPos.w));
 

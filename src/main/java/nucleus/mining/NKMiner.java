@@ -166,7 +166,7 @@ public class NKMiner
         tlsds.registerUniform("LightColor2");
         tlsds.registerUniform("nonce2");
 
-        fbo = new FBO(width * 4, height * 4);
+        fbo = new FBO(width * 1, height * 1);
 
         glBindVertexArray(0);
 
@@ -200,7 +200,7 @@ public class NKMiner
     }
 
     float x = 0;
-    Vector3f camPos = new Vector3f(0,0,-12.0F);
+    Vector3f camPos = new Vector3f(0,0,0.0F);
 
     private void draw(float nonce_a, float r, float g, float b, float r2, float g2, float b2, float r3, float g3, float b3)
     {

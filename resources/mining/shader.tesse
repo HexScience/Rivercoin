@@ -14,6 +14,10 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 proj;
 
+
+uniform vec3 LightColor;
+uniform vec3 nonce2;
+
 struct camera{
     mat4 proj;
     mat4 rotm;
@@ -275,6 +279,8 @@ vec3 AdjustPosition(vec3 position)
     return position + vec3(0, 0, (d2 * (sin(d1 * -1.235) * 0.5 + 0.5) * 10.0) * sign(d0 * 100.0));
 }
 
+out mat4 lastRound;
+
 void main()
 {
     // mat4 identity = mat4(vec4(1.0, 0.0, 0.0, 0.0),
@@ -304,30 +310,38 @@ void main()
    	//normal = normalize(interpolate3D(normalsc_in[0], normalsc_in[1], normalsc_in[2]));
    	vertex = interpolate3D(verticesc_in[0], verticesc_in[1], verticesc_in[2]);
 
+   	vec4 a = mvp * vec4(LightColor, coords.x);
+   	vec4 b = mvp * (vec4(LightColor + nonce2, coords.y) * a);
+   	vec4 c = mvp * vec4((LightColor / nonce2) * vertex, coords.x * coords.x);
+   	vec4 d = mvp * (vec4((LightColor * nonce2) / vertex, coords.y / coords.x) * b);
+
    	x512seed_t seed;
-   	seed.ax = 0;
-   	seed.ay = 0;
-   	seed.az = 0;
-   	seed.aw = 0;
+   	seed.ax = a.x;
+   	seed.ay = a.y;
+   	seed.az = a.z;
+   	seed.aw = a.w;
 
-   	seed.bx = 0;
-   	seed.by = 0;
-   	seed.bz = 0;
-   	seed.bw = 0;
+   	seed.bx = b.x;
+   	seed.by = b.y;
+   	seed.bz = b.z;
+   	seed.bw = b.w;
 
-   	seed.cx = 0;
-   	seed.cy = 0;
-   	seed.cz = 0;
-   	seed.cw = 0;
+   	seed.cx = c.x;
+   	seed.cy = c.y;
+   	seed.cz = c.z;
+   	seed.cw = c.w;
 
-   	seed.dx = 0;
-   	seed.dy = 0;
-   	seed.dz = 0;
-   	seed.dw = 0;
+   	seed.dx = d.x;
+   	seed.dy = d.y;
+   	seed.dz = d.z;
+   	seed.dw = d.w;
+
 
     vertex += (vertex);
 
    	float noise = seeded_noise(vertex, seed);
+
+   	lastRound = mat4(a, b, c, d) * noise;
 
     normal = normalize(vertex - vec3(0, 0, vertex.z));
 

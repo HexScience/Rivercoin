@@ -61,7 +61,7 @@ public class FBO
     public void bind()
     {
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-        glViewport(0,0, width, height);
+        glViewport(0,0, width/5, height/5);
     }
 
     public void unbind()
