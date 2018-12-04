@@ -1,6 +1,7 @@
 package nucleus.protocols;
 
 import nucleus.protocols.protobufs.Block;
+import nucleus.util.SortedLinkedQueue;
 
 import java.util.Queue;
 
@@ -37,4 +38,25 @@ public abstract class ForkI
     }
 
     abstract Queue<Block> get();
+
+    Block getAt(long height)
+    {
+        for (Block block : blockQueue)
+            if (block.getHeader().getBlockID() == height)
+                return block;
+
+        return null;
+    }
+
+    public void replace(long height, Block block)
+    {
+        Queue<Block> temp = new SortedLinkedQueue<>();
+        for (Block _block_ : blockQueue)
+            if (block.getHeader().getBlockID() == height)
+                temp.add(block);
+            else
+                temp.add(_block_);
+
+        blockQueue = temp;
+    }
 }
