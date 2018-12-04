@@ -8,5 +8,7 @@ public interface ForkI
 {
     boolean add(Block block);
     boolean add(DownloadedBlock block);
+    long    numTransactions();
+    long    averageTime();
     Queue<Block> get();
 }
