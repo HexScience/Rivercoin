@@ -287,6 +287,12 @@ float cnoise(vec4 P){
   return 2.2 * n_xyzw;
 }
 
+
+/**
+* Pass worldPos and lastRound
+* To ensure that this calculation was done in
+* The fragment shader.
+*/
 float rand(vec2 co)
 {
 	vec3 nmlz = vec3(co, sin(co.x * co.y + pow(co.x, nonce)));
@@ -305,15 +311,10 @@ float rand(vec2 co)
 	mat4 seed_a2 = seed_a * seed_b;
 	mat4 seed_b2 = seed_c * seed_d;
 
-	mat4 finalRound = (seed_a2 * seed_b2) * lastRound;
+	mat4 finalRound = ((seed_a2 * seed_b2) * lastRound) * transpose(lastRound * pspc);
 
 	vec4 pos = finalRound * worldPos;
 
-	/**
-	* Pass worldPos.x and worldPos.z * worldPos.w
-	* To ensure that this calculation was done in
-	* The fragment shader.
-	*/
 	return cnoise(pos) * 0.5 + 0.5;
 }
 
