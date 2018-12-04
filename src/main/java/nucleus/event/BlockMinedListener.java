@@ -1,9 +1,8 @@
 package nucleus.event;
 
-public abstract class BlockMinedListener implements EventListener<BlockMinedEvent>
+public interface BlockMinedListener extends EventListener<BlockMinedEvent>
 {
-    @Override
-    public EventType getType()
+    default EventType getType()
     {
         return EventType.INTERNAL_NOTIFICATION;
     }
