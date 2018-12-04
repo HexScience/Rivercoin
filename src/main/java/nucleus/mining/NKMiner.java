@@ -1,6 +1,5 @@
 package nucleus.mining;
 
-import nucleus.Start;
 import nucleus.algorithms.*;
 import nucleus.exceptions.NKMinerException;
 import nucleus.exceptions.NKMinerInstanceAlreadyExistsException;
@@ -10,15 +9,12 @@ import nucleus.math.Vector3f;
 import nucleus.system.Parameters;
 import nucleus.util.ByteUtil;
 import nucleus.util.Logger;
-import org.lwjgl.assimp.*;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
-import java.io.*;
 import java.math.BigInteger;
 import java.nio.*;
 import java.util.Random;
@@ -26,25 +22,9 @@ import java.util.Random;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.glDrawBuffers;
-import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
-import static org.lwjgl.opengl.GL32.glFramebufferTexture;
-import static org.lwjgl.opengl.GL40.GL_PATCHES;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
-
-
-import org.lwjgl.opencl.*;
-import sun.misc.IOUtils;
-
-import java.util.concurrent.*;
-
-import static org.lwjgl.opencl.CL11.*;
-import static org.lwjgl.opencl.KHRICD.*;
-import static org.lwjgl.system.Pointer.*;
-
-import static nucleus.mining.InfoUtil.*;
 
 public class NKMiner
 {
@@ -75,6 +55,7 @@ public class NKMiner
     private int     mMDL;
     private int     mMVP;
     private FBO     fbo;
+    private VAOMesh vaoMesh;
     private Mesh    mesh;
 
     private Shader  tlsds;
@@ -144,7 +125,7 @@ public class NKMiner
                 0, -1, 0,
                 1, -1,
                 1, 1, 0,
-                1, 1, 1,
+                1, -1, 1,
                 1, 1,
 
                 -1, -1, 0,
@@ -160,7 +141,15 @@ public class NKMiner
 
         int indices[] = {0, 1, 2, 3, 4, 5};
 
-        mesh = new Mesh(vertices, indices);
+        glFrontFace(GL_CCW);
+        glCullFace(GL_BACK);
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
+
+        glEnable(GL_TEXTURE_2D);
+
+        vaoMesh = new VAOMesh(vertices, indices);
+//        mesh    = VAOMesh.Mesh("cube", "obj");
 
 
 
@@ -211,13 +200,12 @@ public class NKMiner
     }
 
     float x = 0;
-    Vector3f camPos = new Vector3f(0,0,-10.0F);
+    Vector3f camPos = new Vector3f(0,0,-12.0F);
 
     private void draw(float nonce_a, float r, float g, float b, float r2, float g2, float b2, float r3, float g3, float b3)
     {
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-        glPolygonMode( GL_FRONT_AND_BACK, x*50.0F % 500 > 250 ? GL_LINE : GL_FILL);
+//        glPolygonMode( GL_FRONT_AND_BACK, x*50.0F % 500 > 250 ? GL_LINE : GL_FILL);
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE);
 
         tlsds.bind();
 
@@ -229,8 +217,8 @@ public class NKMiner
             tlsds.uniform("nonce2", r3, g3, b3);
 
             Matrix4f pos = new Matrix4f().InitTranslation(0,0, 0),
-                    rot = new Matrix4f().InitRotation(0,-10,0),
-                    scl = new Matrix4f().InitScale(1,1,1),
+                    rot = new Matrix4f().InitRotation(0, 0,0),
+                    scl = new Matrix4f().InitScale(2,2,-1),
 
                     cpos = new Matrix4f().InitTranslation(-camPos.GetX(), -camPos.GetY(), -camPos.GetZ()),
                     crot = new Matrix4f().InitRotation(0,0,0),
@@ -243,7 +231,7 @@ public class NKMiner
             tlsds.uniform("mvp", projv.Mul(model));
             tlsds.uniform("model", model);
 
-            mesh.render();
+            vaoMesh.render();
         }
 //        glBindVertexArray(element.vertices);
 //        glEnableVertexAttribArray(0);
