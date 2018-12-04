@@ -1,6 +1,6 @@
 package nucleus.event;
 
-public abstract class BlockMinedListener implements EventListener<RequestedBlockReceivedEvent>
+public abstract class BlockMinedListener implements EventListener<BlockMinedEvent>
 {
     @Override
     public EventType getType()
