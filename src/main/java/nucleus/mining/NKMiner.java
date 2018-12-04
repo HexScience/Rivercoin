@@ -6,7 +6,6 @@ import nucleus.exceptions.NKMinerInstanceAlreadyExistsException;
 import nucleus.exceptions.NKMinerNullInstanceException;
 import nucleus.math.Matrix4f;
 import nucleus.math.Vector3f;
-import nucleus.protocols.protobufs.Block;
 import nucleus.system.Parameters;
 import nucleus.util.ByteUtil;
 import nucleus.util.Logger;
@@ -18,12 +17,10 @@ import org.lwjgl.system.*;
 
 import java.math.BigInteger;
 import java.nio.*;
-import java.util.Queue;
 import java.util.Random;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.glDrawBuffers;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
