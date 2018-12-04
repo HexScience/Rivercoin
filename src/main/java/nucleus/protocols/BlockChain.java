@@ -71,6 +71,15 @@ public class BlockChain
     {
     }
 
+    /**
+     * @param event
+     * This function is called when a block is successfully mined,
+     * if the current fork at this block-height is empty or this
+     * block seems more favourable, then the block is added to it.
+     *
+     * The block is also sent to all other peers regardless of
+     * whether or not it is favourable.
+     */
     public void onBlockMinedEvent(BlockMinedEvent event)
     {
     }
