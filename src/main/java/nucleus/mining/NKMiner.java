@@ -205,7 +205,7 @@ public class NKMiner
     private void draw(float nonce_a, float r, float g, float b, float r2, float g2, float b2, float r3, float g3, float b3)
     {
 //        glPolygonMode( GL_FRONT_AND_BACK, x*50.0F % 500 > 250 ? GL_LINE : GL_FILL);
-        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE);
+//        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE);
 
         tlsds.bind();
 
@@ -218,7 +218,7 @@ public class NKMiner
 
             Matrix4f pos = new Matrix4f().InitTranslation(0,0, 0),
                     rot = new Matrix4f().InitRotation(0, 0,0),
-                    scl = new Matrix4f().InitScale(2,2,-1),
+                    scl = new Matrix4f().InitScale(3.0f,3.0f,-1),
 
                     cpos = new Matrix4f().InitTranslation(-camPos.GetX(), -camPos.GetY(), -camPos.GetZ()),
                     crot = new Matrix4f().InitRotation(0,0,0),

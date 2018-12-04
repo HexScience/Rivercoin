@@ -331,9 +331,9 @@ void main()
 
     normal = normalize(vertex - vec3(0, 0, vertex.z));
 
-    float Displacement = (noise * 0.16542346);
+    float Displacement = (noise * 0.26542346);
 
     vertex += normal * Displacement;
-    worldPos = vec4(vertex, noise * 0.5 + 0.5);
+    worldPos = vec4(vertex, (noise * 0.5 + 0.5) * 0.26542346);
     gl_Position = mvp * vec4(vertex, 1.0);
 }
