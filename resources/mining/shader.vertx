@@ -8,10 +8,10 @@ out vec3 vertices_in;
 out vec3 normals_in;
 out vec2 coords_in;
 
-//uniform mat4 model;
+uniform mat4 model;
 
 void main(){
-    vertices_in = vertex_in;//(model * vec4(vertex_in, 1.0)).xyz;
+    vertices_in = (model * vec4(vertex_in, 1.0)).xyz;
     normals_in = normal_in;
     coords_in = coord__in;
 }

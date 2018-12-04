@@ -112,7 +112,7 @@ public class Mesh
         for(int f = 0; f < mesh.mNumFaces(); f++)
         {
             AIFace face = mesh.mFaces().get(f);
-            for(int ind = 0; ind < face.mNumIndices(); ind++)
+            for(int ind = 0; ind < face.mNumIndices(); ind ++)
                 indices[index ++] = (face.mIndices().get(ind));
         }
 
@@ -144,16 +144,14 @@ public class Mesh
     {
         sze = indices.length;
 
-
-
         vbo = GL30.glGenVertexArrays();
         ibo = GL15.glGenBuffers();
-        ebo = GL15.glGenBuffers();
+//        ebo = GL15.glGenBuffers();
         GL30.glBindVertexArray(vbo);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, ibo);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertices, GL15.GL_STATIC_DRAW);
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, ebo);
-        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indices, GL15.GL_STATIC_DRAW);
+//        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, ebo);
+//        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indices, GL15.GL_STATIC_DRAW);
 //
 //
 //        glEnableVertexAttribArray(0);
@@ -212,7 +210,7 @@ public class Mesh
     {
         glBindVertexArray(vbo);
         glBindBuffer(GL_ARRAY_BUFFER, ibo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
@@ -222,8 +220,8 @@ public class Mesh
         GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 32, 12);
         GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 32, 24);
 
-//        glDrawArrays(GL_PATCHES, 0, sze);
-        glDrawElements(GL_PATCHES,  sze, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_PATCHES, 0, sze);
+//        glDrawElements(GL_PATCHES,  sze, GL_UNSIGNED_INT, 0);
 
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);

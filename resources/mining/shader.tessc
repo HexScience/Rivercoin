@@ -12,7 +12,7 @@ out vec2 coordsc_in[];
 
 float GetTessLevel(float Distance0, float Distance1)
 {
-    float AvgDistance = 5.0 - (max(1.0, min(5.0, (Distance0 + Distance1) / 2.0)));
+    float AvgDistance = max(1.0, 50.0 - min(50.0, (Distance0 + Distance1) / 2.0));//5.0 - (max(1.0, min(5.0, (Distance0 + Distance1) / 2.0)));
 
     return floor(AvgDistance * 4.2);
 }

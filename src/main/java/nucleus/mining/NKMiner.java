@@ -138,49 +138,29 @@ public class NKMiner
         float vertices[] =
         {
                 -1, -1, 0,
-                1, 1, 1,
+                0, -1, 0,
                 -1, -1,
                 1, -1, 0,
-                1, 1, 1,
+                0, -1, 0,
                 1, -1,
                 1, 1, 0,
                 1, 1, 1,
                 1, 1,
+
                 -1, -1, 0,
-                1, 1, 1,
+                0, -1, 0,
                 -1, -1,
                 1, 1, 0,
-                1, 1, 1,
+                0, -1, 0,
                 1, 1,
                 -1, 1, 0,
-                1, 1, 1,
+                0, -1, 0,
                 -1, 1
         };
 
         int indices[] = {0, 1, 2, 3, 4, 5};
 
         mesh = new Mesh(vertices, indices);
-
-
-
-//        element = new Element();
-//
-//        element.vertices = GL30.glGenVertexArrays();
-//        GL30.glBindVertexArray(element.vertices);
-//
-//        element.vbo = GL15.glGenBuffers();
-//        GL20.glEnableVertexAttribArray(0);
-//        GL20.glEnableVertexAttribArray(1);
-//        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, element.vbo);
-//        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertices, GL15.GL_STATIC_DRAW);
-//        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false,20, 0);
-//        GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 20, 12);
-//        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-//        GL30.glBindVertexArray(0);
-
-
-
-
 
 
 
@@ -231,32 +211,40 @@ public class NKMiner
     }
 
     float x = 0;
-    Vector3f camPos = new Vector3f(0,0,-10);
+    Vector3f camPos = new Vector3f(0,0,-10.0F);
 
     private void draw(float nonce_a, float r, float g, float b, float r2, float g2, float b2, float r3, float g3, float b3)
     {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+        glPolygonMode( GL_FRONT_AND_BACK, x*50.0F % 500 > 250 ? GL_LINE : GL_FILL);
+
         tlsds.bind();
 
-        tlsds.uniform("nonce", nonce_a);
-        tlsds.uniform("LightColor", r, g, b);
-        tlsds.uniform("LightColor2", r2, g2, b2);
-        tlsds.uniform("nonce2", r3, g3, b3);
+        for (int i = 0; i < 1; i ++)
+        {
+            tlsds.uniform("nonce", nonce_a);
+            tlsds.uniform("LightColor", r, g, b);
+            tlsds.uniform("LightColor2", r2, g2, b2);
+            tlsds.uniform("nonce2", r3, g3, b3);
 
-        Matrix4f pos = new Matrix4f().InitTranslation(0,0,5),
-                rot = new Matrix4f().InitRotation(0,x * 20,0),
-                scl = new Matrix4f().InitScale(1,1,1),
+            Matrix4f pos = new Matrix4f().InitTranslation(0,0, 0),
+                    rot = new Matrix4f().InitRotation(0,-10,0),
+                    scl = new Matrix4f().InitScale(1,1,1),
 
-        cpos = new Matrix4f().InitTranslation(-camPos.GetX(), -camPos.GetY(), -camPos.GetZ()),
-        crot = new Matrix4f().InitRotation(0,0,0),
+                    cpos = new Matrix4f().InitTranslation(-camPos.GetX(), -camPos.GetY(), -camPos.GetZ()),
+                    crot = new Matrix4f().InitRotation(0,0,0),
 
-        cproj = new Matrix4f().InitPerspective((float) Math.toRadians(90.0), ((float) width) / ((float) height), 0.01F, 1000.0F);
+                    cproj = new Matrix4f().InitPerspective((float) Math.toRadians(90.0), ((float) width) / ((float) height), 0.01F, 1000.0F);
 
-        Matrix4f model = new Matrix4f().InitIdentity().Mul(pos.Mul(rot.Mul(scl)));
-        Matrix4f projv = cproj.Mul(crot.Mul(cpos));
+            Matrix4f model = new Matrix4f().InitIdentity().Mul(pos.Mul(rot.Mul(scl)));
+            Matrix4f projv = cproj.Mul(crot.Mul(cpos));
 
-        tlsds.uniform("mvp", projv.Mul(model));
+            tlsds.uniform("mvp", projv.Mul(model));
+            tlsds.uniform("model", model);
 
-        mesh.render();
+            mesh.render();
+        }
 //        glBindVertexArray(element.vertices);
 //        glEnableVertexAttribArray(0);
 //        glEnableVertexAttribArray(1);
