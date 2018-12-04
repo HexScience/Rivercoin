@@ -325,7 +325,7 @@ void main()
    	seed.dz = 0;
    	seed.dw = 0;
 
-    vertex += AdjustPosition(vertex);
+    vertex += (vertex);
 
    	float noise = seeded_noise(vertex, seed);
 
@@ -333,7 +333,6 @@ void main()
 
     float Displacement = (noise * 0.26542346);
 
-    vertex += normal * Displacement;
-    worldPos = vec4(vertex, (noise * 0.5 + 0.5) * 0.26542346);
-    gl_Position = mvp * vec4(vertex, 1.0);
+    worldPos = vec4(AdjustPosition(vertex) + normal * Displacement, (noise * 0.5 + 0.5));
+    gl_Position = vec4(vertex, 1.0);
 }

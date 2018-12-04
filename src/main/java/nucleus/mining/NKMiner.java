@@ -218,7 +218,8 @@ public class NKMiner
 
             Matrix4f pos = new Matrix4f().InitTranslation(0,0, 0),
                     rot = new Matrix4f().InitRotation(0, 0,0),
-                    scl = new Matrix4f().InitScale(3.0f,3.0f,-1),
+//                    scl = new Matrix4f().InitScale(3.0f,3.0f,-1),
+                    scl = new Matrix4f().InitScale(1.0f,1.0f,1),
 
                     cpos = new Matrix4f().InitTranslation(-camPos.GetX(), -camPos.GetY(), -camPos.GetZ()),
                     crot = new Matrix4f().InitRotation(0,0,0),
