@@ -356,8 +356,9 @@ void main()
         vec3 camRight = normalize(cross(camDir,camUp));
 
 
-				// vec2 coord =-1.0+2.0*gl_FragCoord.xy/iResolution;
-        vec2 coord =1.0+2.0*gl_FragCoord.xy/iResolution;//-1.0+2.0*((coords.xy/iResolution)*1000.0);
+				vec2 coord =-1.0+2.0*gl_FragCoord.xy/iResolution;
+        // vec2 coord =1.0+2.0*gl_FragCoord.xy/iResolution;//
+				// -1.0+2.0*((coords.xy/iResolution)*1000.0);
         coord.x *= iResolution.x/iResolution.y;
 
 				vec4 nmlz = vec4(normalize(camDir + (coord.x*camRight + coord.y*camUp)*FieldOfView), 0.0);
