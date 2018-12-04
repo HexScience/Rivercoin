@@ -81,6 +81,7 @@ public class BlockChain
      */
     public void onBlockMinedEvent(BlockMinedEvent event)
     {
+        forkManager.add(event.getData());
     }
 
     /**
