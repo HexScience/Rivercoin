@@ -197,6 +197,11 @@ public class Block implements Comparable<Block>, StrippedObject
         return a.getHeader().getBlockID() < b.getHeader().getBlockID() ? -1 : (a.getHeader().getBlockID() == b.getHeader().getBlockID() ? 0 : 1);
     }
 
+    public double ratio()
+    {
+        return (double) accepted.size() / (double) rejected.size();
+    }
+
     public static class BlockComparator implements Comparator<Block>{
         @Override
         public int compare(Block a, Block b)
