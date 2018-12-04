@@ -23,8 +23,7 @@ public class BlockChain
      * is received the program has to choose between
      * the two.
      */
-    private Block   current;
-
+    private Block       current;
     private ForkManager forkManager;
 
     public BlockChain(Context context) throws EventFamilyDoesNotExistException
