@@ -4,5 +4,6 @@ public enum EventType
 {
     NOTIFICATION,
     REPLY_TO_REQUEST,
-    REQUEST;
+    REQUEST,
+    INTERNAL_NOTIFICATION;
 }
