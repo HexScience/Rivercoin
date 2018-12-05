@@ -129,6 +129,17 @@ public class BlockChain
      */
     private void traceForeignBlockChain(DownloadedBlock block)
     {
+        long long_height = block.getBlock().getHeader().getBlockID();
+        long crnt_height = current.getHeader().getBlockID();
+
+        Queue<Block> forkBlocks = new SortedLinkedQueue<>();
+
+        if (forkManager.get(block.getSender()) != null)
+        {
+        } else {
+        }
+
+        Block testBlock = getBlock(current.getHeader().getBlockID() - 1);
     }
 
     /**
