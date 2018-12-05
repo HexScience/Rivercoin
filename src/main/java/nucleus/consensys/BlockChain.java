@@ -2,6 +2,7 @@ package nucleus.consensys;
 
 import nucleus.event.*;
 import nucleus.exceptions.EventFamilyDoesNotExistException;
+import nucleus.mining.AsyncMiner;
 import nucleus.protocols.protobufs.Block;
 import nucleus.system.Context;
 import nucleus.util.SortedLinkedQueue;
@@ -25,6 +26,7 @@ public class BlockChain
      */
     private Block       current;
     private ForkManager forkManager;
+    private AsyncMiner  miner;
 
     public BlockChain(Context context) throws EventFamilyDoesNotExistException
     {
@@ -38,6 +40,7 @@ public class BlockChain
         this.context.getEventManager().register((BlockNotificationEventListener) (_BlockNotificationEvent_)->{onEventBlockNotify(_BlockNotificationEvent_); }, "Block");
         this.context.getEventManager().register((RequestedBlockReceivedListener) (_RequestedBlockReceivedEvent_)->{onEventRequestedBlockReceived(_RequestedBlockReceivedEvent_); }, "Block");
         this.context.getEventManager().register((BlockMinedListener) (_MinedBlockEvent_)->{onBlockMinedEvent(_MinedBlockEvent_); }, "Block");
+        this.miner = new AsyncMiner();
     }
 
     /**
