@@ -1,5 +1,6 @@
 package nucleus.consensys;
 
+import nucleus.net.server.IpAddress;
 import nucleus.protocols.protobufs.Block;
 import nucleus.util.SortedLinkedQueue;
 
@@ -29,5 +30,11 @@ public class LocalFork extends ForkI
     public Queue<Block> get()
     {
         return blockQueue;
+    }
+
+    @Override
+    public boolean hasSender(IpAddress sender)
+    {
+        return false;
     }
 }
