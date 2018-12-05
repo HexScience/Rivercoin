@@ -6,6 +6,7 @@ import nucleus.protocols.transaction.Transaction;
 import nucleus.protocols.transaction.TransactionOutput;
 import nucleus.util.FileService;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -205,6 +206,21 @@ public class Block implements Comparable<Block>, StrippedObject
     public long getTotalValue()
     {
         return 0;
+    }
+
+    public byte[] getBytes() throws IOException
+    {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(stream);
+
+        write(dataOutputStream);
+
+        dataOutputStream.flush();
+        dataOutputStream.close();
+        stream.flush();
+        stream.close();
+
+        return stream.toByteArray();
     }
 
     public static class BlockComparator implements Comparator<Block>{
