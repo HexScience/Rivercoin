@@ -26,9 +26,8 @@ public class MiningThread implements Runnable, ThreadedAccess
     private final AtomicLongArray nonce;
     private final AtomicLongArray hash;
 
-    public MiningThread (Block block, double difficulty) throws IOException
+    public MiningThread (byte data[], double difficulty) throws IOException
     {
-        byte data[] = block.getBytes();
 //        long longData[] = new long[(int) Math.ceil((double)data.length / 8.0)];
 //        ByteBuffer.wrap(data).asLongBuffer().get(longData);
 
