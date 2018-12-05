@@ -1,5 +1,6 @@
 package nucleus.consensys;
 
+import nucleus.net.server.IpAddress;
 import nucleus.protocols.protobufs.Block;
 import nucleus.util.SortedLinkedQueue;
 
@@ -59,4 +60,6 @@ public abstract class ForkI
 
         blockQueue = temp;
     }
+
+    public abstract boolean hasSender(IpAddress sender);
 }
