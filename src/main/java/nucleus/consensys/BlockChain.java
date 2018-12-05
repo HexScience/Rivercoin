@@ -10,6 +10,7 @@ import nucleus.system.Parameters;
 import nucleus.util.SortedLinkedQueue;
 
 import java.io.IOException;
+import java.util.Queue;
 
 public class BlockChain
 {
@@ -120,6 +121,17 @@ public class BlockChain
     }
 
     /**
+     * this function traces back a block to it's forkpoint,
+     * if there is a future block and it's valid, that means
+     * the current main-chain is short, so the program retra
+     * -ces the future block to it's fork point, imports all
+     * blocks since that point, and adjusts the chain.
+     */
+    private void traceForeignBlockChain(DownloadedBlock block)
+    {
+    }
+
+    /**
      * This function will lock a block and attempt to find
      * a solution for it, if the block is solved before any
      * solutions are found by other peers, it will be appen
@@ -153,6 +165,12 @@ public class BlockChain
      */
     protected void realign()
     {
+        /**
+         * 50 blocks * 12seconds each = 10 minutes.
+         */
+        if (getMain().size() == 50)
+        {
+        }
     }
 
     /**
@@ -188,10 +206,19 @@ public class BlockChain
         return context.getSerializer().loadBlock(block);
     }
 
+    protected Queue<Block> getMain()
+    {
+        return forkManager.getMain().get();
+    }
+
     /**
      * The main chain loop
      */
     public void run()
     {
+        while (context.keepAlive())
+        {
+            realign();
+        }
     }
 }
