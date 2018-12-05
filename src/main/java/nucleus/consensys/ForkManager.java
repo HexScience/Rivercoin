@@ -8,6 +8,15 @@ import java.util.Set;
 
 public class ForkManager
 {
+    /**
+     * A set containing different lists of blocks
+     * each from a specific peer, some of these
+     * blocks might not be valid, some are just
+     * orphaned, however they are kept in memory
+     * until the blockchain program decides to
+     * realign the chain, where any invalid blocks
+     * and or chains are discarded.
+     */
     private Set<ForkI>  forks;
     private ForkI       main;
 
