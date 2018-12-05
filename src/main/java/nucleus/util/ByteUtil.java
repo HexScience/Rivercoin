@@ -88,6 +88,26 @@ public class ByteUtil
         return concatenated;
     }
 
+    public static long[] concatenate(long[]...arrays)
+    {
+        int size = 0;
+        for(long[] array : arrays)
+            size += array.length;
+
+        long concatenated[] = new long[size];
+
+        int index = 0;
+
+        for(long[] array : arrays)
+        {
+            System.arraycopy(array, 0, concatenated, index, array.length);
+
+            index += array.length;
+        }
+
+        return concatenated;
+    }
+
     public static String[] concatenate(String[]...arrays)
     {
         int size = 0;
