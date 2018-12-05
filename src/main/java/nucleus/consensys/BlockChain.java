@@ -4,9 +4,11 @@ import nucleus.event.*;
 import nucleus.exceptions.EventFamilyDoesNotExistException;
 import nucleus.mining.AsyncMiner;
 import nucleus.mining.MiningThread;
+import nucleus.net.server.IpAddress;
 import nucleus.protocols.protobufs.Block;
 import nucleus.system.Context;
 import nucleus.system.Parameters;
+import nucleus.util.ByteUtil;
 import nucleus.util.SortedLinkedQueue;
 
 import java.io.IOException;
@@ -61,6 +63,8 @@ public class BlockChain
     {
         long blockHeight = event.getData().getBlock().getHeader().getBlockID();
 
+        forkManager.add(event.getData());
+
         if (blockHeight == current.getHeader().getBlockID())
             handleSolvedBlock(event.getData());
         else if (blockHeight > current.getHeader().getBlockID())
@@ -75,6 +79,10 @@ public class BlockChain
      * queue.
      */
     public void onEventRequestedBlockReceived(RequestedBlockReceivedEvent event)
+    {
+    }
+
+    public void requestBlockFromPeer(long block, IpAddress peer)
     {
     }
 
@@ -132,14 +140,52 @@ public class BlockChain
         long long_height = block.getBlock().getHeader().getBlockID();
         long crnt_height = current.getHeader().getBlockID();
 
-        Queue<Block> forkBlocks = new SortedLinkedQueue<>();
+        Queue<Block> trueFork = new SortedLinkedQueue<>();
 
-        if (forkManager.get(block.getSender()) != null)
+        Block futureBlock = block.getBlock();
+        /**
+         * Get the previous block
+         * If the previous block
+         * matches our main chain
+         * then we stop, if not
+         * then we continue find
+         * -ing older blocks, unt
+         * -il we find the fork-
+         * root.
+         */
+        Block forkedBlock = findByHash(forkManager, futureBlock.getHeader().getParentHash());
+
+        /**
+         * If a matching block cannot be found
+         * then request it from the peer and
+         * continue until the next realignment.
+         */
+        if (forkedBlock == null)
         {
-        } else {
+            requestBlockFromPeer(futureBlock.getHeader().getBlockID(), block.getSender());
+            return;
         }
 
-        Block testBlock = getBlock(current.getHeader().getBlockID() - 1);
+        /**
+         * Add the preleading block.
+         */
+        trueFork.add(forkedBlock);
+
+        forkedBlock = getBlock(futureBlock.getHeader().getBlockID() - 1);
+
+        if (forkedBlock != null && ByteUtil.equals(forkedBlock.getHeader().getHash(), futureBlock.getHeader().getHash()))
+        {
+        }
+    }
+
+    public static Block findByHash(ForkManager manager, byte[] hash)
+    {
+        for (ForkI forkI : manager.get())
+            for (Block block : forkI.get())
+                if (ByteUtil.equals(hash, block.getHeader().getHash()))
+                    return block;
+
+        return null;
     }
 
     /**
@@ -201,6 +247,22 @@ public class BlockChain
         return Parameters.calculateDifficulty(prev.getHeader().getTimeStamp(), bbfr.getHeader().getTimeStamp(), prev.getHeader().getDifficulty());
     }
 
+    protected static Block getBlock(Queue<Block> blocks, final long block)
+    {
+        for (Block find : blocks)
+            if (find.getHeader().getBlockID() == block)
+                return find;
+            else if (find.getHeader().getBlockID() > block)
+                break;
+
+        return null;
+    }
+
+    /**
+     * @param block The block height of the block to be found.
+     * @return The block if it exists on the main chain, else
+     * return the block loaded from the serializer.
+     */
     protected Block getBlock(final long block)
     {
         for (Block find : forkManager.getMain().get())
