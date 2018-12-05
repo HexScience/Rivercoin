@@ -9,6 +9,8 @@ import nucleus.system.Context;
 import nucleus.system.Parameters;
 import nucleus.util.SortedLinkedQueue;
 
+import java.io.IOException;
+
 public class BlockChain
 {
     /**
@@ -130,7 +132,13 @@ public class BlockChain
     {
         current.lock();
 
-        miner.setMinerInstance(null);
+        try
+        {
+            miner.setMinerInstance(new MiningThread(current.getBytes(), getDifficulty(current)));
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -160,7 +168,7 @@ public class BlockChain
     {
         Block prev = getPrevious(block);
         Block bbfr = getPrevious(prev);
-        
+
         return Parameters.calculateDifficulty(prev.getHeader().getTimeStamp(), bbfr.getHeader().getTimeStamp(), prev.getHeader().getDifficulty());
     }
 
