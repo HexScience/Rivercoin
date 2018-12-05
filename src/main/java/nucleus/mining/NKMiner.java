@@ -38,7 +38,7 @@ public class NKMiner
 
     private static final int width = 1280, height = 720;
 
-    private NKMiner() throws Exception
+    protected NKMiner() throws Exception
     {
         GLFWErrorCallback.createPrint(System.err).set();
 
@@ -335,11 +335,6 @@ public class NKMiner
     {
         delete();
         super.finalize();
-    }
-
-    public void stop()
-    {
-        this.run = false;
     }
 
     public Nonce getNonce()
