@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 
 public class IpAddress implements Comparable<IpAddress>
 {
-    private InetAddress address;
+    private InetAddress   address;
     private double        distance;
 
     public IpAddress(String address) throws UnknownHostException
@@ -74,5 +74,14 @@ public class IpAddress implements Comparable<IpAddress>
     public int compareTo(IpAddress o)
     {
         return o.distance > distance ? -1 : 1;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof IpAddress)
+            return ((IpAddress) obj).address.toString().equals(address.toString());
+
+        return super.equals(obj);
     }
 }
