@@ -13,6 +13,7 @@ public class BlockHeader
 
 	private long 			version;
 	private long 			blockID;
+	private byte[]			hash;
 	private byte[] 			parentHash = new byte[32];
 	private byte[] 			merkleRoot = new byte[32];
 	private byte[] 			forkRoot = new byte[32];
@@ -32,6 +33,13 @@ public class BlockHeader
 	//GETTERS
 
 	public long getBlockID() { return blockID; }
+
+	//GETTERS
+
+	public byte[] getHash()
+	{
+		return hash;
+	}
 
 	//GETTERS
 
@@ -72,6 +80,13 @@ public class BlockHeader
 	//SETTERS
 
 	public void  setBlockID(long blockID) { this.blockID = blockID; }
+
+	//SETTERS
+
+	public void setHash(byte[] hash)
+	{
+		this.hash = hash;
+	}
 
 	//SETTERS
 
