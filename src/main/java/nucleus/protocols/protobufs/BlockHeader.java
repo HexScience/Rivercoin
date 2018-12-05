@@ -1,5 +1,7 @@
 package nucleus.protocols.protobufs;
 
+import nucleus.mining.Nonce;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -19,7 +21,7 @@ public class BlockHeader
 	 */
 	private long 			timeStamp;
 	private double 			difficulty;
-	private long 			nonce;
+	private Nonce			nonce;
 	private CompressedKey 	minerAddress = new CompressedKey();
 	private long 			reward;
 
@@ -53,7 +55,7 @@ public class BlockHeader
 
 	//GETTERS
 
-	public long getNonce() { return nonce; }
+	public Nonce getNonce() { return nonce; }
 
 	//GETTERS
 
@@ -93,7 +95,7 @@ public class BlockHeader
 
 	//SETTERS
 
-	public void  setNonce(long nonce) { this.nonce = nonce; }
+	public void  setNonce(Nonce nonce) { this.nonce = nonce; }
 
 	//SETTERS
 
@@ -112,7 +114,9 @@ public class BlockHeader
 		stream.write(forkRoot);
 		stream.writeLong(timeStamp);
 		stream.writeDouble(difficulty);
-		stream.writeLong(nonce);
+		stream.writeLong(nonce.getA());
+		stream.writeLong(nonce.getB());
+		stream.writeLong(nonce.getC());
 		minerAddress.write(stream);
 		stream.writeLong(reward);
 	}
@@ -127,7 +131,7 @@ public class BlockHeader
 		stream.read(this.forkRoot);
 		this.timeStamp = stream.readLong();
 		this.difficulty = stream.readDouble();
-		this.nonce = stream.readLong();
+		this.nonce = new Nonce(stream.readLong(), stream.readLong(), stream.readLong());
 		this.minerAddress.read(stream);
 		this.reward = stream.readLong();
 	}
