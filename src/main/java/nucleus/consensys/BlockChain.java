@@ -166,15 +166,26 @@ public class BlockChain
 
     protected double getDifficulty(final Block block)
     {
-        Block prev = getPrevious(block);
-        Block bbfr = getPrevious(prev);
+        Block prev = getBlock(block.getHeader().getBlockID() - 1);
+        Block bbfr = getBlock(prev.getHeader().getBlockID() - 1);
 
         return Parameters.calculateDifficulty(prev.getHeader().getTimeStamp(), bbfr.getHeader().getTimeStamp(), prev.getHeader().getDifficulty());
     }
 
-    protected Block getPrevious(final Block block)
+    protected Block getBlock(final long block)
     {
+        for (Block find : forkManager.getMain().get())
+            if (find.getHeader().getBlockID() == block)
+                return find;
+            else if (find.getHeader().getBlockID() > block)
+                break;
+
         return null;
+    }
+
+    protected Block loadBlock(final long block)
+    {
+        return context.getSerializer().loadBlock(block);
     }
 
     /**

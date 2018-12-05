@@ -8,7 +8,7 @@ import java.util.Set;
 public class ForkManager
 {
     private Set<ForkI>  forks;
-    private ForkI       favourable;
+    private ForkI       main;
 
     public ForkManager()
     {
@@ -43,13 +43,13 @@ public class ForkManager
 
     private void checkShouldAdd(Block block)
     {
-        Block existing      = favourable.getAt(block.getHeader().getBlockID());
+        Block existing      = main.getAt(block.getHeader().getBlockID());
         boolean blockExists = existing != null;
 
         if (!blockExists)
-            favourable.add(block);
+            main.add(block);
         else{
-            Block preexstng = favourable.getAt(block.getHeader().getBlockID());
+            Block preexstng = main.getAt(block.getHeader().getBlockID());
             long eTimeAvge  = existing.getHeader().getTimeStamp() - preexstng.getHeader().getTimeStamp();
             long nTimeAvge  = block.getHeader().getTimeStamp() - preexstng.getHeader().getTimeStamp();
 
@@ -57,7 +57,12 @@ public class ForkManager
             double nRatio   = block.ratio();
 
             if (!(eTimeAvge < nTimeAvge && eRatio > nRatio && existing.getTotalValue() > block.getTotalValue()))
-                favourable.replace(block.getHeader().getBlockID(), block);
+                main.replace(block.getHeader().getBlockID(), block);
         }
+    }
+
+    public ForkI getMain()
+    {
+        return main;
     }
 }
