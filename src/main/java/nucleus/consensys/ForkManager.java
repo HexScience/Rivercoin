@@ -75,4 +75,9 @@ public class ForkManager
 
         return null;
     }
+
+    public Set<ForkI> get()
+    {
+        return forks;
+    }
 }
