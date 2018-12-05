@@ -35,4 +35,10 @@ public class ForeignFork extends ForkI
     {
         return blockQueue;
     }
+
+    @Override
+    public boolean hasSender(IpAddress sender)
+    {
+        return peer.equals(sender);
+    }
 }
