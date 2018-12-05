@@ -34,6 +34,7 @@ public class NKMiner
     private VAOMesh vaoMesh;
     private Nonce   nonce;
     private Shader  tlsds;
+    private boolean run;
 
     private static final int width = 1280, height = 720;
 
@@ -136,6 +137,8 @@ public class NKMiner
         glBindVertexArray(0);
 
         Logger.alert("NKMiner initialized successfully.");
+
+        run = true;
     }
 
     public static NKMiner init() throws Exception
@@ -257,7 +260,7 @@ public class NKMiner
 
         Random random = new Random();
 
-        while (result.abs().compareTo(difficulty) >= 0)
+        while (result.abs().compareTo(difficulty) >= 0 && run)
         {
             if (nonce == null)
                 nonce = new Nonce();
@@ -334,7 +337,12 @@ public class NKMiner
         super.finalize();
     }
 
-    private Nonce getNonce()
+    public void stop()
+    {
+        this.run = false;
+    }
+
+    public Nonce getNonce()
     {
         return nonce;
     }
