@@ -180,7 +180,7 @@ public class BlockChain
             else if (find.getHeader().getBlockID() > block)
                 break;
 
-        return null;
+        return loadBlock(block);
     }
 
     protected Block loadBlock(final long block)
