@@ -3,6 +3,7 @@ package nucleus.consensys;
 import nucleus.event.*;
 import nucleus.exceptions.EventFamilyDoesNotExistException;
 import nucleus.mining.AsyncMiner;
+import nucleus.mining.MiningThread;
 import nucleus.protocols.protobufs.Block;
 import nucleus.system.Context;
 import nucleus.util.SortedLinkedQueue;
@@ -127,6 +128,8 @@ public class BlockChain
     public void solveBlock()
     {
         current.lock();
+
+        miner.setMinerInstance(null);
     }
 
     /**
