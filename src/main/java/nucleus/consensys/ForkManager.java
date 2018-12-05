@@ -1,5 +1,6 @@
 package nucleus.consensys;
 
+import nucleus.net.server.IpAddress;
 import nucleus.protocols.protobufs.Block;
 
 import java.util.LinkedHashSet;
@@ -64,5 +65,14 @@ public class ForkManager
     public ForkI getMain()
     {
         return main;
+    }
+
+    public ForkI get(IpAddress sender)
+    {
+        for (ForkI forkI : forks)
+            if (forkI.hasSender(sender))
+                return forkI;
+
+        return null;
     }
 }
