@@ -6,6 +6,7 @@ import nucleus.mining.AsyncMiner;
 import nucleus.mining.MiningThread;
 import nucleus.protocols.protobufs.Block;
 import nucleus.system.Context;
+import nucleus.system.Parameters;
 import nucleus.util.SortedLinkedQueue;
 
 public class BlockChain
@@ -153,6 +154,19 @@ public class BlockChain
      */
     protected void serialize(SortedLinkedQueue<Block> blocks)
     {
+    }
+
+    protected double getDifficulty(final Block block)
+    {
+        Block prev = getPrevious(block);
+        Block bbfr = getPrevious(prev);
+        
+        return Parameters.calculateDifficulty(prev.getHeader().getTimeStamp(), bbfr.getHeader().getTimeStamp(), prev.getHeader().getDifficulty());
+    }
+
+    protected Block getPrevious(final Block block)
+    {
+        return null;
     }
 
     /**
