@@ -1,4 +1,4 @@
-package nucleus.protocols;
+package nucleus.consensys;
 
 import nucleus.protocols.protobufs.Block;
 

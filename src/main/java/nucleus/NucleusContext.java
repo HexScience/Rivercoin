@@ -5,7 +5,7 @@ import nucleus.event.EventManager;
 import nucleus.exceptions.EventFamilyDoesNotExistException;
 import nucleus.exceptions.FileServiceException;
 import nucleus.ledger.Ledger;
-import nucleus.protocols.BlockChain;
+import nucleus.consensys.BlockChain;
 import nucleus.util.FileService;
 import nucleus.mining.NKMiner;
 import nucleus.net.ServerManager;

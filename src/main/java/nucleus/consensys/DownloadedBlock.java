@@ -1,4 +1,4 @@
-package nucleus.protocols;
+package nucleus.consensys;
 
 import nucleus.net.server.IpAddress;
 import nucleus.protocols.protobufs.Block;

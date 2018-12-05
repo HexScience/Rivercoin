@@ -1,6 +1,6 @@
 package nucleus.event;
 
-import nucleus.protocols.DownloadedBlock;
+import nucleus.consensys.DownloadedBlock;
 
 public class RequestedBlockReceivedEvent extends ActionableEvent<DownloadedBlock>
 {
