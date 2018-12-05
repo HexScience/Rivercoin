@@ -26,9 +26,11 @@ public class NucleusContext implements Context
     private DB              db;
     private EventManager    eventManager;
     private NKMiner         miner;
+    private boolean         keepAlive;
 
     public NucleusContext(FileService entryPoint, DB db, NKMiner miner) throws IOException, FileServiceException, GeoIp2Exception, EventFamilyDoesNotExistException
     {
+        this.keepAlive = true;
         this.config = new Config();
         this.serializer = new Serializer();
         this.serverManager = new ServerManager(entryPoint);
@@ -73,5 +75,11 @@ public class NucleusContext implements Context
     public EventManager getEventManager()
     {
         return eventManager;
+    }
+
+    @Override
+    public boolean keepAlive()
+    {
+        return keepAlive;
     }
 }
