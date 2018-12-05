@@ -37,16 +37,16 @@ public class Nonce
     {
         byte data[] = integer.toByteArray();
 
-        if (data.length < 32)
+        if (data.length < 24)
         {
-            int difference = 32 - data.length;
+            int difference = 24 - data.length;
 
             data = ByteUtil.concatenate(new byte[difference], data);
         }
 
         this.nonce_a = ByteUtil.decode(ByteUtil.trim(data,  0, 8));
         this.nonce_b = ByteUtil.decode(ByteUtil.trim(data,  8, 16));
-        this.nonce_c = ByteUtil.decode(ByteUtil.trim(data,  16, 32));
+        this.nonce_c = ByteUtil.decode(ByteUtil.trim(data,  16, 24));
 
         return this;
     }
