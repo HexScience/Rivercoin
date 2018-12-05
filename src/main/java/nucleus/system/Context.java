@@ -13,4 +13,6 @@ public interface Context
     Ledger getLedger();
     DB getDB();
     EventManager getEventManager();
+
+    boolean keepAlive();
 }
