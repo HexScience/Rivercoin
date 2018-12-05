@@ -30,33 +30,9 @@ public class NKMiner
     private static NKMiner instance;
 
     private long mWindow;
-    private float mQuad[];
-    private int   mIndices[];
-    private class VBO{
-        private int vbo;
-        private int ibo;
-        private int sze;
-    }
-
-//    private class Element{
-//        private int vertices;
-//        private int vbo;
-//
-//        private int coords;
-//        private int cbp;
-//    }
-//    private Element element;
-    private int     mTime;
-    private int     mLightColour;
-    private int     mLightColour2;
-    private int     mNonce2;
-    private int     mNkHash;
-    private int     mMDL;
-    private int     mMVP;
     private FBO     fbo;
     private VAOMesh vaoMesh;
-    private Mesh    mesh;
-
+    private Nonce   nonce;
     private Shader  tlsds;
 
     private static final int width = 1280, height = 720;
@@ -73,7 +49,6 @@ public class NKMiner
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-//        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
@@ -113,7 +88,6 @@ public class NKMiner
 
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-//        glEnableVertexAttribArray(2);
 
         float vertices[] =
         {
@@ -148,14 +122,6 @@ public class NKMiner
         glEnable(GL_TEXTURE_2D);
 
         vaoMesh = new VAOMesh(vertices, indices);
-//        mesh    = VAOMesh.Mesh("cube", "obj");
-
-
-
-        /**
-         * Bind the vertex array to bypass validation errors.
-         */
-//        GL30.glBindVertexArray(element.vertices);
 
         tlsds = new Shader("shader");
         tlsds.registerUniform("nonce");
@@ -168,9 +134,6 @@ public class NKMiner
         fbo = new FBO(width * 1, height * 1);
 
         glBindVertexArray(0);
-
-//        glViewport(0,0,width,height);
-//        clInit();
 
         Logger.alert("NKMiner initialized successfully.");
     }
@@ -188,9 +151,9 @@ public class NKMiner
      * @param block
      * @return a 160 byte array which can be used to fetch 20 (long int) seeds.
      */
-    public static byte[] buildSeeds(Sha3 sha3_algo, Sha512 sha512_algo, byte block[], long nonce)
+    public static byte[] buildSeeds(Sha3 sha3_algo, Sha512 sha512_algo, byte block[], Nonce nonce)
     {
-        byte strong_seed[] = sha512_algo.encode(ByteUtil.concatenate(block, ByteUtil.encode(nonce)));
+        byte strong_seed[] = sha512_algo.encode(ByteUtil.concatenate(block, nonce.getNonce()));
 
         strong_seed = ByteUtil.concatenate(strong_seed, sha3_algo.encode(strong_seed));
         strong_seed = ByteUtil.concatenate(strong_seed, sha512_algo.encode(sha3_algo.encode(strong_seed)));
@@ -233,21 +196,6 @@ public class NKMiner
 
             vaoMesh.render();
         }
-//        glBindVertexArray(element.vertices);
-//        glEnableVertexAttribArray(0);
-//        glEnableVertexAttribArray(1);
-//        glEnableVertexAttribArray(2);
-//
-//        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false,32, 0);
-//        GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 32, 12);
-//        GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 32, 24);
-//
-//        glBindBuffer(GL_ARRAY_BUFFER, element.vbo);
-//        glDrawArrays(GL_PATCHES, 0, 6);
-//        glBindVertexArray(0);
-//        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-//        GL30.glBindVertexArray(0);
     }
 
     public void step(float nonce_a, float r, float g, float b, float r2, float g2, float b2, float r3, float g3, float b3)
@@ -269,7 +217,6 @@ public class NKMiner
 
     public void looptest()
     {
-//        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
         while (true)
         {
             step(x += 0.1f, 1, 1, 1, 1, 0, 0, 3, 1, 6);
@@ -296,7 +243,6 @@ public class NKMiner
 
     private byte[] do_mine(byte data[], BigInteger difficulty)
     {
-        long nonce = 0;
         Sha256 sha256_algo = new Sha256();
         Sha3 sha3_algo = new Sha3();
         Sha512 sha512_algo = new Sha512();
@@ -313,13 +259,18 @@ public class NKMiner
 
         while (result.abs().compareTo(difficulty) >= 0)
         {
+            if (nonce == null)
+                nonce = new Nonce();
+            else
+                nonce.increment();
+
             /**
              * Generate seeds and scene information
              * and reduce to 48 bytes.
              */
-            byte        seeds[] =   blake384_algo.encode(buildSeeds(sha3_algo, sha512_algo, data, nonce ++));
+            byte        seeds[] =   blake384_algo.encode(buildSeeds(sha3_algo, sha512_algo, data, nonce));
             ByteBuffer  seedGen =   ByteBuffer.wrap(seeds);
-            ByteBuffer  noncebf =   ByteBuffer.wrap(ByteUtil.encode(nonce));
+            ByteBuffer  noncebf =   ByteBuffer.wrap(nonce.getNonce());
 
             float colour[]      =   {((float) ((seedGen.getInt() % 255))) / 255.0f, ((float) ((seedGen.getInt() % 255))) / 255.0f, ((float) ((seedGen.getInt() % 255))) / 255.0f};
             float colour2[]     =   {((float) ((seedGen.getInt() % 255))) / 255.0f, ((float) ((seedGen.getInt() % 255))) / 255.0f, ((float) ((seedGen.getInt() % 255))) / 255.0f};
@@ -383,14 +334,16 @@ public class NKMiner
         super.finalize();
     }
 
+    private Nonce getNonce()
+    {
+        return nonce;
+    }
+
     private void delete()
     {
         glfwDestroyWindow(mWindow);
         GL20.glDisableVertexAttribArray(0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-//        GL15.glDeleteBuffers(element.vbo);
-//        GL30.glBindVertexArray(0);
-//        GL30.glDeleteVertexArrays(element.vertices);
     }
 
     public static NKMiner getInstance() throws NKMinerException
