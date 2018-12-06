@@ -199,11 +199,12 @@ public class BlockChain
      */
     public void solveBlock()
     {
-        current.lock();
+        double difficulty = getDifficulty(current);
+        current.lock(difficulty);
 
         try
         {
-            miner.setMinerInstance(new MiningThread(current.getBytes(), getDifficulty(current)));
+            miner.setMinerInstance(new MiningThread(current.getHeader().getForMining().getBytes(), difficulty));
         } catch (IOException e)
         {
             e.printStackTrace();
