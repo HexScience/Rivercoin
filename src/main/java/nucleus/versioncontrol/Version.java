@@ -52,9 +52,10 @@ public abstract class Version
         return versionLoader.load();
     }
 
-    private Constructors constructors;
+    private Constructors    constructors;
+    private int             version;
 
-    protected Version(Constructors constructors)
+    protected Version(Constructors constructors, int version)
     {
         this.constructors = constructors;
     }
@@ -62,5 +63,10 @@ public abstract class Version
     public Constructors getConstructors()
     {
         return constructors;
+    }
+
+    public long getVersion()
+    {
+        return version;
     }
 }

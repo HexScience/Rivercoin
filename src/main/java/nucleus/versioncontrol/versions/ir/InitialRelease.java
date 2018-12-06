@@ -7,6 +7,6 @@ public class InitialRelease extends Version
 {
     public InitialRelease()
     {
-        super(new Constructors(new irBlockHeaderConstructor(), new irBlockConstructor(), new irTransactionConstructor(), new irTransactionInputConstructor(), new irTransactionOutputConstructor()));
+        super(new Constructors(new irBlockHeaderConstructor(), new irBlockConstructor(), new irTransactionConstructor(), new irTransactionInputConstructor(), new irTransactionOutputConstructor()), 0);
     }
 }
