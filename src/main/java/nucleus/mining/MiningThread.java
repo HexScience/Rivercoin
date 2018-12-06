@@ -8,17 +8,10 @@ import nucleus.util.ByteUtil;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLongArray;
+import static nucleus.threading.Async.*;
 
 public class MiningThread implements Runnable, ThreadedAccess
 {
-    public static final int
-    ERR = 0,
-    EXCECPTION = 1,
-    SUCCESS = 2,
-    NO_EXECUTE = 3,
-    RUNNING = 4,
-    PREPARING = 5;
-
     private final AtomicInteger code;
     private final byte          data[];
     private final AtomicDouble  difficulty;
