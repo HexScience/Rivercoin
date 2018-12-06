@@ -28,7 +28,7 @@ public class PeerGroupCommunicator
     /**
      * broadcast our presence to all known ip addresses
      */
-    public void broadcast()
+    private void broadcast()
     {
         for (IpAddress ipAddress : context.getServerManager().getIpList().get())
         {
@@ -57,5 +57,29 @@ public class PeerGroupCommunicator
     {
         byte data[] = message.getFullMessage();
         return new DatagramPacket(data, data.length, ip, port);
+    }
+
+    /**
+     * @param message The message to broadcast.
+     * @throws IOException An exception if the
+     */
+    public void send(Message message)
+    {
+        long sent = 0;
+        for (IpAddress address : connected)
+        {
+            try {
+                socket.send(createPacket(socket, address.getAddress(), Parameters.MAIN_NETWORK_NODE_PORT, message));
+                sent ++;
+            } catch (Exception e)
+            {
+            }
+        }
+
+        if (sent == 0)
+        {
+            Logger.err("message could not be sent.");
+            broadcast();
+        }
     }
 }
