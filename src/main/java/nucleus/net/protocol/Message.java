@@ -1,6 +1,7 @@
 package nucleus.net.protocol;
 
 import nucleus.util.ByteUtil;
+import nucleus.util.HashUtil;
 
 public abstract class Message
 {
@@ -36,12 +37,14 @@ public abstract class Message
 
     private byte type;
     private byte code;
+    private byte checksum[];
     private byte message[];
 
     public Message(byte type, byte code, byte message[])
     {
         this.code       = code;
         this.message    = message;
+        this.checksum   = HashUtil.applySha256(message);
     }
 
     public abstract Class<?> getAnswerMessage();
@@ -61,8 +64,13 @@ public abstract class Message
 
     public byte[] getFullMessage()
     {
-        return ByteUtil.concatenate(new byte[] {type, code}, message);
+        return ByteUtil.concatenate(new byte[] {type, code}, checksum, message);
     }
 
     public abstract String toString();
+
+    public byte[] getCheckSum()
+    {
+        return checksum;
+    }
 }
