@@ -273,6 +273,10 @@ public class NKMiner
              */
             byte        seeds[] =   blake384_algo.encode(buildSeeds(sha3_algo, sha512_algo, data, nonce));
             ByteBuffer  seedGen =   ByteBuffer.wrap(seeds);
+            /**
+             * 24 bytes
+             * (6 integers)
+             */
             ByteBuffer  noncebf =   ByteBuffer.wrap(nonce.getNonce());
 
             float colour[]      =   {((float) ((seedGen.getInt() % 255))) / 255.0f, ((float) ((seedGen.getInt() % 255))) / 255.0f, ((float) ((seedGen.getInt() % 255))) / 255.0f};
@@ -283,7 +287,7 @@ public class NKMiner
             float b = random.nextFloat();
             random.setSeed(seedGen.getInt());
 
-            float fnonce        = (float) Math.abs((noncebf.getFloat() * noncebf.getFloat()) + Math.pow(random.nextFloat() + 1, 6) + Math.pow(b + 1, 6));
+            float fnonce        = (float) Math.abs((noncebf.getFloat() * noncebf.getFloat() * Math.pow(noncebf.getFloat() + noncebf.getFloat(), noncebf.getFloat() + noncebf.getFloat())) + Math.pow(random.nextFloat() + 1, 6) + Math.pow(b + 1, 6));
 
             /**
              * Render the scene
