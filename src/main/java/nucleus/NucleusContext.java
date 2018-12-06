@@ -12,6 +12,7 @@ import nucleus.net.ServerManager;
 import nucleus.system.Config;
 import nucleus.system.Context;
 import nucleus.system.Serializer;
+import nucleus.versioncontrol.VersionControl;
 import org.iq80.leveldb.DB;
 
 import java.io.IOException;
@@ -27,11 +28,13 @@ public class NucleusContext implements Context
     private EventManager    eventManager;
     private NKMiner         miner;
     private boolean         keepAlive;
+    private VersionControl  versionControl;
 
     public NucleusContext(FileService entryPoint, DB db, NKMiner miner) throws IOException, FileServiceException, GeoIp2Exception, EventFamilyDoesNotExistException
     {
         this.keepAlive = true;
         this.config = new Config();
+        this.versionControl = new VersionControl();
         this.serializer = new Serializer();
         this.serverManager = new ServerManager(entryPoint);
         this.ledgerDatabase = new Ledger();
@@ -75,6 +78,12 @@ public class NucleusContext implements Context
     public EventManager getEventManager()
     {
         return eventManager;
+    }
+
+    @Override
+    public VersionControl getVersionControl()
+    {
+        return versionControl;
     }
 
     @Override
