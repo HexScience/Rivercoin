@@ -10,7 +10,7 @@ import nucleus.system.Context;
 import nucleus.util.FileService;
 import nucleus.net.protocol.Message;
 import nucleus.net.server.IpAddress;
-import nucleus.net.server.PeerGroupCommunicator;
+import nucleus.net.server.Server;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -21,7 +21,7 @@ public class ServerManager
 {
     private MessageQueue                    messageQueue;
     private Map<byte[], MessageRoundTrip>   roundTripQue;
-    private PeerGroupCommunicator           server;
+    private Server                          server;
     private DatabaseReader                  lookupService;
     private IpAddressList                   ipList;
     private Context                         context;
@@ -34,6 +34,7 @@ public class ServerManager
         this.roundTripQue   = new LinkedHashMap<>();
         this.lookupService  = new DatabaseReader.Builder(entryPoint.newFile("GeoLiteC").newFile("GeoLiteC.mmdb").file()).build();
         this.ipList         = new IpAddressList(entryPoint, lookupService);
+        this.server         = new Server(context);
         this.context        = context;
 
         this.context.getEventManager().register((PeerDisconnectEventListener) (_PeerDisconnectEvent_)->{
@@ -67,5 +68,10 @@ public class ServerManager
     {
         roundTripQue.put(request.getCheckSum(), new MessageRoundTrip(request, true));
         server.send(request, peer);
+    }
+
+    public Message getQueuedMessage(byte[] checksum)
+    {
+        return roundTripQue.get(checksum).getMsg();
     }
 }
