@@ -1,6 +1,7 @@
 package nucleus.protocols.protobufs;
 
 import nucleus.mining.Nonce;
+import nucleus.util.ByteUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -9,14 +10,39 @@ import java.io.IOException;
 
 public class BlockHeader
 {
-	public static final int SIZE = 8 + 8 + 32 + 32 + 32 + 8 + 8 + 8 + 33 + 8;
+	public static class MinableBlockHeader
+	{
+		private long version;
+		private byte previousHash[];
+		private byte amerkleRoot[];
+		private byte rmerkleRoot[];
+		private long timestamp;
+		private double difficulty;
+
+		public MinableBlockHeader(long version, byte previousHash[], byte amerkleRoot[], byte rmerkleRoot[], long timestamp, double difficulty)
+		{
+			this.version = version;
+			this.previousHash = previousHash;
+			this.amerkleRoot = amerkleRoot;
+			this.rmerkleRoot = rmerkleRoot;
+			this.timestamp = timestamp;
+			this.difficulty = difficulty;
+		}
+
+		public byte[] getBytes()
+		{
+			return ByteUtil.concatenate(ByteUtil.encode(version), previousHash, amerkleRoot, rmerkleRoot, ByteUtil.encode(timestamp), ByteUtil.encode_double(difficulty));
+		}
+	}
+	public static final int SIZE = 8 + 8 + 32 + 32 + 32 + 8 + 8 + 8 + 33 + 8 + 8;
 
 	private long 			version;
 	private long 			blockID;
 	private byte[]			hash;
 	private byte[] 			parentHash = new byte[32];
-	private byte[] 			merkleRoot = new byte[32];
-	private byte[] 			forkRoot = new byte[32];
+	private byte[] 			amerkleRoot = new byte[32];
+	private byte[] 			rmerkleRoot = new byte[32];
+//	private byte[] 			forkRoot = new byte[32];
 	/**
 	 * timeStamp = ((block.earliesttransaction + block.latesttransaction) / 2);
 	 */
@@ -25,6 +51,11 @@ public class BlockHeader
 	private Nonce			nonce;
 	private CompressedKey 	minerAddress = new CompressedKey();
 	private long 			reward;
+
+	public MinableBlockHeader getForMining()
+	{
+		return new MinableBlockHeader(version, parentHash, amerkleRoot, rmerkleRoot, timeStamp, difficulty);
+	}
 
 	//GETTERS
 
@@ -47,11 +78,15 @@ public class BlockHeader
 
 	//GETTERS
 
-	public byte[] getMerkleRoot() { return merkleRoot; }
+	public byte[] getAcceptedMerkleRoot() { return amerkleRoot; }
 
 	//GETTERS
 
-	public byte[] getForkRoot() { return forkRoot; }
+	public byte[] getRejectedMerkleRoot() { return rmerkleRoot; }
+
+	//GETTERS
+
+//	public byte[] getForkRoot() { return forkRoot; }
 
 	//GETTERS
 
@@ -94,11 +129,15 @@ public class BlockHeader
 
 	//SETTERS
 
-	public void  setMerkleRoot(byte[] merkleRoot) { this.merkleRoot = merkleRoot; }
+	public void  setAcceptedMerkleRoot(byte[] merkleRoot) { this.amerkleRoot = merkleRoot; }
 
 	//SETTERS
 
-	public void  setForkRoot(byte[] forkRoot) { this.forkRoot = forkRoot; }
+	public void  setRejectedMerkleRoot(byte[] merkleRoot) { this.rmerkleRoot = merkleRoot; }
+
+	//SETTERS
+
+//	public void  setForkRoot(byte[] forkRoot) { this.forkRoot = forkRoot; }
 
 	//SETTERS
 
@@ -125,8 +164,9 @@ public class BlockHeader
 		stream.writeLong(version);
 		stream.writeLong(blockID);
 		stream.write(parentHash);
-		stream.write(merkleRoot);
-		stream.write(forkRoot);
+		stream.write(amerkleRoot);
+		stream.write(rmerkleRoot);
+//		stream.write(forkRoot);
 		stream.writeLong(timeStamp);
 		stream.writeDouble(difficulty);
 		stream.writeLong(nonce.getA());
@@ -142,8 +182,9 @@ public class BlockHeader
 		this.version = stream.readLong();
 		this.blockID = stream.readLong();
 		stream.read(this.parentHash);
-		stream.read(this.merkleRoot);
-		stream.read(this.forkRoot);
+		stream.read(this.amerkleRoot);
+		stream.read(this.rmerkleRoot);
+//		stream.read(this.forkRoot);
 		this.timeStamp = stream.readLong();
 		this.difficulty = stream.readDouble();
 		this.nonce = new Nonce(stream.readLong(), stream.readLong(), stream.readLong());
