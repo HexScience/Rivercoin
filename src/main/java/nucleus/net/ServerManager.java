@@ -41,4 +41,10 @@ public class ServerManager
     {
         return ipList;
     }
+
+    public void request(Message request, IpAddress peer)
+    {
+        roundTripQue.put(request.getCheckSum(), new MessageRoundTrip(request, true));
+        server.send(request, peer);
+    }
 }
