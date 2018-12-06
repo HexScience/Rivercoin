@@ -4,12 +4,19 @@ import nucleus.event.*;
 import nucleus.exceptions.EventFamilyDoesNotExistException;
 import nucleus.mining.AsyncMiner;
 import nucleus.mining.MiningThread;
+import nucleus.mining.Nonce;
+import nucleus.net.protocol.Message;
+import nucleus.net.protocol.message.BlockNotifyMessage;
 import nucleus.net.server.IpAddress;
 import nucleus.protocols.protobufs.Block;
 import nucleus.system.Context;
 import nucleus.system.Parameters;
+import nucleus.threading.Async;
+import nucleus.util.Base58;
 import nucleus.util.ByteUtil;
+import nucleus.util.Logger;
 import nucleus.util.SortedLinkedQueue;
+import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 import java.util.Queue;
@@ -205,10 +212,58 @@ public class BlockChain
         try
         {
             miner.setMinerInstance(new MiningThread(current.getHeader().getForMining().getBytes(), difficulty));
+            miner.start();
+
+            int code = miner.get("code");
+
+            switch (code)
+            {
+                case Async.RUNNING:
+                    return;
+                case Async.ERR:
+                    Logger.err("an error occurred: could not mine block '" + current.getHeader().getBlockID() + "'. errcode: '" + code + "'.");
+                    return;
+                case Async.EXCECPTION:
+                    Logger.err("an error occurred: could not mine block '" + current.getHeader().getBlockID() + "'. errcode: '" + code + "'.");
+                    return;
+                case Async.NO_EXECUTE:
+                    miner.start();
+                    return;
+                case Async.PREPARING:
+                        return;
+                case Async.SUCCESS:
+                    Logger.alert("block '" + current.getHeader().getBlockID() + "' mined successfully!");
+                    handleLocallySolvedBlock();
+                    return;
+                case Async.NULL_OBJECT:
+                    miner.setMinerInstance(new MiningThread(current.getHeader().getForMining().getBytes(), difficulty));
+                    miner.start();
+                    return;
+                    default:
+                        return;
+            }
         } catch (IOException e)
         {
             e.printStackTrace();
         }
+    }
+
+    protected void checkBlockSolved()
+    {
+        int code = miner.get("code");
+        if (code == Async.SUCCESS)
+            handleLocallySolvedBlock();
+    }
+
+    protected void handleLocallySolvedBlock()
+    {
+        byte hash[] = ByteUtil.toByteArray((long[]) miner.get("hash"));
+        Nonce nonce = miner.get("nonce");
+
+        current.solve(nonce, hash);
+        context.getServerManager().sendMessage(new BlockNotifyMessage(current));
+
+        Logger.alert("result: " + Base58.encode(hash));
     }
 
     /**
@@ -292,6 +347,7 @@ public class BlockChain
     {
         while (context.keepAlive())
         {
+
             realign();
         }
     }
