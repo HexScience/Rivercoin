@@ -25,7 +25,15 @@ public class ForeignFork extends ForkI
             blockQueue.add(downloadedBlock.getBlock());
         }
         else if (downloadedBlock.getSender().equals(peer))
-            blockQueue.add(downloadedBlock.getBlock());
+        {
+            if (blockQueue.contains(downloadedBlock.getBlock()))
+            {
+                blockQueue.remove(downloadedBlock.getBlock());
+                blockQueue.add(downloadedBlock.getBlock());
+            }
+            else
+                blockQueue.add(downloadedBlock.getBlock());
+        }
 
         return peer.equals(downloadedBlock.getSender());
     }
