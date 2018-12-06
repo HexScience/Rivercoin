@@ -3,6 +3,7 @@ package nucleus.net.server;
 import nucleus.NucleusContext;
 import nucleus.net.p2p.udp.PacketSendReceive;
 import nucleus.net.protocol.Message;
+import nucleus.net.protocol.message.PingMessage;
 import nucleus.system.Parameters;
 import nucleus.util.Logger;
 
@@ -34,8 +35,7 @@ public class PeerGroupCommunicator
         {
             try
             {
-                socket.send(createPacket(socket, ipAddress.getAddress(), Parameters.MAIN_NETWORK_NODE_PORT, null));
-                connected.add(ipAddress);
+                connectTo(ipAddress);
 
                 if (connected.size() > 60)
                     return;
@@ -75,6 +75,37 @@ public class PeerGroupCommunicator
             {
             }
         }
+
+        if (sent == 0)
+        {
+            Logger.err("message could not be sent.");
+            broadcast();
+        }
+    }
+
+    public void connectTo(IpAddress address) throws IOException
+    {
+        socket.send(createPacket(socket, address.getAddress(), Parameters.MAIN_NETWORK_NODE_PORT, null));
+        for (int i = 0; i < 6; i ++)
+            send(new PingMessage(context.getBlockChain().chainSize()));
+        connected.add(address);
+    }
+
+    /**
+     * @param message The message to send.
+     * @param peer The peer to send this message to.
+     * @throws IOException An exception if the
+     */
+    public void send(Message message, IpAddress peer)
+    {
+        long sent = 0;
+
+            try {
+                socket.send(createPacket(socket, peer.getAddress(), Parameters.MAIN_NETWORK_NODE_PORT, message));
+                sent ++;
+            } catch (Exception e)
+            {
+            }
 
         if (sent == 0)
         {
