@@ -57,6 +57,7 @@ public class BlockChain
         this.context.getEventManager().register((BlockNotificationEventListener) (_BlockNotificationEvent_)->{onEventBlockNotify(_BlockNotificationEvent_); }, "Block");
         this.context.getEventManager().register((RequestedBlockReceivedListener) (_RequestedBlockReceivedEvent_)->{onEventRequestedBlockReceived(_RequestedBlockReceivedEvent_); }, "Block");
         this.context.getEventManager().register((BlockMinedListener) (_MinedBlockEvent_)->{onBlockMinedEvent(_MinedBlockEvent_); }, "Block");
+        this.context.getEventManager().register((PeerDisconnectEventListener) (_PeerDisconnectEvent_)->{onPeerDisconnectEvent(_PeerDisconnectEvent_); }, "Server");
         this.miner = new AsyncMiner();
     }
 
@@ -112,6 +113,13 @@ public class BlockChain
     public void onBlockMinedEvent(BlockMinedEvent event)
     {
         forkManager.add(event.getData());
+    }
+
+    /**
+     * @param event
+     */
+    private void onPeerDisconnectEvent(PeerDisconnectEvent event)
+    {
     }
 
     /**
