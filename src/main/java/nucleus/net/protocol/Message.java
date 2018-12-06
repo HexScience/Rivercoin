@@ -1,21 +1,24 @@
 package nucleus.net.protocol;
 
+import nucleus.net.ServerManager;
 import nucleus.system.Context;
 import nucleus.util.ByteUtil;
 import nucleus.util.HashUtil;
 
 public abstract class Message
 {
+    public static final long HEADER_SIZE = 1 + 1 + 32 + 4;
     public static final byte
     NOTFY = 0, /** a notification message type **/
     REPLY = 1, /** a reply message type **/
     OPTIN = 2, /** an optional-to-reply message type **/
     REQUEST = 3, /** a request message **/
+    MSG_CORRUPTED = 4, /** a message received is corrupted, please send again **/
 
 
 
 
-    NONE = 4;
+    NONE = 6;
 
     /**
      * A list of message codes
@@ -44,16 +47,18 @@ public abstract class Message
     private byte type;
     private byte code;
     private byte checksum[];
+    private int  size;
     private byte message[];
 
     public Message(byte type, byte code, byte message[])
     {
         this.code       = code;
+        this.size       = message.length;
         this.message    = message;
         this.checksum   = HashUtil.applySha256(message);
     }
 
-    public abstract Message getAnswerMessage(Context context);
+    public abstract Message getAnswerMessage(Context context, ServerManager manager);
     public byte getType()
     {
         return code;
@@ -70,10 +75,15 @@ public abstract class Message
 
     public byte[] getFullMessage()
     {
-        return ByteUtil.concatenate(new byte[] {type, code}, checksum, message);
+        return ByteUtil.concatenate(new byte[] {type, code}, checksum, ByteUtil.encodei(size), message);
     }
 
     public abstract String toString();
+
+    public long getSize()
+    {
+        return size;
+    }
 
     public byte[] getCheckSum()
     {
