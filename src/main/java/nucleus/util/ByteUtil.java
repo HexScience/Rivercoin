@@ -284,4 +284,13 @@ public class ByteUtil
 
         return pingpong;
     }
+
+    public static byte[] encode_double(double double_)
+    {
+        ByteBuffer b = ByteBuffer.allocate(8);
+        b.putDouble(double_);
+        b.flip();
+
+        return b.array();
+    }
 }
