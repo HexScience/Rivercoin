@@ -2,7 +2,11 @@ package nucleus.net;
 
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
+import nucleus.event.PeerDisconnectEvent;
+import nucleus.event.PeerDisconnectEventListener;
+import nucleus.exceptions.EventFamilyDoesNotExistException;
 import nucleus.exceptions.FileServiceException;
+import nucleus.system.Context;
 import nucleus.util.FileService;
 import nucleus.net.protocol.Message;
 import nucleus.net.server.IpAddress;
@@ -20,15 +24,32 @@ public class ServerManager
     private PeerGroupCommunicator           server;
     private DatabaseReader                  lookupService;
     private IpAddressList                   ipList;
+    private Context                         context;
 
     private Queue<IpAddress>                addresses;
 
-    public ServerManager(FileService entryPoint) throws IOException, FileServiceException, GeoIp2Exception
+    public ServerManager(Context context, FileService entryPoint) throws IOException, FileServiceException, GeoIp2Exception, EventFamilyDoesNotExistException
     {
         this.messageQueue   = new MessageQueue();
         this.roundTripQue   = new LinkedHashMap<>();
         this.lookupService  = new DatabaseReader.Builder(entryPoint.newFile("GeoLiteC").newFile("GeoLiteC.mmdb").file()).build();
         this.ipList         = new IpAddressList(entryPoint, lookupService);
+        this.context        = context;
+
+        this.context.getEventManager().register((PeerDisconnectEventListener) (_PeerDisconnectEvent_)->{
+            try
+            {
+                onPeerDisconnectEvent(_PeerDisconnectEvent_);
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }, "Server");
+    }
+
+    private void onPeerDisconnectEvent(PeerDisconnectEvent event) throws IOException
+    {
+        server.connectTo(event.getData());
     }
 
     public void sendMessage(Message message)
