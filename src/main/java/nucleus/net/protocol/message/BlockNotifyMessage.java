@@ -1,7 +1,9 @@
 package nucleus.net.protocol.message;
 
+import nucleus.net.protocol.Message;
 import nucleus.net.protocol.NotificationMessage;
 import nucleus.protocols.protobufs.Block;
+import nucleus.system.Context;
 
 /**
  * This class should be used when notifying peers of newfound blocks and or block solutions.
@@ -15,9 +17,10 @@ public class BlockNotifyMessage extends NotificationMessage
 
     /**
      * @return null as this is a notification message.
+     * @param context
      */
     @Override
-    public Class<?> getAnswerMessage()
+    public Message getAnswerMessage(Context context)
     {
         return null;
     }
