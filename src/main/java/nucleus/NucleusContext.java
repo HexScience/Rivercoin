@@ -87,6 +87,12 @@ public class NucleusContext implements Context
     }
 
     @Override
+    public BlockChain getBlockChain()
+    {
+        return chain;
+    }
+
+    @Override
     public boolean keepAlive()
     {
         return keepAlive;
