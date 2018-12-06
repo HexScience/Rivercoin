@@ -1,7 +1,6 @@
 package nucleus.mining;
 
 import com.google.common.util.concurrent.AtomicDouble;
-import nucleus.protocols.protobufs.Block;
 import nucleus.system.Parameters;
 import nucleus.threading.ThreadedAccess;
 import nucleus.util.ByteUtil;
