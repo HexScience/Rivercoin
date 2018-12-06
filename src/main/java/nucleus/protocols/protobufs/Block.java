@@ -4,7 +4,9 @@ package nucleus.protocols.protobufs;
 import nucleus.exceptions.FileServiceException;
 import nucleus.protocols.transaction.Transaction;
 import nucleus.protocols.transaction.TransactionOutput;
+import nucleus.util.BinaryTree;
 import nucleus.util.FileService;
+import nucleus.util.HashUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -56,6 +58,13 @@ public class Block implements Comparable<Block>, StrippedObject
 	    this.rejected   = new LinkedHashSet<>();
 	    this.header     = new BlockHeader();
 	}
+
+	public Block(long height, byte[] parent, long version)
+    {
+        header.setVersion(version);
+        header.setBlockID(height);
+        header.setParentHash(parent);
+    }
 
     /**
      * @param service
@@ -181,8 +190,12 @@ public class Block implements Comparable<Block>, StrippedObject
 		return new byte[0];
 	}
 
-    public void lock()
+    public void lock(double difficulty)
     {
+        header.setDifficulty(difficulty);
+        header.setTimeStamp((earliestTransaction() + latestTransaction()) / 2);
+        header.setAcceptedMerkleRoot(genAcceptedMerkleRoot());
+        header.setRejectedMerkleRoot(genRejectedMerkleRoot());
     }
 
     @Override
@@ -229,5 +242,25 @@ public class Block implements Comparable<Block>, StrippedObject
         {
             return a.getHeader().getBlockID() < b.getHeader().getBlockID() ? -1 : (a.getHeader().getBlockID() == b.getHeader().getBlockID() ? 0 : 1);
         }
+    }
+
+    private byte[] genAcceptedMerkleRoot()
+    {
+        BinaryTree tree = new BinaryTree();
+
+        for (Transaction transaction : accepted)
+            tree.insert(transaction.getTransactionID());
+
+        return tree.build();
+    }
+
+    private byte[] genRejectedMerkleRoot()
+    {
+        BinaryTree tree = new BinaryTree();
+
+        for (byte[] transaction : rejected)
+            tree.insert(transaction);
+
+        return tree.build();
     }
 }
