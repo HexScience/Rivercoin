@@ -1,5 +1,6 @@
 package nucleus.net.protocol;
 
+import nucleus.system.Context;
 import nucleus.util.ByteUtil;
 import nucleus.util.HashUtil;
 
@@ -8,8 +9,13 @@ public abstract class Message
     public static final byte
     NOTFY = 0, /** a notification message type **/
     REPLY = 1, /** a reply message type **/
-    RSPND = 2, /** a must-respond message type **/
-    OPTIN = 3; /** an optional-to-reply message type **/
+    OPTIN = 2, /** an optional-to-reply message type **/
+    REQUEST = 3, /** a request message **/
+
+
+
+
+    NONE = 4;
 
     /**
      * A list of message codes
@@ -47,7 +53,7 @@ public abstract class Message
         this.checksum   = HashUtil.applySha256(message);
     }
 
-    public abstract Class<?> getAnswerMessage();
+    public abstract Message getAnswerMessage(Context context);
     public byte getType()
     {
         return code;
