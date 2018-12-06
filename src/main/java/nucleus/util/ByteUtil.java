@@ -296,9 +296,9 @@ public class ByteUtil
 
     public static byte[] toByteArray(int[] array)
     {
-        ByteBuffer buffer = ByteBuffer.allocate(8 * array.length);
-        for (long l : array)
-            buffer.putLong(l);
+        ByteBuffer buffer = ByteBuffer.allocate(4 * array.length);
+        for (int l : array)
+            buffer.putInt(l);
         buffer.flip();
         return buffer.array();
     }
