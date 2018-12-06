@@ -1,5 +1,6 @@
 package nucleus.net.protocol.message;
 
+import nucleus.net.ServerManager;
 import nucleus.net.protocol.Message;
 import nucleus.net.protocol.RequestMessage;
 import nucleus.system.Context;
@@ -18,9 +19,10 @@ public class BlockRequestMessage extends RequestMessage
     /**
      * @return null as this is a request message.
      * @param context
+     * @param manager
      */
     @Override
-    public Message getAnswerMessage(Context context)
+    public Message getAnswerMessage(Context context, ServerManager manager)
     {
         return null;
     }
