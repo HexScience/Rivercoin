@@ -7,6 +7,7 @@ import nucleus.mining.MiningThread;
 import nucleus.mining.Nonce;
 import nucleus.net.protocol.Message;
 import nucleus.net.protocol.message.BlockNotifyMessage;
+import nucleus.net.protocol.message.BlockRequestMessage;
 import nucleus.net.server.IpAddress;
 import nucleus.protocols.protobufs.Block;
 import nucleus.system.Context;
@@ -42,6 +43,7 @@ public class BlockChain
     private Block       current;
     private ForkManager forkManager;
     private AsyncMiner  miner;
+    private long        requests;
 
     public BlockChain(Context context) throws EventFamilyDoesNotExistException
     {
@@ -92,6 +94,10 @@ public class BlockChain
 
     public void requestBlockFromPeer(long block, IpAddress peer)
     {
+        Message request = new BlockRequestMessage(block);
+
+        context.getServerManager().request(request, peer);
+        byte checksum[] = request.getCheckSum();
     }
 
     /**
@@ -118,6 +124,7 @@ public class BlockChain
      */
     private void handleSolvedBlock(DownloadedBlock block)
     {
+        traceForeignBlockChain(block);
     }
 
     /**
@@ -259,6 +266,8 @@ public class BlockChain
         int code = miner.get("code");
         if (code == Async.SUCCESS)
             handleLocallySolvedBlock();
+        else if (code == Async.ERR || code == Async.EXCECPTION)
+            solveBlock();
     }
 
     /**
@@ -273,6 +282,10 @@ public class BlockChain
 
         current.solve(nonce, hash);
         context.getServerManager().sendMessage(new BlockNotifyMessage(current));
+
+        forkManager.add(current);
+
+        newBlock();
 
         Logger.alert("result: " + Base58.encode(hash));
     }
@@ -356,6 +369,11 @@ public class BlockChain
         return forkManager.getMain().get();
     }
 
+    public long chainSize()
+    {
+        return current == null ? -1 : current.getHeader().getBlockID();
+    }
+
     /**
      * The main chain loop
      */
@@ -363,8 +381,8 @@ public class BlockChain
     {
         while (context.keepAlive())
         {
-
             realign();
+            checkBlockSolved();
         }
     }
 }
