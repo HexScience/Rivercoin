@@ -1,5 +1,6 @@
 package nucleus.system;
 
+import nucleus.consensys.BlockChain;
 import nucleus.event.EventManager;
 import nucleus.ledger.Ledger;
 import nucleus.net.ServerManager;
@@ -15,6 +16,7 @@ public interface Context
     DB getDB();
     EventManager getEventManager();
     VersionControl getVersionControl();
+    BlockChain  getBlockChain();
 
     boolean keepAlive();
 }
