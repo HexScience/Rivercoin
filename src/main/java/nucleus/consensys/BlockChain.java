@@ -16,6 +16,7 @@ import nucleus.util.Base58;
 import nucleus.util.ByteUtil;
 import nucleus.util.Logger;
 import nucleus.util.SortedLinkedQueue;
+import nucleus.versioncontrol.Version;
 import sun.rmi.runtime.Log;
 
 import java.io.IOException;
@@ -248,6 +249,11 @@ public class BlockChain
         }
     }
 
+    /**
+     * This function checks if the current miner succeeded in solving
+     * the current block, if it has it calles the handlelocallysolvedblock
+     * function and continues with the protocol.
+     */
     protected void checkBlockSolved()
     {
         int code = miner.get("code");
@@ -255,6 +261,11 @@ public class BlockChain
             handleLocallySolvedBlock();
     }
 
+    /**
+     * This function pulls the solution data from the AsyncMiner instance
+     * and broadcasts it to the peers, it then adds the block to the chain
+     * and continutes with the protocol.
+     */
     protected void handleLocallySolvedBlock()
     {
         byte hash[] = ByteUtil.toByteArray((long[]) miner.get("hash"));
@@ -264,6 +275,11 @@ public class BlockChain
         context.getServerManager().sendMessage(new BlockNotifyMessage(current));
 
         Logger.alert("result: " + Base58.encode(hash));
+    }
+
+    protected void newBlock()
+    {
+        current = new Block(current.getHeader().getBlockID() + 1, current.getHeader().getHash(), Version.getLatest().getVersion());
     }
 
     /**
