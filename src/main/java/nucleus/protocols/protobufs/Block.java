@@ -2,6 +2,7 @@ package nucleus.protocols.protobufs;
 
 
 import nucleus.exceptions.FileServiceException;
+import nucleus.mining.Nonce;
 import nucleus.protocols.transaction.Transaction;
 import nucleus.protocols.transaction.TransactionOutput;
 import nucleus.util.BinaryTree;
@@ -234,6 +235,12 @@ public class Block implements Comparable<Block>, StrippedObject
         stream.close();
 
         return stream.toByteArray();
+    }
+
+    public void solve(Nonce nonce, byte[] hash)
+    {
+        getHeader().setHash(hash);
+        getHeader().setNonce(nonce);
     }
 
     public static class BlockComparator implements Comparator<Block>{
