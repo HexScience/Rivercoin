@@ -14,6 +14,7 @@ public class EventManager
         this.eventFamilyMap = new HashMap<>();
         eventFamilyMap.put("block", new EventFamily());
         eventFamilyMap.put("transaction", new EventFamily());
+        eventFamilyMap.put("server", new EventFamily());
     }
 
     public void register(EventListener listener, String family) throws EventFamilyDoesNotExistException
