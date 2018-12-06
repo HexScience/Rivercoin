@@ -293,4 +293,22 @@ public class ByteUtil
 
         return b.array();
     }
+
+    public static byte[] toByteArray(int[] array)
+    {
+        ByteBuffer buffer = ByteBuffer.allocate(8 * array.length);
+        for (long l : array)
+            buffer.putLong(l);
+        buffer.flip();
+        return buffer.array();
+    }
+
+    public static byte[] toByteArray(long[] array)
+    {
+        ByteBuffer buffer = ByteBuffer.allocate(8 * array.length);
+        for (long l : array)
+            buffer.putLong(l);
+        buffer.flip();
+        return buffer.array();
+    }
 }
