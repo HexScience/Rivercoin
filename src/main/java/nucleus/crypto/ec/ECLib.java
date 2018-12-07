@@ -29,6 +29,7 @@ import java.security.spec.InvalidKeySpecException;
 
 public class ECLib
 {
+    private static final Logger Logger = nucleus.util.Logger.get("ECLib");
     static X9ECParameters params;
     static ECDomainParameters CURVE;
 
