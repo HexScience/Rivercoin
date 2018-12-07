@@ -1,5 +1,6 @@
 package nucleus.protocols.transaction;
 
+import nucleus.exceptions.FileServiceException;
 import nucleus.system.Serializer;
 
 import java.io.DataInputStream;
@@ -101,7 +102,7 @@ public class DBTransactionOutput
         return outputID;
     }
 
-    public TransactionOutput getOutput(Serializer serializer)
+    public TransactionOutput getOutput(Serializer serializer) throws IOException, FileServiceException
     {
         return serializer.loadTransactionOutput(blockID, transactionID, outputID);
     }
