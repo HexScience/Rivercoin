@@ -6,10 +6,7 @@ import com.riverssen.nucleus.exceptions.PayLoadException;
 import com.riverssen.nucleus.ledger.Ledger;
 import com.riverssen.nucleus.protocols.protobufs.Address;
 import com.riverssen.nucleus.protocols.protobufs.Block;
-import com.riverssen.nucleus.protocols.transaction.DBTransactionOutput;
-import com.riverssen.nucleus.protocols.transaction.Signature;
-import com.riverssen.nucleus.protocols.transaction.TransactionInput;
-import com.riverssen.nucleus.protocols.transaction.TransactionOutput;
+import com.riverssen.nucleus.protocols.transaction.*;
 import com.riverssen.nucleus.system.Context;
 import com.riverssen.nucleus.system.Parameters;
 import com.riverssen.nucleus.util.ByteUtil;
@@ -572,11 +569,11 @@ public class TransactionPayload
     }
 
     public static boolean execute(Context context, Ledger ledger,
-                                  Block current, TransactionInput input,
+                                  Block current, Transaction transaction_, TransactionInput input,
                                   int transactionIndex,
                                   TransactionOutput output,
                                   int outputIndex,
-                                  byte codes[],byte transaction[]) throws PayLoadException
+                                  byte codes[], byte transaction[]) throws PayLoadException
     {
         Stack<ScriptObject> stack = new Stack<>();
         ScriptObject[]      localVarTable;
@@ -589,10 +586,10 @@ public class TransactionPayload
             {
                 case APPEND_LEDGER:
                     Address laddress = stack.pop().asAddress();
-                    ledger.getBalanceTable(laddress).insertUnspentOutput(new DBTransactionOutput(current.getHeader().getBlockID(), transactionIndex, outputIndex));
+                    ledger.getBalanceTable(laddress).insertUnspentOutput(new DBTransactionOutput(current.getHeader().getHeight(), transactionIndex, outputIndex));
                     break;
                 case APPEND_COINBASE:
-                    current.getCoinbase().add(output);
+                    current.getCoinbase().addInput(transaction_, outputIndex);
                     break;
                 /** push private key **/
                 case PUSH_PRK:
