@@ -17,27 +17,51 @@ public class Logger
     {
         return !System.getProperty("os.name").toLowerCase().contains("win");
     }
+    private String  caller;
+    private String  ltn;
+    private static final int numTabsPerText = 20;
+
+    private Logger(String name)
+    {
+        this.caller = name.length() > 0 ? name + ": " : name;
+        this.ltn    = name.length() > 0 ? numTabs(numTabsPerText - (name + ": ").length()) : numTabs(numTabsPerText);
+    }
+
+    private static final String numTabs(int num)
+    {
+        String tabs = "";
+
+        for (int i = 0; i < num; i ++)
+            tabs += " ";
+
+        return tabs;
+    }
+
+    public static Logger get(String name)
+    {
+        return new Logger(name);
+    }
 
     public static void prtf(Object msg, Object d)
     {
     }
 
-    public static void prt(Object msg)
+    public void prt(Object msg)
     {
         prt(BLUE, msg);
     }
 
-    public static void prt(Ansi.Color colour, Object msg)
+    public void prt(Ansi.Color colour, Object msg)
     {
-        System.out.println(ansi().fg(colour).a(msg).reset());
+        System.out.println(ansi().fg(YELLOW).a(caller).a(ltn).fg(colour).a(msg).reset());
     }
 
-    public static void err(Object msg)
+    public void err(Object msg)
     {
         prt(COLOUR_RED, msg);
     }
 
-    public static void alert(Object msg)
+    public void alert(Object msg)
     {
         prt(COLOUR_LIME, msg);
     }
