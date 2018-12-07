@@ -9,10 +9,13 @@ public abstract class Message
 {
     public static final long HEADER_SIZE = 1 + 1 + 32 + 4;
     public static final byte
-    NOTFY = 0, /** a notification message type **/
-    REPLY = 1, /** a reply message type **/
-    OPTIN = 2, /** an optional-to-reply message type **/
-    REQUEST = 3, /** a request message **/
+    NOTFY       = 0, /** a notification message type **/
+    REPLY       = 1, /** a reply message type **/
+    OPTIN       = 2, /** an optional-to-reply message type **/
+    REQUEST     = 3, /** a request message **/
+    FAILED      = 4,
+//    NO_FIND     = 5,
+
 
 
 
@@ -44,6 +47,9 @@ public abstract class Message
     JSON            = 15,
     MSG_CORRUPTED   = 16, /** a message received is corrupted, please send again **/
     PEERS           = 17, /** peer data **/
+    MSG_SUCCESS     = 18,
+    NO_FIND         = 19,
+    NO_FIND_BLOCK         = 19,
 
 
 
