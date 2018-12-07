@@ -27,6 +27,6 @@ public class DownloadedBlock implements Comparable<DownloadedBlock>
     @Override
     public int compareTo(DownloadedBlock o)
     {
-        return o.getBlock().getHeader().getBlockID() >= block.getHeader().getBlockID() ? -1 : 1;
+        return o.getBlock().getHeader().getHeight() >= block.getHeader().getHeight() ? -1 : 1;
     }
 }
