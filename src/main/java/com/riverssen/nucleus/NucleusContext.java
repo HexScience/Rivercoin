@@ -31,6 +31,11 @@ public class NucleusContext implements Context
 
     public NucleusContext(FileService entryPoint, DB db) throws IOException, FileServiceException, GeoIp2Exception, EventFamilyDoesNotExistException
     {
+        this(entryPoint, db, false);
+    }
+
+    public NucleusContext(FileService entryPoint, DB db, boolean runOnDifferentThread) throws IOException, FileServiceException, GeoIp2Exception, EventFamilyDoesNotExistException
+    {
         this.keepAlive = new AtomicBoolean(true);
         this.config = new Config();
         this.versionControl = new VersionControl();
@@ -42,7 +47,14 @@ public class NucleusContext implements Context
         this.serverManager = new ServerManager(this, entryPoint);
         this.serverManager.launch();
         this.chain = new BlockChain(this);
-        this.chain.run();
+        if (runOnDifferentThread)
+        {
+            Thread thread = new Thread(chain);
+            thread.setDaemon(true);
+            thread.start();
+        }
+        else
+            this.chain.run();
     }
 
     @Override
