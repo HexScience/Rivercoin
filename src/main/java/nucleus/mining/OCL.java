@@ -37,6 +37,7 @@ import static org.lwjgl.system.Pointer.POINTER_SIZE;
 
 public class OCL
 {
+    private static final Logger Logger = nucleus.util.Logger.get("NKMiner");
     private void clInit(FBO fbo) throws NKMinerException
     {
         MemoryStack stack = stackPush();
