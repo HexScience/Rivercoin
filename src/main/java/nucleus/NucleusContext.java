@@ -35,11 +35,12 @@ public class NucleusContext implements Context
         this.keepAlive = true;
         this.config = new Config();
         this.versionControl = new VersionControl();
-        this.serializer = new Serializer();
-        this.serverManager = new ServerManager(entryPoint);
+        this.serializer = new Serializer(this, entryPoint.newFile("cdb"));
+
+        this.eventManager = new EventManager();
+        this.serverManager = new ServerManager(this, entryPoint);
         this.ledgerDatabase = new Ledger();
         this.db = db;
-        this.eventManager = new EventManager();
         this.chain = new BlockChain(this);
         this.miner = miner;
     }
