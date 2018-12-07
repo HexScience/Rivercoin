@@ -394,4 +394,9 @@ public class BlockChain
             checkBlockSolved();
         }
     }
+
+    public Block getBlockFromMain(long decode)
+    {
+        return null;
+    }
 }
