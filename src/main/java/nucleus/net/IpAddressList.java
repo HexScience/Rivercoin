@@ -19,6 +19,7 @@ import java.util.Queue;
 
 public class IpAddressList
 {
+    private static final Logger Logger = nucleus.util.Logger.get("IPPeerManager");
     private Queue<IpAddress> priorityQueue;
     private FileService      entryPoint;
     private InetAddress      myAddress;
