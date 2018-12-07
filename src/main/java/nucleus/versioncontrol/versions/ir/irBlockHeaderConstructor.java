@@ -1,5 +1,6 @@
 package nucleus.versioncontrol.versions.ir;
 
+import nucleus.mining.Nonce;
 import nucleus.protocols.protobufs.BlockHeader;
 import nucleus.protocols.protobufs.CompressedKey;
 import nucleus.versioncontrol.Constructor;
@@ -20,12 +21,13 @@ public class irBlockHeaderConstructor implements Constructor<BlockHeader>
         header.setVersion(data.getLong());
         header.setBlockID(data.getLong());
 
+        data.get(hash); header.setHash(hash);
         data.get(hash); header.setParentHash(hash);
-        data.get(hash); header.setMerkleRoot(hash);
-        data.get(hash); header.setForkRoot(hash);
+        data.get(hash); header.setAcceptedMerkleRoot(hash);
+        data.get(hash); header.setRejectedMerkleRoot(hash);
         header.setTimeStamp(data.getLong());
         header.setDifficulty(data.getDouble());
-        header.setNonce(data.getLong());
+        byte nonce[] = new byte[24]; data.get(nonce); header.setNonce(new Nonce(nonce));
         data.get(pubk); header.setMinerAddress(new CompressedKey(pubk));
         header.setReward(data.getLong());
 
