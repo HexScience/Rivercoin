@@ -122,7 +122,6 @@ public class Start
          */
         DB db = factory.open(entryPoint.newFile("data").newFile("db").file(), new Options());
         Context context = new NucleusContext(entryPoint, db);
-
 //        miner.looptest();
 //        Tests.main();
     }
