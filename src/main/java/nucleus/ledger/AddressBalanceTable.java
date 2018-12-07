@@ -1,5 +1,6 @@
 package nucleus.ledger;
 
+import nucleus.exceptions.FileServiceException;
 import nucleus.protocols.protobufs.Address;
 import nucleus.protocols.transaction.DBTransactionOutput;
 import nucleus.protocols.transaction.Transaction;
@@ -7,6 +8,7 @@ import nucleus.protocols.transaction.TransactionInput;
 import nucleus.protocols.transaction.TransactionOutput;
 import nucleus.system.Context;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.*;
 
@@ -25,7 +27,7 @@ public class AddressBalanceTable
         this.context = null;
     }
 
-    public AddressBalanceTable(final Context context, final Address address)
+    public AddressBalanceTable(final Context context, final Address address) throws IOException, FileServiceException
     {
         this.address = address;
         this.balances = new LinkedHashSet<>();
@@ -57,7 +59,7 @@ public class AddressBalanceTable
      * @param script The unlocking script needed to unlock these Transaction Outputs.
      * @return An array of Transaction Inputs or null if the balance is lower than "value".
      */
-    public TransactionInput[] getOutputs(long value, byte script[])
+    public TransactionInput[] getOutputs(long value, byte script[]) throws IOException, FileServiceException
     {
         List<TransactionInput> inputs = new ArrayList<>();
         long val = 0;
