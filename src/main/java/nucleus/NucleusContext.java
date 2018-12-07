@@ -7,7 +7,6 @@ import nucleus.exceptions.FileServiceException;
 import nucleus.ledger.Ledger;
 import nucleus.consensys.BlockChain;
 import nucleus.util.FileService;
-import nucleus.mining.NKMiner;
 import nucleus.net.ServerManager;
 import nucleus.system.Config;
 import nucleus.system.Context;
@@ -16,6 +15,7 @@ import nucleus.versioncontrol.VersionControl;
 import org.iq80.leveldb.DB;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NucleusContext implements Context
 {
@@ -26,23 +26,23 @@ public class NucleusContext implements Context
     private Ledger          ledgerDatabase;
     private DB              db;
     private EventManager    eventManager;
-    private NKMiner         miner;
-    private boolean         keepAlive;
+    private AtomicBoolean   keepAlive;
     private VersionControl  versionControl;
 
-    public NucleusContext(FileService entryPoint, DB db, NKMiner miner) throws IOException, FileServiceException, GeoIp2Exception, EventFamilyDoesNotExistException
+    public NucleusContext(FileService entryPoint, DB db) throws IOException, FileServiceException, GeoIp2Exception, EventFamilyDoesNotExistException
     {
-        this.keepAlive = true;
+        this.keepAlive = new AtomicBoolean(true);
         this.config = new Config();
         this.versionControl = new VersionControl();
+        this.db = db;
         this.serializer = new Serializer(this, entryPoint.newFile("cdb"));
 
-        this.eventManager = new EventManager();
-        this.serverManager = new ServerManager(this, entryPoint);
+        this.eventManager = new EventManager(this);
         this.ledgerDatabase = new Ledger();
-        this.db = db;
+        this.serverManager = new ServerManager(this, entryPoint);
+        this.serverManager.launch();
         this.chain = new BlockChain(this);
-        this.miner = miner;
+        this.chain.run();
     }
 
     @Override
@@ -96,6 +96,6 @@ public class NucleusContext implements Context
     @Override
     public boolean keepAlive()
     {
-        return keepAlive;
+        return keepAlive.get();
     }
 }
