@@ -22,7 +22,8 @@ public class ForkManager
 
     public ForkManager()
     {
-        this.forks = new LinkedHashSet<>();
+        this.forks  = new LinkedHashSet<>();
+        this.main   = new LocalFork();
     }
 
     public void add(DownloadedBlock block)
