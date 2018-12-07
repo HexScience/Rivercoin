@@ -10,9 +10,11 @@ public class JSONHelper
             buffer = new StringBuffer();
         }
 
-        public void insert(String name, String data)
+        public JSONObject insert(String name, String data)
         {
             buffer.append((buffer.length() > 0 ? ",\n" : "") + "\"" + name + "\": \"" + data + "\"");
+
+            return this;
         }
 
         public String toString(String name)
