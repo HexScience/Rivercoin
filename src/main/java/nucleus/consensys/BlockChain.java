@@ -2,6 +2,7 @@ package nucleus.consensys;
 
 import nucleus.event.*;
 import nucleus.exceptions.EventFamilyDoesNotExistException;
+import nucleus.exceptions.FileServiceException;
 import nucleus.mining.AsyncMiner;
 import nucleus.mining.MiningThread;
 import nucleus.mining.Nonce;
@@ -13,10 +14,7 @@ import nucleus.protocols.protobufs.Block;
 import nucleus.system.Context;
 import nucleus.system.Parameters;
 import nucleus.threading.Async;
-import nucleus.util.Base58;
-import nucleus.util.ByteUtil;
-import nucleus.util.Logger;
-import nucleus.util.SortedLinkedQueue;
+import nucleus.util.*;
 import nucleus.versioncontrol.Version;
 import sun.rmi.runtime.Log;
 
@@ -25,6 +23,7 @@ import java.util.Queue;
 
 public class BlockChain
 {
+    private static final Logger Logger = nucleus.util.Logger.get("BlockChain");
     /**
      * The current NKContext
      */
@@ -77,7 +76,7 @@ public class BlockChain
         forkManager.add(event.getData());
 
         if (blockHeight == current.getHeader().getBlockID())
-            handleSolvedBlock(event.getData());
+            try { handleSolvedBlock(event.getData()); } catch (FileServiceException e) {} catch (IOException e) {}
         else if (blockHeight > current.getHeader().getBlockID())
             handleFutureBlock(event.getData());
     }
@@ -130,7 +129,7 @@ public class BlockChain
      * If the block is validated before the current block is
      * mined, then this block gets appended to the blockchain.
      */
-    private void handleSolvedBlock(DownloadedBlock block)
+    private void handleSolvedBlock(DownloadedBlock block) throws IOException, FileServiceException
     {
         traceForeignBlockChain(block);
     }
@@ -158,7 +157,7 @@ public class BlockChain
      * -ces the future block to it's fork point, imports all
      * blocks since that point, and adjusts the chain.
      */
-    private void traceForeignBlockChain(DownloadedBlock block)
+    private void traceForeignBlockChain(DownloadedBlock block) throws IOException, FileServiceException
     {
         long long_height = block.getBlock().getHeader().getBlockID();
         long crnt_height = current.getHeader().getBlockID();
@@ -220,7 +219,7 @@ public class BlockChain
      * Regardless of whether or not this block is the first
      * to be solved, it will be sent to other peers.
      */
-    public void solveBlock()
+    public void solveBlock() throws IOException, FileServiceException
     {
         double difficulty = getDifficulty(current);
         current.lock(difficulty);
@@ -269,7 +268,7 @@ public class BlockChain
      * the current block, if it has it calles the handlelocallysolvedblock
      * function and continues with the protocol.
      */
-    protected void checkBlockSolved()
+    protected void checkBlockSolved() throws IOException, FileServiceException
     {
         int code = miner.get("code");
         if (code == Async.SUCCESS)
@@ -283,7 +282,7 @@ public class BlockChain
      * and broadcasts it to the peers, it then adds the block to the chain
      * and continutes with the protocol.
      */
-    protected void handleLocallySolvedBlock()
+    protected void handleLocallySolvedBlock() throws IOException
     {
         byte hash[] = ByteUtil.toByteArray((long[]) miner.get("hash"));
         Nonce nonce = miner.get("nonce");
@@ -332,7 +331,7 @@ public class BlockChain
     {
     }
 
-    protected double getDifficulty(final Block block)
+    protected double getDifficulty(final Block block) throws IOException, FileServiceException
     {
         Block prev = getBlock(block.getHeader().getBlockID() - 1);
         Block bbfr = getBlock(prev.getHeader().getBlockID() - 1);
@@ -356,7 +355,7 @@ public class BlockChain
      * @return The block if it exists on the main chain, else
      * return the block loaded from the serializer.
      */
-    protected Block getBlock(final long block)
+    protected Block getBlock(final long block) throws IOException, FileServiceException
     {
         for (Block find : forkManager.getMain().get())
             if (find.getHeader().getBlockID() == block)
@@ -367,7 +366,7 @@ public class BlockChain
         return loadBlock(block);
     }
 
-    protected Block loadBlock(final long block)
+    protected Block loadBlock(final long block) throws IOException, FileServiceException
     {
         return context.getSerializer().loadBlock(block);
     }
@@ -385,8 +384,10 @@ public class BlockChain
     /**
      * The main chain loop
      */
-    public void run()
+    public void run() throws IOException, FileServiceException
     {
+        Logger.alert("-----------------------");
+        Logger.alert("entering main loop.");
         while (context.keepAlive())
         {
             realign();
