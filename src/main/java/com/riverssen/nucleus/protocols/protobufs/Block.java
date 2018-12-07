@@ -5,6 +5,7 @@ import com.riverssen.nucleus.exceptions.FileServiceException;
 import com.riverssen.nucleus.mining.Nonce;
 import com.riverssen.nucleus.protocols.transaction.Transaction;
 import com.riverssen.nucleus.protocols.transaction.TransactionOutput;
+import com.riverssen.nucleus.system.Parameters;
 import com.riverssen.nucleus.util.BinaryTree;
 import com.riverssen.nucleus.util.FileService;
 
@@ -40,10 +41,10 @@ public class Block implements Comparable<Block>, StrippedObject
      */
     private Set<byte[]>             rejected;
     /**
-     * A list of transaction outputs, the first output should be
-     * the reward, the rest are appended as fees.
+     * The coinbase transaction; contains the reward
+     * and mining fees, unlockable via p2pkh.
      */
-    private List<TransactionOutput> coinbase;
+    private Coinbase                coinbase;
 
 
     /**
@@ -56,11 +57,13 @@ public class Block implements Comparable<Block>, StrippedObject
 	    this.header     = new BlockHeader();
 	}
 
-	public Block(long height, byte[] parent, long version)
+	public Block(long height, byte[] parent, long version, Address miner)
     {
         header.setVersion(version);
-        header.setBlockID(height);
+        header.setHeight(height);
         header.setParentHash(parent);
+        header.setMinerAddress(miner);
+        this.coinbase = new Coinbase(height, "", new byte[0], miner);
     }
 
     public Block(byte[] data) throws IOException
@@ -93,7 +96,7 @@ public class Block implements Comparable<Block>, StrippedObject
 		this.header     = header;
 		this.accepted   = accepted;
 		this.rejected   = rejected;
-		this.coinbase   = new ArrayList<>();
+		this.coinbase   = new Coinbase(Parameters.rewardAtBlock(header.getHeight()), "", new byte[0], header.getMinerAddress());
 	}
 
 	//GETTERS
@@ -184,10 +187,15 @@ public class Block implements Comparable<Block>, StrippedObject
         return list.get(list.size() - 1).getTimeStamp();
     }
 
-	public List<TransactionOutput> getCoinbase()
+	public Coinbase getCoinbase()
 	{
 		return coinbase;
 	}
+
+	public void setCoinbase(Coinbase coinbase)
+    {
+        this.coinbase = coinbase;
+    }
 
 	@Override
 	public byte[] strip()
@@ -206,14 +214,14 @@ public class Block implements Comparable<Block>, StrippedObject
     @Override
     public String toString()
     {
-        return getHeader().getBlockID() + "";
+        return getHeader().getHeight() + "";
     }
 
     @Override
     public int compareTo(Block b)
     {
         Block a = this;
-        return a.getHeader().getBlockID() < b.getHeader().getBlockID() ? -1 : (a.getHeader().getBlockID() == b.getHeader().getBlockID() ? 0 : 1);
+        return a.getHeader().getHeight() < b.getHeader().getHeight() ? -1 : (a.getHeader().getHeight() == b.getHeader().getHeight() ? 0 : 1);
     }
 
     public double ratio()
@@ -251,7 +259,7 @@ public class Block implements Comparable<Block>, StrippedObject
         @Override
         public int compare(Block a, Block b)
         {
-            return a.getHeader().getBlockID() < b.getHeader().getBlockID() ? -1 : (a.getHeader().getBlockID() == b.getHeader().getBlockID() ? 0 : 1);
+            return a.getHeader().getHeight() < b.getHeader().getHeight() ? -1 : (a.getHeader().getHeight() == b.getHeader().getHeight() ? 0 : 1);
         }
     }
 
