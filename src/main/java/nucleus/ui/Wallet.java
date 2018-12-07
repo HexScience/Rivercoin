@@ -203,7 +203,7 @@ public class Wallet extends Application implements Initializable
          * Create a GoogleDB instance.
          */
         DB db = factory.open(entryPoint.newFile("data").newFile("db").file(), new Options());
-        context = new NucleusContext(entryPoint, db, null);
+        context = new NucleusContext(entryPoint, db);
     }
 
     @Override
