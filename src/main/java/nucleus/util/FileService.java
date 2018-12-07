@@ -30,6 +30,11 @@ public class FileService
         return file().length();
     }
 
+    public boolean exists()
+    {
+        return file().exists();
+    }
+
     public FileService newFile(String name)
     {
         return new FileService(entryPoint + File.separator + name);
