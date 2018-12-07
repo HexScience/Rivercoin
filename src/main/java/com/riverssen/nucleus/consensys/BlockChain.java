@@ -20,7 +20,7 @@ import com.riverssen.nucleus.versioncontrol.Version;
 import java.io.IOException;
 import java.util.Queue;
 
-public class BlockChain
+public class BlockChain implements Runnable
 {
     private static final Logger Logger = com.riverssen.nucleus.util.Logger.get("BlockChain");
     /**
@@ -70,13 +70,13 @@ public class BlockChain
      */
     public void onEventBlockNotify(BlockNotificationEvent event)
     {
-        long blockHeight = event.getData().getBlock().getHeader().getBlockID();
+        long blockHeight = event.getData().getBlock().getHeader().getHeight();
 
         forkManager.add(event.getData());
 
-        if (blockHeight == current.getHeader().getBlockID())
+        if (blockHeight == current.getHeader().getHeight())
             try { handleSolvedBlock(event.getData()); } catch (FileServiceException e) {} catch (IOException e) {}
-        else if (blockHeight > current.getHeader().getBlockID())
+        else if (blockHeight > current.getHeader().getHeight())
             handleFutureBlock(event.getData());
     }
 
@@ -158,8 +158,8 @@ public class BlockChain
      */
     private void traceForeignBlockChain(DownloadedBlock block) throws IOException, FileServiceException
     {
-        long long_height = block.getBlock().getHeader().getBlockID();
-        long crnt_height = current.getHeader().getBlockID();
+        long long_height = block.getBlock().getHeader().getHeight();
+        long crnt_height = current.getHeader().getHeight();
 
         Queue<Block> trueFork = new SortedLinkedQueue<>();
 
@@ -183,7 +183,7 @@ public class BlockChain
          */
         if (forkedBlock == null)
         {
-            requestBlockFromPeer(futureBlock.getHeader().getBlockID(), block.getSender());
+            requestBlockFromPeer(futureBlock.getHeader().getHeight(), block.getSender());
             return;
         }
 
@@ -192,7 +192,7 @@ public class BlockChain
          */
         trueFork.add(forkedBlock);
 
-        forkedBlock = getBlock(futureBlock.getHeader().getBlockID() - 1);
+        forkedBlock = getBlock(futureBlock.getHeader().getHeight() - 1);
 
         if (forkedBlock != null && ByteUtil.equals(forkedBlock.getHeader().getHash(), futureBlock.getHeader().getHash()))
         {
@@ -235,10 +235,10 @@ public class BlockChain
                 case Async.RUNNING:
                     return;
                 case Async.ERR:
-                    Logger.err("an error occurred: could not mine block '" + current.getHeader().getBlockID() + "'. errcode: '" + code + "'.");
+                    Logger.err("an error occurred: could not mine block '" + current.getHeader().getHeight() + "'. errcode: '" + code + "'.");
                     return;
                 case Async.EXCECPTION:
-                    Logger.err("an error occurred: could not mine block '" + current.getHeader().getBlockID() + "'. errcode: '" + code + "'.");
+                    Logger.err("an error occurred: could not mine block '" + current.getHeader().getHeight() + "'. errcode: '" + code + "'.");
                     return;
                 case Async.NO_EXECUTE:
                     miner.start();
@@ -246,7 +246,7 @@ public class BlockChain
                 case Async.PREPARING:
                         return;
                 case Async.SUCCESS:
-                    Logger.alert("block '" + current.getHeader().getBlockID() + "' mined successfully!");
+                    Logger.alert("block '" + current.getHeader().getHeight() + "' mined successfully!");
                     handleLocallySolvedBlock();
                     return;
                 case Async.NULL_OBJECT:
@@ -298,7 +298,7 @@ public class BlockChain
 
     protected void newBlock()
     {
-        current = new Block(current.getHeader().getBlockID() + 1, current.getHeader().getHash(), Version.getLatest().getVersion());
+        current = new Block(current.getHeader().getHeight() + 1, current.getHeader().getHash(), Version.getLatest().getVersion(), context.getConfig().getMiner());
     }
 
     /**
@@ -332,8 +332,8 @@ public class BlockChain
 
     protected double getDifficulty(final Block block) throws IOException, FileServiceException
     {
-        Block prev = getBlock(block.getHeader().getBlockID() - 1);
-        Block bbfr = getBlock(prev.getHeader().getBlockID() - 1);
+        Block prev = getBlock(block.getHeader().getHeight() - 1);
+        Block bbfr = getBlock(prev.getHeader().getHeight() - 1);
 
         return Parameters.calculateDifficulty(prev.getHeader().getTimeStamp(), bbfr.getHeader().getTimeStamp(), prev.getHeader().getDifficulty());
     }
@@ -341,9 +341,9 @@ public class BlockChain
     protected static Block getBlock(Queue<Block> blocks, final long block)
     {
         for (Block find : blocks)
-            if (find.getHeader().getBlockID() == block)
+            if (find.getHeader().getHeight() == block)
                 return find;
-            else if (find.getHeader().getBlockID() > block)
+            else if (find.getHeader().getHeight() > block)
                 break;
 
         return null;
@@ -357,9 +357,9 @@ public class BlockChain
     protected Block getBlock(final long block) throws IOException, FileServiceException
     {
         for (Block find : forkManager.getMain().get())
-            if (find.getHeader().getBlockID() == block)
+            if (find.getHeader().getHeight() == block)
                 return find;
-            else if (find.getHeader().getBlockID() > block)
+            else if (find.getHeader().getHeight() > block)
                 break;
 
         return loadBlock(block);
@@ -377,20 +377,29 @@ public class BlockChain
 
     public long chainSize()
     {
-        return current == null ? -1 : current.getHeader().getBlockID();
+        return current == null ? -1 : current.getHeader().getHeight();
     }
 
     /**
      * The main chain loop
      */
-    public void run() throws IOException, FileServiceException
+    public void run()
     {
         Logger.alert("-----------------------");
         Logger.alert("entering main loop.");
         while (context.keepAlive())
         {
-            realign();
-            checkBlockSolved();
+            try
+            {
+                realign();
+                checkBlockSolved();
+            } catch (FileServiceException e)
+            {
+                e.printStackTrace();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
