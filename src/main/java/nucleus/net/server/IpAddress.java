@@ -10,8 +10,10 @@ import java.net.UnknownHostException;
 
 public class IpAddress implements Comparable<IpAddress>
 {
-    private InetAddress   address;
-    private double        distance;
+    private InetAddress     address;
+    private double          distance;
+    private long            lastReply;
+    private long            chainSize;
 
     public IpAddress(String address) throws UnknownHostException
     {
@@ -83,5 +85,25 @@ public class IpAddress implements Comparable<IpAddress>
             return ((IpAddress) obj).address.toString().equals(address.toString());
 
         return super.equals(obj);
+    }
+
+    public void setReplied()
+    {
+        lastReply = System.currentTimeMillis();
+    }
+
+    public boolean isActive()
+    {
+        return System.currentTimeMillis() - lastReply > 60_000L;
+    }
+
+    public static final IpAddress[] pack(IpAddress... addresses)
+    {
+        return addresses;
+    }
+
+    public void setChainSize(long decode)
+    {
+        this.chainSize = decode;
     }
 }
