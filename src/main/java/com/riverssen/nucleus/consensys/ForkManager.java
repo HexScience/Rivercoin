@@ -54,13 +54,13 @@ public class ForkManager
 
     private void checkShouldAdd(Block block)
     {
-        Block existing      = main.getAt(block.getHeader().getBlockID());
+        Block existing      = main.getAt(block.getHeader().getHeight());
         boolean blockExists = existing != null;
 
         if (!blockExists)
             main.add(block);
         else{
-            Block preexstng = main.getAt(block.getHeader().getBlockID());
+            Block preexstng = main.getAt(block.getHeader().getHeight());
             long eTimeAvge  = existing.getHeader().getTimeStamp() - preexstng.getHeader().getTimeStamp();
             long nTimeAvge  = block.getHeader().getTimeStamp() - preexstng.getHeader().getTimeStamp();
 
@@ -68,7 +68,7 @@ public class ForkManager
             double nRatio   = block.ratio();
 
             if (!(eTimeAvge < nTimeAvge && eRatio > nRatio && existing.getTotalValue() > block.getTotalValue()))
-                main.replace(block.getHeader().getBlockID(), block);
+                main.replace(block.getHeader().getHeight(), block);
         }
     }
 
