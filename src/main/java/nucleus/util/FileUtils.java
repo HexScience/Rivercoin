@@ -24,6 +24,7 @@ import java.util.Set;
 
 public class FileUtils
 {
+    private static final Logger Logger = nucleus.util.Logger.get("FileUtils");
     private static Set<String> freeFiles = Collections.synchronizedSet(new HashSet<>());
 
     public static synchronized void setFileIsUsed(String string)
