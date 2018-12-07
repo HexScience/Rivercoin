@@ -21,6 +21,11 @@ public class Address
 		this.address = address;
 	}
 
+	public Address(String address)
+	{
+		this.address = Base58.decode(address);
+	}
+
 	//GETTERS
 
 	public byte[] getAddress() { return address; }
