@@ -27,6 +27,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class NKMiner
 {
+    private static final Logger Logger = nucleus.util.Logger.get("NKMiner");
     private static NKMiner instance;
 
     private long mWindow;
@@ -220,7 +221,8 @@ public class NKMiner
 
     public void looptest()
     {
-        while (true)
+        long now = System.currentTimeMillis();
+        while (System.currentTimeMillis() - now < 200_000)
         {
             step(x += 0.1f, 1, 1, 1, 1, 0, 0, 3, 1, 6);
             try
