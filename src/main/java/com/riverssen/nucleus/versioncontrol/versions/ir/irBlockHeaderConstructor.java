@@ -1,6 +1,7 @@
 package com.riverssen.nucleus.versioncontrol.versions.ir;
 
 import com.riverssen.nucleus.mining.Nonce;
+import com.riverssen.nucleus.protocols.protobufs.Address;
 import com.riverssen.nucleus.protocols.protobufs.BlockHeader;
 import com.riverssen.nucleus.protocols.protobufs.CompressedKey;
 import com.riverssen.nucleus.versioncontrol.Constructor;
@@ -19,7 +20,7 @@ public class irBlockHeaderConstructor implements Constructor<BlockHeader>
         byte pubk[] = new byte[32];
 
         header.setVersion(data.getLong());
-        header.setBlockID(data.getLong());
+        header.setHeight(data.getLong());
 
         data.get(hash); header.setHash(hash);
         data.get(hash); header.setParentHash(hash);
@@ -28,7 +29,7 @@ public class irBlockHeaderConstructor implements Constructor<BlockHeader>
         header.setTimeStamp(data.getLong());
         header.setDifficulty(data.getDouble());
         byte nonce[] = new byte[24]; data.get(nonce); header.setNonce(new Nonce(nonce));
-        data.get(pubk); header.setMinerAddress(new CompressedKey(pubk));
+        data.get(pubk); header.setMinerAddress(new Address(pubk));
         header.setReward(data.getLong());
 
         return header;
@@ -42,7 +43,7 @@ public class irBlockHeaderConstructor implements Constructor<BlockHeader>
 //        byte pubk[] = new byte[32];
 //
 //        header.setVersion(stream.readLong());
-//        header.setBlockID(stream.readLong());
+//        header.setHeight(stream.readLong());
 //
 //        stream.read(hash); header.setParentHash(hash);
 //        stream.read(hash); header.setMerkleRoot(hash);
