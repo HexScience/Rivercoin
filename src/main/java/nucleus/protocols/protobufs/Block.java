@@ -9,10 +9,7 @@ import nucleus.util.BinaryTree;
 import nucleus.util.FileService;
 import nucleus.util.HashUtil;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Block implements Comparable<Block>, StrippedObject
@@ -67,6 +64,13 @@ public class Block implements Comparable<Block>, StrippedObject
         header.setParentHash(parent);
     }
 
+    public Block(byte[] data) throws IOException
+    {
+        DataInputStream stream = new DataInputStream(new ByteArrayInputStream(data));
+        read(stream);
+        stream.close();
+    }
+
     /**
      * @param service
      * @throws IOException
@@ -80,8 +84,9 @@ public class Block implements Comparable<Block>, StrippedObject
     /**
      * @param inputStream
      */
-	public Block(DataInputStream inputStream)
-	{
+	public Block(DataInputStream inputStream) throws IOException
+    {
+	    read(inputStream);
 	}
 
 	public Block(BlockHeader header, Set<Transaction> accepted, Set<byte[]> rejected, byte codebase[])
