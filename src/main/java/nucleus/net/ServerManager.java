@@ -26,7 +26,6 @@ public class ServerManager
     private DatabaseReader                  lookupService;
     private IpAddressList                   ipList;
     private Context                         context;
-
     private Queue<IpAddress>                addresses;
 
     public ServerManager(Context context, FileService entryPoint) throws IOException, FileServiceException, GeoIp2Exception, EventFamilyDoesNotExistException
@@ -62,6 +61,24 @@ public class ServerManager
     {
         roundTripQue.put(message.getCheckSum(), new MessageRoundTrip(message));
         server.send(message);
+    }
+
+    public void sendMessages(Message... messages)
+    {
+        for (Message msg : messages)
+        {
+            roundTripQue.put(msg.getCheckSum(), new MessageRoundTrip(msg));
+            server.send(msg);
+        }
+    }
+
+    public void sendMessages(IpAddress recipient, Message... messages)
+    {
+        for (Message msg : messages)
+        {
+            roundTripQue.put(msg.getCheckSum(), new MessageRoundTrip(msg));
+            server.send(msg);
+        }
     }
 
     public IpAddressList getIpList()
