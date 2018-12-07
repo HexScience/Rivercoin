@@ -13,6 +13,7 @@ import nucleus.net.server.IpAddress;
 import nucleus.net.server.Server;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Queue;
@@ -30,12 +31,11 @@ public class ServerManager
 
     public ServerManager(Context context, FileService entryPoint) throws IOException, FileServiceException, GeoIp2Exception, EventFamilyDoesNotExistException
     {
+        this.context        = context;
         this.messageQueue   = new MessageQueue();
         this.roundTripQue   = new LinkedHashMap<>();
         this.lookupService  = new DatabaseReader.Builder(entryPoint.newFile("GeoLiteC").newFile("GeoLiteC.mmdb").file()).build();
         this.ipList         = new IpAddressList(entryPoint, lookupService);
-        this.server         = new Server(context);
-        this.context        = context;
 
         this.context.getEventManager().register((PeerDisconnectEventListener) (_PeerDisconnectEvent_)->{
             try
@@ -46,6 +46,11 @@ public class ServerManager
                 e.printStackTrace();
             }
         }, "Server");
+    }
+
+    public void launch() throws SocketException
+    {
+        this.server         = new Server(context);
     }
 
     private void onPeerDisconnectEvent(PeerDisconnectEvent event) throws IOException
