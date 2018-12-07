@@ -43,7 +43,7 @@ public abstract class ForkI
     Block getAt(long height)
     {
         for (Block block : blockQueue)
-            if (block.getHeader().getBlockID() == height)
+            if (block.getHeader().getHeight() == height)
                 return block;
 
         return null;
@@ -53,7 +53,7 @@ public abstract class ForkI
     {
         Queue<Block> temp = new SortedLinkedQueue<>();
         for (Block _block_ : blockQueue)
-            if (block.getHeader().getBlockID() == height)
+            if (block.getHeader().getHeight() == height)
                 temp.add(block);
             else
                 temp.add(_block_);
