@@ -63,16 +63,16 @@ public class SortedLinkedQueue<E extends Comparable> extends AbstractQueue<E> im
 //            if (!this.block.getSender().equals(block.getSender()))
 //                return;
 //
-//            if (this.block.getBlock().getHeader().getBlockID() <= block.getBlock().getHeader().getBlockID() && child == null)
+//            if (this.block.getBlock().getHeader().getHeight() <= block.getBlock().getHeader().getHeight() && child == null)
 //                child = new Element(block);
-//            else if (this.block.getBlock().getHeader().getBlockID() <= block.getBlock().getHeader().getBlockID() && child != null)
+//            else if (this.block.getBlock().getHeader().getHeight() <= block.getBlock().getHeader().getHeight() && child != null)
 //                child.add(block);
-//            else if (this.block.getBlock().getHeader().getBlockID() > block.getBlock().getHeader().getBlockID() && child == null)
+//            else if (this.block.getBlock().getHeader().getHeight() > block.getBlock().getHeader().getHeight() && child == null)
 //            {
 //                this.child = new Element(this.block);
 //                this.block = block;
 //            }
-//            else if (this.block.getBlock().getHeader().getBlockID() > block.getBlock().getHeader().getBlockID() && child != null)
+//            else if (this.block.getBlock().getHeader().getHeight() > block.getBlock().getHeader().getHeight() && child != null)
 //            {
 //
 //            }
