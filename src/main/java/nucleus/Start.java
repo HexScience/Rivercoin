@@ -112,7 +112,7 @@ public class Start
          * Initialize the NKMiner.
          */
 
-        NKMiner miner = NKMiner.init();
+//        NKMiner miner = NKMiner.init();
         /**
          * Initialize the version control class.
          */
@@ -122,9 +122,9 @@ public class Start
          * Create a GoogleDB instance.
          */
         DB db = factory.open(entryPoint.newFile("data").newFile("db").file(), new Options());
-        Context context = new NucleusContext(entryPoint, db, miner);
+        Context context = new NucleusContext(entryPoint, db);
 
-        miner.looptest();
+//        miner.looptest();
 //        Tests.main();
     }
 }
