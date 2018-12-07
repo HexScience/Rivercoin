@@ -115,7 +115,16 @@ public class KeyChain
         Signature signature = new Signature();
 //        signature.setPrivateKey(pair().getPrivateKeyObject());
 
-        TransactionInput inputs[] = context.getLedger().getBalanceTable(current).getOutputs(totalAmount, signature.getSignature());
+        try
+        {
+            TransactionInput inputs[] = context.getLedger().getBalanceTable(current).getOutputs(totalAmount, signature.getSignature());
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } catch (FileServiceException e)
+        {
+            e.printStackTrace();
+        }
 
         return null;
     }
