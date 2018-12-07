@@ -49,7 +49,7 @@ public class BlockHeader
 	private long 			timeStamp;
 	private double 			difficulty;
 	private Nonce			nonce;
-	private CompressedKey 	minerAddress = new CompressedKey();
+	private Address         minerAddress;
 	private long 			reward;
 
 	public MinableBlockHeader getForMining()
@@ -63,7 +63,7 @@ public class BlockHeader
 
 	//GETTERS
 
-	public long getBlockID() { return blockID; }
+	public long getHeight() { return blockID; }
 
 	//GETTERS
 
@@ -102,7 +102,7 @@ public class BlockHeader
 
 	//GETTERS
 
-	public CompressedKey getMinerAddress() { return minerAddress; }
+	public Address getMinerAddress() { return minerAddress; }
 
 	//GETTERS
 
@@ -114,7 +114,7 @@ public class BlockHeader
 
 	//SETTERS
 
-	public void  setBlockID(long blockID) { this.blockID = blockID; }
+	public void setHeight(long blockID) { this.blockID = blockID; }
 
 	//SETTERS
 
@@ -153,7 +153,7 @@ public class BlockHeader
 
 	//SETTERS
 
-	public void  setMinerAddress(CompressedKey minerAddress) { this.minerAddress = minerAddress; }
+	public void  setMinerAddress(Address minerAddress) { this.minerAddress = minerAddress; }
 
 	//SETTERS
 
