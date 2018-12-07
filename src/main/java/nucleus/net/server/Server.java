@@ -22,6 +22,7 @@ import static nucleus.util.HashUtil.applySha256;
 
 public class Server
 {
+    private static final Logger Logger = nucleus.util.Logger.get("Server");
     private Context             context;
     private DatagramSocket      socket;
     private Set<IpAddress>      connected;
@@ -84,7 +85,7 @@ public class Server
 
     public void listen()
     {
-        while (true)
+        while (context.keepAlive())
         {
             /**
              * This reconnects to all peers, keeping the connection alive
