@@ -8,7 +8,7 @@ public class CorruptedMessage extends Message
 {
     public CorruptedMessage(byte[] message)
     {
-        super(MSG_CORRUPTED, MSG_CORRUPTED, message);
+        super(NOTFY, MSG_CORRUPTED, message);
     }
 
     @Override
