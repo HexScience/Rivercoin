@@ -92,8 +92,8 @@ public class AddressBalanceTable
 
 //        for (DBTransactionOutput output : balances)
 //        {
-//            Transaction transaction = context.getSerializer().loadTransaction(output.getBlockID(), output.getTransactionID());
-//            inputs.add(new TransactionInput(transaction.getTransactionID(), output.getBlockID(), output.getTransactionID(), output.getOutputID(), script));
+//            Transaction transaction = context.getSerializer().loadTransaction(output.getHeight(), output.getTransactionID());
+//            inputs.add(new TransactionInput(transaction.getTransactionID(), output.getHeight(), output.getTransactionID(), output.getOutputID(), script));
 //        }
 
         return inputs.toArray(new TransactionInput[inputs.size()]);
