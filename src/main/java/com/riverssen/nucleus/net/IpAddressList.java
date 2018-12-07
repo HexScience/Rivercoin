@@ -32,8 +32,14 @@ public class IpAddressList
         this.seed();
         this.entryPoint         = entryPoint;
         this.myAddress          = InetAddress.getByName(Parameters.getMyIP());
+
         if (this.myAddress != null)
-            myLocale = new Vector2d(dbReader.city(this.myAddress).getLocation());
+            try{
+                myLocale = new Vector2d(dbReader.city(this.myAddress).getLocation());
+            } catch (Exception e)
+            {
+                myLocale = new Vector2d(0, 0);
+            };
 
         String ip = "";
         IpAddress ipAddress = null;
