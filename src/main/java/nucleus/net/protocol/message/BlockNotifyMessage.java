@@ -24,14 +24,14 @@ public class BlockNotifyMessage extends NotificationMessage
     }
 
     /**
-     * @return null as this is a notification message.
+     * @return success as this is a notification message.
      * @param context
      * @param manager
      */
     @Override
     public Message getAnswerMessage(Context context, ServerManager manager)
     {
-        return null;
+        return new SuccessMessage(getCheckSum());
     }
 
     @Override
