@@ -1,6 +1,7 @@
 package nucleus.event;
 
 import nucleus.exceptions.EventFamilyDoesNotExistException;
+import nucleus.system.Context;
 import nucleus.threading.Async;
 import nucleus.threading.ThreadedAccess;
 import nucleus.util.Tuple;
@@ -15,9 +16,11 @@ public class EventManager extends Async<EventManager.EventManagerE>
     class EventManagerE implements Runnable, ThreadedAccess{
         private Map<String, EventFamily>                eventFamilyMap;
         private Queue<Tuple<String, ActionableEvent>>   fireQueue;
+        private Context context;
 
-        private EventManagerE()
+        private EventManagerE(Context context)
         {
+            this.context        = context;
             this.eventFamilyMap = new HashMap<>();
             this.fireQueue      = new LinkedTransferQueue<>();
 
@@ -60,7 +63,7 @@ public class EventManager extends Async<EventManager.EventManagerE>
         @Override
         public void run()
         {
-            while (true)
+            while (context.keepAlive())
             {
                 while (fireQueue.size() > 0)
                 {
@@ -83,9 +86,9 @@ public class EventManager extends Async<EventManager.EventManagerE>
         }
     }
 
-    public EventManager()
+    public EventManager(Context context)
     {
-        asyncronousObject   = new EventManagerE();
+        asyncronousObject   = new EventManagerE(context);
         start();
     }
 
