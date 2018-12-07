@@ -6,14 +6,21 @@ import nucleus.net.protocol.NotificationMessage;
 import nucleus.protocols.protobufs.Block;
 import nucleus.system.Context;
 
+import java.io.IOException;
+
 /**
  * This class should be used when notifying peers of newfound blocks and or block solutions.
  */
 public class BlockNotifyMessage extends NotificationMessage
 {
-    public BlockNotifyMessage(Block block)
+    public BlockNotifyMessage(Block block) throws IOException
     {
-        super(BLOCK, block.strip());
+        super(BLOCK, block.getBytes());
+    }
+
+    public BlockNotifyMessage(byte[] block)
+    {
+        super(BLOCK, block);
     }
 
     /**
