@@ -13,7 +13,6 @@ public abstract class Message
     REPLY = 1, /** a reply message type **/
     OPTIN = 2, /** an optional-to-reply message type **/
     REQUEST = 3, /** a request message **/
-    MSG_CORRUPTED = 4, /** a message received is corrupted, please send again **/
 
 
 
@@ -28,11 +27,11 @@ public abstract class Message
     PING            = 0,
     PONG            = 1,
 
-    GETBLOCK        = 2,
-    GETBLOCKHEADER  = 3,
-    GETCHAIN        = 4,
-    GETCHAINHEADERS = 5,
-    GETCHAINSIZE    = 6,
+//    GETBLOCK        = 2,
+//    GETBLOCKHEADER  = 3,
+//    GETCHAIN        = 4,
+//    GETCHAINHEADERS = 5,
+//    GETCHAINSIZE    = 6,
 
     BLOCK           = 7,
     BLOCKHEADER     = 8,
@@ -42,7 +41,18 @@ public abstract class Message
     TRANSACTION     = 12,
     INTRODUCE_SELF  = 13, /** introduction message **/
     RECIPROCATE     = 14, /** reciprocate the introduction **/
-    JSON            = 15;
+    JSON            = 15,
+    MSG_CORRUPTED   = 16, /** a message received is corrupted, please send again **/
+    PEERS           = 17, /** peer data **/
+
+
+
+
+
+
+
+
+    HALT = 30;
 
     private byte type;
     private byte code;
