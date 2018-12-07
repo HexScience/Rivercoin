@@ -29,26 +29,26 @@ public class Transaction
 		public static final int PAYLOAD_ONLY = 0x05;
 	}
 
-	private int						version		= 0;
-	private long					flag		= 0;
+	protected int					version		= 0;
+	protected long					flag		= 0;
 
-	private long					magicheader = 0;
-	private long					locktime	= 0;
+	protected long					magicheader = 0;
+	protected long					locktime	= 0;
 
 	/** an array of inputs **/
-	private TransactionInput     	inputs[] 	= new TransactionInput[0];
+	protected TransactionInput     	inputs[] 	= new TransactionInput[0];
 //	/** an array of outputs that if the transaction succeeds, will be added to the ledger. **/
-//	private List<byte[]>			outputs		= new ArrayList<>();
-	private TransactionOutput		outputs[]	= new TransactionOutput[0];
+//	protected List<byte[]>			outputs		= new ArrayList<>();
+	protected TransactionOutput		outputs[]	= new TransactionOutput[0];
 	/** a comment written by the sender **/
-	private byte 					comment[] 	= new byte[256];
+	protected byte 					comment[] 	= new byte[256];
 	/**
 	 * a payload to be injected into the ledger
 	 * fee varies depending on the
 	 * size of the payload.
 	 */
-	private byte					payload[] 	= new byte[0];
-	private long					timeStamp	= 0L;
+	protected byte					payload[] 	= new byte[0];
+	protected long					timeStamp	= 0L;
 
 	public Transaction()
 	{
@@ -61,7 +61,7 @@ public class Transaction
 		this.locktime = locktime;
 		this.inputs = inputs;
 		this.outputs = outputs;
-		this.comment = comment;
+		setComment(new String(comment));
 		this.payload = payload;
 	}
 
@@ -75,6 +75,14 @@ public class Transaction
 	 */
 	public Transaction(ECDerivedPublicKey from, Address to, long amount, List<Integer> utxos, long fee, byte comment[])
 	{
+	}
+
+	protected void setComment(String comment)
+	{
+		while (comment.length() < 256)
+			comment += " ";
+
+		this.comment = comment.getBytes();
 	}
 
 	public boolean execute(Context context, Object ledgerdb)
@@ -117,7 +125,7 @@ public class Transaction
 //		return privateKey.sign(transaction.getSignatureData(), pph.getBytes());
 //	}
 
-	private byte[] getSignatureData() throws IOException {
+	protected byte[] getSignatureData() throws IOException {
 		ByteArrayOutputStream stream1 = new ByteArrayOutputStream();
 		DataOutputStream stream = new DataOutputStream(stream1);
 
@@ -132,12 +140,6 @@ public class Transaction
 	//GETTERS
 
 	public byte[] getComment() { return comment; }
-
-	//SETTERS
-	private void 	setComment(byte comment[])
-	{
-		this.comment = comment;
-	}
 
 	//IO Functions And Commands
 
