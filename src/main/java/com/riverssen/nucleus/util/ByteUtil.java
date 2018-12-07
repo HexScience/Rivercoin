@@ -16,6 +16,7 @@ import com.riverssen.nucleus.algorithms.HashAlgorithm;
 import com.riverssen.nucleus.algorithms.Sha3;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
@@ -66,6 +67,26 @@ public class ByteUtil
     public static long decode(byte data[])
     {
         return ByteBuffer.wrap(data).getLong();
+    }
+
+    public static <T> T[] concatenate(T[]...arrays)
+    {
+        int size = 0;
+        for(T[] array : arrays)
+            size += array.length;
+
+        T concatenated[] = (T[]) Array.newInstance(arrays[0][0].getClass(), size);
+
+        int index = 0;
+
+        for(T[] array : arrays)
+        {
+            System.arraycopy(array, 0, concatenated, index, array.length);
+
+            index += array.length;
+        }
+
+        return concatenated;
     }
 
     public static byte[] concatenate(byte[]...arrays)
