@@ -21,6 +21,11 @@ public class Nonce
         this.nonce_c = c;
     }
 
+    public Nonce(byte[] nonce)
+    {
+        set(nonce);
+    }
+
     public void set(long a, long b, long c)
     {
         this.nonce_a = a;
@@ -44,6 +49,11 @@ public class Nonce
             data = ByteUtil.concatenate(new byte[difference], data);
         }
 
+        return set(data);
+    }
+
+    public Nonce set(byte data[])
+    {
         this.nonce_a = ByteUtil.decode(ByteUtil.trim(data,  0, 8));
         this.nonce_b = ByteUtil.decode(ByteUtil.trim(data,  8, 16));
         this.nonce_c = ByteUtil.decode(ByteUtil.trim(data,  16, 24));
