@@ -28,6 +28,7 @@ public abstract class Async<E extends ThreadedAccess & Runnable>
     {
         if (asyncronousObject == null) return;
         current = new Thread(asyncronousObject);
+        current.setDaemon(true);
         current.start();
     }
 
